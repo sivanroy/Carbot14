@@ -11,6 +11,11 @@ def io_init():
     GPIO.setup(DIR1, GPIO.OUT)
     GPIO.setup(DIR2, GPIO.OUT)
 
+import RPi.GPIO as GPIO
+
+MAX_SPEED = 100
+FREQ = 1e3
+
 class Motor(object):
     MAX_SPEED = 100
     FREQ = 1e3

@@ -1,7 +1,6 @@
 import spidev
 import math
 
-
 class DE02Rpi(object):
     def __init__(self,MyController):
         self.MyController = MyController
@@ -21,7 +20,7 @@ class DE02Rpi(object):
 
     """
     Give the mesure of angular speed of the odo/encoder
-
+    make one function for both left and right !!! maybe one function for odo/enco/sonar
     GIVE THE DELTATHETA !!! ???
     """
     def mes_right(self,Encoder = 0,verbose = 0):
