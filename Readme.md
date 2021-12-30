@@ -1,4 +1,4 @@
-Readme.md
+Welcome to Carbot14 github !
 
-Please do modify the main unless if the code is functional
-The code is in python and for the Eurobot 2022 contest
+Please do not modify the main unless the code is functional
+The code is in python and used in the Eurobot 2022 contest
