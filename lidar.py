@@ -1,10 +1,10 @@
-#import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 from rplidar import RPLidar
 from threads import *
 
 def lidar_thread_function(MyLidar):
     #this for acts as a while (: into the data of the lidar
-    for i, lidar_scan in enumerate(MyLidar.iter_scans()):
+    for i, lidar_scan in enumerate(MyLidar.lidar.iter_scans()):
         #set scan data
         theta = []; dist = []
         for scan in (lidar_scan):  # each scan = [quality,angle,dist]
@@ -13,16 +13,19 @@ def lidar_thread_function(MyLidar):
         #semaphored
         if (MyLidar.threadOn == 0):
             break
-        while(self.flag):
+        while(MyLidar.flag):
             continue
-        self.flag = 1
-        self.data = [dist,theta]
-        self.flag = 0
+        MyLidar.flag = 1
+        MyLidar.data = [dist,theta]
+        MyLidar.flag = 0
         #semaphored
         if (MyLidar.threadOn == 0):
             break
     #ended lidar task
-    MyLidar.stop()
+    MyLidar.lidar.stop()
+    MyLidar.lidar.stop_motor()
+    MyLidar.lidar.disconnect()
+    return 1
 
 
 class Lidar(object):
@@ -34,16 +37,14 @@ class Lidar(object):
         self.thread = myThread(lidar_thread_function,self,'lidar')
 
     def start(self):
-        lidar.start_motor()
-        info = lidar.get_info()
+        self.lidar.start_motor()
+        info = self.lidar.get_info()
         print(info)
+        self.lidar.clean_input()
         self.thread.start()
 
     def stop(self):
         self.threadOn = 0
-        self.lidar.stop()
-        self.lidar.stop_motor()
-        self.lidar.disconnect()
         #stop the thread
 
     #if no data get , return None !!
@@ -54,3 +55,22 @@ class Lidar(object):
         data = self.data
         self.flag = 0
         return data
+
+
+
+"""
+MyLidar = Lidar()
+MyLidar.start()
+i = 0
+while (i<5):
+    data = MyLidar.getData()
+    if (data == None):
+        i=0
+    else:
+        print('len data :')
+        print(len(data))
+        i+=1
+print('begin of the end')
+MyLidar.stop()
+print("lidar has stopped")
+"""
