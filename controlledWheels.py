@@ -3,10 +3,10 @@ from DE02Rpi import *
 from simple_pid import PID
 import matplotlib.pyplot as plt
 
-wheelP = 1e-6
-wheelI = 0
+wheelP = 70
+wheelI = 50
 wheelD = 0
-wheelMax = 10
+wheelMax = 50
 wheelMin = -wheelMax
 odoD = 46e-3
 wheelD = 56e-3
@@ -40,12 +40,12 @@ class ControlledWheels(object):
 		self.setSpeed(0,0)
 		self.leftPID.set_auto_mode = False
 		self.rightPID.set_auto_mode = False
-		#self.motors.stop_all()
+		self.motors.stop_all()
 
 	def start(self):
 		self.leftPID.set_auto_mode = True
 		self.rightPID.set_auto_mode = True
-		#self.motors.start_all()
+		self.motors.start_all()
 
 	def giveV(self,current_s_l,current_s_r):
 		"""
@@ -58,12 +58,14 @@ class ControlledWheels(object):
 
 	def sendV(self,current_s_l,current_s_r,verbose=0):
 		v_l,v_r = self.giveV(current_s_l,current_s_r)
+		v_l = int(v_l)
+		v_r = int(v_r)
 		self.motors.set_speeds(v_l,v_r)
 		if(verbose):print("v_l = {}, v_r = {}".format(v_l,v_r))
 
 
 
-values = [0,0,5e-2,5e-2]#,5e-2,5e-2,5,1e-2,1e-2,1e-2,1e-2,-1e-2,-1e-2,-1e-2,-1e-2,0]
+values = [0,20e-2]#,1e-2,-1e-2,0]
 
 ### displacement tests
 cw = ControlledWheels()
@@ -77,12 +79,12 @@ sl_r = []
 setp = []
 for si in values:
 	cw.setSpeed(si,si)
-	for j in range(10): #stay 1s on each value
+	for j in range(100): #stay 1s on each value
 		for i in range(int(dt/deltat)):
 			l = dr.measure(1,1)
 			r = dr.measure(1,0)
-			sl = -l*wheelD/2*RadPerTickEnc*deltat #check ??
-			sr = r*wheelD/2*RadPerTickEnc*deltat
+			sl = -l*wheelD/2*RadPerTickEnc/deltat #check ??
+			sr = r*wheelD/2*RadPerTickEnc/deltat
 			sl_m.append(sl)
 			sl_r.append(sr)
 			setp.append(si)
@@ -90,6 +92,8 @@ for si in values:
 			print("sl = {}; sr = {}".format(sl,sr))
 			cw.sendV(sl,sr,1)
 			time.sleep(deltat)
+
+cw.stop()
 			
 plt.plot(sl_m)
 plt.plot(sl_r)
