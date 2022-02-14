@@ -4,15 +4,15 @@
 
 #include "DualMC33926RPi.h"
 
-#define MAX_SPEED 480
+#define MAX_SPEED 100
 
 DualMC33926RPi::DualMC33926RPi()
 {
     //Pin map
-    this->M1DIR = 24;//21
-    this->M1PWM = 12;//26
-    this->M2DIR = 25;//22
-    this->M2PWM = 13;//23
+    this->M1DIR = 21;//21
+    this->M1PWM = 26;//26
+    this->M2DIR = 22;//22
+    this->M2PWM = 23;//23
 }
 
 DualMC33926RPi::DualMC33926RPi(unsigned char M1DIR,
@@ -28,10 +28,12 @@ DualMC33926RPi::DualMC33926RPi(unsigned char M1DIR,
 
 void DualMC33926RPi::init()
 {
-    wiringPiSetupGpio();
+    wiringPiSetup();
+    /*
     pwmSetMode(PWM_MODE_MS);
     pwmSetRange(MAX_SPEED);
     pwmSetClock(2);
+    */
 
     pinMode(this->M1PWM, PWM_OUTPUT);
     pinMode(this->M2PWM, PWM_OUTPUT);

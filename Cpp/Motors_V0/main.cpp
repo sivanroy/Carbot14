@@ -5,7 +5,7 @@
 int main() {
 
     int time = 1;
-    int speed = 1;
+    int speed = 10;
 
     DualMC33926RPi wheels;
 
@@ -36,6 +36,7 @@ int main() {
     usleep(1000000 * time);
 
     wheels.stop();
+    usleep(1000000 * time);
 
     return 0;
 }
