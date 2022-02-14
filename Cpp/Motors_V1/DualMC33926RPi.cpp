@@ -52,8 +52,8 @@ void DualMC33926RPi::init()
     pinMode(this->M1PWM, PWM_OUTPUT);
     pinMode(this->M2PWM, PWM_OUTPUT);
      */
-    softPwmCreate(this->M1PWM, 0, PWM_RANGE)
-    softPwmCreate(this->M2PWM, 0, PWM_RANGE)
+    softPwmCreate(this->M1PWM, 0, PWM_RANGE);
+    softPwmCreate(this->M2PWM, 0, PWM_RANGE);
 }
 
 void DualMC33926RPi::setM1Speed(int speed)
