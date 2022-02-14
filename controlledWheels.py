@@ -65,7 +65,7 @@ class ControlledWheels(object):
 
 
 
-values = [0,20e-2]#,1e-2,-1e-2,0]
+values = [0,20e-2,50e-2]#,1e-2,-1e-2,0]
 
 ### displacement tests
 cw = ControlledWheels()
