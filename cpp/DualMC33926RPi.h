@@ -2,8 +2,8 @@
 // Created by Louis Libert on 8/11/21.
 //
 
-#ifndef DUALMC33926RPI_H
-#define DUALMC33926RPI_H
+#ifndef CARBOT14_DUALMC33926RPI_H
+#define CARBOT14_DUALMC33926RPI_H
 
 #include <wiringPi.h>
 #include <softPwm.h>
@@ -36,4 +36,4 @@ private:
 
 };
 
-#endif
+#endif //CARBOT14_DUALMC33926RPI_H

@@ -35,12 +35,6 @@ DualMC33926RPi::DualMC33926RPi(unsigned char M1DIR,
 
 void DualMC33926RPi::init()
 {
-    /*
-    wiringPiSetupGpio();
-    pwmSetMode(PWM_MODE_MS);
-    pwmSetRange(MAX_SPEED);
-    pwmSetClock(2);
-     */
     wiringPiSetup(); // or wiringPiSetupGpio() (pin : 5 12 6 13), or wiringPiSetupPhys()
 
     // Direction : 1 or 0
@@ -48,10 +42,6 @@ void DualMC33926RPi::init()
     pinMode(this->M2DIR, OUTPUT);
 
     // PWM
-    /*
-    pinMode(this->M1PWM, PWM_OUTPUT);
-    pinMode(this->M2PWM, PWM_OUTPUT);
-     */
     softPwmCreate(this->M1PWM, 0, PWM_RANGE);
     softPwmCreate(this->M2PWM, 0, PWM_RANGE);
 }

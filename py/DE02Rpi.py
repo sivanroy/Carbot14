@@ -27,12 +27,12 @@ class DE02Rpi(object):
 
     def giveAddress(self,encoder,left):
         Adr = None
-        if (left == 1):
+        if (left == 0):
             if(encoder == 1):
                 Adr = 0x00
             else :
                 Adr = 0x02
-        elif (left == 0):
+        elif (left == 1):
             if(encoder == 1):
                 Adr = 0x01
             else :
@@ -50,14 +50,14 @@ class DE02Rpi(object):
 
 
 #de0 tests
-"""
+
 de0 = DE02Rpi()
 count = 0
 i = 0
 while(1):
     a = int(input("give left + encoder*2 :\nwhere left and encoder is bool\n"))
     l = 0; e = 0
-    if (a%2 == 0):
+    if (a%2 == 1):
         l = 1
     if(a-2>=0):
         e = 1
@@ -68,4 +68,3 @@ while(1):
         print(count)
         i += 1
         time.sleep(0.01)
-"""
