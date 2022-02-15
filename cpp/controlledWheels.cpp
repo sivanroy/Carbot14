@@ -28,29 +28,29 @@ controlledWheels::controlledWheels()
 	this->s_r = 0;
 }
 
-controlledWheels::init()
+void controlledWheels::init()
 {
 	//nothing to do ?
 }
 
-controlledWheels::setSpeed(sl,sr)
+void controlledWheels::setSpeed(double sl, double sr)
 {
 	this->s_l = sl;
 	this->s_r = sr;
 }
 
-controlledWheels::stop()
+void controlledWheels::stop()
 {
 	this->s_l = 0; this->s_r = 0;
 	this->motors.stop();
 }
 
-controlledWheels::start()
+void controlledWheels::start()
 {
 	//nothing to do ?
 }
 
-controlledWheels::giveV(current_s_l,current_s_r,out)
+void controlledWheels::giveV(double current_s_l, double current_s_r, int out[])
 {
 	s_l = this->s_l;
 	s_r = this->s_r;
@@ -59,12 +59,12 @@ controlledWheels::giveV(current_s_l,current_s_r,out)
 	out[0] = (int) v_l; out[1] = (int) v_r;
 }
 
-controlledWheels::sendV(current_s_l,current_s_r,verbose)
+void controlledWheels::sendV(double current_s_l, double current_s_r, bool verbose)
 {
 	int out[2];
-	giveV(current_s_l,current_s_r,out,verbose)
+	giveV(current_s_l,current_s_r,out);
 	wheels.setSpeeds(out[0], out[1]);	
-	if(verbose){printf("vl = %d  vr = %d\n", v_l,v_r);}
+	if(verbose) printf("vl = %d  vr = %d\n", v_l,v_r);
 }
 
 
