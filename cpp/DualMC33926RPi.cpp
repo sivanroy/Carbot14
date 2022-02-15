@@ -42,7 +42,7 @@ void DualMC33926RPi::init()
     pwmSetClock(2);
      */
     wiringPiSetup(); // or wiringPiSetupGpio() (pin : 5 12 6 13), or wiringPiSetupPhys()
-
+    
     // Direction : 1 or 0
     pinMode(this->M1DIR, OUTPUT);
     pinMode(this->M2DIR, OUTPUT);
