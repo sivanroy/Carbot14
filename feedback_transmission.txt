@@ -1,0 +1,16 @@
+Transmission:
+
+Forme; 	-relire section 2,3 et sous sections : redites
+	-attention à l'explication / liens entre les différentes idées
+		effort tranchant est faible -> dépend de la portée de l'axe, moyen de le vérifier par après (dépends du d² tandis que le reste du d^3, ca serait bien de révérifier après les calcul l'hypothèse)
+	- fbd diagram of the shaft -> pas internal forces , aussi externes ca sont juste les forces
+	- fig8 , engrenage effort tangentiels
+	- FBD est pas équilibré, il manque la force de frtottement au niveau de la roue, plus tout ce qui est hors champ
+	- équilibre avec le couple?
+	- force on de gear, on prends le moteur pour un certain couple puis on utilise le couple du moteur, on tourne en rond
+	- poids divisé par 4 sur chaque roue? bof, roue qui stabilise, prendre le cas critique
+	- , / . -> dire ou sont les moment des couples maximum
+	- "good behavior of the shaft" -> pas très rigoureux , shaft mattériau c'est pas une hypothèse
+	- d^3 = ... erreur sur les unités
+	-évcrire avec des symbole et mettre la valeur ds le texte 
+	-lister ce qu'on néglige
