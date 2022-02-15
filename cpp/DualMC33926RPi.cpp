@@ -36,7 +36,7 @@ DualMC33926RPi::DualMC33926RPi(unsigned char M1DIR,
 void DualMC33926RPi::init()
 {
     wiringPiSetup(); // or wiringPiSetupGpio() (pin : 5 12 6 13), or wiringPiSetupPhys()
-
+    
     // Direction : 1 or 0
     pinMode(this->M1DIR, OUTPUT);
     pinMode(this->M2DIR, OUTPUT);
