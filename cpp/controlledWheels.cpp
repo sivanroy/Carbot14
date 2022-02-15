@@ -3,29 +3,33 @@
 #ifndef CONTROLLEDWHEELS_SRC
 #define CONTROLLEDWHEELS_SRC
 
+/* already include in the header file
 #include <iostream>
 #include <unistd.h>
 #include "DualMC33926RPi.h"
 #include "PidLib/pid.h"
-
-#define deltaT 0.01
-#define WheelP 70
-#define WheelI 50
-#define WheelD 0
-#define WheelMax 50
-#define WheelMin -50
-#define odoD 0.046
-#define wheelD 0.056
-#define RadPerTick 0.001
+*/
+#define dt 0.01
+#define wheelP 70
+#define wheelI 50
+#define wheelD 0
+#define wheelMax 50
+#define wheelMin -50
+#define odoDia 0.046
+#define wheelDia 0.056
+#define ticksEnc 1840
 
 controlledWheels::controlledWheels()
 {
 	//this->motors = DualMC33926RPi 
 	this->motors.init();
-	this->leftPID = PID(deltaT,WheelMax,WheelMin,WheelP,wheelD,WheelI);
-	this->rightPID = PID(deltaT,WheelMax,WheelMin,WheelP,wheelD,WheelI);
+	this->leftPID = PID(dt,wheelMax,wheelMin,wheelP,wheelD,wheelI);
+	this->rightPID = PID(dt,wheelMax,wheelMin,wheelP,wheelD,wheelI);
 	this->s_l = 0;
 	this->s_r = 0;
+	this->dt = dt;
+	this->wheelDia = wheelDia;
+	this->radPerTickEnc = 2*M_PI/ticksEnc;
 }
 
 void controlledWheels::init()
@@ -63,8 +67,23 @@ void controlledWheels::sendV(double current_s_l, double current_s_r, bool verbos
 {
 	int out[2];
 	giveV(current_s_l,current_s_r,out);
-	wheels.setSpeeds(out[0], out[1]);	
-	if(verbose) printf("vl = %d  vr = %d\n", v_l,v_r);
+	this->motors.setSpeeds(out[0], out[1]);
+	if (verbose) printf("vl = %d  vr = %d\n", v_l,v_r);
+}
+
+double controlledWheels::dt()
+{
+    return this->dt;
+}
+
+double controlledWheels::wheelDia()
+{
+    return this->wheelDia;
+}
+
+double controlledWheels::radPerTickEnc()
+{
+    return this->radPerTickEnc;
 }
 
 
