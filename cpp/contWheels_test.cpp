@@ -10,10 +10,17 @@ int main()
     DE02Rpi DE02Rpi;
     DE02Rpi.init();
 
+    PID pid = PID(0.01,50,-50,70,0,50);
+
     controlledWheels cw;
+    /*
     double deltat = cw.givedt();
     double wheelDiam = cw.givewheelDia();
     double radPerTickEncod = cw.giveradPerTickEnc();
+     */
+    double deltat = 0.01;
+    double wheelDiam = 0.056;
+    double radPerTickEncod = 2*M_PI/1840;
 
     double speedsRef[3]; double speedRef;
     speedsRef[0] = 0; speedsRef[1] = 0.2; speedsRef[2] = 0.5;

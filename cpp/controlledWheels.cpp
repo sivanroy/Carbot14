@@ -23,13 +23,19 @@ controlledWheels::controlledWheels()
 {
 	//this->motors = DualMC33926RPi 
 	this->motors.init();
+	/*
 	this->leftPID = PID(dt,wheelMax,wheelMin,wheelP,wheelD,wheelI);
 	this->rightPID = PID(dt,wheelMax,wheelMin,wheelP,wheelD,wheelI);
+	 */
+    this->leftPID = PID(0.01,50,-50,70,0,50);
+    this->rightPID = PID(0.01,50,-50,70,0,50);
 	this->s_l = 0;
 	this->s_r = 0;
+	/*
 	this->dt = dt;
 	this->wheelDia = wheelDia;
 	this->radPerTickEnc = 2*M_PI/ticksEnc;
+	 */
 }
 
 void controlledWheels::init()
@@ -56,8 +62,8 @@ void controlledWheels::start()
 
 void controlledWheels::giveV(double current_s_l, double current_s_r, int out[])
 {
-	s_l = this->s_l;
-	s_r = this->s_r;
+	double s_l = this->s_l;
+	double s_r = this->s_r;
 	double v_l = this->leftPID.calculate(s_l,current_s_l);
 	double v_r = this->rightPID.calculate(s_r,current_s_r);
 	out[0] = (int) v_l; out[1] = (int) v_r;
@@ -70,7 +76,7 @@ void controlledWheels::sendV(double current_s_l, double current_s_r, bool verbos
 	this->motors.setSpeeds(out[0], out[1]);
 	if (verbose) printf("vl = %d  vr = %d\n", out[0],out[1]);
 }
-
+/*
 double controlledWheels::givedt()
 {
     return this->dt;
@@ -85,6 +91,6 @@ double controlledWheels::giveradPerTickEnc()
 {
     return this->radPerTickEnc;
 }
-
+*/
 
 #endif
