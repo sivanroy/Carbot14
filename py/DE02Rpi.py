@@ -51,6 +51,7 @@ class DE02Rpi(object):
 
 #de0 tests
 
+"""
 de0 = DE02Rpi()
 count = 0
 i = 0
@@ -68,3 +69,4 @@ while(1):
         print(count)
         i += 1
         time.sleep(0.01)
+"""

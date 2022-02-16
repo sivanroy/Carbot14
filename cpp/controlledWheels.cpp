@@ -22,6 +22,7 @@ double ticksEnc = 1840;
 controlledWheels::controlledWheels()
 {
 	//this->motors = DualMC33926RPi 
+	PID pid = PID(0.1, 100, -100, 0.1, 0.01, 0.5);
 	this->motors.init();
 	this->leftPID = PID(dt,wheelMax,wheelMin,wheelP,wheelD,wheelI);
 	this->rightPID = PID(dt,wheelMax,wheelMin,wheelP,wheelD,wheelI);

@@ -33,7 +33,7 @@ DE02Rpi_test.o: DE02Rpi_test.cpp DE02Rpi.h
 # PID
 
 conttest: contWheels_test.o controlledWheels.o DE02Rpi.o DualMC33926RPi.o pid.o
-	$(CC) $(CFLAGS) -o conttest contWheels_test.o controlledWheels.o DE02Rpi.o DualMC33926RPi.o PidLib/pid.o $(LIB)
+	$(CC) $(CFLAGS) -o conttest contWheels_test.o controlledWheels.o DE02Rpi.o DualMC33926RPi.o pid.o $(LIB)
 
 contWheels_test.o: DE02Rpi_test.cpp controlledWheels.h DE02Rpi.h DualMC33926RPi.h pid.h
 	$(CC) $(CFLAGS) -c contWheels_test.cpp $(LIB)
