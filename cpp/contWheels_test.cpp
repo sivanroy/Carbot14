@@ -31,10 +31,12 @@ int main()
         for (int j; j < 400; j++) {
             int ticksL = DE02Rpi.measure(1, 1);
             int ticksR = DE02Rpi.measure(1, 0);
+            printf("ticksL = %d | ticksR = %d\n", ticksL, ticksR);
             double speedMesL = (-ticksL * (wheelDiam/2) * radPerTickEncod)/deltat;
             double speedMesR = (ticksR * (wheelDiam/2) * radPerTickEncod)/deltat;
-            cw.sendV(speedMesL, speedMesR, 1);
-            usleep(1000000 * deltat);
+            cw.sendV(speedMesL, speedMesR, true);
+            int error = usleep(1000000 * deltat);
+            if (error == -1) printf("error usleep\n");
         }
     }
     cw.stop();
