@@ -28,8 +28,8 @@ class controlledWheels
 		double s_l;
 		double s_r;
 		DualMC33926RPi motors;
-		PID leftPID;
-		PID rightPID;
+		PID leftPID =  PID(0.01,50,-50,70,0,50);
+		PID rightPID =  PID(0.01,50,-50,70,0,50);
 		/*
 		double dt;
 		double wheelDia;
