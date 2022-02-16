@@ -11,11 +11,7 @@ int main()
     DE02Rpi.init();
 
     controlledWheels cw;
-    /*
-    double deltat = cw.givedt();
-    double wheelDiam = cw.givewheelDia();
-    double radPerTickEncod = cw.giveradPerTickEnc();
-     */
+
     double deltat = 0.01;
     double wheelDiam = 0.056;
     double radPerTickEncod = 2*M_PI/1840;

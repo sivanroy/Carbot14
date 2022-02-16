@@ -3,12 +3,7 @@
 #ifndef CONTROLLEDWHEELS_SRC
 #define CONTROLLEDWHEELS_SRC
 
-/* already include in the header file
-#include <iostream>
-#include <unistd.h>
-#include "DualMC33926RPi.h"
-#include "PidLib/pid.h"
-*/
+
 double dt = 0.01;
 double wheelP = 70;
 double wheelI = 50;
@@ -21,22 +16,13 @@ double ticksEnc = 1840;
 
 controlledWheels::controlledWheels()
 {
-	//this->motors = DualMC33926RPi 
-	//PID pid = PID(0.1, 100, -100, 0.1, 0.01, 0.5);
 	this->motors.init();
 	/*
 	this->leftPID = PID(dt,wheelMax,wheelMin,wheelP,wheelD,wheelI);
 	this->rightPID = PID(dt,wheelMax,wheelMin,wheelP,wheelD,wheelI);
 	 */
-    //this->leftPID = PID(0.01,50,-50,70,0,50);
-    //this->rightPID = PID(0.01,50,-50,70,0,50);
 	this->s_l = 0;
 	this->s_r = 0;
-	/*
-	this->dt = dt;
-	this->wheelDia = wheelDia;
-	this->radPerTickEnc = 2*M_PI/ticksEnc;
-	 */
 }
 
 void controlledWheels::init()
@@ -77,21 +63,5 @@ void controlledWheels::sendV(double current_s_l, double current_s_r, bool verbos
 	this->motors.setSpeeds(out[0], out[1]);
 	if (verbose) printf("vl = %d  vr = %d\n", out[0],out[1]);
 }
-/*
-double controlledWheels::givedt()
-{
-    return this->dt;
-}
-
-double controlledWheels::givewheelDia()
-{
-    return this->wheelDia;
-}
-
-double controlledWheels::giveradPerTickEnc()
-{
-    return this->radPerTickEnc;
-}
-*/
 
 #endif

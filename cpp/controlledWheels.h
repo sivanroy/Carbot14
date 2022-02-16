@@ -19,22 +19,13 @@ class controlledWheels
 		void start();
 		void giveV(double current_s_l,double current_s_r,int out[]);
 		void sendV(double current_s_l,double current_s_r,bool verbose=0);
-		/*
-		double givedt();
-		double givewheelDia();
-		double giveradPerTickEnc();
-        */
+
 	private:
 		double s_l;
 		double s_r;
 		DualMC33926RPi motors;
 		PID leftPID =  PID(0.01,50,-50,70,0,50);
 		PID rightPID =  PID(0.01,50,-50,70,0,50);
-		/*
-		double dt;
-		double wheelDia;
-		double radPerTickEnc;
-		 */
 };
 
 
