@@ -10,8 +10,6 @@ int main()
     DE02Rpi DE02Rpi;
     DE02Rpi.init();
 
-    PID pid = PID(0.01,50,-50,70,0,50);
-
     controlledWheels cw;
     /*
     double deltat = cw.givedt();
@@ -28,13 +26,15 @@ int main()
     for (int i; i < 3; i++) {
         speedRef = speedsRef[i];
         cw.setSpeed(speedRef, speedRef);
+        printf("init speed %d\n", i);
 
-        for (int j; j < 200; j++) {
+        for (int j; j < 400; j++) {
             int ticksL = DE02Rpi.measure(1, 1);
             int ticksR = DE02Rpi.measure(1, 0);
             double speedMesL = (-ticksL * (wheelDiam/2) * radPerTickEncod)/deltat;
             double speedMesR = (ticksR * (wheelDiam/2) * radPerTickEncod)/deltat;
             cw.sendV(speedMesL, speedMesR, 1);
+            usleep(1000000 * deltat);
         }
     }
     cw.stop();
