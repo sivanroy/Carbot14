@@ -9,15 +9,15 @@
 #include "DualMC33926RPi.h"
 #include "PidLib/pid.h"
 */
-#define dt 0.01
-#define wheelP 70
-#define wheelI 50
-#define wheelD 0
-#define wheelMax 50
-#define wheelMin -50
-#define odoDia 0.046
-#define wheelDia 0.056
-#define ticksEnc 1840
+double dt = 0.01;
+double wheelP = 70;
+double wheelI = 50;
+double wheelD = 0;
+double wheelMax = 50;
+double wheelMin = -50;
+double odoDia = 0.046;
+double wheelDia = 0.056;
+double ticksEnc = 1840;
 
 controlledWheels::controlledWheels()
 {
@@ -68,20 +68,20 @@ void controlledWheels::sendV(double current_s_l, double current_s_r, bool verbos
 	int out[2];
 	giveV(current_s_l,current_s_r,out);
 	this->motors.setSpeeds(out[0], out[1]);
-	if (verbose) printf("vl = %d  vr = %d\n", v_l,v_r);
+	if (verbose) printf("vl = %d  vr = %d\n", out[0],out[1]);
 }
 
-double controlledWheels::dt()
+double controlledWheels::givedt()
 {
     return this->dt;
 }
 
-double controlledWheels::wheelDia()
+double controlledWheels::givewheelDia()
 {
     return this->wheelDia;
 }
 
-double controlledWheels::radPerTickEnc()
+double controlledWheels::giveradPerTickEnc()
 {
     return this->radPerTickEnc;
 }

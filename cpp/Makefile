@@ -16,7 +16,7 @@ mtest: motor_test.o DualMC33926RPi.o
 motor_test.o: motor_test.cpp DualMC33926RPi.h
 	$(CC) $(CFLAGS) -c motor_test.cpp $(LIB)
 
-DualMC33926RPi.o: DualMC33926RPi.h
+#DualMC33926RPi.o: DualMC33926RPi.h
 
 # ****************************************************
 # Run DE02Rpi_test
@@ -27,18 +27,18 @@ enctest: DE02Rpi_test.o DE02Rpi.o
 DE02Rpi_test.o: DE02Rpi_test.cpp DE02Rpi.h
 	$(CC) $(CFLAGS) -c DE02Rpi_test.cpp $(LIB)
 
-DE02Rpi.o: DE02Rpi.h
+#DE02Rpi.o: DE02Rpi.h
 
 # ****************************************************
 # PID
 
-conttest: contWheels_test.o controlledWheels.o DE02Rpi.o DualMC33926RPi.o PidLib/pid.o
+conttest: contWheels_test.o controlledWheels.o DE02Rpi.o DualMC33926RPi.o pid.o
 	$(CC) $(CFLAGS) -o conttest contWheels_test.o controlledWheels.o DE02Rpi.o DualMC33926RPi.o PidLib/pid.o $(LIB)
 
-DE02Rpi_test.o: DE02Rpi_test.cpp controlledWheels.h DE02Rpi.h DualMC33926RPi.h PidLib/pid.h
+contWheels_test.o: DE02Rpi_test.cpp controlledWheels.h DE02Rpi.h DualMC33926RPi.h pid.h
 	$(CC) $(CFLAGS) -c contWheels_test.cpp $(LIB)
 
 controlledWheels.o: controlledWheels.h
 DE02Rpi.o: DE02Rpi.h
 DualMC33926RPi.o: DualMC33926RPi.h
-PidLib/pid.o: PidLib/pid.h
+pid.o: pid.h

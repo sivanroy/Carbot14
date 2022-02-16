@@ -4,7 +4,7 @@
 
 /*
  * Cmd to run :
- * $ gcc -o exec main.cpp -lwiringPi
+ * $ gcc -o exec motor_test.cpp -lwiringPi
  * $ sudo ./exec
  */
 

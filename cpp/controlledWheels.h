@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <math.h>
 #include "DualMC33926RPi.h"
-#include "PidLib/pid.h"
+#include "pid.h"
 
 
 class controlledWheels 
@@ -19,9 +19,9 @@ class controlledWheels
 		void start();
 		void giveV(double current_s_l,double current_s_r,int out[]);
 		void sendV(double current_s_l,double current_s_r,bool verbose=0);
-		double dt();
-		double wheelDia();
-		double radPerTickEnc();
+		double givedt();
+		double givewheelDia();
+		double giveradPerTickEnc();
 
 	private:
 		double s_l;
@@ -32,7 +32,7 @@ class controlledWheels
 		double dt;
 		double wheelDia;
 		double radPerTickEnc;
-}
+};
 
 
 #endif
