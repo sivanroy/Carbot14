@@ -3,13 +3,13 @@ from DE02Rpi import *
 from simple_pid import PID
 import matplotlib.pyplot as plt
 
-wheelP = 70
-wheelI = 50
+wheelP = 200
+wheelI = 0
 wheelD = 0
 wheelMax = 50
 wheelMin = -wheelMax
 odoD = 46e-3
-wheelD = 56e-3
+wheelDia = 56e-3
 RadPerTickEnc = (ticksEncoder/ (2*3.1415))**-1
 
 class ControlledWheels(object):
@@ -65,15 +65,15 @@ class ControlledWheels(object):
 
 
 
-values = [0,20e-2,50e-2]#,1e-2,-1e-2,0]
-
+values = [0,20e-2,50e-2,-10e-2,0]
+"""
 ### displacement tests
 cw = ControlledWheels()
 cw.start()
 dr = DE02Rpi()
 dt = 1e-1
-cw.leftPID.sample_time = dt
-cw.rightPID.sample_time = dt
+#cw.leftPID.sample_time = dt
+#cw.rightPID.sample_time = dt
 sl_m = []
 sl_r = []
 setp = []
@@ -83,15 +83,19 @@ for si in values:
 		for i in range(int(dt/deltat)):
 			l = dr.measure(1,1)
 			r = dr.measure(1,0)
-			sl = -l*wheelD/2*RadPerTickEnc/deltat #check ??
-			sr = r*wheelD/2*RadPerTickEnc/deltat
+			sl = l*wheelDia/2*RadPerTickEnc/deltat #check ??
+			sr = -r*wheelDia/2*RadPerTickEnc/deltat
+			if(abs(sl)>5):
+				sl = 0
+			if(abs(sr)>5) :
+				sr = 0
 			sl_m.append(sl)
 			sl_r.append(sr)
 			setp.append(si)
 			print("set speed : {}".format(si))
 			print("sl = {}; sr = {}".format(sl,sr))
-			cw.sendV(sl,sr,1)
-			time.sleep(deltat)
+			cw.sendV(sr,sl,1)
+			time.sleep(deltat*.99)
 
 cw.stop()
 			
@@ -99,3 +103,4 @@ plt.plot(sl_m)
 plt.plot(sl_r)
 plt.plot(setp)
 plt.show()
+"""
