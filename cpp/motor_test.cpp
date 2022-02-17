@@ -35,12 +35,7 @@ int main() {
 
     wheels.stop();
 
-    wheels.setSpeeds(speed, speed);
-    usleep(1000000 * 2*time);
-
-    speed = speed + 20;
-
-    wheels.setSpeeds(speed, speed);
+    wheels.setSpeeds(speed, 0);
     usleep(1000000 * 2*time);
 
     wheels.stop();

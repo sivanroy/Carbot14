@@ -66,5 +66,6 @@ int DE02Rpi::measure(int encoder, int left)
     wiringPiSPIDataRW(this->channel, buffer, 5);
     int count = buffer[4] + (buffer[3] << 8) + (buffer[2] << 16) + (buffer[1] << 24) - 4192;
 
+    printf("DE02Rpi : data measure\n");
     return count;
 }

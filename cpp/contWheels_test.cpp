@@ -17,19 +17,22 @@ int main()
     double radPerTickEncod = 2*M_PI/1840;
 
     double speedsRef[3]; double speedRef;
-    speedsRef[0] = 0; speedsRef[1] = 0.2; speedsRef[2] = 0.5;
+    speedsRef[0] = 0.2; speedsRef[1] = 0.2; speedsRef[2] = 0.2;
 
-    for (int i; i < 3; i++) {
+    for (int i = 0; i < 3; i++) {
         speedRef = speedsRef[i];
         cw.setSpeed(speedRef, speedRef);
         printf("init speed %d\n", i);
 
-        for (int j; j < 400; j++) {
+        for (int j = 0; j < 200; j++) {
             int ticksL = DE02Rpi.measure(1, 1);
             int ticksR = DE02Rpi.measure(1, 0);
-            printf("ticksL = %d | ticksR = %d\n", ticksL, ticksR);
-            double speedMesL = (-ticksL * (wheelDiam/2) * radPerTickEncod)/deltat;
-            double speedMesR = (ticksR * (wheelDiam/2) * radPerTickEncod)/deltat;
+            double speedMesL = (ticksL * (wheelDiam/2) * radPerTickEncod)/deltat;
+            double speedMesR = (-ticksR * (wheelDiam/2) * radPerTickEncod)/deltat;
+            printf("***************************************\n");
+            printf("sLref = %f | sRref = %f\n", speedRef, speedRef);
+            printf("sLmes = %f | sRmes = %f\n", speedMesL, speedMesR);
+            printf("ticksL = %d| ticksR = %d\n", ticksL, ticksR);
             cw.sendV(speedMesL, speedMesR, true);
             int error = usleep(1000000 * deltat);
             if (error == -1) printf("error usleep\n");

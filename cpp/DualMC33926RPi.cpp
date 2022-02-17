@@ -60,9 +60,9 @@ void DualMC33926RPi::setM1Speed(int speed)
 
 
     if (reverse)
-        digitalWrite(this->M1DIR,HIGH);
-    else
         digitalWrite(this->M1DIR,LOW);
+    else
+        digitalWrite(this->M1DIR,HIGH);
 
     softPwmWrite(this->M1PWM, speed);
 }
@@ -81,9 +81,9 @@ void DualMC33926RPi::setM2Speed(int speed)
 
 
     if (reverse)
-        digitalWrite(this->M2DIR,HIGH);
-    else
         digitalWrite(this->M2DIR,LOW);
+    else
+        digitalWrite(this->M2DIR,HIGH);
 
     softPwmWrite(this->M2PWM, speed);
 }
