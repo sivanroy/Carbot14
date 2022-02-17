@@ -4,6 +4,8 @@
 #include <iostream>
 #include <unistd.h>
 #include <math.h>
+#include <chrono>
+
 #include "DualMC33926RPi.h"
 #include "pid.h"
 
@@ -24,8 +26,8 @@ class controlledWheels
 		double s_l;
 		double s_r;
 		DualMC33926RPi motors;
-		PID leftPID =  PID(0.01,50,-50,1,0,0.1);
-		PID rightPID =  PID(0.01,50,-50,1,0,0.1);
+		PID leftPID =  PID(0.01,50,-50,200,0,50);
+		PID rightPID =  PID(0.01,50,-50,200,0,50);
 };
 
 

@@ -5,6 +5,8 @@
 #include "controlledWheels.h"
 #include "DE02Rpi.h"
 
+using namespace std::chrono;
+
 int main()
 {
     DE02Rpi DE02Rpi;
@@ -16,29 +18,46 @@ int main()
     double wheelDiam = 0.06;
     double radPerTickEncod = 2*M_PI/1840;
 
+    long long int dtExec = 0;
+    double dL = 0; double dR = 0;
+
     double speedsRef[3]; double speedRef;
-    speedsRef[0] = 0.2; speedsRef[1] = 0.2; speedsRef[2] = 0.2;
+    speedsRef[0] = 0.2; speedsRef[1] = 0.4; speedsRef[2] = 0.1;
 
     for (int i = 0; i < 3; i++) {
         speedRef = speedsRef[i];
-        cw.setSpeed(speedRef, speedRef);
         printf("init speed %d\n", i);
 
-        for (int j = 0; j < 200; j++) {
+        for (int j = 0; j < 300; j++) {
+            auto start = high_resolution_clock::now();
+
+            cw.setSpeed(speedRef, speedRef);
+
             int ticksL = DE02Rpi.measure(1, 1);
             int ticksR = DE02Rpi.measure(1, 0);
-            double speedMesL = (ticksL * (wheelDiam/2) * radPerTickEncod)/deltat;
-            double speedMesR = (-ticksR * (wheelDiam/2) * radPerTickEncod)/deltat;
+            double speedMesL = (-ticksL * (wheelDiam/2) * radPerTickEncod)/deltat;
+            double speedMesR = (ticksR * (wheelDiam/2) * radPerTickEncod)/deltat;
+            dL += speedMesL * deltat;
+            dR += speedMesR * deltat;
             printf("***************************************\n");
             printf("sLref = %f | sRref = %f\n", speedRef, speedRef);
             printf("sLmes = %f | sRmes = %f\n", speedMesL, speedMesR);
             printf("ticksL = %d| ticksR = %d\n", ticksL, ticksR);
             cw.sendV(speedMesL, speedMesR, true);
-            int error = usleep(1000000 * deltat);
-            if (error == -1) printf("error usleep\n");
+            usleep(1000000 * 0.95*deltat);
+
+            auto stop = high_resolution_clock::now();
+            auto duration = duration_cast<microseconds>(stop - start);
+            dtExec += duration.count();
+            printf("-> exec time : %lld us\n", duration.count());
         }
     }
     cw.stop();
+
+    printf("\n***************************************\n");
+    printf("dL = %f    | dR = %f\n", dL, dR);
+    printf("-> exec time : %lld us\n", dtExec);
+    printf("***************************************\n");
 
     return 0;
 }

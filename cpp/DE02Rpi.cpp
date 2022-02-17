@@ -48,8 +48,8 @@ unsigned char DE02Rpi::giveAddress(int encoder, int left)
     unsigned char addr;
 
     if (encoder == 1) {
-        if (left == 1) addr = 0x01;
-        else addr = 0x00;
+        if (left == 1) addr = 0x00;
+        else addr = 0x01;
     } else {
         if (left == 1) addr = 0x03;
         else addr = 0x02;
@@ -66,6 +66,6 @@ int DE02Rpi::measure(int encoder, int left)
     wiringPiSPIDataRW(this->channel, buffer, 5);
     int count = buffer[4] + (buffer[3] << 8) + (buffer[2] << 16) + (buffer[1] << 24) - 4192;
 
-    printf("DE02Rpi : data measure\n");
+    //printf("DE02Rpi : data measure\n");
     return count;
 }

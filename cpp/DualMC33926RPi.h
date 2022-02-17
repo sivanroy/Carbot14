@@ -7,6 +7,7 @@
 
 #include <wiringPi.h>
 #include <softPwm.h>
+#include <unistd.h>
 
 class DualMC33926RPi
 {

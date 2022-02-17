@@ -98,5 +98,6 @@ void DualMC33926RPi::setSpeeds(int m1Speed, int m2Speed)
 void DualMC33926RPi::stop()
 {
     setSpeeds(0, 0);
+    usleep(1000000*0.2);
 }
 

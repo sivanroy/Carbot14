@@ -3,15 +3,14 @@
 #ifndef CONTROLLEDWHEELS_SRC
 #define CONTROLLEDWHEELS_SRC
 
-
 double dt = 0.01;
-double wheelP = 70;
-double wheelI = 50;
+double wheelP = 1;
+double wheelI = 0.1;
 double wheelD = 0;
 double wheelMax = 50;
 double wheelMin = -50;
 double odoDia = 0.046;
-double wheelDia = 0.056;
+double wheelDia = 0.06;
 double ticksEnc = 1840;
 
 controlledWheels::controlledWheels()
@@ -49,10 +48,8 @@ void controlledWheels::start()
 
 void controlledWheels::giveV(double current_s_l, double current_s_r, int out[])
 {
-	double s_l = this->s_l;
-	double s_r = this->s_r;
-	double v_l = this->leftPID.calculate(s_l,current_s_l);
-	double v_r = this->rightPID.calculate(s_r,current_s_r);
+	double v_l = this->leftPID.calculate(this->s_l,current_s_l);
+	double v_r = this->rightPID.calculate(this->s_r,current_s_r);
 	out[0] = (int) v_l; out[1] = (int) v_r;
 }
 

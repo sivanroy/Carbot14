@@ -53,5 +53,5 @@ pid.o: pid.h
 
 
 clean:
-	rm -rf *.o mtest enctest conttest
+	rm -rf *.o mtest enctest conttest ticktest
 
