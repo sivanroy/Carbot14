@@ -13,7 +13,7 @@ int main()
     controlledWheels cw;
 
     double deltat = 0.01;
-    double wheelDiam = 0.056;
+    double wheelDiam = 0.06;
     double radPerTickEncod = 2*M_PI/1840;
 
     double speedsRef[3]; double speedRef;
