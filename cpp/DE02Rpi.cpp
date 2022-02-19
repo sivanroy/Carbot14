@@ -27,7 +27,7 @@ using namespace std;
 
 DE02Rpi::DE02Rpi()
 {
-    this->channel = 1;
+    this->channel = 0; // CS0
     this->SPIspeed = 500000;
 }
 
