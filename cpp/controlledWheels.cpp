@@ -11,7 +11,7 @@ double wheelMax = 50;
 double wheelMin = -50;
 double odoDia = 0.046;
 double wheelDia = 0.06;
-double ticksEnc = 2048*4;
+double ticksEnc = 2048*4*10;
 
 controlledWheels::controlledWheels()
 {

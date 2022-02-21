@@ -26,8 +26,8 @@ class controlledWheels
 		double s_l;
 		double s_r;
 		CAN motors;
-		PID leftPID =  PID(0.01,30,-30,1,0,0);
-		PID rightPID =  PID(0.01,30,-30,1,0,0);
+		PID leftPID =  PID(0.01,30,-30,25,0,0);
+		PID rightPID =  PID(0.01,30,-30,25,0,0);
 };
 
 

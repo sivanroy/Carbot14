@@ -22,7 +22,7 @@ int main() {
 
     double dt = 0.01;
     double wheelDiam = 0.06;
-    double radPerTickEncod = 2*M_PI/(2048*2*4);
+    double radPerTickEncod = 2*M_PI/(2048*4*10);
     int i = 0;
 
     long long int dtExec = 0;
@@ -33,7 +33,7 @@ int main() {
         wheels.setSpeeds(uL, uR);
         auto start = high_resolution_clock::now();
 
-        usleep(1000000 * (0.01-dtExec));
+        usleep(1000000 * (0.95*dt));
         int ticksL = DE02Rpi.measure(1, 1);
         int ticksR = DE02Rpi.measure(1, 0);
         printf("%d : ticksL = %d | ticksR = %d\n", i, ticksL, ticksR);

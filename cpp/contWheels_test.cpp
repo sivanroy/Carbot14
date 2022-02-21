@@ -16,19 +16,19 @@ int main()
 
     double deltat = 0.01;
     double wheelDiam = 0.06;
-    double radPerTickEncod = 2*M_PI/8192;
+    double radPerTickEncod = 2*M_PI/(8192*10);
 
     long long int dtExec = 0;
     double dL = 0; double dR = 0;
 
-    double speedsRef[3]; double speedRef;
-    speedsRef[0] = 0.2; speedsRef[1] = 0.2; speedsRef[2] = 0.2;
+    double speedsRef[4]; double speedRef;
+    speedsRef[0] = 0.4; speedsRef[1] = 0.6; speedsRef[2] = -0.2; speedsRef[3] = -0.6;
 
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 4; i++) {
         speedRef = speedsRef[i];
         printf("init speed %d\n", i);
 
-        for (int j = 0; j < 300; j++) {
+        for (int j = 0; j < 100; j++) {
             auto start = high_resolution_clock::now();
 
             cw.setSpeed(speedRef, speedRef);
@@ -44,7 +44,7 @@ int main()
             printf("sLmes = %f | sRmes = %f\n", speedMesL, speedMesR);
             printf("ticksL = %d| ticksR = %d\n", ticksL, ticksR);
             cw.sendV(speedMesL, speedMesR, true);
-            usleep(1000000 * (0.01-deltat));
+            usleep(1000000 * (0.01-dtExec));
 
             auto stop = high_resolution_clock::now();
             auto duration = duration_cast<microseconds>(stop - start);

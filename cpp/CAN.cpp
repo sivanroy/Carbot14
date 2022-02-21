@@ -8,10 +8,12 @@ CAN::CAN() {}
 
 void CAN::init()
 {
+    /*
     system("sudo ifconfig can0 down");
     system("sudo ip link set can0 type can bitrate 125000");
     system("sudo ifconfig can0 up");
     usleep(1000);
+     */
     system("cansend can0 708#1EFF40");
     system("cansend can0 708#1EFF00");
     system("cansend can0 708#1CFF80");
