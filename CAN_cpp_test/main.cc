@@ -1,6 +1,7 @@
 #include <cstdio>
 
 #include <wiringPiSPI.h>
+#include <unistd.h>
 #include "CAN.hh"
 #include "SPI_CAN.hh"
 #include "SPI.hh"
@@ -23,6 +24,26 @@ int main()
 	can = new CAN(CAN_BR);
 	can->configure();
 	can->ctrl_led(1);
+	usleep(50);
 
+	can->ctrl_motor(1);
+	usleep(50);
+
+	can->push_PropDC(5, 5);
+	usleep (1000000*3);
+    /*
+	can->motors_setup();
+	can->motors_cmd(0x30, 0x30);
+
+	usleep(1000000 * 2);
+    can->motors_cmd(0x23, 0x23);
+    */
+    can->push_PropDC(0, 0);
+
+    can->ctrl_led(0);
+    usleep(50);
+
+    can->ctrl_motor(0);
+    usleep(50);
 }
 

@@ -4,7 +4,7 @@
 CAN::CAN(uint32_t baudrate)
 {
 	this->baudrate = baudrate;
-	this->spi2can = new SPI_CAN(1, 500e3);
+	this->spi2can = new SPI_CAN(0, 500e3);
 
 }
 
@@ -106,7 +106,7 @@ int CAN::sendMessage(CANMessage *msg, uint8_t buf_nb)
 
 	//status = spi2can->getBitsField(TXB_CTRL[buf_nb], 4, 4);
 	//printf("Message sent with status: 0x%x \n", status);
-
+    return 1;
 	
 }
 
@@ -190,6 +190,17 @@ void CAN::ctrl_motor(int state)
 
 	msg.sid = CAN_TOW;
 	sendMessage(&msg, 1);
+
+    msg.sid = CAN_MOT;
+    msg.data[0] = 0x1C;
+    msg.data[1] = 0xFF;
+    msg.data[2] = 0x80;
+    sendMessage(&msg, 0);
+
+    msg.data[0] = 0x1D;
+    msg.data[1] = 0xFF;
+    msg.data[2] = 0x80;
+    sendMessage(&msg, 0);
 }
 
 void CAN::push_PropDC(int dcG, int dcD)
@@ -198,7 +209,7 @@ void CAN::push_PropDC(int dcG, int dcD)
 	uint8_t dcGc = 128*dcG/100.0 +128;
 	uint8_t dcDc = 128*dcD/100.0 +128;
 
-	//printf("G: %d D: %d \n", dcGc, dcDc);
+	printf("G: %d D: %d \n", dcGc, dcDc);
 
 	CANMessage msg;
 
@@ -247,13 +258,57 @@ void CAN::ctrl_led(int state)
     msg.rtr = 0;
     msg.priority = 3;
     msg.data[0] = 0x1E;
-    msg.data[1] = 0x40;
+    msg.data[1] = 0xFF;
     msg.data[2] = state? 0x40 : 0x0;
+    printf("CAN_MOT : %hhX %hhX %hhX\n", msg.data[0], msg.data[1], msg.data[2]);
 
     msg.sid = CAN_MOT;
     sendMessage(&msg, 0);
 
+
     msg.sid = CAN_TOW;
+    sendMessage(&msg, 1);
+
+}
+
+void CAN::motors_setup()
+{
+    CANMessage msg;
+
+    msg.len = 3;
+    msg.rtr = 0;
+    msg.priority = 3;
+    msg.sid = CAN_MOT;
+
+    msg.data[0] = 0x1C;
+    msg.data[1] = 0xFF;
+    msg.data[2] = 0x80;
+    sendMessage(&msg, 0);
+
+    msg.data[0] = 0x1D;
+    msg.data[1] = 0xFF;
+    msg.data[2] = 0x80;
+    sendMessage(&msg, 1);
+
+}
+
+void CAN::motors_cmd(uint8_t cmd_l, uint8_t cmd_r)
+{
+    CANMessage msg;
+
+    msg.len = 3;
+    msg.rtr = 0;
+    msg.priority = 3;
+    msg.sid = CAN_MOT;
+
+    msg.data[0] = 0x25;
+    msg.data[1] = 0xFF;
+    msg.data[2] = cmd_l;
+    sendMessage(&msg, 0);
+
+    msg.data[0] = 0x26;
+    msg.data[1] = 0xFF;
+    msg.data[2] = cmd_r;
     sendMessage(&msg, 1);
 
 }

@@ -69,6 +69,8 @@ class CAN{
 		void push_PropDC(int dcG, int dcD);
 		void ctrl_led(int state);
 		void ctrl_motor(int state);
+        void motors_setup();
+        void motors_cmd(uint8_t cmd_l, uint8_t cmd_r);
 
 	private:
 		SPI_CAN *spi2can;

@@ -46,6 +46,13 @@ conttest: contWheels_test.o controlledWheels.o DE02Rpi.o DualMC33926RPi.o pid.o
 contWheels_test.o: contWheels_test.cpp controlledWheels.h DE02Rpi.h DualMC33926RPi.h pid.h
 	$(CC) $(CFLAGS) -c contWheels_test.cpp $(LIB)
 
+
+cantest: can_test.o
+	$(CC) $(CFLAGS) -o cantest can_test.o
+
+can_test.o: can_test.cpp
+	$(CC) $(CFLAGS) -c can_test.cpp
+
 controlledWheels.o: controlledWheels.h
 DE02Rpi.o: DE02Rpi.h
 DualMC33926RPi.o: DualMC33926RPi.h
@@ -53,5 +60,5 @@ pid.o: pid.h
 
 
 clean:
-	rm -rf *.o mtest enctest conttest ticktest
+	rm -rf *.o mtest enctest conttest ticktest cantest
 

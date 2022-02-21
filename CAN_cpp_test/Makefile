@@ -5,7 +5,7 @@
  
 CC = g++
 CFLAGS = -Wall -g
-LIB = -lwiringPi #-lpthread
+LIB = -lwiringPi -lpthread
  
 # ****************************************************
 # Run motor_test
@@ -13,8 +13,8 @@ LIB = -lwiringPi #-lpthread
 can: main.o CAN.o SPI_CAN.o SPI.o
 	$(CC) $(CFLAGS) -o can main.o CAN.o SPI_CAN.o SPI.o $(LIB)
 
-main.o: motor_test.cc CAN.hh SPI_CAN.hh SPI.hh
-	$(CC) $(CFLAGS) -c main.cpp $(LIB)
+main.o: main.cc CAN.hh SPI_CAN.hh SPI.hh
+	$(CC) $(CFLAGS) -c main.cc $(LIB)
 
 
 # ****************************************************
