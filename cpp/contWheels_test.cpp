@@ -28,10 +28,13 @@ int main()
         speedRef = speedsRef[i];
         printf("init speed %d\n", i);
 
-        for (int j = 0; j < 100; j++) {
+        for (int j = 0; j < 200; j++) {
             auto start = high_resolution_clock::now();
 
             cw.setSpeed(speedRef, speedRef);
+            if (i == 2) {
+                cw.setSpeed(speedRef, -speedRef);
+            }
 
             int ticksL = DE02Rpi.measure(1, 1);
             int ticksR = DE02Rpi.measure(1, 0);
