@@ -21,12 +21,12 @@ int main()
     long long int dtExec = 0;
     double dL = 0; double dR = 0;
 
-    double speedsRef[3]; double speedRef;
-    speedsRef[0] = 0.2; speedsRef[1] = 0.4; speedsRef[2] = 0.1;
+    double speedsRef[4]; double speedRef;
+    speedsRef[0] = 0.4; speedsRef[1] = 0.2; speedsRef[2] = -0.2; speedsRef[3] = 0;
 
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 4; i++) {
         speedRef = speedsRef[i];
-        printf("init speed %d\n", i);
+        //printf("init speed %d\n", i);
 
         for (int j = 0; j < 300; j++) {
             auto start = high_resolution_clock::now();
@@ -39,17 +39,19 @@ int main()
             double speedMesR = (ticksR * (wheelDiam/2) * radPerTickEncod)/deltat;
             dL += speedMesL * deltat;
             dR += speedMesR * deltat;
+            //if(j>290) {
             printf("***************************************\n");
             printf("sLref = %f | sRref = %f\n", speedRef, speedRef);
             printf("sLmes = %f | sRmes = %f\n", speedMesL, speedMesR);
             printf("ticksL = %d| ticksR = %d\n", ticksL, ticksR);
-            cw.sendV(speedMesL, speedMesR, true);
+            //}
+            cw.sendV(speedMesL, speedMesR, 0);
             usleep(1000000 * 0.95*deltat);
 
             auto stop = high_resolution_clock::now();
             auto duration = duration_cast<microseconds>(stop - start);
             dtExec += duration.count();
-            printf("-> exec time : %lld us\n", duration.count());
+            //printf("-> exec time : %lld us\n", duration.count());
         }
     }
     cw.stop();

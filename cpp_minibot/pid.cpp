@@ -34,6 +34,7 @@ class PIDImpl
     public:
         PIDImpl( double dt, double max, double min, double Kp, double Kd, double Ki );
         ~PIDImpl();
+        void FreeCache();
         double calculate( double setpoint, double pv );
 
     private:
@@ -56,6 +57,10 @@ double PID::calculate( double setpoint, double pv )
 {
     return pimpl->calculate(setpoint,pv);
 }
+void PID::FreeCache()
+{
+    pimpl->FreeCache();
+}
 PID::~PID() 
 {
     delete pimpl;
@@ -77,6 +82,11 @@ PIDImpl::PIDImpl( double dt, double max, double min, double Kp, double Kd, doubl
 {
 }
 
+void PIDImpl::FreeCache(){
+    _integral = 0;
+    _pre_error = 0;
+}
+
 double PIDImpl::calculate( double setpoint, double pv )
 {
     
@@ -95,6 +105,7 @@ double PIDImpl::calculate( double setpoint, double pv )
     double Dout = _Kd * derivative;
 
     // Calculate total output
+    //printf("P:%f I:%f D:%f\r\n",Pout,Iout,Dout);
     double output = Pout + Iout + Dout;
 
     // Restrict to max/min
