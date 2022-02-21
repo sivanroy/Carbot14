@@ -1,6 +1,6 @@
 #include <iostream>
 #include <unistd.h>
-#include "DualMC33926RPi.h"
+#include "CAN.h"
 
 /*
  * Cmd to run :
@@ -11,32 +11,16 @@
 int main() {
 
     int time = 1;
-    int speed = 20;
+    int speed = 5;
 
-    DualMC33926RPi wheels;
+    CAN wheels;
 
     wheels.init();
 
     std::cout << "init" << "\n";
 
-    wheels.setM1Speed(speed);
-    usleep(1000000 * time);
-
-    wheels.setM1Speed(-speed);
-    usleep(1000000 * time);
-
-    wheels.stop();
-
-    wheels.setM2Speed(speed);
-    usleep(1000000 * time);
-
-    wheels.setM2Speed(-speed);
-    usleep(1000000 * time);
-
-    wheels.stop();
-
     wheels.setSpeeds(speed, speed);
-    usleep(1000000 * 1*time);
+    usleep(1000000 * 2*time);
 
     wheels.stop();
 

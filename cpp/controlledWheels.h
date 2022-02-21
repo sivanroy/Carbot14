@@ -6,7 +6,7 @@
 #include <math.h>
 #include <chrono>
 
-#include "DualMC33926RPi.h"
+#include "CAN.h"
 #include "pid.h"
 
 
@@ -25,9 +25,9 @@ class controlledWheels
 	private:
 		double s_l;
 		double s_r;
-		DualMC33926RPi motors;
-		PID leftPID =  PID(0.01,50,-50,200,0,50);
-		PID rightPID =  PID(0.01,50,-50,200,0,50);
+		CAN motors;
+		PID leftPID =  PID(0.01,30,-30,1,0,0);
+		PID rightPID =  PID(0.01,30,-30,1,0,0);
 };
 
 
