@@ -31,6 +31,8 @@ void controlledWheels::init()
 
 void controlledWheels::setSpeed(double sl, double sr)
 {
+	this->leftPID.FreeCache();
+	this->rightPID.FreeCache();
 	this->s_l = sl;
 	this->s_r = sr;
 }
@@ -48,8 +50,10 @@ void controlledWheels::start()
 
 void controlledWheels::giveV(double current_s_l, double current_s_r, int out[])
 {
-	double v_l = this->leftPID.calculate(this->s_l,current_s_l);
-	double v_r = this->rightPID.calculate(this->s_r,current_s_r);
+	double backEMF = 0.0;//0.3;
+	double v_l = this->leftPID.calculate(this->s_l,current_s_l) + backEMF * this->s_l;
+	double v_r = this->rightPID.calculate(this->s_r,current_s_r) + backEMF * this->s_r;
+	//printf("backemf %f , v_l %f \r\n",backEMF * this->s_l,v_l);
 	out[0] = (int) v_l; out[1] = (int) v_r;
 }
 

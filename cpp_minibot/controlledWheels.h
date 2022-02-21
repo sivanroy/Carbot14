@@ -9,6 +9,7 @@
 #include "DualMC33926RPi.h"
 #include "pid.h"
 
+// 2pb: valeuress de vitesse très variable + valeur KI bizarre ...
 
 class controlledWheels 
 {
@@ -23,12 +24,17 @@ class controlledWheels
 		void sendV(double current_s_l,double current_s_r,bool verbose=0);
 
 	private:
+		double Wdeltat = 0.01;
+		double WMAX = 50;
+		double WMIN = -WMAX;
+		double WKP = 350; //400 seem's to be limit
+		double WKD = 0;
+		double WKI = WKP*0;
 		double s_l;
 		double s_r;
 		DualMC33926RPi motors;
-		PID leftPID =  PID(0.01,50,-50,200,0,50);
-		PID rightPID =  PID(0.01,50,-50,200,0,50);
+		PID leftPID =  PID(Wdeltat,WMAX,WMIN,WKP,WKD,WKI);
+		PID rightPID =  PID(Wdeltat,WMAX,WMIN,WKP,WKD,WKI);
 };
-
 
 #endif
