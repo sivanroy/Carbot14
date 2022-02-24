@@ -23,7 +23,6 @@ int main()
     int val = 10;
     std::stringstream commandLStream;
     commandLStream << "cansend can0 708#26FF";
-
     if (val < 16) {
         commandLStream << "0";
     }
