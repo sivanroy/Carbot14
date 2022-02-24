@@ -20,10 +20,10 @@ motor_test.o: motor_test.cpp CAN.h
 # ****************************************************
 # Run DE02Rpi_test
 
-enctest: DE02Rpi_test.o DE02Rpi.o
-	$(CC) $(CFLAGS) -o enctest DE02Rpi_test.o DE02Rpi.o $(LIB)
+enctest: DE02Rpi_test.o Lib/DE02Rpi/DE02Rpi.o
+	$(CC) $(CFLAGS) -o enctest DE02Rpi_test.o Lib/DE02Rpi/DE02Rpi.o $(LIB)
 
-DE02Rpi_test.o: DE02Rpi_test.cpp DE02Rpi.h
+DE02Rpi_test.o: DE02Rpi_test.cpp Lib/DE02Rpi/DE02Rpi.h
 	$(CC) $(CFLAGS) -c DE02Rpi_test.cpp $(LIB)
 
 
@@ -66,7 +66,7 @@ can_test.o: can_test.cpp
 
 
 controlledWheels.o: controlledWheels.h
-DE02Rpi.o: DE02Rpi.h
+Lib/DE02Rpi/DE02Rpi.o: Lib/DE02Rpi/DE02Rpi.h
 CAN.o: CAN.h
 pid.o: pid.h
 
