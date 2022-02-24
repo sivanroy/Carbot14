@@ -8,12 +8,12 @@ CAN::CAN() {}
 
 void CAN::init()
 {
-    /*
+
     system("sudo ifconfig can0 down");
     system("sudo ip link set can0 type can bitrate 125000");
     system("sudo ifconfig can0 up");
     usleep(1000);
-     */
+
     system("cansend can0 708#1EFF40");
     system("cansend can0 708#1EFF00");
     system("cansend can0 708#1CFF80");
@@ -39,6 +39,7 @@ void CAN::setSpeeds(int cmd_l, int cmd_r)
     std::string sr = cmd_r_stream.str();
     const char * cr = sr.c_str();
 
+    printf("cl = %s | cr = %s\n", cl, cr);
     system(cl);
     system(cr);
 }

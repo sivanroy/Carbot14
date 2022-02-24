@@ -38,6 +38,17 @@ EncData_test.o: EncData_test.cpp DE02Rpi.h CAN.h
 
 
 # ****************************************************
+# Run EncCalib
+
+EncCalib: EncCalib.o DE02Rpi.o CAN.o
+	$(CC) $(CFLAGS) -o EncCalib EncCalib.o DE02Rpi.o CAN.o $(LIB)
+
+EncCalib.o: EncCalib.cpp DE02Rpi.h CAN.h
+	$(CC) $(CFLAGS) -c EncCalib.cpp $(LIB)
+
+
+
+# ****************************************************
 # PID
 
 conttest: contWheels_test.o controlledWheels.o DE02Rpi.o CAN.o pid.o
@@ -61,5 +72,5 @@ pid.o: pid.h
 
 
 clean:
-	rm -rf *.o mtest enctest conttest ticktest cantest
+	rm -rf *.o mtest enctest conttest ticktest cantest EncCalib
 
