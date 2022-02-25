@@ -156,13 +156,24 @@ input logic 		     [1:0]		GPIO_1_IN
 	assign rightOdoB = GPIO_0_PI[9];
 	assign leftOdoA  = GPIO_0_PI[10];
 	assign leftOdoB  = GPIO_0_PI[11];
+	
+	
+	logic set,running;
+	logic [31:0] distance;
+	logic echo,trigger;
+	assign echo		= GPIO_0_PI[16];
+	assign trigger = GPIO_0_PI[17];
 
 	Encoder leftEnc(clk, leftEncA, leftEncB, countLeftEnc);
 	Encoder rightEnc(clk, rightEncA, rightEncB, countRightEnc);
 
 	Encoder leftOdo(clk, leftOdoA, leftOdoB, countLeftOdo);
 	Encoder rightOdo(clk, rightOdoA, rightOdoB, countRightOdo);
-
+	
+	//MySonar
+	assign set = 1;
+	
+	MySonar sonar(clk,set,running,echo,trigger,distance);
 	// Sonar
 
 
