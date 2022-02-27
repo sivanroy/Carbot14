@@ -1,4 +1,11 @@
 
+State Machine - |MyDE0_Nano|MySonar:sonar|state
+Name state.Compute state.Echo state.Trigger state.S0 
+state.S0 0 0 0 0 
+state.Trigger 0 0 1 1 
+state.Echo 0 1 0 1 
+state.Compute 1 0 0 1 
+
 State Machine - |MyDE0_Nano|spi_slave:spi_slave_instance|state
 Name state.S3 state.S2 state.S1 state.S0 
 state.S0 0 0 0 0 

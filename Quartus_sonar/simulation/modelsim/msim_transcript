@@ -1,0 +1,69 @@
+# Reading C:/intelFPGA_lite/18.1/modelsim_ase/tcl/vsim/pref.tcl
+# ERROR: No extended dataflow license exists
+# do sonar_run_msim_rtl_verilog.do
+# if {[file exists rtl_work]} {
+# 	vdel -lib rtl_work -all
+# }
+# vlib rtl_work
+# vmap work rtl_work
+# Model Technology ModelSim - Intel FPGA Edition vmap 10.5b Lib Mapping Utility 2016.10 Oct  5 2016
+# vmap work rtl_work 
+# Copying C:/intelFPGA_lite/18.1/modelsim_ase/win32aloem/../modelsim.ini to modelsim.ini
+# Modifying modelsim.ini
+# 
+# vlog -sv -work work +incdir+D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar {D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv}
+# Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 16:33:44 on Feb 25,2022
+# vlog -reportprogress 300 -sv -work work "+incdir+D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar" D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv 
+# -- Compiling module MySonar
+# 
+# Top level modules:
+# 	MySonar
+# End time: 16:33:44 on Feb 25,2022, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# 
+# vlog -sv -work work +incdir+D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar {D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MyTestbench.sv}
+# Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 16:33:44 on Feb 25,2022
+# vlog -reportprogress 300 -sv -work work "+incdir+D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar" D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MyTestbench.sv 
+# -- Compiling module MyTestbench
+# 
+# Top level modules:
+# 	MyTestbench
+# End time: 16:33:44 on Feb 25,2022, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# 
+# vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L cycloneive_ver -L rtl_work -L work -voptargs="+acc"  MyTestbench
+# vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L cycloneive_ver -L rtl_work -L work -voptargs=""+acc"" MyTestbench 
+# Start time: 16:33:44 on Feb 25,2022
+# Loading sv_std.std
+# Loading work.MyTestbench
+# Loading work.MySonar
+# 
+# add wave *
+# ** Warning: (vsim-WLF-5000) WLF file currently in use: vsim.wlf
+#           File in use by: vanro  Hostname: LAPTOP-FS6DK79P  ProcessID: 7356
+#           Attempting to use alternate WLF file "./wlft0sws3b".
+# ** Warning: (vsim-WLF-5001) Could not open WLF file: vsim.wlf
+#           Using alternate file: ./wlft0sws3b
+# view structure
+# .main_pane.structure.interior.cs.body.struct
+# view signals
+# .main_pane.objects.interior.cs.body.tree
+# run 1000 us
+add wave -position insertpoint  \
+sim:/MyTestbench/dut/state
+add wave -position insertpoint  \
+sim:/MyTestbench/dut/count_dist
+restart
+run
+run
+run
+run
+run
+run
+run
+run
+run
+# End time: 16:35:30 on Feb 25,2022, Elapsed time: 0:01:46
+# Errors: 0, Warnings: 2

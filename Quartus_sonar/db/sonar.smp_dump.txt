@@ -1,0 +1,7 @@
+
+State Machine - |sonar|state
+Name state.Compute state.Echo state.Trigger state.S0 
+state.S0 0 0 0 0 
+state.Trigger 0 0 1 1 
+state.Echo 0 1 0 1 
+state.Compute 1 0 0 1 

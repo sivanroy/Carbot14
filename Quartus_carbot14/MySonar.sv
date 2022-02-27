@@ -1,7 +1,7 @@
 module MySonar(
-	input logic clk,set,echo,
-	output logic trigger,running,
-	output logic [31:0] 	distance
+	input logic clk,reset,echo,
+	output logic trigger,
+	output logic [31:0] distance
 );
 	
 	typedef enum logic [1:0] {S0,Trigger,Echo,Compute} statetype;
@@ -10,60 +10,47 @@ module MySonar(
 	logic [31:0]counter;
 	logic [31:0]count_dist;
 	logic prev_echo;
+
 	
 	
 	always_ff @(posedge clk) begin
-		if (set) begin
+		if (reset) begin
 			state <= S0;
-			counter <= 1;
+			counter <= 0;
 			count_dist <= 0;
-			prev_echo <= 0;
 		end
-		if (echo) count_dist <= count_dist + 1;
 		else begin
 			state <= nextstate;
 			counter <= counter + 1;
-			prev_echo <= echo;
 		end
+		if (echo & state==Echo) count_dist <= count_dist + 1;
 	end
 	
-	//problem comes from counter +=1 !!
 	always_comb begin
+		nextstate = state;
+		trigger = 0; prev_echo = 0;
 		case(state)
-			S0:begin
-				trigger = 0;
-				running = 1;
+			S0: begin
 				nextstate = Trigger;
-				distance = 0;
-			end
-			
-			Trigger:begin
-				if(counter==32'd500) begin
-					trigger = 0;
-					nextstate = Echo;
 				end
-				else trigger = 1;
-			end
-			
-			Echo:begin
-				if(!echo & prev_echo) nextstate = Compute;
-			end
 				
+			Trigger:begin
+				if (counter >= 32'd500) nextstate = Echo;
+				trigger = 1;
+				end
 			
+			Echo: begin
+				if(prev_echo & !echo) nextstate = Compute;
+				prev_echo = echo;
+				if(count_dist == 32'd1_900_000) nextstate = Compute;
+				end			
 			Compute:begin
-					//distance = count_dist/50 /58; //50 to have us and 58 to have cm
-					if (counter == 32'd3_000_000) begin
-						nextstate = S0;
-						running = 0;
-						distance = count_dist;
-					end
-			end
-			
-			default: nextstate = S0;
+				if (counter >= 32'd3_000_000) nextstate = S0;
+				end
 		endcase
 	end
 	
-		
+	assign distance = (state == Compute)? count_dist: distance;
 	
 
 endmodule

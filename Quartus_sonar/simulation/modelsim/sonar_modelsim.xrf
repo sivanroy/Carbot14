@@ -1,0 +1,13 @@
+vendor_name = ModelSim
+source_file = 1, D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/sonar.sv
+source_file = 1, D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MyTestbench.sv
+source_file = 1, D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv
+source_file = 1, D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/db/sonar.cbx.xml
+design_name = sonar
+instance = comp, trigger_aoutput, trigger~output, sonar, 1
+instance = comp, clk_ainput, clk~input, sonar, 1
+instance = comp, reset_ainput, reset~input, sonar, 1
+design_name = hard_block
+instance = comp, a_aALTERA_ASDO_DATA1_a_aibuf, ~ALTERA_ASDO_DATA1~~ibuf, hard_block, 1
+instance = comp, a_aALTERA_FLASH_nCE_nCSO_a_aibuf, ~ALTERA_FLASH_nCE_nCSO~~ibuf, hard_block, 1
+instance = comp, a_aALTERA_DATA0_a_aibuf, ~ALTERA_DATA0~~ibuf, hard_block, 1

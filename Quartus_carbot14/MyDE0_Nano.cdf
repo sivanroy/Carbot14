@@ -4,7 +4,7 @@ JedecChain;
 	DefaultMfr(6E);
 
 	P ActionCode(Cfg)
-		Device PartName(EP4CE22F17) Path("C:/Users/vlibert/Desktop/LELME2002/minibot/minibot-code/Quartus-Pipelined_2020/") File("MyDE0_Nano.sof") MfrSpec(OpMask(1));
+		Device PartName(EP4CE22F17) Path("D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_carbot14/") File("MyDE0_Nano.sof") MfrSpec(OpMask(1));
 
 ChainEnd;
 

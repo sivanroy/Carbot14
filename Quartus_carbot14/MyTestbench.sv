@@ -1,61 +1,53 @@
-`timescale 1 ps / 1 ps
+`timescale 1ns/1ns
 
 module MyTestbench();
 
   logic        clk;
   logic        reset;
-
-  logic [15:0] ReadData;
-  logic [15:0] WriteData;
-  logic [12:0] DataAdr;
-  logic        MemWrite;
+  logic	       trigger;
+  logic        echo;
+  logic [31:0] time_echo;
   
-  wire [33:0]	GPIO_0_PI;
-  wire [33:0]	GPIO_1;
-  wire [12:0]	GPIO_2;
-
-  integer f;
 	 
-  // instantiate device to be tested
-  MyDE0_Nano dut(
-	.CLOCK_50(clk), 
-	.GPIO_0_PI(GPIO_0_PI),
-	.GPIO_1(GPIO_1),  
-	.GPIO_2(GPIO_2)
-	);
+  MySonar dut(
+   	.clk(clk),
+    	.reset(reset),
+    	.echo(echo),
+    	.trigger(trigger),
+    	.distance(time_echo));
+	
+  // generate clock to sequence tests
+  always #10 clk = ~clk;
 
-  assign GPIO_0_PI[1] = reset;
-  assign MemWrite = GPIO_1[33];
-  assign WriteData = GPIO_1[15:0];
-  assign DataAdr = GPIO_2;
-  assign ReadData = GPIO_1[31:16];
-  
   // initialize test
   initial
     begin
-	 	f = $fopen("student_simul.txt", "w");
-      reset <= 1; # 22; reset <= 0;
+      		reset = 1;
+		clk = 0;
+		echo = 0;
+		# 10; 
+		reset = 0;
+		//trigger = 1; 
+		# 10000;     //10µs
+		//trigger = 0;
+		# 200000; // the 8 pulses
+		echo = 1;
+		# 30000000; // echo of 30ms
+		echo = 0;
+		#60 
+		$display("time_echo = %d", time_echo); //should equal 1500000
+		# 8000000
+		# 500000000 // wait  0.5 sec
+		//trigger = 1; 
+		# 10000;     //10µs
+		//trigger = 0;
+		# 200000; // the 8 pulses
+		echo = 1;
+		# 10000000; // echo of 10ms
+		echo = 0;
+		# 60   
+		$display("time_echo = %d", time_echo); //should equal 500000
+		# 60; 
     end
 
-  // generate clock to sequence tests
-  always
-    begin
-      clk <= 1; # 5; clk <= 0; # 5;
-    end
-
-  // check results
-  always @(negedge clk)
-    begin
-		$fwrite(f, "%4x %4x %4x %1x\n", DataAdr, ReadData, WriteData, MemWrite);
-      if(MemWrite) begin
-        if(DataAdr === 100 & WriteData === 7) begin
-          $display("Simulation succeeded");
-          $stop;
-        end else if (DataAdr !== 96) begin
-          $display("Simulation failed");
-          $stop;
-        end
-      end
-    end
-     
-endmodule
+endmodule 

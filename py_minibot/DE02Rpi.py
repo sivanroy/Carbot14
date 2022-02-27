@@ -49,6 +49,24 @@ class DE02Rpi(object):
         return count
 
 
+    def setSonar(self,verbose=0):
+        ToSPI = [0x08, 0x00, 0x00, 0x00, 0x00]
+        A = self.MySPI_FPGA.xfer2(ToSPI)
+        if(verbose):
+            print(A)
+    def resetSonar(self,verbose=0):
+        ToSPI = [0x012, 0x00, 0x00, 0x00, 0x00]
+        A = self.MySPI_FPGA.xfer2(ToSPI)
+        if(verbose):
+            print(A)
+
+    def readSonar(self,verbose=0):
+        Adr = 0x04
+        ToSPI = [Adr, 0x00, 0x00, 0x00, 0x00]
+        A = self.MySPI_FPGA.xfer2(ToSPI)
+        if (verbose): print("Count = {}".format(count))
+        return A
+
 #de0 tests
 
 """
@@ -70,3 +88,11 @@ while(1):
         i += 1
         time.sleep(0.01)
 """
+
+de0 = DE02Rpi()
+count = 0
+i = 0
+while(1):
+    a = de0.readSonar()
+    print("sonar = {}".format(a))
+    i = 0

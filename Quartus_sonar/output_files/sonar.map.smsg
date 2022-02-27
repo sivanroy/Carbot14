@@ -1,0 +1,2 @@
+Info (10281): Verilog HDL Declaration information at MySonar.sv(3): object "trigger" differs only in case from object "Trigger" in the same scope File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 3
+Info (10281): Verilog HDL Declaration information at MySonar.sv(2): object "echo" differs only in case from object "Echo" in the same scope File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 2

@@ -111,17 +111,25 @@ input logic 		     [1:0]		GPIO_1_IN
 	logic [31:0] count;
 
 	always_comb begin
-		case(DataAddr)
-			8'b00: count = countLeftEnc;
-			8'b01: count = countRightEnc;
-			8'b10: count = countLeftOdo;
-			8'b11: count = countRightOdo;
+		case(DataAddr[2:0])
+			3'b000: count = countLeftEnc;
+			3'b001: count = countRightEnc;
+			3'b010: count = countLeftOdo;
+			3'b011: count = countRightOdo;
+			3'b100: count = distance;
 		default: count = 32'b0;
 		endcase
 	end
-
+	
 	assign DataToRPi = count;
 
+	//always_comb begin
+	//	case(DataAddr[3:0])
+	//		4'b10xx: set = 1;
+	//		4'b11xx: set = 0;
+	//	endcase
+	//end
+	
 //=======================================================
 //  Encoder
 //=======================================================
@@ -158,11 +166,10 @@ input logic 		     [1:0]		GPIO_1_IN
 	assign leftOdoB  = GPIO_0_PI[11];
 	
 	
-	logic set,running;
 	logic [31:0] distance;
-	logic echo,trigger;
+	logic trigger,echo;
 	assign echo		= GPIO_0_PI[16];
-	assign trigger = GPIO_0_PI[17];
+	assign GPIO_0_PI[17] = trigger;
 
 	Encoder leftEnc(clk, leftEncA, leftEncB, countLeftEnc);
 	Encoder rightEnc(clk, rightEncA, rightEncB, countRightEnc);
@@ -171,9 +178,12 @@ input logic 		     [1:0]		GPIO_1_IN
 	Encoder rightOdo(clk, rightOdoA, rightOdoB, countRightOdo);
 	
 	//MySonar
-	assign set = 1;
 	
-	MySonar sonar(clk,set,running,echo,trigger,distance);
+	assign reset_s = ~KEY[0];
+	MySonar sonar(clk,resset_s,echo,trigger,distance);
+	assign LED[1] = 1;
+	assign LED[0] = reset_s;
+	assign LED[7:3] = distance;
 	// Sonar
 
 
