@@ -8,26 +8,6 @@
 					"strict" : false
 				},
 				{
-					"name" : "LED[3]",
-					"strict" : false
-				},
-				{
-					"name" : "LED[4]",
-					"strict" : false
-				},
-				{
-					"name" : "LED[5]",
-					"strict" : false
-				},
-				{
-					"name" : "LED[6]",
-					"strict" : false
-				},
-				{
-					"name" : "LED[7]",
-					"strict" : false
-				},
-				{
 					"name" : "GPIO_0_PI[1]",
 					"strict" : false
 				},
@@ -60,19 +40,27 @@
 					"strict" : false
 				},
 				{
-					"name" : "GPIO_0_PI[13]",
+					"name" : "GPIO_0_PI[20]",
 					"strict" : false
 				},
 				{
-					"name" : "GPIO_0_PI[15]",
+					"name" : "GPIO_0_PI[21]",
 					"strict" : false
 				},
 				{
-					"name" : "GPIO_0_PI[16]",
+					"name" : "GPIO_0_PI[22]",
 					"strict" : false
 				},
 				{
-					"name" : "GPIO_0_PI[17]",
+					"name" : "GPIO_0_PI[23]",
+					"strict" : false
+				},
+				{
+					"name" : "GPIO_1[12]",
+					"strict" : false
+				},
+				{
+					"name" : "GPIO_1[14]",
 					"strict" : false
 				},
 				{

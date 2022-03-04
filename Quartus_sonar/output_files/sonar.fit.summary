@@ -1,15 +1,15 @@
-Fitter Status : Successful - Fri Feb 25 16:15:07 2022
+Fitter Status : Successful - Fri Mar 04 23:01:40 2022
 Quartus Prime Version : 18.1.0 Build 625 09/12/2018 SJ Lite Edition
 Revision Name : sonar
-Top-level Entity Name : sonar
+Top-level Entity Name : MySonarI2C
 Family : Cyclone IV E
 Device : EP4CE22F17C6
 Timing Models : Final
-Total logic elements : 0 / 22,320 ( 0 % )
-    Total combinational functions : 0 / 22,320 ( 0 % )
-    Dedicated logic registers : 0 / 22,320 ( 0 % )
-Total registers : 0
-Total pins : 3 / 154 ( 2 % )
+Total logic elements : 127 / 22,320 ( < 1 % )
+    Total combinational functions : 112 / 22,320 ( < 1 % )
+    Dedicated logic registers : 42 / 22,320 ( < 1 % )
+Total registers : 42
+Total pins : 53 / 154 ( 34 % )
 Total virtual pins : 0
 Total memory bits : 0 / 608,256 ( 0 % )
 Embedded Multiplier 9-bit elements : 0 / 132 ( 0 % )

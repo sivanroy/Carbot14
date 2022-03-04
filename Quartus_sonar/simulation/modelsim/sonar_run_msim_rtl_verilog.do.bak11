@@ -5,7 +5,7 @@ if {[file exists rtl_work]} {
 vlib rtl_work
 vmap work rtl_work
 
-vlog -sv -work work +incdir+D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar {D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv}
+vlog -sv -work work +incdir+D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar {D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv}
 
 vlog -sv -work work +incdir+D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar {D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MyTestbench.sv}
 

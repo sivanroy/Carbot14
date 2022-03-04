@@ -1,7 +1,14 @@
 
-State Machine - |sonar|state
-Name state.Compute state.Echo state.Trigger state.S0 
-state.S0 0 0 0 0 
-state.Trigger 0 0 1 1 
-state.Echo 0 1 0 1 
-state.Compute 1 0 0 1 
+State Machine - |MySonarI2C|done
+Name done.000 done.010 done.001 
+done.010 0 0 0 
+done.001 0 1 1 
+done.000 1 1 0 
+
+State Machine - |MySonarI2C|state
+Name state.Pause state.RegSelect state.CM state.S0 state.Read 
+state.S0 0 0 0 0 0 
+state.CM 0 0 1 1 0 
+state.RegSelect 0 1 0 1 0 
+state.Pause 1 0 0 1 0 
+state.Read 0 0 0 1 1 

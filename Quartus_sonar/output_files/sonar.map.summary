@@ -1,7 +1,7 @@
-Analysis & Elaboration Status : Successful - Fri Feb 25 16:32:35 2022
+Analysis & Elaboration Status : Successful - Fri Mar 04 23:07:26 2022
 Quartus Prime Version : 18.1.0 Build 625 09/12/2018 SJ Lite Edition
 Revision Name : sonar
-Top-level Entity Name : MySonar
+Top-level Entity Name : MySonarI2C
 Family : Cyclone IV E
 Total logic elements : N/A until Partition Merge
     Total combinational functions : N/A until Partition Merge

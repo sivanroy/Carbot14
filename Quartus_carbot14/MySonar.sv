@@ -9,26 +9,29 @@ module MySonar(
 	
 	logic [31:0]counter;
 	logic [31:0]count_dist;
-	logic prev_echo;
-
+	logic [1:0] ech;
 	
-	
-	always_ff @(posedge clk) begin
-		if (reset) begin
-			state <= S0;
+	always @(posedge clk) begin
+		if (reset|nextstate == S0) begin
 			counter <= 0;
 			count_dist <= 0;
+			ech <= 2'b00;
 		end
 		else begin
-			state <= nextstate;
-			counter <= counter + 1;
+			counter <= counter +1;	
+			if (echo & state==Echo) count_dist <= count_dist + 1;
+			ech <= ech*2+echo;
 		end
-		if (echo & state==Echo) count_dist <= count_dist + 1;
 	end
+	
+	always @(posedge clk) begin
+		if (reset) state <= S0;
+		else state <= nextstate;
+	end	
 	
 	always_comb begin
 		nextstate = state;
-		trigger = 0; prev_echo = 0;
+		trigger = 0;
 		case(state)
 			S0: begin
 				nextstate = Trigger;
@@ -40,17 +43,18 @@ module MySonar(
 				end
 			
 			Echo: begin
-				if(prev_echo & !echo) nextstate = Compute;
-				prev_echo = echo;
+				if(ech == 2'b10) nextstate = Compute;
 				if(count_dist == 32'd1_900_000) nextstate = Compute;
-				end			
+				end
+				
 			Compute:begin
 				if (counter >= 32'd3_000_000) nextstate = S0;
 				end
+				
 		endcase
 	end
 	
-	assign distance = (state == Compute)? count_dist: distance;
+	assign distance = (state == Compute)? count_dist/50/58: distance;
 	
 
 endmodule

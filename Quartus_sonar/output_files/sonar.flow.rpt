@@ -1,5 +1,5 @@
 Flow report for sonar
-Fri Feb 25 16:32:35 2022
+Fri Mar 04 23:07:26 2022
 Quartus Prime Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
 
 
@@ -40,10 +40,10 @@ refer to the applicable agreement for further details.
 +----------------------------------------------------------------------------------+
 ; Flow Summary                                                                     ;
 +------------------------------------+---------------------------------------------+
-; Flow Status                        ; Successful - Fri Feb 25 16:32:35 2022       ;
+; Flow Status                        ; Successful - Fri Mar 04 23:07:26 2022       ;
 ; Quartus Prime Version              ; 18.1.0 Build 625 09/12/2018 SJ Lite Edition ;
 ; Revision Name                      ; sonar                                       ;
-; Top-level Entity Name              ; MySonar                                     ;
+; Top-level Entity Name              ; MySonarI2C                                  ;
 ; Family                             ; Cyclone IV E                                ;
 ; Device                             ; EP4CE22F17C6                                ;
 ; Timing Models                      ; Final                                       ;
@@ -64,7 +64,7 @@ refer to the applicable agreement for further details.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 02/25/2022 16:32:22 ;
+; Start date & time ; 03/04/2022 23:07:17 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; sonar               ;
 +-------------------+---------------------+
@@ -75,7 +75,7 @@ refer to the applicable agreement for further details.
 +--------------------------------------+----------------------------------------+---------------+-------------+----------------+
 ; Assignment Name                      ; Value                                  ; Default Value ; Entity Name ; Section Id     ;
 +--------------------------------------+----------------------------------------+---------------+-------------+----------------+
-; COMPILER_SIGNATURE_ID                ; 91764782227.164580314126176            ; --            ; --          ; --             ;
+; COMPILER_SIGNATURE_ID                ; 91759169122.164643163717052            ; --            ; --          ; --             ;
 ; EDA_DESIGN_INSTANCE_NAME             ; dut                                    ; --            ; --          ; MyTestbench    ;
 ; EDA_ENABLE_GLITCH_FILTERING          ; Off                                    ; --            ; --          ; eda_simulation ;
 ; EDA_MAP_ILLEGAL_CHARACTERS           ; On                                     ; --            ; --          ; eda_simulation ;
@@ -91,13 +91,13 @@ refer to the applicable agreement for further details.
 ; MAX_CORE_JUNCTION_TEMP               ; 85                                     ; --            ; --          ; --             ;
 ; MIN_CORE_JUNCTION_TEMP               ; 0                                      ; --            ; --          ; --             ;
 ; NOMINAL_CORE_SUPPLY_VOLTAGE          ; 1.2V                                   ; --            ; --          ; --             ;
-; PARTITION_COLOR                      ; -- (Not supported for targeted family) ; --            ; MySonar     ; Top            ;
-; PARTITION_FITTER_PRESERVATION_LEVEL  ; -- (Not supported for targeted family) ; --            ; MySonar     ; Top            ;
-; PARTITION_NETLIST_TYPE               ; -- (Not supported for targeted family) ; --            ; MySonar     ; Top            ;
+; PARTITION_COLOR                      ; -- (Not supported for targeted family) ; --            ; MySonarI2C  ; Top            ;
+; PARTITION_FITTER_PRESERVATION_LEVEL  ; -- (Not supported for targeted family) ; --            ; MySonarI2C  ; Top            ;
+; PARTITION_NETLIST_TYPE               ; -- (Not supported for targeted family) ; --            ; MySonarI2C  ; Top            ;
 ; POWER_BOARD_THERMAL_MODEL            ; None (CONSERVATIVE)                    ; --            ; --          ; --             ;
 ; POWER_PRESET_COOLING_SOLUTION        ; 23 MM HEAT SINK WITH 200 LFPM AIRFLOW  ; --            ; --          ; --             ;
 ; PROJECT_OUTPUT_DIRECTORY             ; output_files                           ; --            ; --          ; --             ;
-; TOP_LEVEL_ENTITY                     ; MySonar                                ; sonar         ; --          ; --             ;
+; TOP_LEVEL_ENTITY                     ; MySonarI2C                             ; sonar         ; --          ; --             ;
 +--------------------------------------+----------------------------------------+---------------+-------------+----------------+
 
 
@@ -106,8 +106,8 @@ refer to the applicable agreement for further details.
 +------------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Module Name            ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +------------------------+--------------+-------------------------+---------------------+------------------------------------+
-; Analysis & Elaboration ; 00:00:15     ; 1.0                     ; 4712 MB             ; 00:00:36                           ;
-; Total                  ; 00:00:15     ; --                      ; --                  ; 00:00:36                           ;
+; Analysis & Elaboration ; 00:00:11     ; 1.0                     ; 4713 MB             ; 00:00:22                           ;
+; Total                  ; 00:00:11     ; --                      ; --                  ; 00:00:22                           ;
 +------------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 

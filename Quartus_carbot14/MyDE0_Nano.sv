@@ -86,21 +86,23 @@ input logic 		     [1:0]		GPIO_1_IN
 		.DataToRPi  (DataToRPi),	// input  : data to send to the RPi
 		.Clk        (clk)				// input
 	);
+	
 	// Connect to JP1 on the DE0-Nano : CARBOT14
+	
+	/*
 	assign spi_clk  		= GPIO_0_PI[11];	// SCLK = pin 16 = GPIO_11
 	assign spi_cs   		= GPIO_0_PI[9];	// CE0  = pin 14 = GPIO_9
 	assign spi_mosi     	= GPIO_0_PI[15];	// MOSI = pin 20 = GPIO_15
-	
 	assign GPIO_0_PI[13] = spi_cs ? 1'bz : spi_miso;  // MISO = pin 18 = GPIO_13
-
-    /*
+	*/
+    
 	// Connect to JP1 on the DE0-Nano : MINIBOT
 	assign spi_clk  		= GPIO_0_PI[22];	// SCLK = pin 27 = GPIO_22
 	assign spi_cs   		= GPIO_0_PI[20];	// CE1  = pin 25 = GPIO_20
 	assign spi_mosi     	= GPIO_0_PI[23];	// MOSI = pin 28 = GPIO_23
 
 	assign GPIO_0_PI[21] = spi_cs ? 1'bz : spi_miso;  // MISO = pin 26 = GPIO_21
-	*/
+	
 	
 
 
@@ -116,19 +118,20 @@ input logic 		     [1:0]		GPIO_1_IN
 			3'b001: count = countRightEnc;
 			3'b010: count = countLeftOdo;
 			3'b011: count = countRightOdo;
-			3'b100: count = distance;
+			//3'b100: count = distance;
 		default: count = 32'b0;
 		endcase
 	end
 	
 	assign DataToRPi = count;
 
-	//always_comb begin
-	//	case(DataAddr[3:0])
-	//		4'b10xx: set = 1;
-	//		4'b11xx: set = 0;
-	//	endcase
-	//end
+	/*always_comb begin
+		case(DataAddr[3:2])
+			2'b10: set = 1;
+			2'b11: set = 0;
+			default: set = 0;
+		endcase
+	end*/
 	
 //=======================================================
 //  Encoder
@@ -165,27 +168,42 @@ input logic 		     [1:0]		GPIO_1_IN
 	assign leftOdoA  = GPIO_0_PI[10];
 	assign leftOdoB  = GPIO_0_PI[11];
 	
-	
-	logic [31:0] distance;
-	logic trigger,echo;
-	assign echo		= GPIO_0_PI[16];
-	assign GPIO_0_PI[17] = trigger;
 
 	Encoder leftEnc(clk, leftEncA, leftEncB, countLeftEnc);
 	Encoder rightEnc(clk, rightEncA, rightEncB, countRightEnc);
 
 	Encoder leftOdo(clk, leftOdoA, leftOdoB, countLeftOdo);
 	Encoder rightOdo(clk, rightOdoA, rightOdoB, countRightOdo);
+		
+	//sonar
+	
+	logic [31:0] distance;
+	logic reset_s,launch;
+	//logic [6:0] Adr;
+	assign Adr = 7'hEC;
+	assign GPIO_1[12] = i2c_sda;
+	assign GPIO_1[14] = i2c_scl;
+	assign launch = ~KEY[0];
+	
+	MySonarI2C sonar1(clk,reset_s,launch,Adr,distance,i2c_sda,i2c_scl);
 	
 	//MySonar
+	//logic [31:0] distance;
+	//logic trigger,echo,reset_s, set;
+	//assign echo		= GPIO_0_PI[16];
+	//assign GPIO_0_PI[17] = trigger;
+	//MySonar sonar(clk,reset_s,echo,trigger,distance);
+	//assign LED[0] = 1;
 	
-	assign reset_s = ~KEY[0];
-	MySonar sonar(clk,resset_s,echo,trigger,distance);
-	assign LED[1] = 1;
-	assign LED[0] = reset_s;
-	assign LED[7:3] = distance;
+	//assign LED[0] = reset_s;
+	//assign LED[1] = set;
+	//assign LED[7:3] = distance;
 	// Sonar
+	assign LED[0] = launch;
+	assign LED[7:1] = distance;
 
 
 endmodule
+
+
 

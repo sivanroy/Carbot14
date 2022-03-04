@@ -1,10 +1,29 @@
 
-State Machine - |MyDE0_Nano|MySonar:sonar|state
-Name state.Compute state.Echo state.Trigger state.S0 
-state.S0 0 0 0 0 
-state.Trigger 0 0 1 1 
-state.Echo 0 1 0 1 
-state.Compute 1 0 0 1 
+State Machine - |MyDE0_Nano|MySonarI2C:sonar1|done
+Name done.000 done.010 done.001 
+done.010 0 0 0 
+done.001 0 1 1 
+done.000 1 1 0 
+
+State Machine - |MyDE0_Nano|MySonarI2C:sonar1|state
+Name state.Pause state.RegSelect state.CM state.S0 state.Read 
+state.S0 0 0 0 0 0 
+state.CM 0 0 1 1 0 
+state.RegSelect 0 1 0 1 0 
+state.Pause 1 0 0 1 0 
+state.Read 0 0 0 1 1 
+
+State Machine - |MyDE0_Nano|MySonarI2C:sonar1|i2c_controller:sonar1|state
+Name state.READ_ACK2 state.READ_DATA state.WRITE_ACK state.WRITE_DATA state.READ_ACK state.ADDRESS state.START state.IDLE state.STOP 
+state.IDLE 0 0 0 0 0 0 0 0 0 
+state.START 0 0 0 0 0 0 1 1 0 
+state.ADDRESS 0 0 0 0 0 1 0 1 0 
+state.READ_ACK 0 0 0 0 1 0 0 1 0 
+state.WRITE_DATA 0 0 0 1 0 0 0 1 0 
+state.WRITE_ACK 0 0 1 0 0 0 0 1 0 
+state.READ_DATA 0 1 0 0 0 0 0 1 0 
+state.READ_ACK2 1 0 0 0 0 0 0 1 0 
+state.STOP 0 0 0 0 0 0 0 1 1 
 
 State Machine - |MyDE0_Nano|spi_slave:spi_slave_instance|state
 Name state.S3 state.S2 state.S1 state.S0 

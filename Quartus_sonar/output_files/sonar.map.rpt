@@ -1,5 +1,5 @@
 Analysis & Elaboration report for sonar
-Fri Feb 25 16:32:35 2022
+Fri Mar 04 23:07:26 2022
 Quartus Prime Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
 
 
@@ -37,10 +37,10 @@ refer to the applicable agreement for further details.
 +----------------------------------------------------------------------------------+
 ; Analysis & Elaboration Summary                                                   ;
 +------------------------------------+---------------------------------------------+
-; Analysis & Elaboration Status      ; Successful - Fri Feb 25 16:32:35 2022       ;
+; Analysis & Elaboration Status      ; Successful - Fri Mar 04 23:07:26 2022       ;
 ; Quartus Prime Version              ; 18.1.0 Build 625 09/12/2018 SJ Lite Edition ;
 ; Revision Name                      ; sonar                                       ;
-; Top-level Entity Name              ; MySonar                                     ;
+; Top-level Entity Name              ; MySonarI2C                                  ;
 ; Family                             ; Cyclone IV E                                ;
 ; Total logic elements               ; N/A until Partition Merge                   ;
 ;     Total combinational functions  ; N/A until Partition Merge                   ;
@@ -76,7 +76,7 @@ refer to the applicable agreement for further details.
 ; Option                                                           ; Setting            ; Default Value      ;
 +------------------------------------------------------------------+--------------------+--------------------+
 ; Device                                                           ; EP4CE22F17C6       ;                    ;
-; Top-level entity name                                            ; MySonar            ; sonar              ;
+; Top-level entity name                                            ; MySonarI2C         ; sonar              ;
 ; Family name                                                      ; Cyclone IV E       ; Cyclone V          ;
 ; Use smart compilation                                            ; Off                ; Off                ;
 ; Enable parallel Assembler and Timing Analyzer during compilation ; On                 ; On                 ;
@@ -162,55 +162,101 @@ refer to the applicable agreement for further details.
 Info: *******************************************************************
 Info: Running Quartus Prime Analysis & Elaboration
     Info: Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
-    Info: Processing started: Fri Feb 25 16:32:20 2022
+    Info: Processing started: Fri Mar 04 23:07:15 2022
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off sonar -c sonar --analysis_and_elaboration
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
 Info (20030): Parallel compilation is enabled and will use 16 of the 16 processors detected
+Info (12021): Found 1 design units, including 1 entities, in source file mysonari2c.sv
+    Info (12023): Found entity 1: MySonarI2C File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file i2c_controller.sv
+    Info (12023): Found entity 1: i2c_controller File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/i2c_controller.sv Line: 5
 Info (12021): Found 1 design units, including 1 entities, in source file sonar.sv
     Info (12023): Found entity 1: sonar File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/sonar.sv Line: 1
 Info (12021): Found 1 design units, including 1 entities, in source file mytestbench.sv
     Info (12023): Found entity 1: MyTestbench File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MyTestbench.sv Line: 3
 Info (12021): Found 1 design units, including 1 entities, in source file mysonar.sv
     Info (12023): Found entity 1: MySonar File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 1
-Info (12127): Elaborating entity "MySonar" for the top level hierarchy
-Info (10041): Inferred latch for "distance[0]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
-Info (10041): Inferred latch for "distance[1]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
-Info (10041): Inferred latch for "distance[2]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
-Info (10041): Inferred latch for "distance[3]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
-Info (10041): Inferred latch for "distance[4]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
-Info (10041): Inferred latch for "distance[5]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
-Info (10041): Inferred latch for "distance[6]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
-Info (10041): Inferred latch for "distance[7]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
-Info (10041): Inferred latch for "distance[8]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
-Info (10041): Inferred latch for "distance[9]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
-Info (10041): Inferred latch for "distance[10]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
-Info (10041): Inferred latch for "distance[11]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
-Info (10041): Inferred latch for "distance[12]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
-Info (10041): Inferred latch for "distance[13]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
-Info (10041): Inferred latch for "distance[14]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
-Info (10041): Inferred latch for "distance[15]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
-Info (10041): Inferred latch for "distance[16]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
-Info (10041): Inferred latch for "distance[17]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
-Info (10041): Inferred latch for "distance[18]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
-Info (10041): Inferred latch for "distance[19]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
-Info (10041): Inferred latch for "distance[20]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
-Info (10041): Inferred latch for "distance[21]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
-Info (10041): Inferred latch for "distance[22]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
-Info (10041): Inferred latch for "distance[23]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
-Info (10041): Inferred latch for "distance[24]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
-Info (10041): Inferred latch for "distance[25]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
-Info (10041): Inferred latch for "distance[26]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
-Info (10041): Inferred latch for "distance[27]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
-Info (10041): Inferred latch for "distance[28]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
-Info (10041): Inferred latch for "distance[29]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
-Info (10041): Inferred latch for "distance[30]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
-Info (10041): Inferred latch for "distance[31]" at MySonar.sv(55) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonar.sv Line: 55
+Info (12127): Elaborating entity "MySonarI2C" for the top level hierarchy
+Warning (10036): Verilog HDL or VHDL warning at MySonarI2C.sv(15): object "rst" assigned a value but never read File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 15
+Warning (10036): Verilog HDL or VHDL warning at MySonarI2C.sv(15): object "enable" assigned a value but never read File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 15
+Warning (10036): Verilog HDL or VHDL warning at MySonarI2C.sv(15): object "rw" assigned a value but never read File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 15
+Warning (10036): Verilog HDL or VHDL warning at MySonarI2C.sv(16): object "addr" assigned a value but never read File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 16
+Warning (10036): Verilog HDL or VHDL warning at MySonarI2C.sv(17): object "data_in" assigned a value but never read File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 17
+Warning (10036): Verilog HDL or VHDL warning at MySonarI2C.sv(25): object "Reg" assigned a value but never read File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 25
+Warning (10270): Verilog HDL Case Statement warning at MySonarI2C.sv(116): incomplete case statement has no default case item File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 116
+Info (10264): Verilog HDL Case Statement information at MySonarI2C.sv(116): all case item expressions in this case statement are onehot File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 116
+Warning (10034): Output port "i2c_sda" at MySonarI2C.sv(7) has no driver File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 7
+Warning (10034): Output port "i2c_scl" at MySonarI2C.sv(11) has no driver File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 11
+Info (10041): Inferred latch for "distance[0]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "distance[1]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "distance[2]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "distance[3]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "distance[4]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "distance[5]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "distance[6]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "distance[7]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "distance[8]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "distance[9]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "distance[10]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "distance[11]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "distance[12]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "distance[13]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "distance[14]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "distance[15]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "distance[16]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "distance[17]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "distance[18]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "distance[19]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "distance[20]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "distance[21]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "distance[22]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "distance[23]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "distance[24]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "distance[25]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "distance[26]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "distance[27]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "distance[28]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "distance[29]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "distance[30]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "distance[31]" at MySonarI2C.sv(148) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 148
+Info (10041): Inferred latch for "lowByte[0]" at MySonarI2C.sv(146) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 146
+Info (10041): Inferred latch for "lowByte[1]" at MySonarI2C.sv(146) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 146
+Info (10041): Inferred latch for "lowByte[2]" at MySonarI2C.sv(146) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 146
+Info (10041): Inferred latch for "lowByte[3]" at MySonarI2C.sv(146) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 146
+Info (10041): Inferred latch for "lowByte[4]" at MySonarI2C.sv(146) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 146
+Info (10041): Inferred latch for "lowByte[5]" at MySonarI2C.sv(146) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 146
+Info (10041): Inferred latch for "lowByte[6]" at MySonarI2C.sv(146) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 146
+Info (10041): Inferred latch for "lowByte[7]" at MySonarI2C.sv(146) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 146
+Info (10041): Inferred latch for "lowByte[8]" at MySonarI2C.sv(146) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 146
+Info (10041): Inferred latch for "lowByte[9]" at MySonarI2C.sv(146) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 146
+Info (10041): Inferred latch for "lowByte[10]" at MySonarI2C.sv(146) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 146
+Info (10041): Inferred latch for "lowByte[11]" at MySonarI2C.sv(146) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 146
+Info (10041): Inferred latch for "lowByte[12]" at MySonarI2C.sv(146) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 146
+Info (10041): Inferred latch for "lowByte[13]" at MySonarI2C.sv(146) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 146
+Info (10041): Inferred latch for "lowByte[14]" at MySonarI2C.sv(146) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 146
+Info (10041): Inferred latch for "lowByte[15]" at MySonarI2C.sv(146) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 146
+Info (10041): Inferred latch for "highByte[0]" at MySonarI2C.sv(145) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 145
+Info (10041): Inferred latch for "highByte[1]" at MySonarI2C.sv(145) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 145
+Info (10041): Inferred latch for "highByte[2]" at MySonarI2C.sv(145) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 145
+Info (10041): Inferred latch for "highByte[3]" at MySonarI2C.sv(145) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 145
+Info (10041): Inferred latch for "highByte[4]" at MySonarI2C.sv(145) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 145
+Info (10041): Inferred latch for "highByte[5]" at MySonarI2C.sv(145) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 145
+Info (10041): Inferred latch for "highByte[6]" at MySonarI2C.sv(145) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 145
+Info (10041): Inferred latch for "highByte[7]" at MySonarI2C.sv(145) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 145
+Info (10041): Inferred latch for "highByte[8]" at MySonarI2C.sv(145) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 145
+Info (10041): Inferred latch for "highByte[9]" at MySonarI2C.sv(145) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 145
+Info (10041): Inferred latch for "highByte[10]" at MySonarI2C.sv(145) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 145
+Info (10041): Inferred latch for "highByte[11]" at MySonarI2C.sv(145) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 145
+Info (10041): Inferred latch for "highByte[12]" at MySonarI2C.sv(145) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 145
+Info (10041): Inferred latch for "highByte[13]" at MySonarI2C.sv(145) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 145
+Info (10041): Inferred latch for "highByte[14]" at MySonarI2C.sv(145) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 145
+Info (10041): Inferred latch for "highByte[15]" at MySonarI2C.sv(145) File: D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/MySonarI2C.sv Line: 145
 Info (144001): Generated suppressed messages file D:/UCL/Q7-Q8_LELME2002/Carbot14/Quartus_sonar/output_files/sonar.map.smsg
-Info: Quartus Prime Analysis & Elaboration was successful. 0 errors, 1 warning
-    Info: Peak virtual memory: 4712 megabytes
-    Info: Processing ended: Fri Feb 25 16:32:35 2022
-    Info: Elapsed time: 00:00:15
-    Info: Total CPU time (on all processors): 00:00:36
+Info: Quartus Prime Analysis & Elaboration was successful. 0 errors, 10 warnings
+    Info: Peak virtual memory: 4713 megabytes
+    Info: Processing ended: Fri Mar 04 23:07:26 2022
+    Info: Elapsed time: 00:00:11
+    Info: Total CPU time (on all processors): 00:00:22
 
 
 +--------------------------------------------+
