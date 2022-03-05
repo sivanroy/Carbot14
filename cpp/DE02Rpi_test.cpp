@@ -2,7 +2,7 @@
 // Created by Louis Libert on 15/02/22.
 //
 
-#include "DE02Rpi.h"
+#include "Lib/DE02Rpi/DE02Rpi.h"
 
 #include <chrono>
 
