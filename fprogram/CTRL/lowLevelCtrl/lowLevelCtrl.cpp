@@ -6,7 +6,7 @@
 #include "lowLevelCtrl.h"
 
 
-void init_lowLevelCtrl(lowLevelCtrl *llc)
+void llc_init(lowLevelCtrl *llc)
 {
     llc->dt = 0.01;
     llc->max = 35;
@@ -32,8 +32,8 @@ void set_commands(CtrlStruct *cvs, double r_sp_ref, double l_sp_ref)
     outputs = cvs->outputs;
     llc  = cvs->llc;
 
-    double r_sp_mes = inputs->wheel_speeds[R_ID];
-    double l_sp_mes = inputs->wheel_speeds[L_ID];
+    double r_sp_mes = inputs->r_sp_ref;
+    double l_sp_mes = inputs->l_sp_ref;
 
     //kphi term
     double kphi_r = r_sp_mes * llc->kphiOnK;
@@ -76,6 +76,6 @@ void set_commands(CtrlStruct *cvs, double r_sp_ref, double l_sp_ref)
         l_cmd = 0.0;
         llc->l_integral_err = 0.0;
     }
-    outputs->wheel_commands[R_ID] = r_cmd;
-    outputs->wheel_commands[L_ID] = l_cmd;
+    outputs->r_cmd = r_cmd;
+    outputs->l_cmd = l_cmd;
 }

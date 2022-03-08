@@ -24,7 +24,7 @@ double limit_angle(double th)
     return th;
 }
 
-void init_myPosition(myPosition *mp)
+void mp_init(myPosition *mp)
 {
     mp->dt = 0.01;
     mp->R_odo = 0.03;
@@ -46,8 +46,8 @@ void set_new_position(CtrlStruct *cvs)
     mp  = cvs->mp;
 
     // measured angular speed of each odo
-    double r_sp_mes = inputs->wheel_speeds[R_ID];
-    double l_sp_mes = inputs->wheel_speeds[L_ID];
+    double r_sp_mes = inputs->r_sp_mes;
+    double l_sp_mes = inputs->l_sp_mes;
 
     // delta distance 'ds' of each odo
     double ds_r = r_sp_mes * mp->dt * mp->R_odo;
