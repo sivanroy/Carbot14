@@ -8,7 +8,7 @@
 // Include the string library
 #include <string>
 #include <sstream>
-// egeg
+
 int main()
 {
     //0x23 -> 35
