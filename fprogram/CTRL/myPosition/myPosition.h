@@ -24,7 +24,7 @@ typedef struct myPosition
 
 } myPosition;
 
-void init_myPosition(myPosition *mp);
+void mp_init(myPosition *mp);
 void set_new_position(CtrlStruct *cvs);
 double limit_angle(double th);
 

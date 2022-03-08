@@ -1,6 +1,6 @@
 /*!
  * \file midLevelCtrlPF.h
- * \brief Middle-level controller of the robot
+ * \brief Middle-level controller of the robot for Potential Field method
  */
 
 #ifndef _MIDLEVELCTRLPF_H_

@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 
 typedef struct lowLevelCtrl
@@ -24,7 +25,7 @@ typedef struct lowLevelCtrl
 
 } lowLevelCtrl;
 
-void init_lowLevelCtrl(lowLevelCtrl *llc);
+void llc_init(lowLevelCtrl *llc);
 void set_commands(CtrlStruct *cvs, double r_sp_ref, double l_sp_ref);
 
 #endif

@@ -21,23 +21,23 @@ void CAN::init()
     system("cansend can0 708#1DFF80"); // MOTOR R INIT
 }
 
-void CAN::setSpeeds(int cmd_l, int cmd_r)
+void CAN::setSpeeds(int r_cmd, int l_cmd)
 {
-    cmd_l = cmd_l + 35;
-    cmd_r = cmd_r + 35;
-    std::stringstream cmd_l_stream;
-    std::stringstream cmd_r_stream;
-    cmd_l_stream <<"cansend can0 708#25FF";
-    cmd_r_stream <<"cansend can0 708#26FF";
+    r_cmd = r_cmd + 35;
+    l_cmd = l_cmd + 35;
+    std::stringstream r_cmd_stream;
+    std::stringstream l_cmd_stream;
+    r_cmd_stream <<"cansend can0 708#26FF";
+    l_cmd_stream <<"cansend can0 708#25FF";
 
-    if (cmd_l < 16) cmd_l_stream << "0";
-    cmd_l_stream << std::hex << cmd_l;
-    std::string sl = cmd_l_stream.str();
+    if (l_cmd < 16) l_cmd_stream << "0";
+    l_cmd_stream << std::hex << l_cmd;
+    std::string sl = l_cmd_stream.str();
     const char * cl = sl.c_str();
 
-    if (cmd_r < 16) cmd_r_stream << "0";
-    cmd_r_stream << std::hex << cmd_r;
-    std::string sr = cmd_r_stream.str();
+    if (r_cmd < 16) r_cmd_stream << "0";
+    r_cmd_stream << std::hex << r_cmd;
+    std::string sr = r_cmd_stream.str();
     const char * cr = sr.c_str();
 
     printf("cl = %s | cr = %s\n", cl, cr);
