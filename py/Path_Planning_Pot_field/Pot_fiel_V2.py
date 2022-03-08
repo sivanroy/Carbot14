@@ -13,7 +13,7 @@ from sympy.geometry import *
 
 def calc_AttractivePotential(x,y,x_goal,y_goal,R):
     
-    ALPHA   = 1     # Scaling factor attractive potential
+    ALPHA   = 5        # Scaling factor attractive potential
     d_limit = 2      # Composite potential field limit
     
     # Distance to goal
@@ -35,10 +35,10 @@ def calc_AttractivePotential(x,y,x_goal,y_goal,R):
 
 def calc_RepulsivePotential(x,y,x_obst,y_obst,R):
     
-    ETHA = 0.2       # Scaling factor repulsive potential
-    front_obst = 5   # Influence dimension of obstacle
+    ETHA = 10      # Scaling factor repulsive potential
+    front_obst = 2  # Influence dimension of obstacle
     
-    radius_obst = 0.001       # Obstacle radius
+    radius_obst = 0.01       # Obstacle radius
     
     Fx = 0.0
     Fy = 0.0
@@ -51,16 +51,21 @@ def calc_RepulsivePotential(x,y,x_obst,y_obst,R):
         # If in robot range
         if d <= R:
             
-            if radius_obst < d <= front_obst:
+            if d <= front_obst:
                 
                 Fx += ETHA * (1/front_obst - 1/d) * 1/(d*d) * (x-x_obst[i])/2
                 Fy += ETHA * (1/front_obst - 1/d) * 1/(d*d) * (y-y_obst[i])/2
+                         
+            else:
+                
+                Fx += 0
+                Fy += 0
             
         # If not in robot range
         else:
             
             continue
-        
+             
     return Fx,Fy
         
         
@@ -87,10 +92,10 @@ def travel_loop(t0,tf,steps):
     dt = int((tf-t0)/steps)
     
     x,y   = 0,0
-    xg,yg = 1,1
-    xo    = [0.5]
-    yo    = [0.5]
-    R     = 10
+    xg,yg = 5,5
+    xo    = [2,4]
+    yo    = [1.9,4.5]
+    R     = 2
     
     x_pos = np.zeros(steps)
     y_pos = np.zeros(steps)
@@ -101,6 +106,8 @@ def travel_loop(t0,tf,steps):
     v_x   = np.zeros(steps-1)
     v_y   = np.zeros(steps-1)
     theta = np.zeros(steps-1)
+    
+    print(x,y)
       
     for i in range(t0,tf-1,dt):
               
@@ -115,13 +122,18 @@ def travel_loop(t0,tf,steps):
         x_pos[i+1] = new_x
         y_pos[i+1] = new_y
         
+        
     return x_pos,y_pos,theta
         
-x_pos,y_pos,theta = travel_loop(0, 100, 100)
+x_pos,y_pos,theta = travel_loop(0, 1000, 1000)
 
-print(x_pos)
+fig = plt.figure(figsize =(10, 7))
 
 plt.plot(x_pos,y_pos,'bo')
+plt.plot(0,0,'bo',color = 'black')
+plt.plot(2,1.9,'bo',color = 'red')
+plt.plot(4,4.5,'bo',color = 'red')
+plt.plot(5,5,'bo',color = 'green')
 
 
 
