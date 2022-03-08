@@ -66,20 +66,26 @@ def calc_RepulsivePotential(x,y,x_obst,y_obst,R):
         
 def main(x,y,xg,yg,xo,yo,R):
     
-    F_att_x,F_att_y = calc_AttractivePotential(x,y,xg,yg,d_limit,R)
-    F_rep_x,F_rep_y = calc_RepulsivePotential(x,y,xo,yo,front_obst,R)
+    F_att_x,F_att_y = calc_AttractivePotential(x,y,xg,yg,R)
+    F_rep_x,F_rep_y = calc_RepulsivePotential(x,y,xo,yo,R)
     
-    F_tot_x = F_att_x + F_rep_x
-    F_tot_y = F_att_y + F_rep_y
+    F_tot_x = (F_att_x + F_rep_x) * -1
+    F_tot_y = (F_att_y + F_rep_y) * -1
     
-    gain_vx = 1
-    gain_vy = 1
+    gain_vx = 0.1
+    gain_vy = 0.1
     
-    v_x = gain_vx * F_tot_x
-    v_y = gain_vy * F_tot_y
+    v_x = gain_vx * F_tot_x # [m/s]
+    v_y = gain_vy * F_tot_y # [m/s]
+    
+    theta = np.arctan(F_tot_y/F_tot_x) * 180/np.pi # [degrees]
+    
+    print(theta)
+    print(v_x)
+    print(v_y)
        
     return
 
-main();
+main(0,0,2,3,0,0,2);
 
  
