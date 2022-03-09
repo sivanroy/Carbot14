@@ -21,19 +21,24 @@ int main() {
     int ticksLmax = 0; int ticksRmax = 0;
 
     int i = 0;
-    while (i < 500) {
+    while (i < 10000) {
         auto start = high_resolution_clock::now();
 
-        int countL = DE02Rpi.measure(1,1);
-        int countR = DE02Rpi.measure(1,0);
+        int countL_enc = DE02Rpi.measure(1,1);
+        int countR_enc = DE02Rpi.measure(1,0);
 
-        if (countL != 0) printf("L = %d\n", countL);
-        if (countR != 0) printf("R = %d\n", countR);
+        int countL_odo = DE02Rpi.measure(1,1);
+        int countR_odo = DE02Rpi.measure(1,0);
+
+        if (countL_enc != 0) printf("L_enc = %d\n", countL_enc);
+        if (countR_enc != 0) printf("R_enc = %d\n", countR_enc);
+        if (countL_odo != 0) printf("L_odo = %d\n", countL_odo);
+        if (countR_odo != 0) printf("R_odo = %d\n", countR_odo);
         //printf("L = %d\n", countL);
         auto stop = high_resolution_clock::now();
         auto duration = duration_cast<microseconds>(stop - start);
         dtExec = duration.count();
-        printf("dt-dtExec = %lld\n", dt - dtExec);
+        printf("dt-dtExec = %lld\n---------------------------\n", dt - dtExec);
 
         ticksLmax += countL;
         ticksRmax += countR;

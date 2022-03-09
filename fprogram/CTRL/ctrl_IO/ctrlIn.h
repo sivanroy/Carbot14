@@ -20,7 +20,8 @@ typedef struct ctrlIn
     double t; ///< time reference [s]
     double dt; ///< time-step : time between 2 updates
 
-    int radPerTickEnc
+    int radPerTick_enc; ///< radian per tick of the encoders
+    int radPerTick_odo; ///< radian per tick of the odometers
 
     DE02Rpi d2r; ///< class to communicate with DE0-Nano
 
