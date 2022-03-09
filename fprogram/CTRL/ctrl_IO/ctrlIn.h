@@ -11,16 +11,27 @@
 #include <string.h>
 #include <math.h>
 
+#include "../ctrlStruct/ctrlStruct.h"
+#include "../LIB/DE02Rpi/DE02Rpi.h"
+
 
 typedef struct ctrlIn
 {
     double t; ///< time reference [s]
+    double dt; ///< time-step : time between 2 updates
 
-    double r_sp_mes; ///< right wheel speed [rad/s] : positive when the robot is going forward
-    double l_sp_mes; ///< left wheel speed [rad/s] : positive when the robot is going forward
+    int radPerTickEnc
+
+    DE02Rpi d2r; ///< class to communicate with DE0-Nano
+
+    double r_sp_mes_enc; ///< right wheel speed [rad/s] : positive when the robot is going forward
+    double l_sp_mes_enc; ///< left wheel speed [rad/s] : positive when the robot is going forward
+    double r_sp_mes_odo; ///< right odometer speed [rad/s] : positive when the robot is going forward
+    double l_sp_mes_odo; ///< left odometer speed [rad/s] : positive when the robot is going forward
 
 } ctrlIn;
 
 void ctrlIn_init(ctrlIn *inputs);
+void get_speeds_mes(ctrlStruct *cvs);
 
 #endif

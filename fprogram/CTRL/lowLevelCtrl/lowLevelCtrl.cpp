@@ -32,8 +32,8 @@ void set_commands(CtrlStruct *cvs, double r_sp_ref, double l_sp_ref)
     outputs = cvs->outputs;
     llc  = cvs->llc;
 
-    double r_sp_mes = inputs->r_sp_ref;
-    double l_sp_mes = inputs->l_sp_ref;
+    double r_sp_mes = inputs->r_sp_mes_enc;
+    double l_sp_mes = inputs->l_sp_mes_enc;
 
     //kphi term
     double kphi_r = r_sp_mes * llc->kphiOnK;

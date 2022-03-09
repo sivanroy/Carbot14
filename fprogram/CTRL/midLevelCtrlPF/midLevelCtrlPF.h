@@ -11,6 +11,8 @@
 #include <string.h>
 #include <math.h>
 
+#include "../ctrlStruct/ctrlStruct.h"
+
 
 typedef struct midLevelCtrlPF
 {

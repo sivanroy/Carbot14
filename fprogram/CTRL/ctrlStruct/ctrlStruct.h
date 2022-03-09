@@ -11,6 +11,12 @@
 #include <string.h>
 #include <math.h>
 
+#include "../ctrl_IO/ctrlIn.h"
+#include "../ctrl_IO/ctrlOut.h"
+#include "../lowLevelCtrl/lowLevelCtrl.h"
+#include "../myPosition/myPosition.h"
+#include "../midLevelCtrlPF/midLevelCtrlPF.h"
+
 
 typedef struct ctrlStruct
 {
@@ -18,10 +24,12 @@ typedef struct ctrlStruct
     ctrlOut *outputs; ///< controller outputs
 
     lowLevelCtrl *llc; ///< low-level controller
+    myPosition *mp; ///< localization of the robot
     midLevelCtrlPF *mlcPF; ///< middle-level controller of the Potential Field method
 
 } ctrlStruct;
 
-void
+ctrlStruct* cvs_init();
+void cvs_free(ctrlStruct *cvs);
 
 #endif
