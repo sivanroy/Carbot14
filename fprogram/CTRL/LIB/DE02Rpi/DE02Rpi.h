@@ -26,9 +26,9 @@ public:
     // PUBLIC METHODS
     void init(); // Initialize SPI bus (channel [0 or 1], SPIspeed [Hz])
     unsigned char enc_address(int encoder, int left);
-    int enc_measure(int encoder, int left, int verbose);
+    int enc_measure(int encoder, int left, bool verbose = 0);
     unsigned char sonar_address(int front, int left);
-    int sonar_measure(int front, int left, int verbose);
+    int sonar_measure(int front, int left, bool verbose = 0);
 
 private:
     int channel;

@@ -1,5 +1,5 @@
 //
-// Created by Louis Libert on 9/03/22.
+// Created by Louis Libert on 10/03/22.
 //
 #include <iostream>
 #include <unistd.h>
@@ -17,50 +17,50 @@ int main()
     // variables declaration
     CtrlIn  *inputs;
     CtrlOut *outputs;
-    lowLevelCtrl *llc;
-    myPosition *mp;
-    midLevelCtrlPF *mlcPF;
     double t;
     double dt;
 
     // variables initialization
     inputs  = cvs->inputs;
     outputs = cvs->outputs;
-    llc  = cvs->llc;
-    mp = cvs->mp;
-    mlcPF = cvs->mlcPF;
     t = inputs->t;
     dt = inputs->dt;
 
-    // loop
-    double r_sp_ref = 0.0;
-    double l_sp_ref = 0.0;
+    int r_cmd = 0;
+    int l_cmd = 0;
 
     while (inputs->t < 5) {
         auto start = high_resolution_clock::now();
 
         get_speeds_mes(cvs); // ctrlIn
 
+        printf("r_sp_mes_enc = %f | l_sp_mes_enc = %f\n", inputs->r_sp_mes_enc, inputs->l_sp_mes_enc);
+        printf("r_sp_mes_odo = %f | l_sp_mes_odo = %f\n", inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
+
         if (t >= 0 && t < 2) {
-            r_sp_ref = 2.0;
-            l_sp_ref = 2.0;
+            r_cmd = 10;
+            l_cmd = 10;
         }
         else if (t >= 2 && t < 4) {
-            r_sp_ref = -4.0;
-            l_sp_ref = -4.0;
+            r_cmd = 20;
+            l_cmd = 20;
+        }
+        else if (t >= 4 && t < 6) {
+            r_cmd = -10;
+            l_cmd = 10;
         }
         else {
-            r_sp_ref = 0.0;
-            l_sp_ref = 0.0;
+            r_cmd = 0;
+            l_cmd = 0;
         }
-        set_commands(cvs, r_sp_ref, l_sp_ref); // llc
+        outputs->r_cmd = r_cmd;
+        outputs->l_cmd = l_cmd
         send_commands(cvs); // ctrlOut
 
         update_time(cvs);
         auto stop = high_resolution_clock::now();
         auto duration = duration_cast<microseconds>(stop - start);
         printf("duration.count() = %lld us | t = %f\n-------------\n", duration.count(), inputs->t);
-
 
         usleep(dt * 1000000 - duration.count());
     }

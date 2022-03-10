@@ -11,14 +11,20 @@
 #include <string.h>
 #include <math.h>
 
+#include "../ctrlStruct/ctrlStruct.h"
+#include "../LIB/CAN/CAN.h"
+
 
 typedef struct ctrlOut
 {
     int r_cmd; ///< Command [-] of the right wheel : bounded in [-35 ; 35]
     int l_cmd; ///< Command [-] of the left wheel : bounded in [-35 ; 35]
 
+    CAN can; ///< class to control motors with CAN bus
+
 } ctrlOut;
 
 void ctrlOut_init(ctrlOut *outputs);
+void send_commands(ctrlStruct *cvs);
 
 #endif

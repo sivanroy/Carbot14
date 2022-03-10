@@ -56,7 +56,7 @@ unsigned char DE02Rpi::enc_address(int encoder, int left)
     return addr;
 }
 
-int DE02Rpi::enc_measure(int encoder, int left, int verbose = 0)
+int DE02Rpi::enc_measure(int encoder, int left, bool verbose)
 {
     unsigned char buffer[5];
     unsigned char addr = enc_address(encoder, left);
@@ -83,7 +83,7 @@ unsigned char DE02Rpi::sonar_address(int front, int left)
     return addr;
 }
 
-int DE02Rpi::sonar_measure(int front, int left, int verbose = 0)
+int DE02Rpi::sonar_measure(int front, int left, bool verbose)
 {
     unsigned char buffer[5];
     unsigned char addr = sonar_address(front, left);

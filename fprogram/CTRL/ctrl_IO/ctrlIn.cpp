@@ -25,6 +25,27 @@ void ctrlIn_init(ctrlIn *inputs)
 void get_speeds_mes(ctrlStruct *cvs)
 {
     ctrlIn *inputs;
-
     inputs = cvs->inputs;
+
+    double dt = inputs->dt;
+    double rpt_enc = inputs->radPerTick_enc;
+    double rpt_odo = inputs->radPerTick_odo;
+
+    int r_ticks_enc = inputs->d2r.enc_measure(1, 0);
+    int l_ticks_enc = inputs->d2r.enc_measure(1, 1);
+    int r_ticks_odo = inputs->d2r.enc_measure(0, 0);
+    int l_ticks_odo = inputs->d2r.enc_measure(0, 1);
+
+    inputs->r_sp_mes_enc = - r_ticks_enc * rpt_enc/dt;
+    inputs->l_sp_mes_enc =   l_ticks_enc * rpt_enc/dt;
+    inputs->r_sp_mes_odo = - r_ticks_odo * rpt_odo/dt;
+    inputs->l_sp_mes_odo =   l_ticks_odo * rpt_odo/dt;
+}
+
+void update_time(ctrlStruct *cvs)
+{
+    ctrlIn *inputs;
+    inputs = cvs->inputs;
+
+    inputs->t += inputs->dt;
 }

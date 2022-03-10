@@ -21,7 +21,7 @@ void CAN::init()
     system("cansend can0 708#1DFF80"); // MOTOR R INIT
 }
 
-void CAN::setSpeeds(int r_cmd, int l_cmd)
+void CAN::motor_commands(int r_cmd, int l_cmd)
 {
     r_cmd = r_cmd + 35;
     l_cmd = l_cmd + 35;

@@ -17,7 +17,7 @@ class CAN
 public:
     CAN();
     void init();
-    void setSpeeds(int r_cmd, int l_cmd);
+    void motor_commands(int r_cmd, int l_cmd);
     void stop();
 private:
 
