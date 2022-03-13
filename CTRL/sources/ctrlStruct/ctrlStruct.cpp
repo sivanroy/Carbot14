@@ -26,6 +26,10 @@ ctrlStruct* cvs_init()
     cvs->mlcPF = (midLevelCtrlPF*) malloc(sizeof(midLevelCtrlPF));
     mlcPF_init(cvs->mlcPF);
 
+    // txt files
+    cvs->llc_data = fopen("llc_data.txt", "w");
+    if (cvs->llc_data == NULL) printf("Enable to open file llc_data.txt\n");
+
     return cvs;
 }
 

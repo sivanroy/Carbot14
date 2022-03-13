@@ -34,6 +34,8 @@ typedef struct ctrlStruct
     myPosition *mp; ///< localization of the robot
     midLevelCtrlPF *mlcPF; ///< middle-level controller of the Potential Field method
 
+    FILE *llc_data;
+
 } ctrlStruct;
 
 ctrlStruct* cvs_init();

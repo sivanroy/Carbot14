@@ -20,13 +20,17 @@ int main()
     // variables declaration
     ctrlIn  *inputs;
     ctrlOut *outputs;
-    double t;
+    lowLevelCtrl *llc;
+    myPosition *mp;
+    midLevelCtrlPF *mlcPF;
     double dt;
 
     // variables initialization
     inputs  = cvs->inputs;
     outputs = cvs->outputs;
-    t = inputs->t;
+    llc  = cvs->llc;
+    mp = cvs->mp;
+    mlcPF = cvs->mlcPF;
     dt = inputs->dt;
 
     int r_cmd = 0;
@@ -40,15 +44,15 @@ int main()
         printf("r_sp_mes_enc = %f | l_sp_mes_enc = %f\n", inputs->r_sp_mes_enc, inputs->l_sp_mes_enc);
         printf("r_sp_mes_odo = %f | l_sp_mes_odo = %f\n", inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
 
-        if (t >= 0 && t < 2) {
+        if (inputs->t >= 0 && inputs->t < 2) {
             r_cmd = 10;
             l_cmd = 10;
         }
-        else if (t >= 2 && t < 4) {
+        else if (inputs->t >= 2 && inputs->t < 4) {
             r_cmd = 20;
             l_cmd = 20;
         }
-        else if (t >= 4 && t < 6) {
+        else if (inputs->t >= 4 && inputs->t < 6) {
             r_cmd = -10;
             l_cmd = 10;
         }
@@ -59,6 +63,8 @@ int main()
         outputs->r_cmd = r_cmd;
         outputs->l_cmd = l_cmd;
         send_commands(cvs); // ctrlOut
+
+        fprintf(cvs->llc_data, "%f,%f,%f,%f,%f\n", inputs->t, r_cmd, l_cmd, inputs->r_sp_mes_enc, inputs->l_sp_mes_enc);
 
         update_time(cvs);
         auto stop = high_resolution_clock::now();
