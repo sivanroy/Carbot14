@@ -7,6 +7,7 @@
 #include <chrono>
 
 #include "../ctrlStruct/ctrlStruct.h"
+#include "../rplidar_sdk/sdk/include/rplidar.h"
 
 
 using namespace std::chrono;

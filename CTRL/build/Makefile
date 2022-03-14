@@ -16,7 +16,7 @@ TARGET = exec
 VERBOSE = FALSE
 
 # Create the list of directories
-DIRS = main ctrlStruct ctrl_IO lowLevelCtrl midLevelCtrlPF myPosition CAN DE02Rpi
+DIRS = main ctrlStruct ctrl_IO lowLevelCtrl midLevelCtrlPF myPosition CAN DE02Rpi rplidar_sdk/sdk/include rplidar_sdk/sdk/src rplidar_sdk/sdk/src/arch/linux rplidar_sdk/sdk/src/hal
 SOURCEDIRS = $(foreach dir, $(DIRS), $(addprefix $(SOURCEDIR)/, $(dir)))
 TARGETDIRS = $(foreach dir, $(DIRS), $(addprefix $(BUILDDIR)/, $(dir)))
 
@@ -37,7 +37,7 @@ DEPS = $(OBJS:.o=.d)
 
 # Name the compiler
 CC = g++
-LIB = -lwiringPi
+LIB = -lwiringPi -lpthread
 
 RM = rm -rf
 RMDIR = rm -rf
@@ -83,4 +83,5 @@ directories:
 clean:
 	$(HIDE)$(RMDIR) $(subst /,$(PSEP),$(TARGETDIRS)) $(ERRIGNORE)
 	$(HIDE)$(RM) $(TARGET) $(ERRIGNORE)
+	$(HIDE)$(RMDIR) rplidar_sdk $(ERRIGNORE)
 	@echo Cleaning done !

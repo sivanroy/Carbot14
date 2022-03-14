@@ -65,6 +65,13 @@ can_test.o: can_test.cpp
 	$(CC) $(CFLAGS) -c can_test.cpp
 
 
+ltest: lidar_test.o
+	$(CC) $(CFLAGS) -o ltest lidar_test.o
+
+lidar_test.o: lidar_test.cpp
+	$(CC) $(CFLAGS) -c lidar_test.cpp
+
+
 controlledWheels.o: controlledWheels.h
 Lib/DE02Rpi/DE02Rpi.o: Lib/DE02Rpi/DE02Rpi.h
 Lib/CAN/CAN.o: Lib/CAN/CAN.h

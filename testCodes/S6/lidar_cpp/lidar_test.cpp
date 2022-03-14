@@ -4,12 +4,11 @@
 
 #include <iostream>
 #include <errno.h>
-#include <wiringPiSPI.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "RPLidar/rplidar.h"
+#include <rplidar.h>
 
 int main() {
 
