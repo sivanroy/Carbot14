@@ -14,9 +14,10 @@ int main()
 
     controlledWheels cw;
 
+    long long int dt = 10000;
     double deltat = 0.01;
     double wheelDiam = 0.06;
-    double radPerTickEncod = 2*M_PI/(8192*10);
+    double radPerTickEncod = 2*M_PI/(8192*19);
 
     long long int dtExec = 0;
     double dL = 0; double dR = 0;
@@ -47,19 +48,18 @@ int main()
             printf("sLmes = %f | sRmes = %f\n", speedMesL, speedMesR);
             printf("ticksL = %d| ticksR = %d\n", ticksL, ticksR);
             cw.sendV(speedMesL, speedMesR, true);
-            usleep(1000000 * (0.01-dtExec));
 
             auto stop = high_resolution_clock::now();
             auto duration = duration_cast<microseconds>(stop - start);
-            dtExec += duration.count();
-            printf("-> exec time : %lld us\n", duration.count());
+            dtExec = duration.count();
+            printf("-> exec time : %lld us\n", dtExec);
+            usleep(dt - dtExec));
         }
     }
     cw.stop();
 
     printf("\n***************************************\n");
     printf("dL = %f    | dR = %f\n", dL, dR);
-    printf("-> exec time : %lld us\n", dtExec);
     printf("***************************************\n");
 
     return 0;

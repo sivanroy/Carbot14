@@ -12,8 +12,8 @@ void llc_init(lowLevelCtrl *llc)
     llc->max = 35;
     llc->min = -35;
 
-    llc->Kp = 7.385;
-    llc->Ki = 1061.75;
+    llc->Kp = 0.706;
+    llc->Ki = 0;//39.437;
 
     llc->r_integral_err = 0.0;
     llc->l_integral_err = 0.0;

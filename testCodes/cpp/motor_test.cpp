@@ -1,6 +1,6 @@
 #include <iostream>
 #include <unistd.h>
-#include "CAN.h"
+#include "Lib/CAN/CAN.h"
 
 /*
  * Cmd to run :

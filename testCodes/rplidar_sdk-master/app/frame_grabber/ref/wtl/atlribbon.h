@@ -39,10 +39,10 @@
 	#pragma comment(lib, "shlwapi.lib")
 #endif
 
-#include <atlmisc.h>    // for RecentDocumentList classes
-#include <atlframe.h>   // for Frame and UpdateUI classes
-#include <atlctrls.h>   // required for atlctrlw.h
-#include <atlctrlw.h>   // for CCommandBarCtrl
+#include "atlmisc.h"    // for RecentDocumentList classes
+#include "atlframe.h"   // for Frame and UpdateUI classes
+#include "atlctrls.h"   // required for atlctrlw.h
+#include "atlctrlw.h"   // for CCommandBarCtrl
 
 #if !defined(_WTL_USE_CSTRING) && !defined(__ATLSTR_H__)
   #pragma warning(disable : 4530)   // unwind semantics not enabled

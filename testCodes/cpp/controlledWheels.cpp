@@ -3,15 +3,6 @@
 #ifndef CONTROLLEDWHEELS_SRC
 #define CONTROLLEDWHEELS_SRC
 
-double dt = 0.01;
-double wheelP = 1;
-double wheelI = 0.1;
-double wheelD = 0;
-double wheelMax = 50;
-double wheelMin = -50;
-double odoDia = 0.046;
-double wheelDia = 0.06;
-double ticksEnc = 2048*4*10;
 
 controlledWheels::controlledWheels()
 {

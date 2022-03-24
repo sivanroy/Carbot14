@@ -31,7 +31,7 @@
 
 #include "resource.h"
 #include "scanView.h"
-#include "aboutdlg.h"
+#include "AboutDlg.h"
 #include "MainFrm.h"
 #include "ChooseConnectionDlg.h"
 #include "drvlogic\lidarmgr.h"

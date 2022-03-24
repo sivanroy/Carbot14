@@ -8,6 +8,7 @@
 
 ctrlStruct* cvs_init()
 {
+    printf("cvs init : start\n");
     ctrlStruct *cvs;
     cvs = (ctrlStruct*) malloc(sizeof(ctrlStruct));
 
@@ -35,6 +36,7 @@ ctrlStruct* cvs_init()
 
 void cvs_free(ctrlStruct *cvs)
 {
+    can_free(cvs);
     free(cvs->inputs);
     free(cvs->outputs);
     free(cvs->llc);

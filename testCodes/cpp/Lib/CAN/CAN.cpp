@@ -4,48 +4,127 @@
 
 #include "CAN.h"
 
-CAN::CAN() {}
+CAN::CAN() {
+
+    if ((this->s = socket(PF_CAN, SOCK_RAW, CAN_RAW)) < 0) {
+        perror("Socket");
+    }
+    strcpy(this->ifr.ifr_name, "can0");
+
+    if (ioctl(this->s, SIOCGIFINDEX, &(this->ifr)) < 0) {
+        perror("ioctl");
+    }
+    memset(&(this->addr), 0, sizeof(this->addr));
+    this->addr.can_family = AF_CAN;
+    this->addr.can_ifindex = this->ifr.ifr_ifindex;
+    if (bind(this->s, (struct sockaddr *)&(this->addr), sizeof(this->addr)) < 0) {
+        perror("Bind");
+    }
+    this->frame.can_id = 0x708;
+    this->frame.can_dlc = 3; // 3 bytes transmitted
+}
 
 void CAN::init()
 {
-
+    /*!
+     * CAN UP
+     */
     system("sudo ifconfig can0 down");
     system("sudo ip link set can0 type can bitrate 125000");
     system("sudo ifconfig can0 up");
     usleep(1000);
 
-    system("cansend can0 708#1EFF40");
-    system("cansend can0 708#1EFF00");
-    system("cansend can0 708#1CFF80");
-    system("cansend can0 708#1DFF80");
+    /*!
+     * LED ON -> OFF
+     */
+    this->frame.data[0] = 0x1E;
+    this->frame.data[1] = 0xFF;
+    this->frame.data[2] = 0x40;
+
+    if (write(this->s, &(this->frame), sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+        perror("Write LED ON");
+    }
+    printf("Write OK : LED ON\n");
+
+    this->frame.data[0] = 0x1E;
+    this->frame.data[1] = 0xFF;
+    this->frame.data[2] = 0x00;
+
+    if (write(this->s, &(this->frame), sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+        perror("Write LED OFF");
+    }
+    printf("Write OK : LED OFF\n");
+
+    /*!
+     * Motors INIT
+     */
+    this->frame.data[0] = 0x1C;
+    this->frame.data[1] = 0xFF;
+    this->frame.data[2] = 0x80;
+
+    if (write(this->s, &(this->frame), sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+        perror("Write INIT M_l");
+    }
+    printf("Write OK : INIT M_l\n");
+
+    this->frame.data[0] = 0x1D;
+    this->frame.data[1] = 0xFF;
+    this->frame.data[2] = 0x80;
+
+    if (write(this->s, &(this->frame), sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+        perror("Write INIT M_r");
+    }
+    printf("Write OK : INIT M_r\n");
 }
 
 void CAN::setSpeeds(int cmd_l, int cmd_r)
 {
     cmd_l = cmd_l + 35;
     cmd_r = cmd_r + 35;
-    std::stringstream cmd_l_stream;
-    std::stringstream cmd_r_stream;
-    cmd_l_stream <<"cansend can0 708#25FF";
-    cmd_r_stream <<"cansend can0 708#26FF";
 
-    if (cmd_l < 16) cmd_l_stream << "0";
-    cmd_l_stream << std::hex << cmd_l;
-    std::string sl = cmd_l_stream.str();
-    const char * cl = sl.c_str();
+    unsigned char cmd_l_hex = (unsigned char) cmd_l;
+    unsigned char cmd_r_hex = (unsigned char) cmd_r;
 
-    if (cmd_r < 16) cmd_r_stream << "0";
-    cmd_r_stream << std::hex << cmd_r;
-    std::string sr = cmd_r_stream.str();
-    const char * cr = sr.c_str();
+    this->frame.data[0] = 0x25;
+    this->frame.data[1] = 0xFF;
+    this->frame.data[2] = cmd_l_hex;
 
-    printf("cl = %s | cr = %s\n", cl, cr);
-    system(cl);
-    system(cr);
+    if (write(this->s, &(this->frame), sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+        perror("Write STOP M_l");
+    }
+
+    this->frame.data[0] = 0x26;
+    this->frame.data[1] = 0xFF;
+    this->frame.data[2] = cmd_r_hex;
+
+    if (write(this->s, &(this->frame), sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+        perror("Write STOP M_r");
+    }
+
 }
 
 void CAN::stop()
 {
-    system("cansend can0 708#25FF23");
-    system("cansend can0 708#26FF23");
+    this->frame.data[0] = 0x25;
+    this->frame.data[1] = 0xFF;
+    this->frame.data[2] = 0x23;
+
+    if (write(this->s, &(this->frame), sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+        perror("Write STOP M_l");
+    }
+
+    this->frame.data[0] = 0x26;
+    this->frame.data[1] = 0xFF;
+    this->frame.data[2] = 0x23;
+
+    if (write(this->s, &(this->frame), sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+        perror("Write STOP M_r");
+    }
+}
+
+void CAN::freeCAN()
+{
+    if (close(this->s) < 0) {
+        perror("Close");
+    }
 }

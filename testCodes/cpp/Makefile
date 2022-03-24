@@ -5,7 +5,17 @@
  
 CC = g++
 CFLAGS = -Wall -g
-LIB = -lwiringPi -lpthread
+LIB = -lwiringPi #-lpthread
+
+# ****************************************************
+# Run socketCAN_test
+
+stest: socketCAN_test.o
+	$(CC) $(CFLAGS) -o stest socketCAN_test.o $(LIB)
+
+socketCAN_test.o: socketCAN_test.cpp
+	$(CC) $(CFLAGS) -c socketCAN_test.cpp $(LIB)
+
  
 # ****************************************************
 # Run motor_test
@@ -65,13 +75,6 @@ can_test.o: can_test.cpp
 	$(CC) $(CFLAGS) -c can_test.cpp
 
 
-ltest: lidar_test.o
-	$(CC) $(CFLAGS) -o ltest lidar_test.o
-
-lidar_test.o: lidar_test.cpp
-	$(CC) $(CFLAGS) -c lidar_test.cpp
-
-
 controlledWheels.o: controlledWheels.h
 Lib/DE02Rpi/DE02Rpi.o: Lib/DE02Rpi/DE02Rpi.h
 Lib/CAN/CAN.o: Lib/CAN/CAN.h
@@ -79,5 +82,5 @@ Lib/PID/pid.o: Lib/PID/pid.h
 
 
 clean:
-	rm -rf *.o mtest enctest conttest ticktest cantest EncCalib
+	rm -rf *.o stest mtest enctest conttest ticktest cantest EncCalib
 

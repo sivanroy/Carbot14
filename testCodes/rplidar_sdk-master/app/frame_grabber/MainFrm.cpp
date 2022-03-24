@@ -31,7 +31,7 @@
 #include "stdafx.h"
 #include "resource.h"
 
-#include "aboutdlg.h"
+#include "AboutDlg.h"
 #include "scanView.h"
 #include "MainFrm.h"
 #include "sdkcommon.h"

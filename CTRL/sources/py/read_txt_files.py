@@ -83,22 +83,33 @@ def plot_mlc_data():
 def plot_llc_data():
 
     Data = read_txt_file("../../build/llc_data.txt", 5)
-    """
-    plt.plot(Data[3], Data[4], label="ref")
-    plt.plot(Data[3], Data[6], label="mes")
-    plt.xlabel("t [s]")
-    plt.ylabel("w [rad/s]")
-    plt.title("R speed")
-    plt.legend()
-    plt.grid()
-    plt.show()
-    """
+    
+    moy_list = []
+    moy = 0
+    for i in range (len(Data[0])):
+        if Data[0][i] > 0.2:
+            moy_list.append(Data[4][i])
+            moy = moy + Data[4][i]
+            
+    moy = moy/len(moy_list)
+    print(moy)
+    
+    moy_95 = moy*0.95
+    
+    t_95 = 0
+    for i in range (len(Data[0])):
+        if Data[4][i] >= moy_95:
+            t_95 = Data[0][i]
+            break
+    print(t_95)
+
     plt.plot(Data[0], Data[2], label=r"$\omega_{ref}$", linewidth=2)
-    plt.plot(Data[0], Data[4], label=r"$\omega_{mes}$", linewidth=1.2)
+    plt.plot(Data[0], Data[4], label=r"$\omega_{mes,l}$", linewidth=1.2)
+    plt.plot(Data[0], Data[3], label=r"$\omega_{mes,r}$", linewidth=1.2)
     plt.xlabel("Time [s]")
     plt.ylabel(r"$\omega$ [rad/s]")
     plt.title("Wheels speed profile")
-    #plt.xlim(1.5, 2.5)
+    #plt.xlim(0, 0.05)
     #plt.ylim(-1, 6)
     #plt.axis([0, 10, -6, 6])
     plt.legend()
@@ -236,3 +247,4 @@ def plot_op_data():
     #plt.savefig("op_pos.pdf", format="pdf")
     plt.show()
 
+plot_llc_data()

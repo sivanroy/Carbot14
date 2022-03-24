@@ -48,11 +48,11 @@ unsigned char DE02Rpi::giveAddress(int encoder, int left)
     unsigned char addr;
 
     if (encoder == 1) {
-        if (left == 1) addr = 0x01;
-        else addr = 0x00;
+        if (left == 1) addr = 0x00;//0x01;
+        else addr = 0x03;//0x00;
     } else {
-        if (left == 1) addr = 0x03;
-        else addr = 0x02;
+        if (left == 1) addr = 0x02;//0x03;
+        else addr = 0x01;//0x02;
     }
     return addr;
 }

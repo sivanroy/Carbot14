@@ -1,8 +1,8 @@
 //
 // Created by Louis Libert on 23/02/22.
 //
-#include "DE02Rpi.h"
-#include "CAN.h"
+#include "Lib/DE02Rpi/DE02Rpi.h"
+#include "Lib/CAN/CAN.h"
 
 #include <math.h>
 #include <chrono>
@@ -28,18 +28,24 @@ int main() {
     long long int dtExecMax = 0;
     long long int dtExec = 0;
 
-    int ticksLmax = 0; int ticksRmax = 0;
+    int countR_enc;
+    int countL_enc;
+    int countR_odo;
+    int countL_odo;
 
     while (i < 100) {
-        wheels.setSpeeds(uL, uR);
         auto start = high_resolution_clock::now();
+        wheels.setSpeeds(uL, uR);
 
+        countL_enc = DE02Rpi.measure(1,1);
+        countR_enc = DE02Rpi.measure(1,0);
+        countL_odo = DE02Rpi.measure(0,1);
+        countR_odo = DE02Rpi.measure(0,0);
 
-        int ticksL = DE02Rpi.measure(1, 1);
-        int ticksR = DE02Rpi.measure(1, 0);
-        ticksLmax += ticksL;
-        ticksRmax += ticksR;
-        printf("%d : ticksL = %d | ticksR = %d\n", i, ticksL, ticksR);
+        if (abs(countL_enc) > 10) printf("L_enc = %d\n", countL_enc);
+        if (abs(countR_enc) > 10) printf("R_enc = %d\n", countR_enc);
+        if (abs(countL_odo) > 10) printf("L_odo = %d\n", countL_odo);
+        if (abs(countR_odo) > 10) printf("R_odo = %d\n", countR_odo);
 
         i++;
 
@@ -47,14 +53,14 @@ int main() {
         auto duration = duration_cast<microseconds>(stop - start);
         dtExec = duration.count();
 
-        usleep(dt - dtExec);
         dtExecMax += dt;
-        printf("    -> exec time : %lld us\n", dt - dtExec);
+        printf("    -> exec time : %lld us\n", dtExec);
 
+        if (dtExec < dt) usleep(dt - dtExec);
     }
-    printf("ticksLmax = %d | ticksRmax = %d\n", ticksLmax, ticksRmax);
-    printf("-> exec time : %lld us\n", dtExecMax);
+    printf("dtExecMax = %f s\n", dtExecMax*1e-6);
     wheels.stop();
+    wheels.freeCAN();
 
     return 0;
 }
