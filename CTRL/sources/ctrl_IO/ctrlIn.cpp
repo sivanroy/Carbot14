@@ -8,17 +8,20 @@
 
 void ctrlIn_init(ctrlIn *inputs)
 {
+    /*!  Time variables  */
     inputs->t = 0.0;
     inputs->dt = 0.01;
 
+    /*!  Global variables  */
     inputs->radPerTick_enc = 2 * M_PI/(8192 * 19);
     inputs->radPerTick_odo = 2 * M_PI/8192;
 
-    //inputs->d2r.init();
+    /*!  DE02Rpi communication  */
     inputs->d2r_channel = 0;
     inputs->d2r_speed = 500000;
     wiringPiSPISetup(inputs->d2r_channel, inputs->d2r_speed = 500000);
 
+    /*!  Measured speeds of encoders and odometers  */
     inputs->r_sp_mes_enc = 0.0;
     inputs->l_sp_mes_enc = 0.0;
     inputs->r_sp_mes_odo = 0.0;
@@ -64,8 +67,8 @@ void get_d2r_data(ctrlStruct *cvs)
     double rpt_enc = inputs->radPerTick_enc;
     double rpt_odo = inputs->radPerTick_odo;
 
-    int r_ticks_enc = d2r_enc_measure(cvs, 1, 0, true);
-    int l_ticks_enc = d2r_enc_measure(cvs, 1, 1, true);
+    int r_ticks_enc = d2r_enc_measure(cvs, 1, 0);
+    int l_ticks_enc = d2r_enc_measure(cvs, 1, 1);
     int r_ticks_odo = d2r_enc_measure(cvs, 0, 0);
     int l_ticks_odo = d2r_enc_measure(cvs, 0, 1);
 

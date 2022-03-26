@@ -11,7 +11,7 @@ void mlcPF_init(midLevelCtrlPF *mlcPF)
     mlcPF->dt = 0.01;
 
     mlcPF->sigma = 1;
-    mlcPF->R_odo = 0.03;
+    mlcPF->R_odo = 0.022;
 
     mlcPF->Kp_th = 10.0;
 

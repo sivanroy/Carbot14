@@ -57,61 +57,6 @@ void lidarConfigure()
     lidar->startScan(0,1);
 }
 /*
-int main() {
-
-    CAN wheels;
-    wheels.init();
-
-    DE02Rpi DE02Rpi;
-    DE02Rpi.init();
-
-    int uL = 10; int uR = 10;
-
-    long long int dt = 10000;
-    //double wheelDiam = 0.06;
-    //double radPerTickEncod = 2*M_PI/(2048*4*10);
-    int i = 0;
-
-    long long int dtExecMax = 0;
-    long long int dtExec = 0;
-
-    int countR_enc;
-    int countL_enc;
-    int countR_odo;
-    int countL_odo;
-
-    while (i < 100) {
-        auto start = high_resolution_clock::now();
-        wheels.motor_commands(uR, uL);
-
-        countL_enc = DE02Rpi.enc_measure(1,1);
-        countR_enc = DE02Rpi.enc_measure(1,0);
-        countL_odo = DE02Rpi.enc_measure(0,1);
-        countR_odo = DE02Rpi.enc_measure(0,0);
-
-        if (abs(countL_enc) > 10) printf("L_enc = %d\n", countL_enc);
-        if (abs(countR_enc) > 10) printf("R_enc = %d\n", countR_enc);
-        if (abs(countL_odo) > 10) printf("L_odo = %d\n", countL_odo);
-        if (abs(countR_odo) > 10) printf("R_odo = %d\n", countR_odo);
-
-        i++;
-
-        auto stop = high_resolution_clock::now();
-        auto duration = duration_cast<microseconds>(stop - start);
-        dtExec = duration.count();
-
-        dtExecMax += dt;
-        printf("    -> exec time : %lld us\n", dtExec);
-
-        if (dtExec < dt) usleep(dt - dtExec);
-    }
-    printf("dtExecMax = %f s\n", dtExecMax*1e-6);
-    wheels.stop();
-    wheels.freeCAN();
-
-    return 0;
-}
-
 
 int main()
 {
@@ -169,14 +114,16 @@ int main()
     mlcPF = cvs->mlcPF;
     dt = inputs->dt;
 
-    int cmdON = 1;
+    int cmdON = 0;
     int llcON = 0;
+    int mlcPF_ON = 1;
+    int odoCalib = 0;
 
     if (cmdON) {
         int r_cmd = 0;
         int l_cmd = 0;
 
-        while (inputs->t < 1.5) {
+        while (inputs->t < 2) {
             auto start = high_resolution_clock::now();
 
             get_d2r_data(cvs); // ctrlIn
@@ -184,12 +131,12 @@ int main()
             printf("r_sp_mes_enc = %f | l_sp_mes_enc = %f\n", inputs->r_sp_mes_enc, inputs->l_sp_mes_enc);
             printf("r_sp_mes_odo = %f | l_sp_mes_odo = %f\n", inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
 
-            if (inputs->t >= 0 && inputs->t < 1.5) {
-                r_cmd = 10;
-                l_cmd = 10;
+            if (inputs->t >= 0 && inputs->t < 1) {
+                r_cmd = 5;
+                l_cmd = 5;
             }
 
-            else if (inputs->t >= 1.5 && inputs->t < 3) {
+            else if (inputs->t >= 1 && inputs->t < 2) {
                 r_cmd = 10;
                 l_cmd = 10;
             }
@@ -221,7 +168,7 @@ int main()
         double r_sp_ref = 0.0;
         double l_sp_ref = 0.0;
 
-        while (inputs->t < 1.5) {
+        while (inputs->t < 2) {
             auto start = high_resolution_clock::now();
 
             get_d2r_data(cvs); // ctrlIn
@@ -229,9 +176,9 @@ int main()
             printf("r_sp_mes_enc = %f | l_sp_mes_enc = %f\n", inputs->r_sp_mes_enc, inputs->l_sp_mes_enc);
             printf("r_sp_mes_odo = %f | l_sp_mes_odo = %f\n", inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
 
-            if (inputs->t >= 0 && inputs->t < 1.5) {
-                r_sp_ref = 2;
-                l_sp_ref = 2;
+            if (inputs->t >= 0 && inputs->t < 3) {
+                r_sp_ref = 10;
+                l_sp_ref = 10;
             }
 
             else if (inputs->t >= 1.5 && inputs->t < 3) {
@@ -252,7 +199,10 @@ int main()
             printf("cmd_r = %d | cmd_l = %d\n", outputs->r_cmd, outputs->l_cmd);
             send_commands(cvs);
 
-            fprintf(cvs->llc_data, "%f,%f,%f,%f,%f\n", inputs->t, r_sp_ref, l_sp_ref, inputs->r_sp_mes_enc, inputs->l_sp_mes_enc);
+            set_new_position(cvs);
+            printf("x = %f | y = %f | th = %f\n", mp->x, mp->y, mp->th);
+
+            fprintf(cvs->llc_data, "%f,%f,%f,%f,%f,%f,%f\n", inputs->t, r_sp_ref, l_sp_ref, inputs->r_sp_mes_enc, inputs->l_sp_mes_enc, inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
 
             update_time(cvs);
             auto stop = high_resolution_clock::now();
@@ -261,6 +211,67 @@ int main()
 
             usleep(dt * 1000000 - duration.count());
         }
+    }
+    if (mlcPF_ON) {
+        double v_ref = 0.2;
+        double th_ref = 0;
+
+        while (inputs->t < 4) {
+            auto start = high_resolution_clock::now();
+
+            if (inputs->t >= 2 && inputs->t < 4) th_ref = -M_PI/4;
+
+            get_d2r_data(cvs); // ctrlIn
+
+            printf("r_sp_mes_enc = %f | l_sp_mes_enc = %f\n", inputs->r_sp_mes_enc, inputs->l_sp_mes_enc);
+            printf("r_sp_mes_odo = %f | l_sp_mes_odo = %f\n", inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
+
+            mlcPF_out(cvs, v_ref, th_ref);
+            set_commands(cvs, mlcPF->r_sp_ref, mlcPF->l_sp_ref);
+            printf("cmd_r = %d | cmd_l = %d\n", outputs->r_cmd, outputs->l_cmd);
+            send_commands(cvs);
+
+            set_new_position(cvs);
+            printf("x = %f | y = %f | th = %f\n", mp->x, mp->y, mp->th);
+
+            fprintf(cvs->llc_data, "%f,%f,%f,%f,%f,%f,%f\n", inputs->t, mlcPF->r_sp_ref, mlcPF->l_sp_ref, inputs->r_sp_mes_enc, inputs->l_sp_mes_enc, inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
+
+            update_time(cvs);
+            auto stop = high_resolution_clock::now();
+            auto duration = duration_cast<microseconds>(stop - start);
+            printf("duration.count() = %lld us | t = %f\n-------------\n", duration.count(), inputs->t);
+
+            usleep(dt * 1000000 - duration.count());
+        }
+    }
+    if (odoCalib) {
+        int r_ticks_enc_tot = 0;
+        int l_ticks_enc_tot = 0;
+        int r_ticks_odo_tot = 0;
+        int l_ticks_odo_tot = 0;
+
+        while (inputs->t < 8) {
+            auto start = high_resolution_clock::now();
+
+            int r_ticks_enc = d2r_enc_measure(cvs, 1, 0, true);
+            int l_ticks_enc = d2r_enc_measure(cvs, 1, 1, true);
+            int r_ticks_odo = d2r_enc_measure(cvs, 0, 0, true);
+            int l_ticks_odo = d2r_enc_measure(cvs, 0, 1, true);
+
+            r_ticks_enc_tot += r_ticks_enc;
+            l_ticks_enc_tot += l_ticks_enc;
+            r_ticks_odo_tot += r_ticks_odo;
+            l_ticks_odo_tot += l_ticks_odo;
+
+            update_time(cvs);
+            auto stop = high_resolution_clock::now();
+            auto duration = duration_cast<microseconds>(stop - start);
+            printf("duration.count() = %lld us | t = %f\n-------------\n", duration.count(), inputs->t);
+
+            usleep(dt * 1000000 - duration.count());
+        }
+        printf("r_ticks_enc_tot = %d | l_ticks_enc_tot = %d\n", r_ticks_enc_tot, l_ticks_enc_tot);
+        printf("r_ticks_odo_tot = %d | l_ticks_odo_tot = %d\n", r_ticks_odo_tot, l_ticks_odo_tot);
     }
 
     motors_stop(cvs);

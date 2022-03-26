@@ -27,8 +27,8 @@ double limit_angle(double th)
 void mp_init(myPosition *mp)
 {
     mp->dt = 0.01;
-    mp->R_odo = 0.03;
-    mp->b = 0.18;
+    mp->R_odo = 0.022;
+    mp->b = 0.168;
 
     mp->x = 0.0;
     mp->y = 0.0;

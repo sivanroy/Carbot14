@@ -3,8 +3,8 @@
  * \brief Structure defining the inputs of the robot controller
  */
 
-#ifndef _CTRLIN_H_
-#define _CTRLIN_H_
+#ifndef CARBOT14_CTRLIN_H
+#define CARBOT14_CTRLIN_H
 
 #include <stdio.h>
 #include <stdlib.h>

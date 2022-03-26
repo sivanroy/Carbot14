@@ -3,8 +3,8 @@
  * \brief Localization of the robot
  */
 
-#ifndef _MYPOSITION_H_
-#define _MYPOSITION_H_
+#ifndef CARBOT14_MYPOSITION_H
+#define CARBOT14_MYPOSITION_H
 
 #include <stdio.h>
 #include <stdlib.h>

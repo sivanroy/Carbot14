@@ -3,8 +3,8 @@
  * \brief Controller main structure
  */
 
-#ifndef _CTRLSTRUCT_H_
-#define _CTRLSTRUCT_H_
+#ifndef CARBOT14_CTRLSTRUCT_H
+#define CARBOT14_CTRLSTRUCT_H
 
 #include <stdio.h>
 #include <stdlib.h>

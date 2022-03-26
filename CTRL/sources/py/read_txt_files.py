@@ -82,7 +82,7 @@ def plot_mlc_data():
 
 def plot_llc_data():
 
-    Data = read_txt_file("../../build/llc_data.txt", 5)
+    Data = read_txt_file("../../build/llc_data.txt", 7)
     
     moy_list = []
     moy = 0
@@ -106,6 +106,20 @@ def plot_llc_data():
     plt.plot(Data[0], Data[2], label=r"$\omega_{ref}$", linewidth=2)
     plt.plot(Data[0], Data[4], label=r"$\omega_{mes,l}$", linewidth=1.2)
     plt.plot(Data[0], Data[3], label=r"$\omega_{mes,r}$", linewidth=1.2)
+    plt.xlabel("Time [s]")
+    plt.ylabel(r"$\omega$ [rad/s]")
+    plt.title("Wheels speed profile")
+    #plt.xlim(0, 0.05)
+    #plt.ylim(-1, 6)
+    #plt.axis([0, 10, -6, 6])
+    plt.legend()
+    plt.grid()
+    #plt.savefig("speed_profile_zoom.pdf", format="pdf")
+    plt.show()
+    
+    plt.plot(Data[0], Data[2], label=r"$\omega_{ref}$", linewidth=2)
+    plt.plot(Data[0], Data[6], label=r"$\omega_{mes,l}$", linewidth=1.2)
+    plt.plot(Data[0], Data[5], label=r"$\omega_{mes,r}$", linewidth=1.2)
     plt.xlabel("Time [s]")
     plt.ylabel(r"$\omega$ [rad/s]")
     plt.title("Wheels speed profile")

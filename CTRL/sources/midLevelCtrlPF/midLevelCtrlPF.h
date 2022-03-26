@@ -3,8 +3,8 @@
  * \brief Middle-level controller of the robot for Potential Field method
  */
 
-#ifndef _MIDLEVELCTRLPF_H_
-#define _MIDLEVELCTRLPF_H_
+#ifndef CARBOT14_MIDLEVELCTRLPF_H
+#define CARBOT14_MIDLEVELCTRLPF_H
 
 #include <stdio.h>
 #include <stdlib.h>

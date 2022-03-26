@@ -3,8 +3,8 @@
  * \brief Structure defining the outputs of the robot controller
  */
 
-#ifndef _CTRLOUT_H_
-#define _CTRLOUT_H_
+#ifndef CARBOT14_CTRLOUT_H
+#define CARBOT14_CTRLOUT_H
 
 #include <errno.h>
 #include <unistd.h>
@@ -23,7 +23,6 @@
 #include <linux/can/raw.h>
 
 #include "../ctrlStruct/ctrlStruct.h"
-//#include "../CAN/CAN.h"
 
 
 typedef struct ctrlStruct ctrlStruct;
