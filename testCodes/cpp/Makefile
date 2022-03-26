@@ -7,6 +7,17 @@ CC = g++
 CFLAGS = -Wall -g
 LIB = -lwiringPi #-lpthread
 
+
+# ****************************************************
+# Run motor_test
+
+teensy: test_switch.o Lib/rs232/rs232.o
+	$(CC) $(CFLAGS) -o teensy test_switch.o Lib/rs232/rs232.o $(LIB)
+
+test_switch.o: test_switch.cpp Lib/rs232/rs232.h
+	$(CC) $(CFLAGS) -c test_switch.cpp $(LIB)
+
+
 # ****************************************************
 # Run socketCAN_test
 
@@ -79,8 +90,9 @@ controlledWheels.o: controlledWheels.h
 Lib/DE02Rpi/DE02Rpi.o: Lib/DE02Rpi/DE02Rpi.h
 Lib/CAN/CAN.o: Lib/CAN/CAN.h
 Lib/PID/pid.o: Lib/PID/pid.h
+Lib/rs232/rs232.o: Lib/rs232/rs232.h
 
 
 clean:
-	rm -rf *.o stest mtest enctest conttest ticktest cantest EncCalib
+	rm -rf *.o teensy stest mtest enctest conttest ticktest cantest EncCalib
 

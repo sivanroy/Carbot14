@@ -13,7 +13,6 @@
 #include <wiringPiSPI.h>
 
 #include "../ctrlStruct/ctrlStruct.h"
-//#include "../DE02Rpi/DE02Rpi.h"
 
 
 typedef struct ctrlStruct ctrlStruct;
@@ -26,7 +25,6 @@ typedef struct ctrlIn
     double radPerTick_enc; ///< radian per tick of the encoders
     double radPerTick_odo; ///< radian per tick of the odometers
 
-    //DE02Rpi d2r; ///< class to communicate with DE0-Nano
     int d2r_channel;
     int d2r_speed;
 
@@ -34,6 +32,10 @@ typedef struct ctrlIn
     double l_sp_mes_enc; ///< left wheel speed [rad/s] : positive when the robot is going forward
     double r_sp_mes_odo; ///< right odometer speed [rad/s] : positive when the robot is going forward
     double l_sp_mes_odo; ///< left odometer speed [rad/s] : positive when the robot is going forward
+
+    int rpl_data_size;
+    double rpl_a[RPL_MAX_DATA_SIZE];
+    double rpl_d[RPL_MAX_DATA_SIZE];
 
 } ctrlIn;
 

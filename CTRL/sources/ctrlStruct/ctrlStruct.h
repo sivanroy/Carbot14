@@ -16,6 +16,7 @@
 #include "../lowLevelCtrl/lowLevelCtrl.h"
 #include "../myPosition/myPosition.h"
 #include "../midLevelCtrlPF/midLevelCtrlPF.h"
+#include "../rplidar_sdk/rplStruct/rplStruct.h"
 
 
 typedef struct ctrlStruct ctrlStruct;
@@ -24,6 +25,7 @@ typedef struct ctrlOut ctrlOut;
 typedef struct lowLevelCtrl lowLevelCtrl;
 typedef struct myPosition myPosition;
 typedef struct midLevelCtrlPF midLevelCtrlPF;
+typedef struct rplStruct rplStruct;
 
 typedef struct ctrlStruct
 {
@@ -33,6 +35,8 @@ typedef struct ctrlStruct
     lowLevelCtrl *llc; ///< low-level controller
     myPosition *mp; ///< localization of the robot
     midLevelCtrlPF *mlcPF; ///< middle-level controller of the Potential Field method
+
+    rplStruct *rpl;
 
     FILE *llc_data;
 

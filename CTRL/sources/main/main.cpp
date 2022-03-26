@@ -8,90 +8,10 @@
 #include <stdlib.h>
 
 #include "../ctrlStruct/ctrlStruct.h"
-#include "../rplidar_sdk/sdk/include/rplidar.h"
-#include "../rplidar_sdk/sdk/include/rplidar_driver.h"
-
-
-#ifndef _countof
-#define _countof(_Array) (int)(sizeof(_Array) / sizeof(_Array[0]))
-#endif
-
 
 using namespace std::chrono;
 
 
-// Variables declaration
-u_result op_result;
-rp::standalone::rplidar::RPlidarDriver* lidar = rp::standalone::rplidar::RPlidarDriver::CreateDriver();
-
-
-void stopLidar()
-{
-    lidar->stop();
-    lidar->stopMotor();
-    rp::standalone::rplidar::RPlidarDriver::DisposeDriver(lidar);
-    lidar = NULL;
-}
-/*
-    create a driver
-    start the motor
-    start the scan
-
-    @input : none
-    @return : void
-*/
-void lidarConfigure()
-{
-    u_result res = lidar->connect("/dev/ttyUSB0", 115200);
-    if (IS_OK(res)){
-        printf("Success \n");
-    }
-    else{
-        printf("Failed to connect to LIDAR\n");
-    }
-    std::vector<rp::standalone::rplidar::RplidarScanMode> scanModes;
-    lidar->getAllSupportedScanModes(scanModes);
-
-    rp::standalone::rplidar::RplidarScanMode scanMode;
-    lidar->startMotor();
-    lidar->startScan(0,1);
-}
-/*
-
-int main()
-{
-    lidarConfigure();
-
-    rplidar_response_measurement_node_hq_t nodes[8192];
-    size_t   count = _countof(nodes);
-    op_result = lidar->grabScanDataHq(nodes, count);
-
-    long long int t = 0;
-    while (t < 2000000) {
-        auto start = high_resolution_clock::now();
-
-        if (IS_OK(op_result)) {
-            lidar->ascendScanData(nodes, count);
-            for (int pos = 0; pos < (int)count ; ++pos){
-                double angle = nodes[pos].angle_z_q14 * 90.f / (1 << 14);
-                double dist = nodes[pos].dist_mm_q2/4.0f;
-                double quality = nodes[pos].quality;
-                if (dist < 200 && quality > 0) {
-                    printf("angle = %f | dist = %f | quality = %f\n", angle, dist, quality);
-                }
-            }
-        }
-        auto stop = high_resolution_clock::now();
-        auto duration = duration_cast<microseconds>(stop - start);
-        printf("*********************\nExec time : %lld\n*********************\n", duration.count());
-        t += duration.count();
-    }
-    stopLidar();
-
-
-    return 0;
-}
-*/
 int main()
 {
     ctrlStruct *cvs;
@@ -104,6 +24,7 @@ int main()
     lowLevelCtrl *llc;
     myPosition *mp;
     midLevelCtrlPF *mlcPF;
+    rplStruct *rpl;
     double dt;
 
     // variables initialization
@@ -112,11 +33,13 @@ int main()
     llc  = cvs->llc;
     mp = cvs->mp;
     mlcPF = cvs->mlcPF;
+    rpl = cvs->rpl;
     dt = inputs->dt;
 
     int cmdON = 0;
     int llcON = 0;
     int mlcPF_ON = 1;
+    int rplON = 0;
     int odoCalib = 0;
 
     if (cmdON) {
@@ -213,13 +136,13 @@ int main()
         }
     }
     if (mlcPF_ON) {
-        double v_ref = 0.2;
-        double th_ref = 0;
+        double v_ref = 0.0;
+        double th_ref = -M_PI/4;
 
-        while (inputs->t < 4) {
+        while (inputs->t < 2) {
             auto start = high_resolution_clock::now();
 
-            if (inputs->t >= 2 && inputs->t < 4) th_ref = -M_PI/4;
+            if (inputs->t >= 2 && inputs->t < 4) th_ref = 0;//-M_PI/4;
 
             get_d2r_data(cvs); // ctrlIn
 
@@ -242,6 +165,24 @@ int main()
             printf("duration.count() = %lld us | t = %f\n-------------\n", duration.count(), inputs->t);
 
             usleep(dt * 1000000 - duration.count());
+        }
+    }
+    if (rplON) {
+        while (rpl->nTurns < 10) {
+            auto start = high_resolution_clock::now();
+
+            int grabSuccess = rpl_grabData(cvs);
+            printf("grabSuccess = %d\n", grabSuccess);
+            /*
+            for (int i = 0; i < rpl->data_size; i++) {
+                printf("a = %f | d = %f | q = %f\n", rpl->a[i], rpl->d[i], rpl->q[i]);
+            }
+            */
+            auto stop = high_resolution_clock::now();
+            auto duration = duration_cast<microseconds>(stop - start);
+            printf("\nduration.count() = %lld us\n-------------\n", duration.count());
+
+            //usleep(dt * 1000000 - duration.count());
         }
     }
     if (odoCalib) {
@@ -279,3 +220,80 @@ int main()
 
     return 0;
 }
+
+/*
+#include "../rplidar_sdk/sdk/include/rplidar.h"
+#include "../rplidar_sdk/sdk/include/rplidar_driver.h"
+
+
+#ifndef _countof
+#define _countof(_Array) (int)(sizeof(_Array) / sizeof(_Array[0]))
+#endif
+
+
+
+// Variables declaration
+u_result op_result;
+rp::standalone::rplidar::RPlidarDriver* lidar = rp::standalone::rplidar::RPlidarDriver::CreateDriver();
+
+
+void stopLidar()
+{
+    lidar->stop();
+    lidar->stopMotor();
+    rp::standalone::rplidar::RPlidarDriver::DisposeDriver(lidar);
+    lidar = NULL;
+}
+
+void lidarConfigure()
+{
+    u_result res = lidar->connect("/dev/ttyUSB0", 115200);
+    if (IS_OK(res)){
+        printf("Success \n");
+    }
+    else{
+        printf("Failed to connect to LIDAR\n");
+    }
+    std::vector<rp::standalone::rplidar::RplidarScanMode> scanModes;
+    lidar->getAllSupportedScanModes(scanModes);
+
+    rp::standalone::rplidar::RplidarScanMode scanMode;
+    lidar->startMotor();
+    lidar->startScan(0,1);
+}
+
+
+int main()
+{
+    lidarConfigure();
+
+    rplidar_response_measurement_node_hq_t nodes[8192];
+    size_t   count = _countof(nodes);
+    op_result = lidar->grabScanDataHq(nodes, count);
+
+    long long int t = 0;
+    while (t < 2000000) {
+        auto start = high_resolution_clock::now();
+
+        if (IS_OK(op_result)) {
+            lidar->ascendScanData(nodes, count);
+            for (int pos = 0; pos < (int)count ; ++pos){
+                double angle = nodes[pos].angle_z_q14 * 90.f / (1 << 14);
+                double dist = nodes[pos].dist_mm_q2/4.0f;
+                double quality = nodes[pos].quality;
+                if (dist < 200 && quality > 0) {
+                    printf("angle = %f | dist = %f | quality = %f\n", angle, dist, quality);
+                }
+            }
+        }
+        auto stop = high_resolution_clock::now();
+        auto duration = duration_cast<microseconds>(stop - start);
+        printf("*********************\nExec time : %lld\n*********************\n", duration.count());
+        t += duration.count();
+    }
+    stopLidar();
+
+
+    return 0;
+}
+*/

@@ -26,6 +26,9 @@ void ctrlIn_init(ctrlIn *inputs)
     inputs->l_sp_mes_enc = 0.0;
     inputs->r_sp_mes_odo = 0.0;
     inputs->l_sp_mes_odo = 0.0;
+
+    /*!  rplidar data  */
+    inputs->rpl_data_size = 0;
 }
 
 unsigned char d2r_enc_address(int encoder, int left)
@@ -77,10 +80,10 @@ void get_d2r_data(ctrlStruct *cvs)
     double r_sp_mes_odo = - r_ticks_odo * rpt_odo/dt;
     double l_sp_mes_odo =   l_ticks_odo * rpt_odo/dt;
 
-    if (r_sp_mes_enc > -30 && r_sp_mes_enc < 30) inputs->r_sp_mes_enc = r_sp_mes_enc;
-    if (l_sp_mes_enc > -30 && l_sp_mes_enc < 30) inputs->l_sp_mes_enc = l_sp_mes_enc;
-    if (r_sp_mes_odo > -30 && r_sp_mes_odo < 30) inputs->r_sp_mes_odo = r_sp_mes_odo;
-    if (l_sp_mes_odo > -30 && l_sp_mes_odo < 30) inputs->l_sp_mes_odo = l_sp_mes_odo;
+    if (r_sp_mes_enc > inputs->r_sp_mes_enc - 20 && r_sp_mes_enc < inputs->r_sp_mes_enc + 20) inputs->r_sp_mes_enc = r_sp_mes_enc;
+    if (l_sp_mes_enc > inputs->l_sp_mes_enc - 20 && l_sp_mes_enc < inputs->l_sp_mes_enc + 20) inputs->l_sp_mes_enc = l_sp_mes_enc;
+    if (r_sp_mes_odo > inputs->r_sp_mes_odo - 20 && r_sp_mes_odo < inputs->r_sp_mes_odo + 20) inputs->r_sp_mes_odo = r_sp_mes_odo;
+    if (l_sp_mes_odo > inputs->l_sp_mes_odo - 20 && l_sp_mes_odo < inputs->l_sp_mes_odo + 20) inputs->l_sp_mes_odo = l_sp_mes_odo;
 }
 
 void update_time(ctrlStruct *cvs)
