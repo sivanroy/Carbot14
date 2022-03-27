@@ -12,21 +12,22 @@ void op_init(oppPosition *op)
     op->cluster_size_min = 4;
     op->map_margin = 0.05;
 
+    op->update_flag = 0;
     op->x_op = -1;
     op->y_op = -1;
 }
 
 void get_opp_pos(ctrlStruct *cvs)
 {
-    ctrlIn  *inputs;
     myPosition *mp;
     oppPosition *op;
+    rplStruct *rpl;
 
-    inputs  = cvs->inputs;
     mp = cvs->mp;
     op = cvs->op;
+    rpl = cvs->rpl;
 
-    int size = inputs->rpl_data_size;
+    int size = rpl->data_size;
 
     double map_margin = op->map_margin;
 
@@ -47,8 +48,8 @@ void get_opp_pos(ctrlStruct *cvs)
 
     int i;
     for (i = 0; i < size; i++) {
-        a = inputs->rpl_a[i];
-        d = inputs->rpl_d[i];
+        a = rpl->a[i];
+        d = rpl->d[i];
         pt_or = th + a;
         pt_x = x + d * cos(pt_or);
         pt_y = y + d * sin(pt_or);
@@ -96,10 +97,12 @@ void get_opp_pos(ctrlStruct *cvs)
         if (max_cluster > op->cluster_size_min) {
             op->x_op = x_op[n_cluster];
             op->y_op = y_op[n_cluster];
+            op->update_flag = 1;
         }
         else {
             op->x_op = -1;
             op->y_op = -1;
+            op->update_flag = 1;
         }
     }
 }
