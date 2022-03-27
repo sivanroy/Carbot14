@@ -19,6 +19,7 @@ void pushShed_init(pushShed *pshed) {
     int s = 4;
     double x_goalsI[s] = {2.5,2.2,2.3,2.5};
     double y_goalsI[s] = {1.5,1.2,0.7,0.5};
+    //double thetasI[4] = {-1.5};
     for (int i=0; i<s;i++) {
     	pshed->x_goals[i] = x_goalsI[i];
     	pshed->y_goals[i] = y_goalsI[i];
