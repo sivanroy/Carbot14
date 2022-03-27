@@ -10,15 +10,15 @@ void mlcPF_init(midLevelCtrlPF *mlcPF)
 {
     mlcPF->dt = 0.01;
 
-    mlcPF->sigma = 1;
+    mlcPF->sigma = .45;
     mlcPF->R_odo = 0.022;
 
-    mlcPF->Kp_th = 10.0;
+    mlcPF->Kp_th = 3.0;
 
     mlcPF->r_sp_ref = 0.0;
     mlcPF->l_sp_ref = 0.0;
-    mlcPF->max_sp_ref = 10.0;
-    mlcPF->min_sp_ref = -10.0;
+    mlcPF->max_sp_ref = 5.0;
+    mlcPF->min_sp_ref = -5.0;
 }
 
 void mlcPF_out(ctrlStruct *cvs, double v_ref, double th_ref)
@@ -32,7 +32,7 @@ void mlcPF_out(ctrlStruct *cvs, double v_ref, double th_ref)
     mp = cvs->mp;
 
     // calculate th error
-    double th_error = th_ref - mp->th;
+    double th_error = limit_angle(th_ref - mp->th);
 
     // proportional terms
     double v_out = (v_ref/mlcPF->R_odo) * exp(-pow(th_error/mlcPF->sigma, 2));

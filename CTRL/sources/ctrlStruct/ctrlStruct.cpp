@@ -33,6 +33,9 @@ ctrlStruct* cvs_init()
     cvs->obs = (obstacles*) malloc(sizeof(obstacles));
     obs_init(cvs->obs);    
 
+    cvs->pshed = (pushShed*) malloc(sizeof(pushShed));
+    pushShed_init(cvs->pshed);
+
     cvs->rpl = (rplStruct*) malloc(sizeof(rplStruct));
     rpl_init(cvs->rpl);
 

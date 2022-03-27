@@ -18,6 +18,7 @@
 #include "../midLevelCtrlPF/midLevelCtrlPF.h"
 #include "../highLevelCtrlPF/highLevelCtrlPF.h"
 #include "../obstacles/obstacles.h"
+#include "../FSMs/pushShed.h"
 
 
 #include "../rplidar_sdk/rplStruct/rplStruct.h"
@@ -32,6 +33,7 @@ typedef struct midLevelCtrlPF midLevelCtrlPF;
 typedef struct rplStruct rplStruct;
 typedef struct highLevelCtrlPF highLevelCtrlPF;
 typedef struct obstacles obstacles;
+typedef struct pushShed pushShed;
 
 
 typedef struct ctrlStruct
@@ -44,6 +46,7 @@ typedef struct ctrlStruct
     midLevelCtrlPF *mlcPF; ///< middle-level controller of the Potential Field method
     highLevelCtrlPF *hlcPF;
     obstacles *obs;
+    pushShed *pshed;
 
     rplStruct *rpl;
 
