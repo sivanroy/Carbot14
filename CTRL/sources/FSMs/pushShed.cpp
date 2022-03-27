@@ -47,7 +47,7 @@ void sendFromMainPot(ctrlStruct *cvs,double x_goal,double y_goal){
     set_new_position(cvs);
     printf("cmd_r = %d | cmd_l = %d\n", cvs->outputs->r_cmd, cvs->outputs->l_cmd);
 
-    printf("x = %f | y = %f | th = %f\n", cvs->mp->x, cvs->mp->y, mp->th);
+    printf("x = %f | y = %f | th = %f\n", cvs->mp->x, cvs->mp->y, cvs->mp->th);
 }
 
 void pushShed_loop(ctrlStruct *cvs){

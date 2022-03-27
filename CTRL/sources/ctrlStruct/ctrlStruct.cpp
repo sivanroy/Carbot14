@@ -39,8 +39,8 @@ ctrlStruct* cvs_init()
     cvs->rpl = (rplStruct*) malloc(sizeof(rplStruct));
     rpl_init(cvs->rpl);
 
-    cvs->op = (oppPosition*) malloc(sizeof(oppPosition));
-    op_init(cvs->op);
+    //cvs->op = (oppPosition*) malloc(sizeof(oppPosition));
+    //op_init(cvs->op);
 
     // txt files
     cvs->llc_data = fopen("llc_data.txt", "w");
@@ -52,7 +52,7 @@ ctrlStruct* cvs_init()
 void cvs_free(ctrlStruct *cvs)
 {
     can_free(cvs);
-    mutex_destroy(cvs);
+    //mutex_destroy(cvs);
 
     free(cvs->inputs);
     free(cvs->outputs);
@@ -62,7 +62,7 @@ void cvs_free(ctrlStruct *cvs)
     free(cvs->rpl);
     free(cvs->hlcPF);
     free(cvs->obs);
-    free(cvs->op);
+    //free(cvs->op);
 
     fclose(cvs->llc_data);
 

@@ -49,7 +49,7 @@ typedef struct ctrlStruct
     pushShed *pshed;
 
     rplStruct *rpl;
-    oppPosition *op;
+    //oppPosition *op;
 
     FILE *llc_data;
 

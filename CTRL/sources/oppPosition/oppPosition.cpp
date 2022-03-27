@@ -44,9 +44,9 @@ void get_opp_pos(ctrlStruct *cvs)
     double pt_y;
 
     int size_op = 0;
-    double x_op[RPL_MAX_DATA_SIZE];
-    double y_op[RPL_MAX_DATA_SIZE];
-    double d_op[RPL_MAX_DATA_SIZE];
+    double x_op[8192];
+    double y_op[8192];
+    double d_op[8192];
 
     int i;
     for (i = 0; i < size; i++) {
@@ -97,18 +97,18 @@ void get_opp_pos(ctrlStruct *cvs)
             }
         }
         if (max_cluster > op->cluster_size_min) {
-            pthread_mutex_lock(&(mt->mutex_op));
+            //pthread_mutex_lock(&(mt->mutex_op));
             op->x_op = x_op[n_cluster];
             op->y_op = y_op[n_cluster];
             op->update_flag = 1;
-            pthread_mutex_unlock(&(mt->mutex_op));
+            //pthread_mutex_unlock(&(mt->mutex_op));
         }
         else {
-            pthread_mutex_lock(&(mt->mutex_op));
+            //pthread_mutex_lock(&(mt->mutex_op));
             op->x_op = -1;
             op->y_op = -1;
             op->update_flag = 1;
-            pthread_mutex_unlock(&(mt->mutex_op));
+            //pthread_mutex_unlock(&(mt->mutex_op));
         }
     }
 }
