@@ -21,6 +21,7 @@
 #include "../FSMs/pushShed.h"
 #include "../rplidar_sdk/rplStruct/rplStruct.h"
 #include "../oppPosition/oppPosition.h"
+#include "../teensyStruct/teensyStruct.h"
 
 
 typedef struct ctrlStruct ctrlStruct;
@@ -34,6 +35,7 @@ typedef struct highLevelCtrlPF highLevelCtrlPF;
 typedef struct obstacles obstacles;
 typedef struct pushShed pushShed;
 typedef struct oppPosition oppPosition;
+typedef struct teensyStruct teensyStruct;
 
 
 typedef struct ctrlStruct
@@ -50,6 +52,8 @@ typedef struct ctrlStruct
 
     rplStruct *rpl;
     //oppPosition *op;
+
+    teensyStruct *teensy;
 
     FILE *llc_data;
 

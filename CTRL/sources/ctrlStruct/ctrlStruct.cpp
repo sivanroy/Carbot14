@@ -42,6 +42,9 @@ ctrlStruct* cvs_init()
     //cvs->op = (oppPosition*) malloc(sizeof(oppPosition));
     //op_init(cvs->op);
 
+    cvs->teensy = (teensyStruct*) malloc(sizeof(teensyStruct));
+    teensy_init(cvs->teensy);
+
     // txt files
     cvs->llc_data = fopen("llc_data.txt", "w");
     if (cvs->llc_data == NULL) printf("Enable to open file llc_data.txt\n");
@@ -63,6 +66,7 @@ void cvs_free(ctrlStruct *cvs)
     free(cvs->hlcPF);
     free(cvs->obs);
     //free(cvs->op);
+    free(cvs->teensy);
 
     fclose(cvs->llc_data);
 
