@@ -19,6 +19,7 @@
 #include "../highLevelCtrlPF/highLevelCtrlPF.h"
 #include "../obstacles/obstacles.h"
 #include "../FSMs/pushShed.h"
+#include "../midLevelCtrl/midLevelCtrl.h"
 #include "../rplidar_sdk/rplStruct/rplStruct.h"
 #include "../oppPosition/oppPosition.h"
 #include "../teensyStruct/teensyStruct.h"
@@ -36,6 +37,7 @@ typedef struct obstacles obstacles;
 typedef struct pushShed pushShed;
 typedef struct oppPosition oppPosition;
 typedef struct teensyStruct teensyStruct;
+typedef struct midLevelCtrl midLevelCtrl;
 
 
 typedef struct ctrlStruct
@@ -49,6 +51,7 @@ typedef struct ctrlStruct
     highLevelCtrlPF *hlcPF;
     obstacles *obs;
     pushShed *pshed;
+    midLevelCtrl *mlc;
 
     rplStruct *rpl;
     //oppPosition *op;

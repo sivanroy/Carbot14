@@ -45,6 +45,11 @@ ctrlStruct* cvs_init()
     cvs->teensy = (teensyStruct*) malloc(sizeof(teensyStruct));
     teensy_init(cvs->teensy);
 
+
+    cvs->mlc = (midLevelCtrl*) malloc(sizeof(midLevelCtrl));
+    init_midLevelCtrl(cvs->mlc);
+
+
     // txt files
     cvs->llc_data = fopen("llc_data.txt", "w");
     if (cvs->llc_data == NULL) printf("Enable to open file llc_data.txt\n");

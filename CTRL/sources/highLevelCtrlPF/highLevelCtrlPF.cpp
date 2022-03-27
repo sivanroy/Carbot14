@@ -278,7 +278,7 @@ void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal){
 
     double minF = 0.03;
     //printf("fatt %f | ftot %f \n",F_att,F_tot );
-    double error = 0.05;
+    double error = 0.03;
 
     //check if in a special range (is arrived)
     if (d<error) {

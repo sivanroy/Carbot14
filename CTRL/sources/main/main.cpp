@@ -27,6 +27,7 @@ int main()
     rplStruct *rpl;
     highLevelCtrlPF *hlcPF;
     pushShed *pshed;
+    midLevelCtrl *mlc;
     double dt;
 
     // variables initialization
@@ -39,10 +40,12 @@ int main()
     rpl = cvs->rpl;
     dt = inputs->dt;
     pshed = cvs->pshed;
+    mlc = cvs->mlc;
 
     int cmdON = 0;
     int llcON = 0;
     int mlcPF_ON = 0;
+    int mlc_ON = 0;
     int rplON = 0;
     int odoCalib = 0;
     int hlcPFON = 0;
@@ -221,6 +224,41 @@ int main()
         printf("r_ticks_odo_tot = %d | l_ticks_odo_tot = %d\n", r_ticks_odo_tot, l_ticks_odo_tot);
     }
 
+    if (mlc_ON){
+        double x_goal = 0.5;
+        double y_goal = .5;
+
+        while (inputs->t < 10) {
+            auto start = high_resolution_clock::now();
+
+            get_d2r_data(cvs); // ctrlIn
+
+            printf("r_sp_mes_enc = %f | l_sp_mes_enc = %f\n", inputs->r_sp_mes_enc, inputs->l_sp_mes_enc);
+            printf("r_sp_mes_odo = %f | l_sp_mes_odo = %f\n", inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
+
+            //mlcPF_out(cvs, v_ref, th_ref);
+            set_speed_ref(cvs,x_goal,y_goal);
+            if(mlc->reach_goal){
+                break;
+            }
+            set_commands(cvs, mlc->r_sp_ref, mlc->l_sp_ref);
+            printf("cmd_r = %d | cmd_l = %d\n", outputs->r_cmd, outputs->l_cmd);
+            send_commands(cvs);
+
+            set_new_position(cvs);
+            printf("x = %f | y = %f | th = %f\n", mp->x, mp->y, mp->th);
+
+            fprintf(cvs->llc_data, "%f,%f,%f,%f,%f,%f,%f\n", inputs->t, mlcPF->r_sp_ref, mlcPF->l_sp_ref, inputs->r_sp_mes_enc, inputs->l_sp_mes_enc, inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
+
+            update_time(cvs);
+            auto stop = high_resolution_clock::now();
+            auto duration = duration_cast<microseconds>(stop - start);
+            printf("duration.count() = %lld us | t = %f\n-------------\n", duration.count(), inputs->t);
+
+            usleep(dt * 1000000 - duration.count());
+        }
+    }
+
     if (hlcPFON) {
         double x_goal = 2;
         double y_goal = 1;
@@ -271,10 +309,10 @@ int main()
         pushShed_launch(cvs);
         printf("pushShedON\n");
         cvs->mp->x = 3-0.14;
-        cvs->mp->y = 2-0.86;
+        cvs->mp->y = 2-0.53;
         cvs->mp->th = M_PI;
 
-        while(inputs->t < 20){
+        while(inputs->t < 10){
             auto start = high_resolution_clock::now();
 
             pushShed_loop(cvs);

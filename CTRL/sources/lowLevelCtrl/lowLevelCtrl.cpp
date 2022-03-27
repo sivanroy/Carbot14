@@ -9,8 +9,8 @@
 void llc_init(lowLevelCtrl *llc)
 {
     llc->dt = 0.01;
-    llc->max = 35;
-    llc->min = -35;
+    llc->max = 20;
+    llc->min = -20;
 
     llc->Kp = 0.7;//0.706;
     llc->Ki = 8;//39.437;
