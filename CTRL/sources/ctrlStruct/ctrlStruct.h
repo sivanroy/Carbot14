@@ -17,6 +17,7 @@
 #include "../myPosition/myPosition.h"
 #include "../midLevelCtrlPF/midLevelCtrlPF.h"
 #include "../rplidar_sdk/rplStruct/rplStruct.h"
+#include "../oppPosition/oppPosition.h"
 
 
 typedef struct ctrlStruct ctrlStruct;
@@ -26,6 +27,7 @@ typedef struct lowLevelCtrl lowLevelCtrl;
 typedef struct myPosition myPosition;
 typedef struct midLevelCtrlPF midLevelCtrlPF;
 typedef struct rplStruct rplStruct;
+typedef struct oppPosition oppPosition;
 
 typedef struct ctrlStruct
 {
@@ -37,8 +39,11 @@ typedef struct ctrlStruct
     midLevelCtrlPF *mlcPF; ///< middle-level controller of the Potential Field method
 
     rplStruct *rpl;
+    oppPosition *op;
 
     FILE *llc_data;
+    FILE *rpl_data;
+    FILE *op_data;
 
 } ctrlStruct;
 

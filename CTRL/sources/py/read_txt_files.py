@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+from math import pi
+import numpy as np
 
 
 def read_txt_file(path_file, nData):
@@ -76,7 +78,6 @@ def plot_mlc_data():
     plt.legend()
     plt.grid()
     plt.show()
-
 
 
 
@@ -236,29 +237,58 @@ def plot_mlcPF_data():
     plt.show()
 
 
+def plot_rpl_data():
+
+    Data = read_txt_file("../../build/rpl_data.txt", 2)
+    
+    
+    x = []
+    y = []
+    for i in range(len(Data[0])):
+        x.append(Data[1][i] * np.cos(Data[0][i] + pi))
+        y.append(Data[1][i] * np.sin(Data[0][i] + pi))
+        
+    plt.plot(x, y, 'ro', label="rpl_data")
+    plt.xlabel("x [m]")
+    plt.ylabel("y [m]")
+    plt.title("rpl")
+    #plt.ylim(-0.1, 0.6)
+    plt.axis("equal")
+    plt.legend()
+    plt.grid()
+    #plt.savefig("mlcPF_pos.pdf", format="pdf")
+    plt.show()
+    
 def plot_op_data():
 
-    Data = read_txt_file("../../build/op_data.txt", 144*2+2)
+    Data = read_txt_file("../../build/op_data.txt", 2)
 
     map_x = [0,3,3,0,0]
     map_y = [0,0,2,2,0]
+    
+    pt_x = []
+    pt_y = []
+    for i in range(len(Data[0])):
+        pt_or = -Data[0][i]
+        pt_x.append(1.5 + Data[1][i] * np.cos(pt_or))
+        pt_y.append(0.5 + Data[1][i] * np.sin(pt_or))
 
     plt.plot(map_x, map_y, label="Map")
-    plt.plot(Data[288], Data[289], 'ro', label="My pos")
-
-    i = 0
-    for i in range(144):
-        plt.plot(Data[i], Data[i+144])
-
+    plt.plot(Data[0], Data[1], 'ro', label="op_data")
     plt.xlabel("x [m]")
     plt.ylabel("y [m]")
-    plt.title("op test")
-    #plt.ylim(0.60, 1.2)
-    #plt.xlim(2.5, 3.2)
-    #plt.axis("equal")
+    plt.title("op")
+    #plt.ylim(-0.1, 0.6)
+    plt.axis("equal")
     plt.legend()
     plt.grid()
-    #plt.savefig("op_pos.pdf", format="pdf")
+    #plt.savefig("mlcPF_pos.pdf", format="pdf")
     plt.show()
+    
 
+    Data = read_txt_file("../../build/op_data.txt", 144*2+2)
+
+
+#plot_rpl_data()
+#plot_op_data()
 plot_llc_data()

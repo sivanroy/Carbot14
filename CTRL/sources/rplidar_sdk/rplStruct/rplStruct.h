@@ -22,22 +22,22 @@
 #define _countof(_Array) (int)(sizeof(_Array) / sizeof(_Array[0]))
 #endif
 
-#define RPL_MAX_DATA_SIZE 8192
+#define MAX_DATA_SIZE 8192
 
 
 typedef struct rplStruct
 {
     rp::standalone::rplidar::RPlidarDriver* lidar;
-    rplidar_response_measurement_node_hq_t nodes[RPL_MAX_DATA_SIZE];
+    rplidar_response_measurement_node_hq_t nodes[MAX_DATA_SIZE];
     size_t count;
     u_result op_result;
 
     int data_size;
     int nTurns;
     int data_updated;
-    double a[RPL_MAX_DATA_SIZE];
-    double d[RPL_MAX_DATA_SIZE];
-    double q[RPL_MAX_DATA_SIZE];
+    double a[MAX_DATA_SIZE];
+    double d[MAX_DATA_SIZE];
+    double q[MAX_DATA_SIZE];
 
 } rplStruct;
 

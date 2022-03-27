@@ -34,8 +34,8 @@ typedef struct ctrlIn
     double l_sp_mes_odo; ///< left odometer speed [rad/s] : positive when the robot is going forward
 
     int rpl_data_size;
-    double rpl_a[RPL_MAX_DATA_SIZE];
-    double rpl_d[RPL_MAX_DATA_SIZE];
+    double rpl_a[8192];
+    double rpl_d[8192];
 
 } ctrlIn;
 

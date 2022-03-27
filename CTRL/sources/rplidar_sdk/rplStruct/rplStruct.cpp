@@ -52,7 +52,7 @@ int rpl_grabData(ctrlStruct *cvs)
             angle = (rpl->nodes[i].angle_z_q14 * 90.f / (1 << 14)) * M_PI/180;
             dist = rpl->nodes[i].dist_mm_q2/4.0f;
             quality = rpl->nodes[i].quality;
-            if (quality > 0) {
+            if (quality > 0 && (dist > 200 && dist < 4000)) {
                 //printf("angle = %f | dist = %f | quality = %f\n", angle, dist, quality);
                 rpl->a[rpl->data_size] = angle;
                 rpl->d[rpl->data_size] = dist;
@@ -74,7 +74,7 @@ void rpl_stop(ctrlStruct *cvs)
     rpl = cvs->rpl;
 
     rpl->lidar->stop();
-    rpl->lidar->stopMotor();
+    //rpl->lidar->stopMotor();
     rp::standalone::rplidar::RPlidarDriver::DisposeDriver(rpl->lidar);
     rpl->lidar = NULL;
 }

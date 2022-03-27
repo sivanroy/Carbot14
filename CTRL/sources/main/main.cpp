@@ -25,6 +25,7 @@ int main()
     myPosition *mp;
     midLevelCtrlPF *mlcPF;
     rplStruct *rpl;
+    oppPosition *op;
     double dt;
 
     // variables initialization
@@ -34,19 +35,21 @@ int main()
     mp = cvs->mp;
     mlcPF = cvs->mlcPF;
     rpl = cvs->rpl;
+    op = cvs->op;
     dt = inputs->dt;
 
     int cmdON = 0;
-    int llcON = 0;
-    int mlcPF_ON = 1;
+    int llcON = 1;
+    int mlcPF_ON = 0;
     int rplON = 0;
     int odoCalib = 0;
+    int opON = 0;
 
     if (cmdON) {
         int r_cmd = 0;
         int l_cmd = 0;
 
-        while (inputs->t < 2) {
+        while (inputs->t < 8) {
             auto start = high_resolution_clock::now();
 
             get_d2r_data(cvs); // ctrlIn
@@ -59,7 +62,7 @@ int main()
                 l_cmd = 5;
             }
 
-            else if (inputs->t >= 1 && inputs->t < 2) {
+            else if (inputs->t >= 1 && inputs->t < 8) {
                 r_cmd = 10;
                 l_cmd = 10;
             }
@@ -91,7 +94,7 @@ int main()
         double r_sp_ref = 0.0;
         double l_sp_ref = 0.0;
 
-        while (inputs->t < 2) {
+        while (inputs->t < 4) {
             auto start = high_resolution_clock::now();
 
             get_d2r_data(cvs); // ctrlIn
@@ -104,7 +107,7 @@ int main()
                 l_sp_ref = 10;
             }
 
-            else if (inputs->t >= 1.5 && inputs->t < 3) {
+            else if (inputs->t >= 1.5 && inputs->t < 4) {
                 r_sp_ref = 10;
                 l_sp_ref = 10;
             }
@@ -173,11 +176,12 @@ int main()
 
             int grabSuccess = rpl_grabData(cvs);
             printf("grabSuccess = %d\n", grabSuccess);
-            /*
+
             for (int i = 0; i < rpl->data_size; i++) {
                 printf("a = %f | d = %f | q = %f\n", rpl->a[i], rpl->d[i], rpl->q[i]);
+                fprintf(cvs->rpl_data, "%f,%f\n",rpl->a[i], rpl->d[i]);
             }
-            */
+
             auto stop = high_resolution_clock::now();
             auto duration = duration_cast<microseconds>(stop - start);
             printf("\nduration.count() = %lld us\n-------------\n", duration.count());
@@ -213,6 +217,32 @@ int main()
         }
         printf("r_ticks_enc_tot = %d | l_ticks_enc_tot = %d\n", r_ticks_enc_tot, l_ticks_enc_tot);
         printf("r_ticks_odo_tot = %d | l_ticks_odo_tot = %d\n", r_ticks_odo_tot, l_ticks_odo_tot);
+    }
+
+    if (opON) {
+        mp->x = 1.5;
+        mp->y = 0.5;
+
+        while (rpl->nTurns < 10) {
+            auto start = high_resolution_clock::now();
+
+            int grabSuccess = rpl_grabData(cvs);
+            printf("grabSuccess = %d\n", grabSuccess);
+
+            for (int i = 0; i < rpl->data_size; i++) {
+                //printf("a = %f | d = %f | q = %f\n", rpl->a[i], rpl->d[i], rpl->q[i]);
+                fprintf(cvs->rpl_data, "%f,%f\n",rpl->a[i], rpl->d[i]);
+            }
+            get_opp_pos(cvs);
+            printf("op : x = %f | y = %f\n", op->x_op, op->y_op);
+            fprintf(cvs->op_data, "%f,%f\n",op->x_op, op->y_op);
+
+            auto stop = high_resolution_clock::now();
+            auto duration = duration_cast<microseconds>(stop - start);
+            printf("\nduration.count() = %lld us\n-------------\n", duration.count());
+
+            //usleep(dt * 1000000 - duration.count());
+        }
     }
 
     motors_stop(cvs);
