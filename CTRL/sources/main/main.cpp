@@ -38,9 +38,10 @@ int main()
 
     int cmdON = 0;
     int llcON = 0;
-    int mlcPF_ON = 1;
+    int mlcPF_ON = 0;
     int rplON = 0;
     int odoCalib = 0;
+    int hlcPFON = 1;
 
     if (cmdON) {
         int r_cmd = 0;

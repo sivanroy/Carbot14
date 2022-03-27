@@ -16,6 +16,10 @@
 #include "../lowLevelCtrl/lowLevelCtrl.h"
 #include "../myPosition/myPosition.h"
 #include "../midLevelCtrlPF/midLevelCtrlPF.h"
+#include "../highLevelCtrlPF/highLevelCtrlPF.h"
+#include "../obstacles/obstacles.h"
+
+
 #include "../rplidar_sdk/rplStruct/rplStruct.h"
 
 
@@ -26,6 +30,9 @@ typedef struct lowLevelCtrl lowLevelCtrl;
 typedef struct myPosition myPosition;
 typedef struct midLevelCtrlPF midLevelCtrlPF;
 typedef struct rplStruct rplStruct;
+typedef struct highLevelCtrlPF highLevelCtrlPF;
+typedef struct obstacles obstacles;
+
 
 typedef struct ctrlStruct
 {
@@ -35,6 +42,8 @@ typedef struct ctrlStruct
     lowLevelCtrl *llc; ///< low-level controller
     myPosition *mp; ///< localization of the robot
     midLevelCtrlPF *mlcPF; ///< middle-level controller of the Potential Field method
+    highLevelCtrlPF *hlcPF;
+    obstacles *obs;
 
     rplStruct *rpl;
 

@@ -27,8 +27,15 @@ ctrlStruct* cvs_init()
     cvs->mlcPF = (midLevelCtrlPF*) malloc(sizeof(midLevelCtrlPF));
     mlcPF_init(cvs->mlcPF);
 
+    cvs->hlcPF = (highLevelCtrlPF*) malloc(sizeof(highLevelCtrlPF));
+    hlcPF_init(cvs->hlcPF);
+
+    cvs->obs = (obstacles*) malloc(sizeof(obstacles));
+    obs_init(cvs->obs);    
+
     cvs->rpl = (rplStruct*) malloc(sizeof(rplStruct));
     rpl_init(cvs->rpl);
+
 
     // txt files
     cvs->llc_data = fopen("llc_data.txt", "w");
@@ -46,6 +53,8 @@ void cvs_free(ctrlStruct *cvs)
     free(cvs->mp);
     free(cvs->mlcPF);
     free(cvs->rpl);
+    free(cvs->hlcPF);
+    free(cvs->obs);
 
     free(cvs);
 }
