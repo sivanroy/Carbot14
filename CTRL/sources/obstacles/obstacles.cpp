@@ -9,8 +9,7 @@
 #include <math.h>
 #include <cmath> //for sqrt
 
-#include "../ctrlStruct/ctrlStruct.h"
-#include "../obstacles/obstacles.h"
+#include "obstacles.h"
 
 
 void obs_init(obstacles *obs)

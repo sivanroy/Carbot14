@@ -9,11 +9,6 @@
 
 #include "highLevelCtrlPF.h" // adapt it with your headers
 
-#include "../myPosition/myPosition.h"
-#include "../obstacles/obstacles.h"
-
-#include "../ctrlStruct/ctrlStruct.h"
-
 void hlcPF_init(highLevelCtrlPF *hlcPF) {
     hlcPF->output = 0;
     hlcPF->d = 0;
@@ -209,7 +204,7 @@ void calc_RepulsivePotential(ctrlStruct *cvs) {
 
 void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal){
     highLevelCtrlPF *hlcPF = cvs->hlcPF;
-    CtrlIn *inputs = cvs->inputs;
+    ctrlIn *inputs = cvs->inputs;
         //reset output
     hlcPF->output = 0;
     myPosition *mp = cvs->mp;
@@ -281,9 +276,6 @@ void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal){
     F_att = sqrt(F_att_x*F_att_x+F_att_y*F_att_y);
     F_tot = sqrt(F_tot_x*F_tot_x+F_tot_y*F_tot_y);
 
-    set_plot(F_att, "F_att");
-    set_plot(F_tot, "F_tot");
-    set_plot(d,"dist");
     double minF = 0.03;
     //printf("fatt %f | ftot %f \n",F_att,F_tot );
     double error = 0.05;
