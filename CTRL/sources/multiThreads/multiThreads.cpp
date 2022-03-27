@@ -31,6 +31,25 @@ int threads_launcher(ctrlStruct *cvs)
         perror("pthread_create(&thread_op) failed\n");
         return -1;
     }
+
+    /*!  Threads stopping  */
+    err = pthread_join(thread_main, NULL);
+    if (err != 0) {
+        perror("pthread_join(thread_main) failed\n");
+        return -1;
+    }
+
+    err = pthread_cancel(thread_op);
+    if (err != 0) {
+        perror("pthread_cancel(thread_op) failed\n");
+        return -1;
+    }
+    err = pthread_join(thread_op, NULL);
+    if (err != 0) {
+        perror("pthread_join(thread_op) failed\n");
+        return -1;
+    }
+    return 0;
 }
 
 int mutex_destroy(ctrlStruct *cvs)

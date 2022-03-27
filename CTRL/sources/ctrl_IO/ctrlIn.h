@@ -40,9 +40,13 @@ typedef struct ctrlIn
 } ctrlIn;
 
 void ctrlIn_init(ctrlIn *inputs);
+
 unsigned char d2r_enc_address(int encoder, int left);
 int d2r_enc_measure(ctrlStruct *cvs, int encoder, int left, bool verbose);
 void get_d2r_data(ctrlStruct *cvs);
+
+void set_rpl_data(ctrlStruct *cvs);
+
 void update_time(ctrlStruct *cvs);
 
 #endif

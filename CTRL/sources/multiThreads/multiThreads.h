@@ -26,6 +26,6 @@ typedef struct mThreadsStruct
 
 void mt_init(mThreadsStruct *mt);
 int threads_launcher(ctrlStruct *cvs);
-int mutex_destroy();
+int mutex_destroy(ctrlStruct *cvs);
 
 #endif

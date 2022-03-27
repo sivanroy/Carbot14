@@ -22,10 +22,12 @@ void get_opp_pos(ctrlStruct *cvs)
     myPosition *mp;
     oppPosition *op;
     rplStruct *rpl;
+    mThreadsStruct *mt;
 
     mp = cvs->mp;
     op = cvs->op;
     rpl = cvs->rpl;
+    mt = cvs->mt;
 
     int size = rpl->data_size;
 
@@ -50,7 +52,7 @@ void get_opp_pos(ctrlStruct *cvs)
     for (i = 0; i < size; i++) {
         a = rpl->a[i];
         d = rpl->d[i];
-        pt_or = th + a;
+        pt_or = th - a;
         pt_x = x + d * cos(pt_or);
         pt_y = y + d * sin(pt_or);
 
@@ -95,14 +97,18 @@ void get_opp_pos(ctrlStruct *cvs)
             }
         }
         if (max_cluster > op->cluster_size_min) {
+            pthread_mutex_lock(&(mt->mutex_op));
             op->x_op = x_op[n_cluster];
             op->y_op = y_op[n_cluster];
             op->update_flag = 1;
+            pthread_mutex_unlock(&(mt->mutex_op));
         }
         else {
+            pthread_mutex_lock(&(mt->mutex_op));
             op->x_op = -1;
             op->y_op = -1;
             op->update_flag = 1;
+            pthread_mutex_unlock(&(mt->mutex_op));
         }
     }
 }

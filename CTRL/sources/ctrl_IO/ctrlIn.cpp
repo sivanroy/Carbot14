@@ -86,6 +86,22 @@ void get_d2r_data(ctrlStruct *cvs)
     if (l_sp_mes_odo > -20 && l_sp_mes_odo < 20) inputs->l_sp_mes_odo = l_sp_mes_odo;
 }
 
+void set_rpl_data(ctrlStruct *cvs)
+{
+    ctrlIn *inputs;
+    rplStruct *rpl;
+
+    inputs = cvs->inputs;
+    rpl = cvs->rpl;
+
+    int i;
+    for (i = 0; i < rpl->data_size; i++) {
+        inputs->rpl_a[i] = rpl->a[i];
+        inputs->rpl_d[i] = rpl->d[i];
+    }
+    inputs->rpl_data_size = rpl->data_size;
+}
+
 void update_time(ctrlStruct *cvs)
 {
     ctrlIn *inputs;
