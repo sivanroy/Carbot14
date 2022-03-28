@@ -62,7 +62,7 @@ int rpl_grabData(ctrlStruct *cvs)
         }
         rpl->nTurns++;
         printf("data_size = %d\n", rpl->data_size);
-        printf("nTurns = %d\n", rpl->nTurns);
+        //printf("nTurns = %d\n", rpl->nTurns);
         return 1;
     }
     else return -1;

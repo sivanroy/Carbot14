@@ -16,6 +16,7 @@ int main()
 {
     ctrlStruct *cvs;
     cvs = cvs_init();
+    printf("dt = %f\n", cvs->inputs->dt);
     printf("cvs init : end\n");
 
     // variables declaration
@@ -28,6 +29,8 @@ int main()
     highLevelCtrlPF *hlcPF;
     pushShed *pshed;
     midLevelCtrl *mlc;
+    oppPosition *op;
+    mThreadsStruct *mt;
     teensyStruct *teensy;
     double dt;
 
@@ -39,10 +42,12 @@ int main()
     mlcPF = cvs->mlcPF;
     hlcPF = cvs->hlcPF;
     rpl = cvs->rpl;
-    dt = inputs->dt;
     pshed = cvs->pshed;
     mlc = cvs->mlc;
+    op = cvs->op;
+    mt = cvs->mt;
     teensy = cvs->teensy;
+    dt = inputs->dt;
 
     int cmdON = 0;
     int llcON = 0;
@@ -51,8 +56,13 @@ int main()
     int rplON = 0;
     int odoCalib = 0;
     int hlcPFON = 0;
-    int pushShedON = 1;
+    int pushShedON = 0;
     int teensyON = 0;
+    int mThreadsON = 1;
+
+    if (mThreadsON) {
+        threads_launcher(cvs);
+    }
 
     if (cmdON) {
         int r_cmd = 0;
@@ -372,10 +382,10 @@ int main()
             usleep(dt * 1000000 - duration.count());
         }
     }
+    motors_stop(cvs);
     teensy_send(cvs, "B");
     usleep(2000000);
     teensy_send(cvs, "R");
-    motors_stop(cvs);
     cvs_free(cvs);
 
     return 0;
