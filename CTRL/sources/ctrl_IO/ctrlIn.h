@@ -33,6 +33,9 @@ typedef struct ctrlIn
     double r_sp_mes_odo; ///< right odometer speed [rad/s] : positive when the robot is going forward
     double l_sp_mes_odo; ///< left odometer speed [rad/s] : positive when the robot is going forward
 
+    double r_front_s;
+    double l_front_s;
+
     int rpl_data_size;
     double rpl_a[8192];
     double rpl_d[8192];
@@ -41,8 +44,8 @@ typedef struct ctrlIn
 
 void ctrlIn_init(ctrlIn *inputs);
 
-unsigned char d2r_enc_address(int encoder, int left);
-int d2r_enc_measure(ctrlStruct *cvs, int encoder, int left, bool verbose);
+unsigned char d2r_enc_address(int encoder, int left, int sonar);
+int d2r_enc_measure(ctrlStruct *cvs, int encoder, int left,int sonar ,bool verbose);
 void get_d2r_data(ctrlStruct *cvs);
 
 void set_rpl_data(ctrlStruct *cvs);
