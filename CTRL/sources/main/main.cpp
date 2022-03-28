@@ -49,9 +49,9 @@ int main()
     int mlcPF_ON = 0;
     int mlc_ON = 0;
     int rplON = 0;
-    int odoCalib = 0;
+    int odoCalib = 1;
     int hlcPFON = 0;
-    int pushShedON = 1;
+    int pushShedON = 0;
     int teensyON = 0;
 
     if (cmdON) {
@@ -208,15 +208,18 @@ int main()
         while (inputs->t < 8) {
             auto start = high_resolution_clock::now();
 
-            int r_ticks_enc = d2r_enc_measure(cvs, 1, 0, true);
-            int l_ticks_enc = d2r_enc_measure(cvs, 1, 1, true);
-            int r_ticks_odo = d2r_enc_measure(cvs, 0, 0, true);
-            int l_ticks_odo = d2r_enc_measure(cvs, 0, 1, true);
+            int r_ticks_enc = d2r_enc_measure(cvs, 1, 0, -1 ,true);
+            int l_ticks_enc = d2r_enc_measure(cvs, 1, 1, -1 ,true);
+            int r_ticks_odo = d2r_enc_measure(cvs, 0, 0, -1 ,true);
+            int l_ticks_odo = d2r_enc_measure(cvs, 0, 1, -1 ,true);
 
             r_ticks_enc_tot += r_ticks_enc;
             l_ticks_enc_tot += l_ticks_enc;
             r_ticks_odo_tot += r_ticks_odo;
             l_ticks_odo_tot += l_ticks_odo;
+
+            int d1 = d2r_enc_measure(cvs,-1,-1,0,true);
+            int d2 = d2r_enc_measure(cvs,-1,-1,1,true);
 
             update_time(cvs);
             auto stop = high_resolution_clock::now();
