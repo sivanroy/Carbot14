@@ -19,6 +19,8 @@ void mlcPF_init(midLevelCtrlPF *mlcPF)
     mlcPF->l_sp_ref = 0.0;
     mlcPF->max_sp_ref = 5.0;
     mlcPF->min_sp_ref = -5.0;
+
+    mlcPF->t_start = 0;
 }
 
 void mlcPF_out(ctrlStruct *cvs, double v_ref, double th_ref)

@@ -20,9 +20,11 @@ void teensy_init(teensyStruct *teensy)
     {
         printf("teensy : can not open comport\n");
     }
-    usleep(100000);
+    usleep(1000000);
 
     teensy->switch_F = 0;
+    teensy->switch_F_end = 0;
+
 }
 
 void teensy_send(ctrlStruct *cvs, const char *data)
@@ -33,6 +35,7 @@ void teensy_send(ctrlStruct *cvs, const char *data)
     strcpy(teensy->str_send, data);
     RS232_cputs(teensy->port, teensy->str_send);
     printf("Sent to teensy: '%s'\n", teensy->str_send);
+    usleep(2000);
 }
 
 void teensy_recv(ctrlStruct *cvs)

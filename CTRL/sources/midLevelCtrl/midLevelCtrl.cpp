@@ -10,7 +10,7 @@
 
 void init_midLevelCtrl(midLevelCtrl *mlc)
 {
-    mlc->dt = 0.001;
+    mlc->dt = 0.01;
 
     mlc->d_ref = 0.0;
     mlc->d_mes = 0.0;
@@ -21,14 +21,14 @@ void init_midLevelCtrl(midLevelCtrl *mlc)
     mlc->Ki_d = 0.0;
     mlc->integral_err_d = 0.0;
 
-    mlc->Kp_th = 25.0;
+    mlc->Kp_th = 40.0;
     mlc->Ki_th = 0.0;
     mlc->integral_err_th = 0.0;
 
     mlc->r_sp_ref = 0.0;
     mlc->l_sp_ref = 0.0;
-    mlc->max_sp_ref = 5.0;
-    mlc->min_sp_ref = -5.0;
+    mlc->max_sp_ref = 2.5;
+    mlc->min_sp_ref = -2.5;
 
     mlc->reach_goal = 0;
 }
@@ -71,12 +71,7 @@ void set_speed_ref(ctrlStruct *cvs, double x_g, double y_g)
 
     // calculate errors
     double d_error = mlc->d_mes - mlc->d_ref;
-    double th_error = mlc->th_mes - mlc->th_ref;
-    if(th_error> 3.1415) {
-        th_error-=3.1415*2;
-    } else if(th_error < -3.1415) {
-        th_error += 3.1415*2;
-    }
+    double th_error = limit_angle(mlc->th_mes - mlc->th_ref);
 
     // proportional terms
     double d_Pout = mlc->Kp_d * d_error;

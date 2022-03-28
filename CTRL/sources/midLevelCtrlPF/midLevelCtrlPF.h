@@ -28,6 +28,8 @@ typedef struct midLevelCtrlPF
     double max_sp_ref; ///< upper bound of the reference speed
     double min_sp_ref; ///< lower bound of the reference speed
 
+    double t_start;
+
 } midLevelCtrlPF;
 
 void mlcPF_init(midLevelCtrlPF *mlcPF);

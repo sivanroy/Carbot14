@@ -30,11 +30,12 @@ typedef struct teensyStruct
     unsigned char str_recv[BUF_SIZE];
 
     int switch_F;
+    int switch_F_end;
 
 } teensyStruct;
 
 void teensy_init(teensyStruct *teensy);
-void teensy_send(ctrlStruct *cvs);
+void teensy_send(ctrlStruct *cvs, const char *data);
 void teensy_recv(ctrlStruct *cvs);
 
 #endif
