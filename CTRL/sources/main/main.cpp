@@ -49,10 +49,11 @@ int main()
     int mlcPF_ON = 0;
     int mlc_ON = 0;
     int rplON = 0;
-    int odoCalib = 1;
-    int hlcPFON = 0;
+    int odoCalib = 0;
+    int hlcPFON = 1;
     int pushShedON = 0;
     int teensyON = 0;
+    int pushShed_and_sonar_ON = 0;
 
     if (cmdON) {
         int r_cmd = 0;
@@ -274,15 +275,15 @@ int main()
     }
 
     if (hlcPFON) {
-        double x_goal = 2;
-        double y_goal = 1;
+        double x_goal = 1;
+        double y_goal = 1.13;
 
         cvs->mp->x = 3-0.14;
         cvs->mp->y = 1.13;
         cvs->mp->th = M_PI;
 
         printf("begin test hlcPF\n");
-        while (inputs->t < 10) {
+        while (inputs->t < 15) {
             auto start = high_resolution_clock::now();
 
             get_d2r_data(cvs); // ctrlIn
@@ -341,6 +342,34 @@ int main()
             usleep(dt * 1000000 - duration.count());
         }
     }
+
+    if (pushShed_and_sonar_ON){
+        pushShed_launch(cvs);
+        printf("pushShedON\n");
+        cvs->mp->x = 3-0.14;
+        cvs->mp->y = 2-0.53;
+        cvs->mp->th = M_PI;
+
+        while(inputs->t < 70){
+            auto start = high_resolution_clock::now();
+            if(inputs->l_front_s < 5 | inputs->r_front_s<5){
+                motors_stop(cvs);
+            }
+            else {
+                pushShed_loop(cvs);
+            }
+            if(pshed->output) {
+                printf("ended\n");
+                motors_stop(cvs);
+                break;
+            }
+            update_time(cvs);
+            auto stop = high_resolution_clock::now();
+            auto duration = duration_cast<microseconds>(stop - start);
+            usleep(dt * 1000000 - duration.count());
+        }
+    }
+    
 
     if (teensyON) {
         int A = 0;
