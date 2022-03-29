@@ -11,9 +11,6 @@ void rpl_init(rplStruct *rpl)
     rpl->lidar = rp::standalone::rplidar::RPlidarDriver::CreateDriver();
     if (rpl_config(rpl) == -1) perror("rpl_config() failed\n");
 
-    rpl->count = _countof(rpl->nodes);
-    rpl->op_result = rpl->lidar->grabScanDataHq(rpl->nodes, rpl->count);
-
     rpl->data_size = 0;
     rpl->nTurns = 0;
     rpl->data_updated = 0;
@@ -39,8 +36,12 @@ int rpl_grabData(ctrlStruct *cvs)
     rplStruct *rpl;
     rpl = cvs->rpl;
 
+    rplidar_response_measurement_node_hq_t nodes[RPL_MAX_DATA_SIZE];
+    rpl->count = _countof(nodes);
+    rpl->op_result = rpl->lidar->grabScanDataHq(nodes, rpl->count);
+
     if (IS_OK(rpl->op_result)) {
-        rpl->lidar->ascendScanData(rpl->nodes, rpl->count);
+        rpl->lidar->ascendScanData(nodes, rpl->count);
         rpl->data_size = 0;
 
         double angle;
@@ -49,10 +50,10 @@ int rpl_grabData(ctrlStruct *cvs)
 
         int i;
         for (i = 0; i < (int) rpl->count ; ++i){
-            angle = (rpl->nodes[i].angle_z_q14 * 90.f / (1 << 14)) * M_PI/180;
-            dist = rpl->nodes[i].dist_mm_q2/4.0f;
-            quality = rpl->nodes[i].quality;
-            if (quality > 0) {
+            angle = (nodes[i].angle_z_q14 * 90.f / (1 << 14)) * M_PI/180;
+            dist = (nodes[i].dist_mm_q2/4.0f)/1000;
+            quality = nodes[i].quality;
+            if (quality > 0 && (dist > 0.18 && dist < 4)) {
                 //printf("angle = %f | dist = %f | quality = %f\n", angle, dist, quality);
                 rpl->a[rpl->data_size] = angle;
                 rpl->d[rpl->data_size] = dist;
@@ -61,7 +62,7 @@ int rpl_grabData(ctrlStruct *cvs)
             }
         }
         rpl->nTurns++;
-        printf("data_size = %d\n", rpl->data_size);
+        //printf("data_size = %d\n", rpl->data_size);
         //printf("nTurns = %d\n", rpl->nTurns);
         return 1;
     }
@@ -74,7 +75,6 @@ void rpl_stop(ctrlStruct *cvs)
     rpl = cvs->rpl;
 
     rpl->lidar->stop();
-    rpl->lidar->stopMotor();
     rp::standalone::rplidar::RPlidarDriver::DisposeDriver(rpl->lidar);
     rpl->lidar = NULL;
 }

@@ -39,20 +39,20 @@ unsigned char d2r_enc_address(int encoder, int left, int sonar)
     unsigned char addr;
 
     if(encoder!=-1) {
-        if (encoder == 0) {
-            if (left == 1) addr = 0x04; //0x01;
-            else addr = 0x01; //0x00;
+        if (encoder) {
+            if (left == 1) addr = 0x02;//0x04;//0x00; //0x01;
+            else addr = 0x01;//0x01;//0x03; //0x00;
         } else {
-            if (left == 1) addr = 0x00; //0x03;
-            else addr = 0x03; //0x02;
+            if (left == 1) addr = 0x04;//0x00;//0x02; //0x03;
+            else addr = 0x03;//0x03;//0x01; //0x02;
         }
     }
     else {
         if(sonar == 0) {
-            addr = 0x05; //4
+            addr = 0x05;//0x05; //4
         }
         else if (sonar == 1){
-            addr = 0x02; //5
+            addr = 0x00;//0x02; //5
         }
     }
     return addr;
@@ -129,6 +129,5 @@ void update_time(ctrlStruct *cvs)
     ctrlIn *inputs;
     inputs = cvs->inputs;
 
-    //printf("update time : cvs->inputs->t = %f\n", cvs->inputs->t);
     inputs->t += inputs->dt;
 }

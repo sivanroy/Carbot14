@@ -50,11 +50,11 @@ int main()
     dt = inputs->dt;
 
     int cmdON = 0;
-    int llcON = 0;
+    int llcON = 1;
     int mlcPF_ON = 0;
     int mlc_ON = 0;
     int rplON = 0;
-    int odoCalib = 1;
+    int odoCalib = 0;
     int hlcPFON = 0;
     int pushShedON = 0;
     int teensyON = 0;
@@ -113,7 +113,7 @@ int main()
         double r_sp_ref = 0.0;
         double l_sp_ref = 0.0;
 
-        while (inputs->t < 2) {
+        while (inputs->t < 4) {
             auto start = high_resolution_clock::now();
 
             get_d2r_data(cvs); // ctrlIn
@@ -192,7 +192,7 @@ int main()
         }
     }
     if (rplON) {
-        while (rpl->nTurns < 10) {
+        while (rpl->nTurns < 20) {
             auto start = high_resolution_clock::now();
 
             int grabSuccess = rpl_grabData(cvs);
@@ -215,21 +215,20 @@ int main()
         int r_ticks_odo_tot = 0;
         int l_ticks_odo_tot = 0;
 
-        while (inputs->t < 8) {
+        while (inputs->t < 10) {
             auto start = high_resolution_clock::now();
 
             int r_ticks_enc = d2r_enc_measure(cvs, 1, 0, -1 ,true);
             int l_ticks_enc = d2r_enc_measure(cvs, 1, 1, -1 ,true);
             int r_ticks_odo = d2r_enc_measure(cvs, 0, 0, -1 ,true);
             int l_ticks_odo = d2r_enc_measure(cvs, 0, 1, -1 ,true);
+            int d1 = d2r_enc_measure(cvs,-1,-1,0,true);
+            int d2 = d2r_enc_measure(cvs,-1,-1,1,true);
 
             r_ticks_enc_tot += r_ticks_enc;
             l_ticks_enc_tot += l_ticks_enc;
             r_ticks_odo_tot += r_ticks_odo;
             l_ticks_odo_tot += l_ticks_odo;
-
-            int d1 = d2r_enc_measure(cvs,-1,-1,0,true);
-            int d2 = d2r_enc_measure(cvs,-1,-1,1,true);
 
             update_time(cvs);
             auto stop = high_resolution_clock::now();
@@ -355,7 +354,7 @@ int main()
     if (teensyON) {
         int A = 0;
         int B = 0;
-        while (inputs->t < 3) {
+        while (inputs->t < 8) {
             auto start = high_resolution_clock::now();
 
             teensy_recv(cvs);

@@ -18,7 +18,7 @@ void pushShed_init(pushShed *pshed) {
     pshed->go = 1;
     int s = 7;
     double x_goalsI[s] = {1,2.28,2.2,2.25,2.52,2.7,2.72};
-    double y_goalsI[s] = {1,1.51,1.12,0.85,0.52,0.35,1.3};
+    double y_goalsI[s] = {0.75,1.51,1.12,0.85,0.52,0.35,1.3};
     for (int i=0; i<s;i++) {
     	pshed->x_goals[i] = x_goalsI[i];
     	pshed->y_goals[i] = y_goalsI[i];
@@ -94,9 +94,7 @@ void esquive_loop(ctrlStruct *cvs) {
             break;
         }
         case Dpmt1_es:{
-            dyn_obs_set(cvs);
-
-            printf("D1\n");
+            //printf("D1\n");
 
             xg = pshed->x_goals[0];
             yg = pshed->y_goals[0];
@@ -110,7 +108,7 @@ void esquive_loop(ctrlStruct *cvs) {
         }
         case Close_es:{
             pshed->output = 1;
-            printf("End simu\n");
+            //printf("End simu\n");
             break;
         }
     }

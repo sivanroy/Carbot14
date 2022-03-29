@@ -8,6 +8,7 @@
 
 ctrlStruct* cvs_init()
 {
+    /*!  Structures  */
     printf("cvs init : start\n");
     ctrlStruct *cvs;
     cvs = (ctrlStruct*) malloc(sizeof(ctrlStruct));
@@ -31,7 +32,10 @@ ctrlStruct* cvs_init()
     hlcPF_init(cvs->hlcPF);
 
     cvs->obs = (obstacles*) malloc(sizeof(obstacles));
-    obs_init(cvs->obs);    
+    obs_init(cvs->obs);
+
+    cvs->mlc = (midLevelCtrl*) malloc(sizeof(midLevelCtrl));
+    init_midLevelCtrl(cvs->mlc);
 
     cvs->pshed = (pushShed*) malloc(sizeof(pushShed));
     pushShed_init(cvs->pshed);
@@ -48,14 +52,18 @@ ctrlStruct* cvs_init()
     cvs->teensy = (teensyStruct*) malloc(sizeof(teensyStruct));
     teensy_init(cvs->teensy);
 
-
-    cvs->mlc = (midLevelCtrl*) malloc(sizeof(midLevelCtrl));
-    init_midLevelCtrl(cvs->mlc);
-
-
-    // txt files
+    /*!  txt files  */
     cvs->llc_data = fopen("llc_data.txt", "w");
     if (cvs->llc_data == NULL) printf("Enable to open file llc_data.txt\n");
+
+    cvs->mp_data = fopen("mp_data.txt", "w");
+    if (cvs->mp_data == NULL) printf("Enable to open file mp_data.txt\n");
+
+    cvs->rpl_data = fopen("rpl_data.txt", "w");
+    if (cvs->rpl_data == NULL) printf("Enable to open file rpl_data.txt\n");
+
+    cvs->op_data = fopen("op_data.txt", "w");
+    if (cvs->op_data == NULL) printf("Enable to open file op_data.txt\n");
 
     return cvs;
 }
@@ -64,6 +72,7 @@ void cvs_free(ctrlStruct *cvs)
 {
     can_free(cvs);
     mutex_destroy(cvs);
+    //rpl_stop(cvs);
 
     free(cvs->inputs);
     free(cvs->outputs);
@@ -78,6 +87,9 @@ void cvs_free(ctrlStruct *cvs)
     free(cvs->teensy);
 
     fclose(cvs->llc_data);
+    fclose(cvs->mp_data);
+    fclose(cvs->rpl_data);
+    fclose(cvs->op_data);
 
     free(cvs);
 }

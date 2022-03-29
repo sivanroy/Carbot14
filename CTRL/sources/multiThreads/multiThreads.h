@@ -22,6 +22,7 @@
 typedef struct mThreadsStruct
 {
     pthread_mutex_t mutex_op;
+    pthread_mutex_t mutex_mp;
 
     int thread_main_end;
 

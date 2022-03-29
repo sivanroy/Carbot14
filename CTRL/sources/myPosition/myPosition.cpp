@@ -37,13 +37,11 @@ void mp_init(myPosition *mp)
 
 void set_new_position(ctrlStruct *cvs)
 {
-    // structures declaration
-    ctrlIn  *inputs;
-    myPosition *mp;
+    ctrlIn  *inputs = cvs->inputs;
+    myPosition *mp = cvs->mp;
+    mThreadsStruct *mt = cvs->mt;
 
-    // structures initialization
-    inputs  = cvs->inputs;
-    mp  = cvs->mp;
+    fprintf(cvs->mp_data, "%f,%f,%f\n", mp->x, mp->y, mp->th);
 
     // measured angular speed of each odo
     double r_sp_mes = inputs->r_sp_mes_odo;
@@ -62,7 +60,9 @@ void set_new_position(ctrlStruct *cvs)
     double dy = ds * sin(mp->th + dth/2);
 
     // new position and orientation of the robot
+    pthread_mutex_lock(&(mt->mutex_mp));
     mp->x = mp->x + dx;
     mp->y = mp->y + dy;
     mp->th = limit_angle(mp->th + dth);
+    pthread_mutex_unlock(&(mt->mutex_mp));
 }

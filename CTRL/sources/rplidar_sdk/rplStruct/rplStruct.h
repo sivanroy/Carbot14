@@ -28,7 +28,6 @@
 typedef struct rplStruct
 {
     rp::standalone::rplidar::RPlidarDriver* lidar;
-    rplidar_response_measurement_node_hq_t nodes[RPL_MAX_DATA_SIZE];
     size_t count;
     u_result op_result;
 

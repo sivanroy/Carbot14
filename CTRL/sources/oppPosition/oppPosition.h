@@ -22,6 +22,7 @@ typedef struct oppPosition
 {
     int n_opp;
     int cluster_size_min;
+    double cluster_r;
     double map_margin;
 
     int update_flag;
@@ -31,6 +32,7 @@ typedef struct oppPosition
 } oppPosition;
 
 void op_init(oppPosition *op);
+int not_wall(ctrlStruct *cvs, double x, double y);
 void get_opp_pos(ctrlStruct *cvs);
 
 #endif

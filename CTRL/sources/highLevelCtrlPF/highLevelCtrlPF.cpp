@@ -175,8 +175,8 @@ void calc_RepulsivePotential(ctrlStruct *cvs) {
     for (int i = 0;i<NumbOfObst;i++){
         double x1 = x - x_dyn;
         double y1 = y - y_dyn;
-        ETHA *= 2;
-        front_obst *= 2;
+        ETHA *= 5;
+        front_obst *= 4;
 
         double d = sqrt(x1*x1+y1*y1);
         if (d <= R){

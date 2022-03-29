@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+from math import pi
+import numpy as np
 
 
 def read_txt_file(path_file, nData):
@@ -236,29 +238,66 @@ def plot_mlcPF_data():
     plt.show()
 
 
-def plot_op_data():
+def plot_rpl_data():
 
-    Data = read_txt_file("../../build/op_data.txt", 144*2+2)
+    Data = read_txt_file("../../build/rpl_data.txt", 2)
 
     map_x = [0,3,3,0,0]
     map_y = [0,0,2,2,0]
-
+    
     plt.plot(map_x, map_y, label="Map")
-    plt.plot(Data[288], Data[289], 'ro', label="My pos")
-
-    i = 0
-    for i in range(144):
-        plt.plot(Data[i], Data[i+144])
-
+    plt.plot(Data[0], Data[1], 'ro', label="rpl_data")
     plt.xlabel("x [m]")
     plt.ylabel("y [m]")
-    plt.title("op test")
-    #plt.ylim(0.60, 1.2)
-    #plt.xlim(2.5, 3.2)
+    plt.title("rpl")
+    plt.ylim(-0.1, 2.1)
+    plt.xlim(-0.1, 3.1)
     #plt.axis("equal")
     plt.legend()
     plt.grid()
-    #plt.savefig("op_pos.pdf", format="pdf")
+    #plt.savefig("rpl_data2.pdf", format="pdf")
+    plt.show()
+    
+def plot_op_data():
+
+    Data = read_txt_file("../../build/op_data.txt", 2)
+
+    map_x = [0,3,3,0,0]
+    map_y = [0,0,2,2,0]
+    
+    plt.plot(map_x, map_y, label="Map")
+    plt.plot(Data[0], Data[1], 'ro', label="op_data")
+    plt.xlabel("x [m]")
+    plt.ylabel("y [m]")
+    plt.title("op")
+    plt.ylim(-0.1, 2.1)
+    plt.xlim(-0.1, 3.1)
+    #plt.axis("equal")
+    plt.legend()
+    plt.grid()
+    #plt.savefig("op_data2.pdf", format="pdf")
+    plt.show()
+    
+def plot_mp_data():
+
+    Data = read_txt_file("../../build/mp_data.txt", 3)
+
+    map_x = [0,3,3,0,0]
+    map_y = [0,0,2,2,0]
+    
+    plt.plot(map_x, map_y, label="Map")
+    plt.plot(Data[0], Data[1], 'ro', label="mp_data")
+    plt.xlabel("x [m]")
+    plt.ylabel("y [m]")
+    plt.title("mp")
+    plt.ylim(-0.1, 2.1)
+    plt.xlim(-0.1, 3.1)
+    #plt.axis("equal")
+    plt.legend()
+    plt.grid()
+    #plt.savefig("mp_data2.pdf", format="pdf")
     plt.show()
 
-plot_llc_data()
+plot_rpl_data()
+plot_op_data()
+plot_mp_data()
