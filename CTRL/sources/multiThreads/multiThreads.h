@@ -13,6 +13,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <math.h>
+#include <chrono>
 #include <pthread.h>
 
 #include "../ctrlStruct/ctrlStruct.h"
@@ -22,10 +23,14 @@ typedef struct mThreadsStruct
 {
     pthread_mutex_t mutex_op;
 
+    int thread_main_end;
+
 } mThreadsStruct;
 
 void mt_init(mThreadsStruct *mt);
 int threads_launcher(ctrlStruct *cvs);
+void *ctrl_main(void *arg);
+void *ctrl_op(void *arg);
 int mutex_destroy(ctrlStruct *cvs);
 
 #endif

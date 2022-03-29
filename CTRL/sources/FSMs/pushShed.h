@@ -6,7 +6,7 @@
 
 
 enum {S0_ps,Dpmt1_ps,Dpmt2_ps,servoShedOut,servoShedIn,Rotate1_ps,
-	Close_ps,Dpmt3_ps,Dpmt4_ps,Dpmt5_ps,Dpmt6_ps,Back,GoHome,Push_ps,Ok_ps,NotOk_ps};
+	Close_ps,Dpmt3_ps,Dpmt4_ps,Dpmt5_ps,Dpmt6_ps,Back,GoHome,Push_ps,Ok_ps,NotOk_ps, Dpmt1_es, Close_es};
 
 typedef struct pushShed
 {
@@ -20,6 +20,7 @@ typedef struct pushShed
 } pushShed;
 
 void pushShed_init(pushShed *pshed);
+void esquive_loop(ctrlStruct *cvs);
 void pushShed_loop(ctrlStruct *cvs);
 void pushShed_launch(ctrlStruct *cvs);
 

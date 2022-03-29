@@ -129,5 +129,6 @@ void update_time(ctrlStruct *cvs)
     ctrlIn *inputs;
     inputs = cvs->inputs;
 
+    //printf("update time : cvs->inputs->t = %f\n", cvs->inputs->t);
     inputs->t += inputs->dt;
 }

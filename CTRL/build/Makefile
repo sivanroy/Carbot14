@@ -17,7 +17,7 @@ VERBOSE = FALSE
 
 # Create the list of directories
 DIRS = main ctrlStruct ctrl_IO lowLevelCtrl midLevelCtrl midLevelCtrlPF highLevelCtrlPF obstacles myPosition FSMs teensyStruct \
-		teensyStruct/rs232 rplidar_sdk/rplStruct rplidar_sdk/sdk/include \
+		teensyStruct/rs232 rplidar_sdk/rplStruct oppPosition multiThreads rplidar_sdk/sdk/include \
 		rplidar_sdk/sdk/src rplidar_sdk/sdk/src/arch/linux rplidar_sdk/sdk/src/hal
 SOURCEDIRS = $(foreach dir, $(DIRS), $(addprefix $(SOURCEDIR)/, $(dir)))
 TARGETDIRS = $(foreach dir, $(DIRS), $(addprefix $(BUILDDIR)/, $(dir)))

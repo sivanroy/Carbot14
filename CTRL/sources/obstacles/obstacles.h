@@ -17,8 +17,8 @@
 typedef struct obstacles
 {
 	int sizemax;
-	double obs_dyn_x[1000];
-	double obs_dyn_y[1000];
+	double obs_dyn_x;
+	double obs_dyn_y;
 	double obs_stat_x[1000];
 	double obs_stat_y[1000];
 	int size_dyn;
@@ -28,10 +28,10 @@ typedef struct obstacles
 void obs_init(obstacles *obs);
 void obs_stat(obstacles *obs);
 
-void lines(obstacles *obs,double xy1[2],double xy2[2],double N,int dyn = 1);
+void lines(obstacles *obs,double xy1[2],double xy2[2],double N);
 
 void dyn_obs_free(ctrlStruct * cvs);
-void dyn_obs_set(ctrlStruct *cvs,double *x,double *y,int size);
+void dyn_obs_set(ctrlStruct *cvs);
 
 
 #endif

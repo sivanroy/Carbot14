@@ -15,8 +15,8 @@
 void obs_init(obstacles *obs)
 {
 	obs->sizemax = 1000;
-	obs->obs_dyn_x[0] = -10;
-	obs->obs_dyn_y[0] = -10;
+	obs->obs_dyn_x = -1;
+	obs->obs_dyn_y = -1;
 	obs->obs_stat_x[0] = -10;
 	obs->obs_stat_y[0] = -10;
 	obs->size_dyn = 0;
@@ -48,13 +48,13 @@ void obs_stat(obstacles *obs){
         //int ni = N[i];
         xy1[0] = xs[0]; xy1[1] = ys[0];
         xy2[0] = xs[1]; xy2[1] = ys[1];
-        lines(obs,xy1,xy2,dx,0);
+        lines(obs,xy1,xy2,dx);
     }
     printf("obstacles initialized\n");
 }
 
 
-void lines(obstacles *obs,double xy1[2],double xy2[2],double dx,int dyn){
+void lines(obstacles *obs,double xy1[2],double xy2[2],double dx){
     double d = sqrt(pow((xy1[0]-xy2[0]),2)+pow((xy1[1]-xy2[1]),2));
     int N = fmax( floor(d/dx) ,3 );
     if ( (xy2[0] - xy1[0]) == 0){
@@ -64,16 +64,10 @@ void lines(obstacles *obs,double xy1[2],double xy2[2],double dx,int dyn){
             double step = dy/(N-1);
             double newy = y1+step*i;
             double newx = xy1[0];
-            if(dyn){
-            	obs->obs_dyn_x[obs->size_dyn] = newx;
-	            obs->obs_dyn_y[obs->size_dyn] = newy;
-	            obs->size_dyn ++;  
-        	}
-        	else {
-      			obs->obs_stat_x[obs->size_stat] = newx;
-	            obs->obs_stat_y[obs->size_stat] = newy;
-	            obs->size_stat ++;
-        	}
+            obs->obs_stat_x[obs->size_stat] = newx;
+            obs->obs_stat_y[obs->size_stat] = newy;
+            obs->size_stat ++;
+
         }
     }    
     else {
@@ -85,22 +79,14 @@ void lines(obstacles *obs,double xy1[2],double xy2[2],double dx,int dyn){
             double step = dx / (N-1);
             double newx = x1+step*i;
             double newy = a*(x1+step*i)+b;
-            if(dyn){
-            	obs->obs_dyn_x[obs->size_dyn] = newx;
-	            obs->obs_dyn_y[obs->size_dyn] = newy;
-	            obs->size_dyn ++;  
-                if (obs->size_dyn >= obs->sizemax) {
-                    printf("Error with obstacles formation; to much points to fit int the 1000 arraty; actual size %d\n",obs->size_dyn );
-                }
+
+            obs->obs_stat_x[obs->size_stat] = newx;
+            obs->obs_stat_y[obs->size_stat] = newy;
+            obs->size_stat ++;
+            if (obs->size_stat >= obs->sizemax) {
+                printf("Error with obstacles formation; to much points to fit int the 1000 arraty; actual size %d\n",obs->size_stat );
             }
-        	else {
-      			obs->obs_stat_x[obs->size_stat] = newx;
-	            obs->obs_stat_y[obs->size_stat] = newy;
-	            obs->size_stat ++;
-                if (obs->size_stat >= obs->sizemax) {
-                    printf("Error with obstacles formation; to much points to fit int the 1000 arraty; actual size %d\n",obs->size_stat );
-                }
-        	}
+
         }
     }
 }
@@ -109,22 +95,41 @@ void lines(obstacles *obs,double xy1[2],double xy2[2],double dx,int dyn){
 void dyn_obs_free(ctrlStruct *cvs){
     obstacles *obs = cvs->obs;
     obs->size_dyn = 0;
-    obs->obs_dyn_x[0] = -10;
-    obs->obs_dyn_y[0] = -10;
 }
 
 
-void dyn_obs_set(ctrlStruct *cvs,double *x,double *y,int size) {
+void dyn_obs_set(ctrlStruct *cvs) {
     obstacles *obs=cvs->obs;
-    for (int i =0; i<size;i++) {
-        obs->obs_dyn_x[obs->size_dyn] = x[i];
-        obs->obs_dyn_y[obs->size_dyn] = y[i];
-        obs->size_dyn++;
-        if (obs->size_dyn >= obs->sizemax) {
-            printf("Error with obstacles formation; to much points to fit int the 1000 arraty; actual size %d\n",obs->size_dyn );
-            obs->size_dyn = obs->sizemax;
+    oppPosition *op = cvs->op;
+    mThreadsStruct *mt = cvs->mt;
+
+    double x_op;
+    double y_op;
+    double update_flag_op = 0;
+
+    pthread_mutex_lock(&(mt->mutex_op));
+    if (op->update_flag) {
+        x_op = op->x_op;
+        y_op = op->y_op;
+        update_flag_op = op->update_flag;
+        op->update_flag = 0;
+    }
+    pthread_mutex_unlock(&(mt->mutex_op));
+
+    if (update_flag_op) {
+        if (x_op == -1 || y_op == -1) {
+            obs->size_dyn = 0;
+            obs->obs_dyn_x = x_op;
+            obs->obs_dyn_y = y_op;
+        }
+        else {
+            obs->size_dyn = 1;
+            obs->obs_dyn_x = x_op;
+            obs->obs_dyn_y = y_op;
         }
     }
+    printf("x_op = %f | y_op = %f\n", x_op, y_op);
+
 }
 
 

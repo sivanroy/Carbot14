@@ -17,8 +17,8 @@ void pushShed_init(pushShed *pshed) {
     pshed->output = 0;
     pshed->go = 1;
     int s = 7;
-    double x_goalsI[s] = {2.6,2.28,2.2,2.25,2.52,2.7,2.72};
-    double y_goalsI[s] = {1.65,1.51,1.12,0.85,0.52,0.35,1.3};
+    double x_goalsI[s] = {1,2.28,2.2,2.25,2.52,2.7,2.72};
+    double y_goalsI[s] = {1,1.51,1.12,0.85,0.52,0.35,1.3};
     for (int i=0; i<s;i++) {
     	pshed->x_goals[i] = x_goalsI[i];
     	pshed->y_goals[i] = y_goalsI[i];
@@ -38,7 +38,8 @@ void pushShed_launch(ctrlStruct *cvs){
 }
 
 void sendFromMainPot(ctrlStruct *cvs,double x_goal,double y_goal){
-	get_d2r_data(cvs); 
+	get_d2r_data(cvs);
+    dyn_obs_set(cvs);
     main_pot_force(cvs,x_goal,y_goal);
     if(cvs->hlcPF->output) {
     	motors_stop(cvs);
@@ -60,7 +61,6 @@ void sendFromMLC(ctrlStruct *cvs,double x_goal,double y_goal){
     set_commands(cvs, cvs->mlc->r_sp_ref, cvs->mlc->l_sp_ref);
     send_commands(cvs);
     set_new_position(cvs);
-    update_time(cvs);
 }
 
 
@@ -70,7 +70,50 @@ void sendFromMLCPF(ctrlStruct *cvs,double v_ref, double theta_r){
     set_commands(cvs, cvs->mlcPF->r_sp_ref, cvs->mlcPF->l_sp_ref);
     send_commands(cvs);
     set_new_position(cvs);
-    update_time(cvs);
+}
+
+void esquive_loop(ctrlStruct *cvs) {
+    pushShed *pshed = cvs->pshed;
+    myPosition *mp = cvs->mp;
+    ctrlIn  *inputs = cvs->inputs;
+    highLevelCtrlPF *hlcPF = cvs->hlcPF;
+    midLevelCtrlPF *mlcPF = cvs->mlcPF;
+    midLevelCtrl *mlc = cvs->mlc;
+    teensyStruct *teensy = cvs->teensy;
+
+    double x = mp->x; double y = mp->y;
+    double xg; double yg;
+
+    switch(pshed->status){
+        case S0_ps:{
+            if(pshed->go){
+                pshed->status = Dpmt1_es;
+                printf("go to dp1\n");
+                pshed->go = 0;
+            }
+            break;
+        }
+        case Dpmt1_es:{
+            dyn_obs_set(cvs);
+
+            printf("D1\n");
+
+            xg = pshed->x_goals[0];
+            yg = pshed->y_goals[0];
+            sendFromMainPot(cvs,xg,yg);
+            if(hlcPF->output){
+                pshed->status = Close_es;
+                printf("Close\n");
+            }
+
+            break;
+        }
+        case Close_es:{
+            pshed->output = 1;
+            printf("End simu\n");
+            break;
+        }
+    }
 }
 
 void pushShed_loop(ctrlStruct *cvs){

@@ -23,6 +23,7 @@
 #include "../rplidar_sdk/rplStruct/rplStruct.h"
 #include "../oppPosition/oppPosition.h"
 #include "../teensyStruct/teensyStruct.h"
+#include "../multiThreads/multiThreads.h"
 
 
 typedef struct ctrlStruct ctrlStruct;
@@ -38,6 +39,7 @@ typedef struct pushShed pushShed;
 typedef struct oppPosition oppPosition;
 typedef struct teensyStruct teensyStruct;
 typedef struct midLevelCtrl midLevelCtrl;
+typedef struct mThreadsStruct mThreadsStruct;
 
 
 typedef struct ctrlStruct
@@ -54,7 +56,8 @@ typedef struct ctrlStruct
     midLevelCtrl *mlc;
 
     rplStruct *rpl;
-    //oppPosition *op;
+    oppPosition *op;
+    mThreadsStruct *mt;
 
     teensyStruct *teensy;
 
