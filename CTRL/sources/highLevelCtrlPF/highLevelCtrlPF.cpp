@@ -10,29 +10,34 @@
 #include "highLevelCtrlPF.h" // adapt it with your headers
 
 void hlcPF_init(highLevelCtrlPF *hlcPF) {
+    //outputs
     hlcPF->output = 0;
     hlcPF->d = 0;
-
+    //param physique
+    hlcPF->x_shift = 0.0625;
+    hlcPF->error = 0.03;
+    hlcPF->goal[0] = 0;hlcPF->goal[1] = 0;
+    //references
     hlcPF->v_ref = 0.0;
     hlcPF->theta_ref = 0.0;
-
     hlcPF->vx = 0.0;
     hlcPF->vy = 0.0;
-
+    //Forces
     hlcPF->F_att[0] = 0; hlcPF->F_att[1] = 0;
     hlcPF->F_rep[0] = 0; hlcPF->F_rep[1] = 0;
-
+    //parameters
     hlcPF->Eta = 0.025; //.025 = tout tout juste !!
     hlcPF->Rho = 0.4; // 128 rayon pour le robot a l'avant
-
-    double a = 2;
+    double a = 1;
     hlcPF->d_limit = 0.2;
     hlcPF->Alpha = a/hlcPF->d_limit;
+    hlcPF->Tau = 3;
+    hlcPF->maxF_att = .98;
+    hlcPF->maxF_rep = 1;
+    //param dyn obstacle
 
-    hlcPF->Tau = 1.5;
-
-    hlcPF->goal[0] = 0;hlcPF->goal[1] = 0;
-
+    //local minimum
+    hlcPF->Fmin = 0.03;
     hlcPF->flag_min_local = 0;
     hlcPF->begin_min_local_dodge = 0;
     hlcPF->goal_local_dodge[0] = 0; hlcPF->goal_local_dodge[1] = 0;
@@ -42,8 +47,9 @@ void hlcPF_init(highLevelCtrlPF *hlcPF) {
 int get_partition_map(ctrlStruct *cvs){
     highLevelCtrlPF *hlcPF = cvs->hlcPF;
     myPosition *mp = cvs->mp;
-
-    double x = mp->x; double y = mp->y;
+    double th = mp->th;
+    double x = mp->x + hlcPF->x_shift * cos(th);
+    double y = mp->y + hlcPF->x_shift * sin(th);
     if(x< 1) {
         if(x>y) {
             return 3;
@@ -69,6 +75,7 @@ int get_partition_map(ctrlStruct *cvs){
     return -1;
 
 }
+
 
 double theat_g_compute(double diffx,double diffy){
     double theta_g;
@@ -98,14 +105,51 @@ double theat_g_compute(double diffx,double diffy){
 }
 
 
+void compute_incr(ctrlStruct *cvs, double th) {
+    int part = get_partition_map(cvs);
+    double incr = 3.1415/2;
+    double toincr = 0;
+    if(part == 1) {
+        if(th>3.1415/2 | th< -3.1415/2){
+            toincr += incr;
+        } else {
+            toincr -= incr;
+        }
+    } else if (part == 2) {
+        if(th> 0) {
+            toincr+= incr;
+        } else {
+            toincr-=incr;
+        }
+    } else if (part == 3) {
+        if(th>3.1415/2 | th< -3.1415/2){
+            toincr -= incr;
+        } else {
+            toincr += incr;
+        }
+    } else if (part == 4){
+        if(th> 0) {
+            toincr -= incr;
+        } else {
+            toincr += incr;
+        }
+    } else {
+        printf("should not happend !! part\n");
+    }
+    cvs->hlcPF->dodge_incr = toincr;
+}
+
+
+
 void calc_AttractivePotential(ctrlStruct *cvs,double x_goal,double y_goal) {
     highLevelCtrlPF *hlcPF = cvs->hlcPF;
     myPosition *mp = cvs->mp;
     double ALPHA   = hlcPF->Alpha ;
     double d_limit = hlcPF->d_limit  ;
 
-    double x = mp->x; double y = mp->y;
-    //double x_goal = hlcPF->goal[0]; double y_goal = hlcPF->goal[1];
+    double th = mp->th;
+    double x = mp->x + hlcPF->x_shift * cos(th);
+    double y = mp->y + hlcPF->x_shift * sin(th);
 
     double x1 = x - x_goal;
     double y1 = y - y_goal;
@@ -132,7 +176,10 @@ void calc_RepulsivePotential(ctrlStruct *cvs) {
     obstacles *obs = cvs->obs;
     myPosition *mp = cvs->mp;
 
-    double x = mp->x; double y = mp->y;
+    double th = mp->th;
+    double x = mp->x + hlcPF->x_shift * cos(th);
+    double y = mp->y + hlcPF->x_shift * sin(th);
+
     double ETHA =  hlcPF->Eta;     //# Scaling factor repulsive potential
     double front_obst = hlcPF->Rho; //# Influence dimension of obstacle
 
@@ -176,7 +223,7 @@ void calc_RepulsivePotential(ctrlStruct *cvs) {
         double x1 = x - x_dyn;
         double y1 = y - y_dyn;
         ETHA *= 5;
-        front_obst *= 4;
+        front_obst *= 5;
 
         double d = sqrt(x1*x1+y1*y1);
         if (d <= R){
@@ -202,16 +249,14 @@ void calc_RepulsivePotential(ctrlStruct *cvs) {
     } 
     hlcPF->F_rep[0] = Fx; 
     hlcPF->F_rep[1] = Fy;
-    //printf("Frep_x : %f| Frep_y : %f\n",Fx,Fy);
 }
 
 void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal){
     highLevelCtrlPF *hlcPF = cvs->hlcPF;
     ctrlIn *inputs = cvs->inputs;
-        //reset output
+    //reset output
     hlcPF->output = 0;
     myPosition *mp = cvs->mp;
-
 
     double goalToSendX = x_goal;
     double goalToSendY = y_goal;
@@ -221,10 +266,13 @@ void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal){
         goalToSendY = hlcPF->goal_local_dodge[1];
         //printf("well in local min\n");
     }
-    
-    double x = mp->x;
-    double y = mp->y;
+    double th = mp->th;
+    double x = mp->x + hlcPF->x_shift * cos(th);
+    double y = mp->y + hlcPF->x_shift * sin(th);
     double theta_robot = mp->th;
+
+    double minF = hlcPF->Fmin;
+    double error = hlcPF->error;
 
     calc_AttractivePotential(cvs,goalToSendX,goalToSendY);
     calc_RepulsivePotential(cvs);
@@ -236,17 +284,20 @@ void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal){
     double F_rep_y = hlcPF->F_rep[1];
     double F_rep = sqrt(F_rep_x*F_rep_x+F_rep_y*F_rep_y);
 
-
     // si norme > 1 -> scale par rapport a la norme
-    if ( F_att > .98) {
+    double maxF_att = hlcPF->maxF_att;
+    double maxF_rep = hlcPF->maxF_rep;
+    if ( F_att > maxF_att) {
         F_att_x /= F_att;
-        F_att_x *= .98;
+        F_att_x *= maxF_att;
         F_att_y /= F_att;
-        F_att_y *= .98;
+        F_att_y *= maxF_att;
     }
-    if ( F_rep > 1) {
+    if ( F_rep > maxF_rep) {
         F_rep_x /= F_rep;
+        F_rep_x *= maxF_rep;
         F_rep_y /= F_rep;
+        F_rep_y *= maxF_rep;
     } 
 
     double F_tot_x = (F_att_x + F_rep_x) * -1;
@@ -279,10 +330,6 @@ void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal){
     F_att = sqrt(F_att_x*F_att_x+F_att_y*F_att_y);
     F_tot = sqrt(F_tot_x*F_tot_x+F_tot_y*F_tot_y);
 
-    double minF = 0.03;
-    //printf("fatt %f | ftot %f \n",F_att,F_tot );
-    double error = 0.01;
-
     //check if in a special range (is arrived)
     if (d<error) {
             v = 0;
@@ -296,67 +343,24 @@ void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal){
         }
     } //check for minima 
 
-
-    else if (F_att > minF and F_tot < minF){//} | hlcPF->flag_min_local) {
+    else if (F_att > minF and F_tot < minF){
         printf("Local minimum /: \n");
         //Angle
         double diffx = x_goal - x;
         double diffy = y_goal - y;
-
         double theta_g = theat_g_compute(diffx,diffy);
-
         printf("theta_g before compute %f\n",theta_g);
-
-        int part = get_partition_map(cvs);
-        printf("part %d\n",part );
-        double th = theta_g;//cvs->mp->th;
-
-        double incr = 3.1415/2;
-        double toincr = 0;
-        if(part == 1) {
-            if(th>3.1415/2 | th< -3.1415/2){
-                toincr += incr;
-            } else {
-                toincr -= incr;
-            }
-        } else if (part == 2) {
-            if(th> 0) {
-                toincr+= incr;
-            } else {
-                toincr-=incr;
-            }
-        } else if (part == 3) {
-            if(th>3.1415/2 | th< -3.1415/2){
-                toincr -= incr;
-            } else {
-                toincr += incr;
-            }
-        } else if (part == 4){
-            if(th> 0) {
-                toincr -= incr;
-            } else {
-                toincr += incr;
-            }
-        } else {
-            printf("should not happend !! part\n");
-        }
-
-        hlcPF->dodge_incr = toincr;
-        printf("incr %f\n",toincr); 
-
-        theta_g += toincr;
-
+        compute_incr(cvs,theta_g);
+        theta_g += hlcPF->dodge_incr;
         if(theta_g>3.1415) {
             theta_g -= 2*3.1415;
         } else if (theta_g< -3.1415) {
             theta_g += 2*3.1415;
         }
-
         printf("theta_g = %f\n",theta_g );
-
         //1 m from points goal
-        hlcPF->goal_local_dodge[0] = x + .3 * cos(theta_g);
-        hlcPF->goal_local_dodge[1] = y + .3 * sin(theta_g);
+        hlcPF->goal_local_dodge[0] = x + hlcPF->x_shift*cos(th) + .3 * cos(theta_g);
+        hlcPF->goal_local_dodge[1] = y + hlcPF->x_shift*sin(th) +.3 * sin(theta_g);
         hlcPF->begin_min_local_dodge = inputs->t;
         hlcPF->vx = 0;
         hlcPF->vy = 0;
@@ -374,9 +378,5 @@ void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal){
     hlcPF->v_ref = v;
     hlcPF->theta_ref = theta;
     hlcPF->d = d;
-
-    //int part = get_partition_map(cvs);
-    //printf("part %d\n",part );
-    //printf("v: %f | theta %f\n",v,theta );
 }
 

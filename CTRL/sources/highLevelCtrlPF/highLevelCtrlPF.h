@@ -14,6 +14,8 @@ typedef struct highLevelCtrlPF
 {
 	int output;
 	double d;
+
+	double x_shift; //shift from wheels to center of robot
 	//v,vx,vy,theta in the orthonormal domain of the map
 	double v_ref;
 	double theta_ref;
@@ -29,6 +31,8 @@ typedef struct highLevelCtrlPF
 	double Rho;
 	double Tau;
 	double d_limit;
+	double maxF_att;
+	double maxF_rep;
 
 	double goal[2];
 
@@ -36,6 +40,9 @@ typedef struct highLevelCtrlPF
 	double begin_min_local_dodge;
 	double goal_local_dodge[2];
 	double dodge_incr;
+
+	double error;
+    double Fmin;
 } highLevelCtrlPF;
 
 void hlcPF_init(highLevelCtrlPF *hlcPF);

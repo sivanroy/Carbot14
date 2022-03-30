@@ -50,7 +50,7 @@ int main()
     dt = inputs->dt;
 
     int cmdON = 0;
-    int llcON = 1;
+    int llcON = 0;
     int mlcPF_ON = 0;
     int mlc_ON = 0;
     int rplON = 0;

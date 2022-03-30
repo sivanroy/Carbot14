@@ -15,11 +15,11 @@ from math import *
 dt = 0.001
 
 d_limit = 0.20      # Composite potential field limit
-ALPHA = 4/d_limit   # Scaling factor attractive potential
+ALPHA = 1/d_limit   # Scaling factor attractive potential
 
 
-front_obst = 0.4 # Influence dimension of obstacle
-ETHA = 0.02 #front_obst**A      # Scaling factor repulsive potential
+front_obst = 1 # Influence dimension of obstacle
+ETHA = 0.04 #front_obst**A      # Scaling factor repulsive potential
 
 tau = 5
 
@@ -198,9 +198,9 @@ def obstacles():
     return xo,yo
 
 xo,yo = obstacles()
-x_pos,y_pos = travel_loop(dt, 50000, xo, yo)
+x_pos,y_pos = travel_loop(dt, 1, xo, yo)
 
-x_obst = np.linspace(.01,.5,100)
+x_obst = np.linspace(.01,1,100)
 F_rep = []
 for xi in x_obst :
     Fx,Fy = calc_RepulsivePotential(0, 0, [xi], [0], 1)
@@ -229,9 +229,9 @@ plt.xticks(fontsize=15)
 plt.ylabel("Attractive Force [-]",fontsize = 18)
 plt.xlabel("distance [m]",fontsize = 18)
 plt.title("Attractive force to a goal point",fontsize = 20)
-
 plt.show()
 
+"""
 fig = plt.figure(figsize =(10, 7))
 plt.plot(x_pos,y_pos,'bo')
 #plt.plot(x_pos[-1],y_pos[-1],'bo',c='red')
@@ -245,8 +245,9 @@ plt.ylabel("Y pos [m]",fontsize = 18)
 plt.xlabel("X pos [m]",fontsize = 18)
 plt.title("Path to 2 goals from camp",fontsize = 20)
 plt.show()
+"""
 
-
+"""
 fig = plt.figure(figsize =(14, 9))
 #ax = plt.axes(projection='3d')
 ax = plt.gca()
@@ -269,6 +270,7 @@ for i in range (len(x)):
 print("end")
 
 ax.pcolormesh(X, Y, pmap , cmap='viridis', edgecolor='none')
+
 #ax.set_title('Potential Field');
 plt.show()
 
@@ -276,6 +278,8 @@ ax = plt.axes(projection='3d')
 ax.plot_surface(X, Y, pmap ,rstride=1, cstride=1,cmap='viridis', edgecolor='none')
 ax.view_init(70, -30)
 plt.show()
+
+"""
 
 """
     limitsx = {{0.55,2.45},{3.00,3.0}, {3.00,2.555},{.445,0},{1.175,1.825}  ,{0,0},\
