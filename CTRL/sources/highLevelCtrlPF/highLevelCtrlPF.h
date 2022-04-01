@@ -29,6 +29,8 @@ typedef struct highLevelCtrlPF
 	double Alpha;
 	double Eta;
 	double Rho;
+	double Eta_opp;
+	double Rho_opp;
 	double Tau;
 	double d_limit;
 	double maxF_att;
@@ -48,7 +50,7 @@ typedef struct highLevelCtrlPF
 void hlcPF_init(highLevelCtrlPF *hlcPF);
 void calc_AttractivePotential(ctrlStruct *cvs,double x_goal,double y_goal);
 void calc_RepulsivePotential(ctrlStruct *cvs);
-void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal);
+void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal,int goForward = 1);
 
 
 #endif // end of header guard

@@ -16,7 +16,6 @@ void hlcPF_init(highLevelCtrlPF *hlcPF) {
     //param physique
     hlcPF->x_shift = 0.0625;
     hlcPF->error = 0.03;
-    hlcPF->goal[0] = 0;hlcPF->goal[1] = 0;
     //references
     hlcPF->v_ref = 0.0;
     hlcPF->theta_ref = 0.0;
@@ -26,16 +25,24 @@ void hlcPF_init(highLevelCtrlPF *hlcPF) {
     hlcPF->F_att[0] = 0; hlcPF->F_att[1] = 0;
     hlcPF->F_rep[0] = 0; hlcPF->F_rep[1] = 0;
     //parameters
+    hlcPF->maxF_att = .98;
+    hlcPF->maxF_rep = 1;
+    hlcPF->goal[0] = 0;hlcPF->goal[1] = 0;
+    //repulsive static
     hlcPF->Eta = 0.025; //.025 = tout tout juste !!
-    hlcPF->Rho = 0.4; // 128 rayon pour le robot a l'avant
+    hlcPF->Rho = 0.4; // 
+    //param dyn obstacle
+    hlcPF->Eta_opp = 0.025*5;
+    hlcPF->Rho_opp = 0.4*5;
+    //attractive
     double a = 1;
     hlcPF->d_limit = 0.2;
     hlcPF->Alpha = a/hlcPF->d_limit;
-    hlcPF->Tau = 3;
-    hlcPF->maxF_att = .98;
-    hlcPF->maxF_rep = 1;
-    //param dyn obstacle
-
+    //tau
+    hlcPF->Tau_max = 5;
+    hlcPF->tau_max_dist = .5;
+    hlcPF->Tau_min = 3;
+    hlcPF->tau_min_dist = .2;
     //local minimum
     hlcPF->Fmin = 0.03;
     hlcPF->flag_min_local = 0;
@@ -139,7 +146,19 @@ void compute_incr(ctrlStruct *cvs, double th) {
     cvs->hlcPF->dodge_incr = toincr;
 }
 
+//make computation to give a tau dependant of the distance to the opponent (ralentit si trop proche de l'ennemi)
 
+double tau_compute(ctrlStruct *cvs) {
+    double tau_max = hlcPF->Tau_max;
+    double tau_min = hlcPF->Tau_min;
+    double tau_max_dist = hlcPF->tau_max_dist;
+    double tau_min_dist = hlcPF->tau_max_dist;
+    //compute ax + b =y for segment btwn max and min
+    double a = (tau_min-tau_max)/(tau_min_dist-tau_max_dist);
+    double b = tau_min - a*tau_min_dist;
+    //distance to opponent
+    return tau_min;
+}
 
 void calc_AttractivePotential(ctrlStruct *cvs,double x_goal,double y_goal) {
     highLevelCtrlPF *hlcPF = cvs->hlcPF;
@@ -220,10 +239,11 @@ void calc_RepulsivePotential(ctrlStruct *cvs) {
     double y_dyn = obs->obs_dyn_y;
     NumbOfObst = obs->size_dyn;
     for (int i = 0;i<NumbOfObst;i++){
+
         double x1 = x - x_dyn;
         double y1 = y - y_dyn;
-        ETHA *= 5;
-        front_obst *= 5;
+        ETHA = hlcPF->Eta_opp;
+        front_obst = Rho_opp;
 
         double d = sqrt(x1*x1+y1*y1);
         if (d <= R){
@@ -251,7 +271,10 @@ void calc_RepulsivePotential(ctrlStruct *cvs) {
     hlcPF->F_rep[1] = Fy;
 }
 
-void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal){
+
+
+
+void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal,int goForward){
     highLevelCtrlPF *hlcPF = cvs->hlcPF;
     ctrlIn *inputs = cvs->inputs;
     //reset output
@@ -269,8 +292,6 @@ void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal){
     double th = mp->th;
     double x = mp->x + hlcPF->x_shift * cos(th);
     double y = mp->y + hlcPF->x_shift * sin(th);
-    double theta_robot = mp->th;
-
     double minF = hlcPF->Fmin;
     double error = hlcPF->error;
 
@@ -309,7 +330,7 @@ void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal){
         F_tot_y /= F_tot;
     }
 
-    double tau = hlcPF->Tau;
+    double tau = tau_compute(cvs);
 
     double v_x = tau * F_tot_x;
     double v_y = tau * F_tot_y;
@@ -319,17 +340,18 @@ void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal){
     //to modify, check orientation because atan is -pi/2,pi/2
     double d = sqrt((x-x_goal)*(x-x_goal) +(y-y_goal)*(y-y_goal));
     if (v_x < 0) {
-        theta += 3.1415;
-        if (theta > 3.1415) {
-            theta -= 2*3.1415;
-        }
+        theta = limit_angle(theta + M_PI);
+    }
+    //to go backward
+    if(!goForward){
+        v = -v;
+        theta = limit_angle(theta + M_PI);
     }
 
     //check for minima
     //check with new F's normalized
     F_att = sqrt(F_att_x*F_att_x+F_att_y*F_att_y);
     F_tot = sqrt(F_tot_x*F_tot_x+F_tot_y*F_tot_y);
-
     //check if in a special range (is arrived)
     if (d<error) {
             v = 0;
@@ -342,7 +364,6 @@ void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal){
             printf("reset local min\n");
         }
     } //check for minima 
-
     else if (F_att > minF and F_tot < minF){
         printf("Local minimum /: \n");
         //Angle
@@ -360,14 +381,14 @@ void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal){
         printf("theta_g = %f\n",theta_g );
         //1 m from points goal
         hlcPF->goal_local_dodge[0] = x + hlcPF->x_shift*cos(th) + .3 * cos(theta_g);
-        hlcPF->goal_local_dodge[1] = y + hlcPF->x_shift*sin(th) +.3 * sin(theta_g);
+        hlcPF->goal_local_dodge[1] = y + hlcPF->x_shift*sin(th) + .3 * sin(theta_g);
         hlcPF->begin_min_local_dodge = inputs->t;
         hlcPF->vx = 0;
         hlcPF->vy = 0;
-
+        //set to 0 since minima 
+        // -> have to recalculate with the new goal given to go out of the minimum
         hlcPF->v_ref = 0;
         hlcPF->theta_ref = 0;
-
         hlcPF->flag_min_local = 1;
         return;    
     }

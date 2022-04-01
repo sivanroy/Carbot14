@@ -18,8 +18,8 @@ d_limit = 0.20      # Composite potential field limit
 ALPHA = 1/d_limit   # Scaling factor attractive potential
 
 
-front_obst = 1 # Influence dimension of obstacle
-ETHA = 0.04 #front_obst**A      # Scaling factor repulsive potential
+front_obst = 0.4 # Influence dimension of obstacle
+ETHA = 0.025 #front_obst**A      # Scaling factor repulsive potential
 
 tau = 5
 
@@ -247,7 +247,7 @@ plt.title("Path to 2 goals from camp",fontsize = 20)
 plt.show()
 """
 
-"""
+
 fig = plt.figure(figsize =(14, 9))
 #ax = plt.axes(projection='3d')
 ax = plt.gca()
@@ -270,16 +270,21 @@ for i in range (len(x)):
 print("end")
 
 ax.pcolormesh(X, Y, pmap , cmap='viridis', edgecolor='none')
-
+x_ticks = np.arange( 0, 3, 0.1 ) # minor tick for every 2 units
+y_ticks = np.arange(0,2,0.1)
+ax.set_xticks( x_ticks )
+ax.set_yticks( y_ticks)
+plt.grid()
 #ax.set_title('Potential Field');
 plt.show()
 
-ax = plt.axes(projection='3d')
+"""ax = plt.axes(projection='3d')
 ax.plot_surface(X, Y, pmap ,rstride=1, cstride=1,cmap='viridis', edgecolor='none')
 ax.view_init(70, -30)
-plt.show()
+plt.grid()
+plt.show()"""
 
-"""
+
 
 """
     limitsx = {{0.55,2.45},{3.00,3.0}, {3.00,2.555},{.445,0},{1.175,1.825}  ,{0,0},\
