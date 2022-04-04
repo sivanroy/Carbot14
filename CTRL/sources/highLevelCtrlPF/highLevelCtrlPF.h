@@ -11,46 +11,58 @@
 
 
 typedef struct highLevelCtrlPF
-{
-	int output;
-	double d;
-
-	double x_shift; //shift from wheels to center of robot
-	//v,vx,vy,theta in the orthonormal domain of the map
-	double v_ref;
-	double theta_ref;
-	double vx;
-	double vy;
-
-	double F_att[2];
-	double F_rep[2];
-
-	//Constant for the file path planning
-	double Alpha;
-	double Eta;
-	double Rho;
-	double Eta_opp;
-	double Rho_opp;
-	double Tau;
-	double d_limit;
-	double maxF_att;
-	double maxF_rep;
-
-	double goal[2];
-
-	int flag_min_local;
-	double begin_min_local_dodge;
-	double goal_local_dodge[2];
-	double dodge_incr;
-
-	double error;
-    double Fmin;
+{   //outputs
+    int output_main;
+    int output ;
+    double d ;
+    //param physique
+    double x_shift ;
+    double error ;
+    //references
+    double v_ref ;
+    double theta_ref;
+    double vx ;
+    double vy ;
+    //Forces
+    double F_att[2];
+    double F_rep[2];
+    //parameters
+    double maxF_att ;
+    double maxF_rep ;
+    double goal[2] ;
+    //repulsive static
+    double Eta ; //.025 = tout tout juste !!
+    double Rho ; // 
+    //param dyn obstacle
+    double Eta_opp;
+    double Rho_opp;
+    //attractive
+    double d_limit ;
+    double Alpha ;
+    //tau
+    double Tau_max;
+    double tau_max_dist ;
+    double Tau_min ;
+    double tau_min_dist ;
+    //reorientation
+    double erreurTh;
+    double K_th;
+    //local minimum
+    double Fmin ;
+    int flag_min_local;
+    double begin_min_local_dodge;
+    double goal_local_dodge[2];
+    double dodge_incr;
 } highLevelCtrlPF;
 
 void hlcPF_init(highLevelCtrlPF *hlcPF);
-void calc_AttractivePotential(ctrlStruct *cvs,double x_goal,double y_goal);
-void calc_RepulsivePotential(ctrlStruct *cvs);
-void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal,int goForward = 1);
-
+void calc_AttractivePotential(CtrlStruct *cvs,double x_goal,double y_goal);
+void calc_RepulsivePotential(CtrlStruct *cvs);
+double tau_compute(CtrlStruct *cvs);
+/*goForward ->  1 = FORWARD
+*               0 = BACKWARD
+*              -1 = NO PREF
+* orientation   -10 = No Orientation*/
+void main_pot_force(CtrlStruct *cvs,double x_goal,double y_goal,int goForward = 1,double orientation=-10);
 
 #endif // end of header guard
