@@ -55,12 +55,12 @@ int main()
     int mlc_ON = 0;
     int rplON = 0;
     int odoCalib = 0;
-    int hlcPFON = 0;
+    int hlcPFON = 1;
     int pushShedON = 0;
     int teensyON = 0;
     int pushShed_and_sonar_ON = 0;
 
-    int mThreadsON = 1;
+    int mThreadsON = 0;
 
     if (mThreadsON) {
         threads_launcher(cvs);
@@ -285,27 +285,43 @@ int main()
     }
 
     if (hlcPFON) {
-        double x_goal = 1;
-        double y_goal = 1.13;
-
+        double xgoal;double ygoal;
+        int forward;double orientation;
         cvs->mp->x = 3-0.14;
         cvs->mp->y = 1.13;
         cvs->mp->th = M_PI;
 
         printf("begin test hlcPF\n");
-        while (inputs->t < 15) {
+        while (inputs->t < 30) {
             auto start = high_resolution_clock::now();
+            double t = inputs->t;
+            if (t<10) {
+                xgoal = 1.2;
+                ygoal = 1.60;
+                forward=1;
+                orientation = -M_PI/2;
+            } else if (t<20) {
+                xgoal = 2.7;
+                ygoal = 1.2;
+                forward =-1;
+                orientation = M_PI;
+            } else if (t<30) {
+                xgoal = 1.3;
+                ygoal = .5;
+                forward =0;
+                orientation = -M_PI;
+            }
 
             get_d2r_data(cvs); // ctrlIn
 
-            printf("r_sp_mes_enc = %f | l_sp_mes_enc = %f\n", inputs->r_sp_mes_enc, inputs->l_sp_mes_enc);
-            printf("r_sp_mes_odo = %f | l_sp_mes_odo = %f\n", inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
+            //printf("r_sp_mes_enc = %f | l_sp_mes_enc = %f\n", inputs->r_sp_mes_enc, inputs->l_sp_mes_enc);
+            //printf("r_sp_mes_odo = %f | l_sp_mes_odo = %f\n", inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
 
-
-            main_pot_force(cvs,x_goal,y_goal);
+            main_pot_force(cvs,x_goal,y_goal,forward,orientation);
 
             if(hlcPF->output) {
-                break;
+                hlcPF->v_ref = 0;
+                hlcPF->theta_ref = 0;
             }
 
             mlcPF_out(cvs, hlcPF->v_ref, hlcPF->theta_ref);

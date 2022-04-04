@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <cmath> //for sqrt
+#include <algorithm>    // std::max
 
 #include "highLevelCtrlPF.h" // adapt it with your headers
 
@@ -258,30 +259,30 @@ void calc_RepulsivePotential(CtrlStruct *cvs) {
         }
     }
     //obstacles dynamiques
-    double *x_dyn = obs->obs_dyn_x;
-    double *y_dyn = obs->obs_dyn_y;
+    double x_dyn = obs->obs_dyn_x;
+    double y_dyn = obs->obs_dyn_y;
     NumbOfObst = obs->size_dyn;
     for (int i = 0;i<NumbOfObst;i++){
 
-        double x1 = x - x_dyn[i];
-        double y1 = y - y_dyn[i];
+        double x1 = x - x_dyn;
+        double y1 = y - y_dyn;
         ETHA = hlcPF->Eta_opp;
         front_obst = hlcPF->Rho_opp;
 
         double d = sqrt(x1*x1+y1*y1);
         if (d <= R){
             if (d <= front_obst) {
-                if (abs(x-x_dyn[i]) <= 0.00001){
+                if (abs(x-x_dyn) <= 0.00001){
                     Fx += 100;
                 }
                 else{
-                    Fx += ETHA * (1/front_obst - 1/d) * 1/(d*d) * (x-x_dyn[i])/2;
+                    Fx += ETHA * (1/front_obst - 1/d) * 1/(d*d) * (x-x_dyn)/2;
                 }
-                if (abs(y-y_dyn[i]) <= 0.00001){
+                if (abs(y-y_dyn) <= 0.00001){
                     Fy += 100;
                 }
                 else {
-                    Fy += ETHA * (1/front_obst - 1/d) * 1/(d*d) * (y-y_dyn[i])/2;
+                    Fy += ETHA * (1/front_obst - 1/d) * 1/(d*d) * (y-y_dyn)/2;
                 }
             }
             else {

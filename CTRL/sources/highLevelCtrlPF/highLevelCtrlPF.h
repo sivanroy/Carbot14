@@ -31,8 +31,8 @@ typedef struct highLevelCtrlPF
     double maxF_rep ;
     double goal[2] ;
     //repulsive static
-    double Eta ; //.025 = tout tout juste !!
-    double Rho ; // 
+    double Eta ; 
+    double Rho ;  
     //param dyn obstacle
     double Eta_opp;
     double Rho_opp;
