@@ -126,7 +126,7 @@ void dyn_obs_set(ctrlStruct *cvs) {
             obs->size_dyn = 1;
             obs->obs_dyn_x = x_op;
             obs->obs_dyn_y = y_op;
-            //printf("x_op = %f | y_op = %f\n", x_op, y_op);
+            printf("x_op = %f | y_op = %f\n", x_op, y_op);
             fprintf(cvs->op_data, "%f,%f\n", x_op, y_op);
         }
     }

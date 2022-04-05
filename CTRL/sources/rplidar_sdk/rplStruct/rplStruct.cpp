@@ -11,9 +11,11 @@ void rpl_init(rplStruct *rpl)
     rpl->lidar = rp::standalone::rplidar::RPlidarDriver::CreateDriver();
     if (rpl_config(rpl) == -1) perror("rpl_config() failed\n");
 
+    rpl->e = 0.0505;
+
     rpl->data_size = 0;
     rpl->nTurns = 0;
-    rpl->data_updated = 0;
+    rpl->update_flag = 0;
 }
 
 int rpl_config(rplStruct *rpl)
@@ -33,8 +35,8 @@ int rpl_config(rplStruct *rpl)
 
 int rpl_grabData(ctrlStruct *cvs)
 {
-    rplStruct *rpl;
-    rpl = cvs->rpl;
+    rplStruct *rpl = cvs->rpl;
+    mThreadsStruct *mt = cvs->mt;
 
     rplidar_response_measurement_node_hq_t nodes[RPL_MAX_DATA_SIZE];
     rpl->count = _countof(nodes);
@@ -49,6 +51,7 @@ int rpl_grabData(ctrlStruct *cvs)
         double quality;
 
         int i;
+        pthread_mutex_lock(&(mt->mutex_rpl));
         for (i = 0; i < (int) rpl->count ; ++i){
             angle = (nodes[i].angle_z_q14 * 90.f / (1 << 14)) * M_PI/180;
             dist = (nodes[i].dist_mm_q2/4.0f)/1000;
@@ -62,8 +65,10 @@ int rpl_grabData(ctrlStruct *cvs)
             }
         }
         rpl->nTurns++;
+        rpl->update_flag = 1;
+        pthread_mutex_unlock(&(mt->mutex_rpl));
         //printf("data_size = %d\n", rpl->data_size);
-        //printf("nTurns = %d\n", rpl->nTurns);
+        printf("nTurns = %d\n", rpl->nTurns);
         return 1;
     }
     else return -1;
@@ -71,8 +76,7 @@ int rpl_grabData(ctrlStruct *cvs)
 
 void rpl_stop(ctrlStruct *cvs)
 {
-    rplStruct *rpl;
-    rpl = cvs->rpl;
+    rplStruct *rpl = cvs->rpl;
 
     rpl->lidar->stop();
     rp::standalone::rplidar::RPlidarDriver::DisposeDriver(rpl->lidar);

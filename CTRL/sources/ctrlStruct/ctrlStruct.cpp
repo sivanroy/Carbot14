@@ -49,6 +49,9 @@ ctrlStruct* cvs_init()
     cvs->mt = (mThreadsStruct*) malloc(sizeof(mThreadsStruct));
     mt_init(cvs->mt);
 
+    cvs->rec = (reCalibStruct*) malloc(sizeof(reCalibStruct));
+    rec_init(cvs->rec);
+
     cvs->teensy = (teensyStruct*) malloc(sizeof(teensyStruct));
     teensy_init(cvs->teensy);
 
@@ -64,6 +67,9 @@ ctrlStruct* cvs_init()
 
     cvs->op_data = fopen("op_data.txt", "w");
     if (cvs->op_data == NULL) printf("Enable to open file op_data.txt\n");
+
+    cvs->rec_data = fopen("rec_data.txt", "w");
+    if (cvs->rec_data == NULL) printf("Enable to open file rec_data.txt\n");
 
     return cvs;
 }
@@ -84,12 +90,14 @@ void cvs_free(ctrlStruct *cvs)
     free(cvs->obs);
     free(cvs->op);
     free(cvs->mt);
+    free(cvs->rec);
     free(cvs->teensy);
 
     fclose(cvs->llc_data);
     fclose(cvs->mp_data);
     fclose(cvs->rpl_data);
     fclose(cvs->op_data);
+    fclose(cvs->rec_data);
 
     free(cvs);
 }

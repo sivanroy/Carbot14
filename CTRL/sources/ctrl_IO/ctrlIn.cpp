@@ -29,9 +29,6 @@ void ctrlIn_init(ctrlIn *inputs)
 
     inputs->r_front_s = 0.0;
     inputs->l_front_s = 0.0;
-
-    /*!  rplidar data  */
-    inputs->rpl_data_size = 0;
 }
 
 unsigned char d2r_enc_address(int encoder, int left, int sonar)
@@ -94,8 +91,8 @@ void get_d2r_data(ctrlStruct *cvs)
     int d1 = d2r_enc_measure(cvs,-1,-1,0);
     int d2 = d2r_enc_measure(cvs,-1,-1,1);
 
-    if(d1<300) inputs->l_front_s = d1;
-    if(d2<300) inputs->r_front_s = d2;
+    if (d1 < 300) inputs->l_front_s = d1;
+    if (d2 < 300) inputs->r_front_s = d2;
 
     double r_sp_mes_enc = - r_ticks_enc * rpt_enc/dt;
     double l_sp_mes_enc =   l_ticks_enc * rpt_enc/dt;
@@ -106,22 +103,6 @@ void get_d2r_data(ctrlStruct *cvs)
     if (l_sp_mes_enc > -20 && l_sp_mes_enc < 20) inputs->l_sp_mes_enc = l_sp_mes_enc;
     if (r_sp_mes_odo > -20 && r_sp_mes_odo < 20) inputs->r_sp_mes_odo = r_sp_mes_odo;
     if (l_sp_mes_odo > -20 && l_sp_mes_odo < 20) inputs->l_sp_mes_odo = l_sp_mes_odo;
-}
-
-void set_rpl_data(ctrlStruct *cvs)
-{
-    ctrlIn *inputs;
-    rplStruct *rpl;
-
-    inputs = cvs->inputs;
-    rpl = cvs->rpl;
-
-    int i;
-    for (i = 0; i < rpl->data_size; i++) {
-        inputs->rpl_a[i] = rpl->a[i];
-        inputs->rpl_d[i] = rpl->d[i];
-    }
-    inputs->rpl_data_size = rpl->data_size;
 }
 
 void update_time(ctrlStruct *cvs)

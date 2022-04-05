@@ -16,38 +16,21 @@ int main()
 {
     ctrlStruct *cvs;
     cvs = cvs_init();
-    printf("dt = %f\n", cvs->inputs->dt);
     printf("cvs init : end\n");
 
-    // variables declaration
-    ctrlIn  *inputs;
-    ctrlOut *outputs;
-    lowLevelCtrl *llc;
-    myPosition *mp;
-    midLevelCtrlPF *mlcPF;
-    rplStruct *rpl;
-    highLevelCtrlPF *hlcPF;
-    pushShed *pshed;
-    midLevelCtrl *mlc;
-    oppPosition *op;
-    mThreadsStruct *mt;
-    teensyStruct *teensy;
-    double dt;
-
-    // variables initialization
-    inputs  = cvs->inputs;
-    outputs = cvs->outputs;
-    llc  = cvs->llc;
-    mp = cvs->mp;
-    mlcPF = cvs->mlcPF;
-    hlcPF = cvs->hlcPF;
-    rpl = cvs->rpl;
-    pshed = cvs->pshed;
-    mlc = cvs->mlc;
-    op = cvs->op;
-    mt = cvs->mt;
-    teensy = cvs->teensy;
-    dt = inputs->dt;
+    ctrlIn *inputs = cvs->inputs;
+    ctrlOut *outputs = cvs->outputs;
+    lowLevelCtrl *llc = cvs->llc;
+    myPosition *mp = cvs->mp;
+    midLevelCtrlPF *mlcPF = cvs->mlcPF;
+    highLevelCtrlPF *hlcPF = cvs->hlcPF;
+    rplStruct *rpl = cvs->rpl;
+    pushShed *pshed = cvs->pshed;
+    midLevelCtrl *mlc = cvs->mlc;
+    oppPosition *op = cvs->op;
+    mThreadsStruct *mt = cvs->mt;
+    teensyStruct *teensy = cvs->teensy;
+    double dt = inputs->dt;
 
     int cmdON = 0;
     int llcON = 0;
@@ -63,7 +46,32 @@ int main()
     int mThreadsON = 1;
 
     if (mThreadsON) {
-        threads_launcher(cvs);
+        threads_start(cvs);
+
+        pushShed_launch(cvs);
+        cvs->mp->x = 3-0.17;//3-0.14;
+        cvs->mp->y = 0.75;//0.45;//2-0.53;
+        cvs->mp->th = M_PI;//0;//M_PI;
+
+        while (inputs->t < 4) {
+            auto start = high_resolution_clock::now();
+
+            //printf("-------------\nmain loop\n");
+            //esquive_loop(cvs);
+            dyn_obs_set(cvs);
+
+            update_time(cvs);
+            auto stop = high_resolution_clock::now();
+            auto duration = duration_cast<microseconds>(stop - start);
+            printf("duration.count() = %lld us | t = %f\n-------------\n", duration.count(), inputs->t);
+
+            usleep(dt * 1000000 - duration.count());
+        }
+        mt->thread_main_end = 1;
+
+        printf("th_end : start\n");
+        threads_end(cvs);
+        printf("th_end : end\n");
     }
 
     if (cmdON) {
@@ -384,7 +392,9 @@ int main()
     if (teensyON) {
         int A = 0;
         int B = 0;
-        while (inputs->t < 8) {
+        int C = 0;
+        int D = 0;
+        while (inputs->t < 15) {
             auto start = high_resolution_clock::now();
 
             teensy_recv(cvs);
@@ -400,9 +410,17 @@ int main()
                 teensy_send(cvs, "A");
                 A = 1;
             }
-            if (inputs->t >= 12 && B == 0) {
+            if (inputs->t >= 3 && B == 0) {
                 teensy_send(cvs, "B");
                 B = 1;
+            }
+            if (inputs->t >= 5 && C == 0) {
+                teensy_send(cvs, "C");
+                C = 1;
+            }
+            if (inputs->t >= 7 && D == 0) {
+                teensy_send(cvs, "D");
+                D = 1;
             }
 
 

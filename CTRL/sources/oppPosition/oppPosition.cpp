@@ -35,28 +35,22 @@ int not_wall(ctrlStruct *cvs, double x, double y)
 
 void get_opp_pos(ctrlStruct *cvs)
 {
-    myPosition *mp;
-    oppPosition *op;
-    rplStruct *rpl;
-    mThreadsStruct *mt;
-
-    mp = cvs->mp;
-    op = cvs->op;
-    rpl = cvs->rpl;
-    mt = cvs->mt;
+    myPosition *mp = cvs->mp;
+    oppPosition *op = cvs->op;
+    rplStruct *rpl = cvs->rpl;
+    mThreadsStruct *mt = cvs->mt;
 
     int size = rpl->data_size;
-
     double map_margin = op->map_margin;
 
-    double x; double y; double th;
+    double x, y, th;
     pthread_mutex_lock(&(mt->mutex_mp));
     x = mp->x;
     y = mp->y;
     th = mp->th;
     pthread_mutex_unlock(&(mt->mutex_mp));
 
-    double e = 0.0505; // distance between center of wheels and center of rplidar
+    double e = rpl->e; // distance between center of wheels and center of rplidar
 
     double a;
     double d;
@@ -67,7 +61,6 @@ void get_opp_pos(ctrlStruct *cvs)
     int size_op = 0;
     double x_op[8192];
     double y_op[8192];
-    double d_op[8192];
 
     int i;
     for (i = 0; i < size; i++) {
@@ -80,7 +73,6 @@ void get_opp_pos(ctrlStruct *cvs)
         if (not_wall(cvs, pt_x, pt_y)) {
             x_op[size_op] = pt_x;
             y_op[size_op] = pt_y;
-            d_op[size_op] = d;
             size_op++;
             //fprintf(cvs->op_data, "%f,%f\n", pt_x, pt_y);
         }

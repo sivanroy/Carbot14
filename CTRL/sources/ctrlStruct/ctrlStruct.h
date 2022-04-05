@@ -24,6 +24,7 @@
 #include "../oppPosition/oppPosition.h"
 #include "../teensyStruct/teensyStruct.h"
 #include "../multiThreads/multiThreads.h"
+#include "../reCalibStruct/reCalibStruct.h"
 
 
 typedef struct ctrlStruct ctrlStruct;
@@ -40,6 +41,7 @@ typedef struct oppPosition oppPosition;
 typedef struct teensyStruct teensyStruct;
 typedef struct midLevelCtrl midLevelCtrl;
 typedef struct mThreadsStruct mThreadsStruct;
+typedef struct reCalibStruct reCalibStruct;
 
 
 typedef struct ctrlStruct
@@ -58,6 +60,7 @@ typedef struct ctrlStruct
     rplStruct *rpl;
     oppPosition *op;
     mThreadsStruct *mt;
+    reCalibStruct *rec;
 
     teensyStruct *teensy;
 
@@ -65,6 +68,7 @@ typedef struct ctrlStruct
     FILE *mp_data;
     FILE *rpl_data;
     FILE *op_data;
+    FILE *rec_data;
 
 } ctrlStruct;
 

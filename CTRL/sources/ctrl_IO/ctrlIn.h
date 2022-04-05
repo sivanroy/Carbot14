@@ -36,10 +36,6 @@ typedef struct ctrlIn
     double r_front_s;
     double l_front_s;
 
-    int rpl_data_size;
-    double rpl_a[8192];
-    double rpl_d[8192];
-
 } ctrlIn;
 
 void ctrlIn_init(ctrlIn *inputs);
@@ -47,8 +43,6 @@ void ctrlIn_init(ctrlIn *inputs);
 unsigned char d2r_enc_address(int encoder, int left, int sonar);
 int d2r_enc_measure(ctrlStruct *cvs, int encoder, int left,int sonar ,bool verbose);
 void get_d2r_data(ctrlStruct *cvs);
-
-void set_rpl_data(ctrlStruct *cvs);
 
 void update_time(ctrlStruct *cvs);
 

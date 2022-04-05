@@ -21,17 +21,22 @@
 
 typedef struct mThreadsStruct
 {
+    pthread_t thread_op;
+    pthread_t thread_rec;
+
     pthread_mutex_t mutex_op;
     pthread_mutex_t mutex_mp;
+    pthread_mutex_t mutex_rpl;
 
     int thread_main_end;
 
 } mThreadsStruct;
 
 void mt_init(mThreadsStruct *mt);
-int threads_launcher(ctrlStruct *cvs);
-void *ctrl_main(void *arg);
+int threads_start(ctrlStruct *cvs);
+int threads_end(ctrlStruct *cvs);
 void *ctrl_op(void *arg);
+void *ctrl_rec(void *arg);
 int mutex_destroy(ctrlStruct *cvs);
 
 #endif

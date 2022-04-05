@@ -278,6 +278,26 @@ def plot_op_data():
     #plt.savefig("op_data2.pdf", format="pdf")
     plt.show()
     
+def plot_rec_data():
+
+    Data = read_txt_file("../../build/rec_data.txt", 2)
+
+    map_x = [0,3,3,0,0]
+    map_y = [0,0,2,2,0]
+    
+    plt.plot(map_x, map_y, label="Map")
+    plt.plot(Data[0], Data[1], 'ro', label="rec_data")
+    plt.xlabel("x [m]")
+    plt.ylabel("y [m]")
+    plt.title("rec")
+    plt.ylim(-0.1, 2.1)
+    plt.xlim(-0.1, 3.1)
+    #plt.axis("equal")
+    plt.legend()
+    plt.grid()
+    #plt.savefig("op_data2.pdf", format="pdf")
+    plt.show()
+    
 def plot_mp_data():
 
     Data = read_txt_file("../../build/mp_data.txt", 3)
@@ -300,4 +320,5 @@ def plot_mp_data():
 
 plot_rpl_data()
 plot_op_data()
-plot_mp_data()
+plot_rec_data()
+#plot_mp_data()
