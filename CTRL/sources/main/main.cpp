@@ -292,24 +292,27 @@ int main()
         cvs->mp->th = M_PI;
 
         printf("begin test hlcPF\n");
-        while (inputs->t < 30) {
+        while (inputs->t < 40) {
             auto start = high_resolution_clock::now();
             double t = inputs->t;
             if (t<10) {
-                xgoal = 1.2;
-                ygoal = 1.60;
+                xgoal = 2,2;//1.2;
+                ygoal = 1.6;//1.60;
                 forward=1;
                 orientation = -M_PI/2;
+                printf("goal A\n");
             } else if (t<20) {
                 xgoal = 2.7;
                 ygoal = 1.2;
                 forward =-1;
                 orientation = M_PI;
+                printf("goal B\n");
             } else if (t<30) {
                 xgoal = 1.3;
                 ygoal = .5;
                 forward =0;
                 orientation = -M_PI;
+                printf("goal c\n");
             }
 
             get_d2r_data(cvs); // ctrlIn
@@ -317,21 +320,21 @@ int main()
             //printf("r_sp_mes_enc = %f | l_sp_mes_enc = %f\n", inputs->r_sp_mes_enc, inputs->l_sp_mes_enc);
             //printf("r_sp_mes_odo = %f | l_sp_mes_odo = %f\n", inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
 
-            main_pot_force(cvs,x_goal,y_goal,forward,orientation);
+            main_pot_force(cvs,xgoal,ygoal,forward,orientation);
 
-            if(hlcPF->output) {
-                hlcPF->v_ref = 0;
-                hlcPF->theta_ref = 0;
-            }
+            //if(hlcPF->output) {
+                //hlcPF->v_ref = 0;
+                //hlcPF->theta_ref = 0;
+            //}
 
             mlcPF_out(cvs, hlcPF->v_ref, hlcPF->theta_ref);
-            printf("hlcPF->v %f | hlcPF->theta %f\n",hlcPF->v_ref,hlcPF->theta_ref );
+            //printf("hlcPF->v %f | hlcPF->theta %f\n",hlcPF->v_ref,hlcPF->theta_ref );
             set_commands(cvs, mlcPF->r_sp_ref, mlcPF->l_sp_ref);
             send_commands(cvs);
 
             set_new_position(cvs);
-            printf("cmd_r = %d | cmd_l = %d\n", outputs->r_cmd, outputs->l_cmd);
-            printf("x = %f | y = %f | th = %f\n", mp->x, mp->y, mp->th);
+            //printf("cmd_r = %d | cmd_l = %d\n", outputs->r_cmd, outputs->l_cmd);
+            //printf("x = %f | y = %f | th = %f\n", mp->x, mp->y, mp->th);
 
             fprintf(cvs->llc_data, "%f,%f,%f,%f,%f,%f,%f\n", inputs->t, mlcPF->r_sp_ref, mlcPF->l_sp_ref, inputs->r_sp_mes_enc, inputs->l_sp_mes_enc, inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
 
@@ -339,7 +342,7 @@ int main()
             auto stop = high_resolution_clock::now();
             auto duration = duration_cast<microseconds>(stop - start);
 
-            printf("duration.count() = %lld us | t = %f\n-------------\n", duration.count(), inputs->t);
+            //printf("duration.count() = %lld us | t = %f\n-------------\n", duration.count(), inputs->t);
             usleep(dt * 1000000 - duration.count());
 
 

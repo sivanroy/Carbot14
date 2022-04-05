@@ -231,7 +231,6 @@ plt.xlabel("distance [m]",fontsize = 18)
 plt.title("Attractive force to a goal point",fontsize = 20)
 plt.show()
 
-"""
 fig = plt.figure(figsize =(10, 7))
 plt.plot(x_pos,y_pos,'bo')
 #plt.plot(x_pos[-1],y_pos[-1],'bo',c='red')
@@ -245,7 +244,6 @@ plt.ylabel("Y pos [m]",fontsize = 18)
 plt.xlabel("X pos [m]",fontsize = 18)
 plt.title("Path to 2 goals from camp",fontsize = 20)
 plt.show()
-"""
 
 
 fig = plt.figure(figsize =(14, 9))
