@@ -5,6 +5,8 @@
 #include <algorithm>    // std::max
 
 #include "hlcPF_utils.h"
+#include "highLevelCtrlPF.h" // adapt it with your headers
+
 
 int get_partition_map(ctrlStruct *cvs){
     highLevelCtrlPF *hlcPF = cvs->hlcPF;

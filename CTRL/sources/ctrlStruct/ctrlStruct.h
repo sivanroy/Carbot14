@@ -17,6 +17,7 @@
 #include "../myPosition/myPosition.h"
 #include "../midLevelCtrlPF/midLevelCtrlPF.h"
 #include "../highLevelCtrlPF/highLevelCtrlPF.h"
+#include "../highLevelCtrlPF/hlcPF_utils.h"
 #include "../obstacles/obstacles.h"
 #include "../FSMs/pushShed.h"
 #include "../midLevelCtrl/midLevelCtrl.h"

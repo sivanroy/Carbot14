@@ -8,7 +8,6 @@
 #include "../ctrlStruct/ctrlStruct.h"
 #include "../myPosition/myPosition.h"
 #include "../obstacles/obstacles.h"
-#include "hlcPF_utils.h"
 
 
 typedef struct highLevelCtrlPF
@@ -62,12 +61,12 @@ void calc_RepulsivePotential(ctrlStruct *cvs);
 
 
 
-void set_goal(ctrlStruct *cvs,xgoal,ygoal,orientation=-10);
+//void set_goal(ctrlStruct *cvs,xgoal,ygoal,orientation=-10);
 /*goForward ->  1 = FORWARD
 *               0 = BACKWARD
 *              -1 = NO PREF
 * orientation   -10 = No Orientation*/
 void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal,int goForward = 1,double orientation=-10);
-void hlcPF_out()
+//void hlcPF_out()
 
 #endif // end of header guard
