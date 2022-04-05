@@ -10,10 +10,10 @@ void mlcPF_init(midLevelCtrlPF *mlcPF)
 {
     mlcPF->dt = 0.01;
 
-    mlcPF->sigma = .45;
+    mlcPF->sigma = .5;
     mlcPF->R_odo = 0.022;
 
-    mlcPF->Kp_th = 3.0;
+    mlcPF->Kp_th = 10.0;
 
     mlcPF->r_sp_ref = 0.0;
     mlcPF->l_sp_ref = 0.0;
@@ -47,6 +47,14 @@ void mlcPF_out(ctrlStruct *cvs, double v_ref, double th_ref)
     if (v_out > mlcPF->max_sp_ref - abs(th_out)) v_out = mlcPF->max_sp_ref - abs(th_out);
     else if (v_out < mlcPF->min_sp_ref + abs(th_out)) v_out = mlcPF->min_sp_ref + abs(th_out);
 
-    mlcPF->r_sp_ref = v_out + th_out;
-    mlcPF->l_sp_ref = v_out - th_out;
+    double rout = v_out + th_out;
+    double lout = v_out - th_out;
+
+    if(rout>100 | lout>100) {
+        rout/= fmax(abs(rout),abs(lout))*100;
+        lout/=std::max(abs(rout),abs(lout))*100;
+    }
+    
+    mlcPF->r_sp_ref = rout;
+    mlcPF->l_sp_ref = lout;
 }
