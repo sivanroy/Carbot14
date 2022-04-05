@@ -35,13 +35,15 @@ typedef struct ctrlIn
 
     double r_front_s;
     double l_front_s;
+    double r_back_s;
+    double l_back_s;
 
 } ctrlIn;
 
 void ctrlIn_init(ctrlIn *inputs);
 
-unsigned char d2r_enc_address(int encoder, int left, int sonar);
-int d2r_enc_measure(ctrlStruct *cvs, int encoder, int left,int sonar ,bool verbose);
+unsigned char d2r_enc_address(int encoder, int left, int sonarF);
+int d2r_enc_measure(ctrlStruct *cvs, int encoder, int left, int sonarF ,bool verbose);
 void get_d2r_data(ctrlStruct *cvs);
 
 void update_time(ctrlStruct *cvs);

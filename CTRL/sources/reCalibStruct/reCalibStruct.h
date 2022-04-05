@@ -16,6 +16,7 @@
 #include <chrono>
 #include <pthread.h>
 //#include <Eigen/Dense>
+//#include "libicp/icpPointToPlane.h"
 
 #include "../ctrlStruct/ctrlStruct.h"
 
