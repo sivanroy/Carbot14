@@ -35,42 +35,6 @@ void pushShed_launch(ctrlStruct *cvs){
 	cvs->pshed->status = S0_ps;
 }
 
-void sendFromMainPot(ctrlStruct *cvs,int goForward=1, double x_goal=0,double y_goal=0){
-	get_d2r_data(cvs);
-    dyn_obs_set(cvs);
-
-    hlcPF_out(cvs,goForward);
-    if(cvs->hlcPF->output) {
-    	motors_stop(cvs);
-        printf("stops\n");
-    	return;
-    }
-    mlcPF_out(cvs, cvs->hlcPF->v_ref, cvs->hlcPF->theta_ref);
-    set_commands(cvs, cvs->mlcPF->r_sp_ref, cvs->mlcPF->l_sp_ref);
-    send_commands(cvs);
-    set_new_position(cvs);
-}
-
-void sendFromMLC(ctrlStruct *cvs,double x_goal,double y_goal){
-    get_d2r_data(cvs);
-    set_speed_ref(cvs,x_goal,y_goal);
-    if(cvs->mlc->reach_goal){
-        motors_stop(cvs);
-        return;
-    }
-    set_commands(cvs, cvs->mlc->r_sp_ref, cvs->mlc->l_sp_ref);
-    send_commands(cvs);
-    set_new_position(cvs);
-}
-
-
-void sendFromMLCPF(ctrlStruct *cvs,double v_ref, double theta_r){
-    get_d2r_data(cvs); 
-    mlcPF_out(cvs, v_ref, theta_r);
-    set_commands(cvs, cvs->mlcPF->r_sp_ref, cvs->mlcPF->l_sp_ref);
-    send_commands(cvs);
-    set_new_position(cvs);
-}
 
 void pushShed_loop(ctrlStruct *cvs){
 	pushShed *pshed = cvs->pshed;
@@ -96,7 +60,7 @@ void pushShed_loop(ctrlStruct *cvs){
             break;
 
         case Dpmt1_ps:{
-    		sendFromMainPot(cvs,cvs->pshed->forward[0]);
+    		sendFromHLCPF(cvs,cvs->pshed->forward[0]);
         	if(hlcPF->output){
         		pshed->status = Dpmt2_ps;
                 set_goal(cvs,pshed->x_goals[1],pshed->y_goals[1]);
@@ -106,7 +70,7 @@ void pushShed_loop(ctrlStruct *cvs){
         }
 
         case Dpmt2_ps:{
-    		sendFromMainPot(cvs);
+    		sendFromHLCPF(cvs);
         	if(hlcPF->output){
                 pshed->output=1;
         		//pshed->status = servoShedOut;
@@ -128,7 +92,7 @@ void pushShed_loop(ctrlStruct *cvs){
             mlcPF->min_sp_ref = -2.5;
             xg = pshed->x_goals[2];
         	yg = pshed->y_goals[2];
-        	sendFromMainPot(cvs,xg,yg);
+        	sendFromHLCPF(cvs,xg,yg);
         	if(hlcPF->output){
         		pshed->status = Dpmt4_ps;
         		printf("go to dp4\n");
@@ -139,7 +103,7 @@ void pushShed_loop(ctrlStruct *cvs){
         case Dpmt4_ps:{
             xg = pshed->x_goals[3];
         	yg = pshed->y_goals[3];
-        	sendFromMainPot(cvs,xg,yg);
+        	sendFromHLCPF(cvs,xg,yg);
         	if(hlcPF->output){
         		pshed->status = Dpmt5_ps;
         		motors_stop(cvs);
@@ -150,7 +114,7 @@ void pushShed_loop(ctrlStruct *cvs){
         case Dpmt5_ps:{
             xg = pshed->x_goals[4];
             yg = pshed->y_goals[4];
-            sendFromMainPot(cvs,xg,yg);
+            sendFromHLCPF(cvs,xg,yg);
             if(hlcPF->output){
                 pshed->status = servoShedIn;
                 motors_stop(cvs);
@@ -204,7 +168,7 @@ void pushShed_loop(ctrlStruct *cvs){
             mlcPF->min_sp_ref = -5;
             xg = pshed->x_goals[6];
             yg = pshed->y_goals[6];
-            sendFromMainPot(cvs,xg,yg);
+            sendFromHLCPF(cvs,xg,yg);
             if(hlcPF->output){
                 pshed->status = Close_ps;
                 motors_stop(cvs);
