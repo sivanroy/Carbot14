@@ -30,6 +30,7 @@ typedef struct highLevelCtrlPF
     double maxF_att ;
     double maxF_rep ;
     double goal[2] ;
+    double orientation;
     //repulsive static
     double Eta ; 
     double Rho ;  
@@ -60,13 +61,12 @@ void calc_AttractivePotential(ctrlStruct *cvs,double x_goal,double y_goal);
 void calc_RepulsivePotential(ctrlStruct *cvs);
 
 
-
-//void set_goal(ctrlStruct *cvs,xgoal,ygoal,orientation=-10);
 /*goForward ->  1 = FORWARD
 *               0 = BACKWARD
 *              -1 = NO PREF
 * orientation   -10 = No Orientation*/
-void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal,int goForward = 1,double orientation=-10);
-//void hlcPF_out()
+void set_goal(ctrlStruct *cvs, double xgoal, double ygoal, double orientation=-10);
+void main_pot_force(ctrlStruct *cvs, double x_goal, double y_goal,int goForward = 1);
+void hlcPF_out(ctrlStruct *cvs, int goForward = 1);
 
 #endif // end of header guard

@@ -4,6 +4,8 @@
  */
 
 #include "midLevelCtrlPF.h"
+//#include <algorithm>    // std::max
+
 
 
 void mlcPF_init(midLevelCtrlPF *mlcPF)
@@ -13,12 +15,13 @@ void mlcPF_init(midLevelCtrlPF *mlcPF)
     mlcPF->sigma = .5;
     mlcPF->R_odo = 0.022;
 
-    mlcPF->Kp_th = 10.0;
+    mlcPF->Kp_th = 8.0;
+    mlcPF->max_th = 8;
 
     mlcPF->r_sp_ref = 0.0;
     mlcPF->l_sp_ref = 0.0;
-    mlcPF->max_sp_ref = 7.5;
-    mlcPF->min_sp_ref = -7.5;
+    mlcPF->max_sp_ref = 15;
+    mlcPF->min_sp_ref = -15;
 
     mlcPF->t_start = 0;
 }
@@ -47,12 +50,18 @@ void mlcPF_out(ctrlStruct *cvs, double v_ref, double th_ref)
     if (v_out > mlcPF->max_sp_ref - abs(th_out)) v_out = mlcPF->max_sp_ref - abs(th_out);
     else if (v_out < mlcPF->min_sp_ref + abs(th_out)) v_out = mlcPF->min_sp_ref + abs(th_out);
 
+    if(th_out>0) {
+        th_out = fmin(th_out,mlcPF->max_th);
+    } else {
+        th_out = -1*fmin(-1*th_out,mlcPF->max_th);
+    }
+
     double rout = v_out + th_out;
     double lout = v_out - th_out;
 
     if(rout>100 | lout>100) {
         rout/= fmax(abs(rout),abs(lout))*100;
-        lout/=std::max(abs(rout),abs(lout))*100;
+        lout/= fmax(abs(rout),abs(lout))*100;
     }
     
     mlcPF->r_sp_ref = rout;

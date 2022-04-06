@@ -31,6 +31,7 @@ void hlcPF_init(highLevelCtrlPF *hlcPF) {
     hlcPF->maxF_att = .98;
     hlcPF->maxF_rep = 1;
     hlcPF->goal[0] = 0;hlcPF->goal[1] = 0;
+    hlcPF->orientation = -10;
     //repulsive static
     hlcPF->Eta = 0.02; //.025 = tout tout juste !!
     hlcPF->Rho = 0.4; // 
@@ -174,7 +175,6 @@ void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal,int goForward,do
     highLevelCtrlPF *hlcPF = cvs->hlcPF;
     ctrlIn *inputs = cvs->inputs;
     //reset output
-    hlcPF->output = 0;
     myPosition *mp = cvs->mp;
 
     double goalToSendX = x_goal;
@@ -227,8 +227,8 @@ void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal,int goForward,do
     }
 
     double d = sqrt((x-x_goal)*(x-x_goal) +(y-y_goal)*(y-y_goal));
-    hlcPF->d  = d;
-    printf("d : %f\n", d);
+    //hlcPF->d  = d;
+    //printf("d : %f\n", d);
     double tau = tau_compute(cvs);
 
     double v_x = tau * F_tot_x;
@@ -258,25 +258,15 @@ void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal,int goForward,do
     F_att = sqrt(F_att_x*F_att_x+F_att_y*F_att_y);
     F_tot = sqrt(F_tot_x*F_tot_x+F_tot_y*F_tot_y);
 
-    //check if in a special range (is arrived)
+    //OUTPUT = 1 ??
     if (d<error) {
-        printf("d<error\n");
-        double dth = limit_angle(orientation-cvs->mp->th);
-        if(orientation==-10){
-            hlcPF->output = 1;
-            v = 0; theta = 0;
-            printf("goal :: x : %f | y: %f\n", x_goal,y_goal);
-            printf("No re-orientation\n");
-        } else if(abs(dth) > hlcPF->erreurTh){
-            theta = limit_angle(orientation);
-            printf("in reorientation\n");
-        } else {
-            hlcPF->output = 1;
-            v = 0; theta = 0;
-            printf("goal :: x : %f | y: %f\n", x_goal,y_goal);
-            printf("reoriented\n");
-        }
+        hlcPF->output_main = 1;
+        v = 0; theta = 0;
+        printf("goal :: x : %f | y: %f\n", x_goal,y_goal);
+        printf("reoriented\n");
     } 
+
+    //LOCAL MINIMUM
     else if(hlcPF->flag_min_local) {
         if(inputs->t - hlcPF->begin_min_local_dodge > 1 ) {
             hlcPF->flag_min_local = 0;
@@ -318,4 +308,38 @@ void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal,int goForward,do
     hlcPF->v_ref = v;
     hlcPF->theta_ref = theta;
     hlcPF->d = d;
+}
+
+void set_goal(ctrlStruct *cvs, double xgoal, double ygoal, double orientation) {
+    highLevelCtrlPF *hlcPF = cvs->hlcPF;
+    hlcPF->orientation = orientation;
+    hlcPF->goal[0] = xgoal;
+    hlcPF->goal[1] = ygoal;
+    hlcPF->output = 0;
+    hlcPF->output_main = 0;
+    hlcPF->flag_min_local = 0;
+}
+
+void hlcPF_out(ctrlStruct *cvs,int goForward) {
+    highLevelCtrlPF *hlcPF = cvs->hlcPF;
+    double *goal = hlcPF->goal;
+    double orientation = hlcPF->orientation;
+    double dx = cvs->mp->x - goal[0];
+    double dy = cvs->mp->y - goal[1];
+    hlcPF->d = sqrt(dx*dx+dy*dy);
+    if(!hlcPF->output_main){
+        main_pot_force(cvs,goal[0],goal[1],goForward,orientation);
+    } else if(!hlcPF->output) {
+        double dth = limit_angle(orientation-cvs->mp->th);
+        if(orientation==-10){
+            hlcPF->output = 1;
+            printf("No re-orientation\n");
+        }
+        else if(abs(dth) > hlcPF->erreurTh){
+            hlcPF->theta_ref = limit_angle(orientation);
+        } else {
+            hlcPF->output = 1;
+            printf("reoriented\n");
+        }
+    }
 }

@@ -17,6 +17,7 @@ typedef struct pushShed
 	double x_goals[10];
 	double y_goals[10];
 	double thetas[10];
+	double forward[10];
 } pushShed;
 
 void pushShed_init(pushShed *pshed);

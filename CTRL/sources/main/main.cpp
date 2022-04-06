@@ -32,16 +32,18 @@ int main()
     teensyStruct *teensy = cvs->teensy;
     double dt = inputs->dt;
 
+    int display_position_ON = 1;
+
     int cmdON = 0;
     int llcON = 0;
     int mlcPF_ON = 0;
     int mlc_ON = 0;
     int rplON = 0;
-    int odoCalib = 1;
+    int odoCalib = 0;
     int hlcPFON = 0;
     int pushShedON = 0;
-    int teensyON = 0;
     int pushShed_and_sonar_ON = 0;
+    int teensyON = 0;
 
     int mThreadsON = 0;
 
@@ -67,13 +69,36 @@ int main()
 
             usleep(dt * 1000000 - duration.count());
         }
-        mt->thread_main_end = 1;
 
+
+        mt->thread_main_end = 1;
         printf("th_end : start\n");
         threads_end(cvs);
         printf("th_end : end\n");
     }
 
+    if (display_position_ON){
+        cvs->mp->x = 3-0.14-0.0625;
+        cvs->mp->y = 1.13;
+        cvs->mp->th = M_PI;
+
+        mlcPF->t_start = inputs->t;
+        while (inputs->t < 50) {
+            auto start = high_resolution_clock::now();
+
+            //if (inputs->t >= 2 && inputs->t < 4) th_ref = 0;//-M_PI/4;
+
+            get_d2r_data(cvs); // ctrlIn
+
+            set_new_position(cvs);
+            printf("x = %f | y = %f | th = %f\n", mp->x, mp->y, mp->th);
+
+            update_time(cvs);
+            auto stop = high_resolution_clock::now();
+            auto duration = duration_cast<microseconds>(stop - start);
+            usleep(dt * 1000000 - duration.count());
+        }
+    }
     if (cmdON) {
         int r_cmd = 0;
         int l_cmd = 0;
@@ -295,9 +320,9 @@ int main()
     }
 
     if (hlcPFON) {
-        double xgoal;double ygoal;
+        double xgoal = cvs->mp->x;double ygoal=cvs->mp->y;
         int forward;double orientation;
-        cvs->mp->x = 3-0.14;
+        cvs->mp->x = 3-0.14-0.0625;
         cvs->mp->y = 1.13;
         cvs->mp->th = M_PI;
 
@@ -305,23 +330,26 @@ int main()
         while (inputs->t < 40) {
             auto start = high_resolution_clock::now();
             double t = inputs->t;
-            if (t<10) {
+            if (t==0) {
                 xgoal = 2,2;//1.2;
                 ygoal = 1.6;//1.60;
                 forward=1;
                 orientation = -M_PI/2;
+                set_goal(cvs, xgoal, ygoal, orientation);
                 printf("goal A\n");
-            } else if (t<20) {
+            } else if (t>10 & t<10.1) {
                 xgoal = 2.7;
                 ygoal = 1.2;
                 forward =-1;
                 orientation = M_PI;
+                set_goal(cvs, xgoal, ygoal, orientation);
                 printf("goal B\n");
-            } else if (t<30) {
+            } else if (t>20 & t<20.1) {
                 xgoal = 1.3;
                 ygoal = .5;
                 forward =0;
                 orientation = -M_PI;
+                set_goal(cvs, xgoal, ygoal, orientation);
                 printf("goal c\n");
             }
 
@@ -330,7 +358,7 @@ int main()
             //printf("r_sp_mes_enc = %f | l_sp_mes_enc = %f\n", inputs->r_sp_mes_enc, inputs->l_sp_mes_enc);
             //printf("r_sp_mes_odo = %f | l_sp_mes_odo = %f\n", inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
 
-            main_pot_force(cvs,xgoal,ygoal,forward,orientation);
+            hlcPF_out(cvs, forward);
 
             //if(hlcPF->output) {
                 //hlcPF->v_ref = 0;
@@ -362,11 +390,11 @@ int main()
     if (pushShedON){
         pushShed_launch(cvs);
         printf("pushShedON\n");
-        cvs->mp->x = 3-0.14;
+        cvs->mp->x = 3-0.14-0.0625;
         cvs->mp->y = 2-0.53;
         cvs->mp->th = M_PI;
 
-        while(inputs->t < 70){
+        while(inputs->t < 20){
             auto start = high_resolution_clock::now();
 
             pushShed_loop(cvs);

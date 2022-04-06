@@ -26,6 +26,7 @@
 #include "../teensyStruct/teensyStruct.h"
 #include "../multiThreads/multiThreads.h"
 #include "../reCalibStruct/reCalibStruct.h"
+#include "../FSMs/strategy.h"
 
 
 typedef struct ctrlStruct ctrlStruct;
@@ -43,6 +44,8 @@ typedef struct teensyStruct teensyStruct;
 typedef struct midLevelCtrl midLevelCtrl;
 typedef struct mThreadsStruct mThreadsStruct;
 typedef struct reCalibStruct reCalibStruct;
+typedef struct strategy_FSM strategy_FSM;
+
 
 
 typedef struct ctrlStruct
@@ -55,8 +58,10 @@ typedef struct ctrlStruct
     midLevelCtrlPF *mlcPF; ///< middle-level controller of the Potential Field method
     highLevelCtrlPF *hlcPF;
     obstacles *obs;
-    pushShed *pshed;
     midLevelCtrl *mlc;
+
+    strategy_FSM *stratFSM;
+    pushShed *pshed;
 
     rplStruct *rpl;
     oppPosition *op;
