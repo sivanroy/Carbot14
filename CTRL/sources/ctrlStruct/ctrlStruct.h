@@ -29,7 +29,9 @@
 #include "../FSMs/strategy.h"
 #include "../FSMs/FSMs_utils.h"
 #include "../FSMs/statuetteAndShed.h"
-#include "../FSMs/FSMs_utils.h"
+#include "../FSMs/posePallets.h"
+#include "../FSMs/excavationSquare.h"
+#include "../FSMs/distributeurs.h"
 
 
 typedef struct ctrlStruct ctrlStruct;
@@ -47,9 +49,12 @@ typedef struct teensyStruct teensyStruct;
 typedef struct midLevelCtrl midLevelCtrl;
 typedef struct mThreadsStruct mThreadsStruct;
 typedef struct reCalibStruct reCalibStruct;
+
 typedef struct strategy_FSM strategy_FSM;
 typedef struct statAndShed statAndShed;
-
+typedef struct posePallets posePallets;
+typedef struct excSquares excSquares;
+typedef struct distributeurs distributeurs;
 
 
 typedef struct ctrlStruct
@@ -67,6 +72,9 @@ typedef struct ctrlStruct
     strategy_FSM *stratFSM;
     pushShed *pshed;
     statAndShed *saShed;
+    distributeurs *distr;
+    excSquares *excSq;
+    posePallets *pPalets;
 
     rplStruct *rpl;
     oppPosition *op;

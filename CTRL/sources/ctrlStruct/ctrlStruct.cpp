@@ -60,6 +60,16 @@ ctrlStruct* cvs_init()
 
     cvs->saShed = (statAndShed*) malloc(sizeof(statAndShed));
     saShed_init(cvs->saShed);
+
+    cvs->pPallets = (posePallets*) malloc(sizeof(posePallets));
+    pPalets_init(cvs->pPallets);
+
+    cvs->excSq = (excSquares*) malloc(sizeof(excSquares));
+    excSq_init(cvs->excSq);
+
+    cvs->distr = (distributeurs*) malloc(sizeof(distributeurs));
+    distr_init(cvs->distr);
+
     /*!  txt files  */
     cvs->llc_data = fopen("llc_data.txt", "w");
     if (cvs->llc_data == NULL) printf("Enable to open file llc_data.txt\n");
