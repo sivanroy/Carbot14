@@ -26,14 +26,14 @@ int main()
     highLevelCtrlPF *hlcPF = cvs->hlcPF;
     rplStruct *rpl = cvs->rpl;
     pushShed *pshed = cvs->pshed;
+    statAndShed *saShed = cvs->saShed;
     midLevelCtrl *mlc = cvs->mlc;
     oppPosition *op = cvs->op;
     mThreadsStruct *mt = cvs->mt;
     teensyStruct *teensy = cvs->teensy;
     double dt = inputs->dt;
 
-    int display_position_ON = 1;
-
+    int display_position_ON = 0;
     int cmdON = 0;
     int llcON = 0;
     int mlcPF_ON = 0;
@@ -44,6 +44,7 @@ int main()
     int pushShedON = 0;
     int pushShed_and_sonar_ON = 0;
     int teensyON = 0;
+    int saShedON = 1;
 
     int mThreadsON = 0;
 
@@ -427,6 +428,29 @@ int main()
             }
             if(pshed->output) {
                 printf("ended\n");
+                motors_stop(cvs);
+                break;
+            }
+            update_time(cvs);
+            auto stop = high_resolution_clock::now();
+            auto duration = duration_cast<microseconds>(stop - start);
+            usleep(dt * 1000000 - duration.count());
+        }
+    }
+
+    if (saShedON){
+        saShed_launch(cvs);
+        printf("sasShedON\n");
+        cvs->mp->x = 3-0.14-0.0625;
+        cvs->mp->y = 2-0.53;
+        cvs->mp->th = M_PI;
+
+        while(inputs->t < 20){
+            auto start = high_resolution_clock::now();
+
+            saShed_loop(cvs);
+            if(saShed->output) {
+                printf("ended with %d\n",saShed->output);
                 motors_stop(cvs);
                 break;
             }

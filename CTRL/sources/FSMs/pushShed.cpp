@@ -7,6 +7,7 @@
 #include <cmath> //for sqrt
 
 #include "pushShed.h"
+#include "FSMs_utils.h"
 
 
 
@@ -92,7 +93,7 @@ void pushShed_loop(ctrlStruct *cvs){
             mlcPF->min_sp_ref = -2.5;
             xg = pshed->x_goals[2];
         	yg = pshed->y_goals[2];
-        	sendFromHLCPF(cvs,xg,yg);
+        	sendFromHLCPF(cvs);//,xg,yg);
         	if(hlcPF->output){
         		pshed->status = Dpmt4_ps;
         		printf("go to dp4\n");
@@ -103,7 +104,7 @@ void pushShed_loop(ctrlStruct *cvs){
         case Dpmt4_ps:{
             xg = pshed->x_goals[3];
         	yg = pshed->y_goals[3];
-        	sendFromHLCPF(cvs,xg,yg);
+        	sendFromHLCPF(cvs);//,xg,yg);
         	if(hlcPF->output){
         		pshed->status = Dpmt5_ps;
         		motors_stop(cvs);
@@ -114,7 +115,7 @@ void pushShed_loop(ctrlStruct *cvs){
         case Dpmt5_ps:{
             xg = pshed->x_goals[4];
             yg = pshed->y_goals[4];
-            sendFromHLCPF(cvs,xg,yg);
+            sendFromHLCPF(cvs);//,xg,yg);
             if(hlcPF->output){
                 pshed->status = servoShedIn;
                 motors_stop(cvs);
@@ -168,7 +169,7 @@ void pushShed_loop(ctrlStruct *cvs){
             mlcPF->min_sp_ref = -5;
             xg = pshed->x_goals[6];
             yg = pshed->y_goals[6];
-            sendFromHLCPF(cvs,xg,yg);
+            sendFromHLCPF(cvs);//,xg,yg);
             if(hlcPF->output){
                 pshed->status = Close_ps;
                 motors_stop(cvs);
@@ -227,7 +228,7 @@ void esquive_loop(ctrlStruct *cvs) {
         }
         case Dpmt1_es:{
             //printf("D1\n");
-            sendFromMainPot(cvs);
+            sendFromHLCPF(cvs);
             if(hlcPF->output){
                 pshed->status = Close_es;
                 printf("Close\n");

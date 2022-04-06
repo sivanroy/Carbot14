@@ -57,6 +57,9 @@ ctrlStruct* cvs_init()
 
     cvs->stratFSM = (strategy_FSM *) malloc(sizeof(strategy_FSM));
     strategy_FSM_init(cvs->stratFSM);
+
+    cvs->saShed = (statAndShed*) malloc(sizeof(statAndShed));
+    saShed_init(cvs->saShed);
     /*!  txt files  */
     cvs->llc_data = fopen("llc_data.txt", "w");
     if (cvs->llc_data == NULL) printf("Enable to open file llc_data.txt\n");

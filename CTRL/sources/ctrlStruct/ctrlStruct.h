@@ -27,6 +27,9 @@
 #include "../multiThreads/multiThreads.h"
 #include "../reCalibStruct/reCalibStruct.h"
 #include "../FSMs/strategy.h"
+#include "../FSMs/FSMs_utils.h"
+#include "../FSMs/statuetteAndShed.h"
+#include "../FSMs/FSMs_utils.h"
 
 
 typedef struct ctrlStruct ctrlStruct;
@@ -45,6 +48,7 @@ typedef struct midLevelCtrl midLevelCtrl;
 typedef struct mThreadsStruct mThreadsStruct;
 typedef struct reCalibStruct reCalibStruct;
 typedef struct strategy_FSM strategy_FSM;
+typedef struct statAndShed statAndShed;
 
 
 
@@ -62,6 +66,7 @@ typedef struct ctrlStruct
 
     strategy_FSM *stratFSM;
     pushShed *pshed;
+    statAndShed *saShed;
 
     rplStruct *rpl;
     oppPosition *op;

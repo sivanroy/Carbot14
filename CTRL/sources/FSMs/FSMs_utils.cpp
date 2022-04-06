@@ -8,7 +8,7 @@
 #include "FSMs_utils.h"
 
 
-void sendFromHLCPF(ctrlStruct *cvs,int goForward=1, double x_goal=0,double y_goal=0){
+void sendFromHLCPF(ctrlStruct *cvs,int goForward){
 	get_d2r_data(cvs);
     dyn_obs_set(cvs);
 

@@ -2,6 +2,7 @@
 #define _STRATEGYFSM_GR5_H_ // must be the same name as the line before
 
 #include "../ctrlStruct/ctrlStruct.h"
+#include "../FSMs/FSMs_utils.h"
 
 
 typedef struct strategy_FSM
