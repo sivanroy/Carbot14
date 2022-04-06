@@ -62,7 +62,7 @@ ctrlStruct* cvs_init()
     saShed_init(cvs->saShed);
 
     cvs->pPallets = (posePallets*) malloc(sizeof(posePallets));
-    pPalets_init(cvs->pPallets);
+    pPallets_init(cvs->pPallets);
 
     cvs->excSq = (excSquares*) malloc(sizeof(excSquares));
     excSq_init(cvs->excSq);
@@ -107,6 +107,11 @@ void cvs_free(ctrlStruct *cvs)
     free(cvs->mt);
     free(cvs->rec);
     free(cvs->teensy);
+    free(cvs->stratFSM);
+    free(cvs->saShed);
+    free(cvs->pPallets);
+    free(cvs->excSq);
+    free(cvs->distr);
 
     fclose(cvs->llc_data);
     fclose(cvs->mp_data);

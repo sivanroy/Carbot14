@@ -17,9 +17,8 @@ typedef struct posePallets
 	double forward[10];
 } posePallets;
 
-void pPalets_init(posePallets *pPalets);
-void pPalets_loop(ctrlStruct *cvs);
-void pPalets_loop(ctrlStruct *cvs);
-void pPalets_launch(ctrlStruct *cvs);
+void pPallets_init(posePallets *pPallets);
+void pPallets_loop(ctrlStruct *cvs);
+void pPallets_launch(ctrlStruct *cvs);
 
 #endif // end of header guard

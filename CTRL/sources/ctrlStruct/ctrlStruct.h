@@ -31,7 +31,7 @@
 #include "../FSMs/statuetteAndShed.h"
 #include "../FSMs/posePallets.h"
 #include "../FSMs/excavationSquare.h"
-#include "../FSMs/distributeurs.h"
+#include "../FSMs/distributeur.h"
 
 
 typedef struct ctrlStruct ctrlStruct;
@@ -74,7 +74,7 @@ typedef struct ctrlStruct
     statAndShed *saShed;
     distributeurs *distr;
     excSquares *excSq;
-    posePallets *pPalets;
+    posePallets *pPallets;
 
     rplStruct *rpl;
     oppPosition *op;

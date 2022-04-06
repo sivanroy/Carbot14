@@ -9,8 +9,6 @@
 #include "pushShed.h"
 #include "FSMs_utils.h"
 
-
-
 //enum enum {S0_ps,Dpmt1_ps,Dpmt2_ps,Close_ps,Dpmt3_ps,Dpmt4_ps,Dpmt5_ps,Push_ps,Ok_ps,NotOk_ps};
 
 void pushShed_init(pushShed *pshed) {
@@ -219,24 +217,24 @@ void esquive_loop(ctrlStruct *cvs) {
     switch(pshed->status){
         case S0_ps:{
             if(pshed->go){
-                pshed->status = Dpmt1_es;
+                pshed->status = Dpmt1_esquive;
                 printf("go to dp1\n");
                 pshed->go = 0;
                 set_goal(cvs,pshed->x_goals[6],pshed->y_goals[6]);
             }
             break;
         }
-        case Dpmt1_es:{
+        case Dpmt1_esquive:{
             //printf("D1\n");
             sendFromHLCPF(cvs);
             if(hlcPF->output){
-                pshed->status = Close_es;
+                pshed->status = Close_esquive;
                 printf("Close\n");
             }
 
             break;
         }
-        case Close_es:{
+        case Close_esquive:{
             pshed->output = 1;
             //printf("End simu\n");
             break;

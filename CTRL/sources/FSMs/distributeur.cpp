@@ -31,7 +31,7 @@ void distr_init(distributeurs *distr){
 void distr_launch(ctrlStruct *cvs){
 	cvs->distr->go = 1;
 	cvs->distr->status = S0_ps;
-    cvs->output=0;
+    cvs->distr->output=0;
 }
 
 
@@ -60,7 +60,7 @@ void distr_loop(ctrlStruct *cvs){
         case Dpmt1_di:{
     		sendFromHLCPF(cvs,cvs->distr->forward[0]);
         	if(hlcPF->output){
-        		distr->status = servoShedOut_sas;
+        		distr->status = servoShedOut_di;
         	}
         	break;
         }
