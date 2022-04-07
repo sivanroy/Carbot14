@@ -37,14 +37,14 @@ int main()
     int cmdON = 0;
     int llcON = 0;
     int mlcPF_ON = 0;
-    int mlc_ON = 0;
+    int mlc_ON = 1;
     int rplON = 0;
     int odoCalib = 0;
     int hlcPFON = 0;
     int pushShedON = 0;
     int pushShed_and_sonar_ON = 0;
     int teensyON = 0;
-    int saShedON = 1;
+    int saShedON = 0;
 
     int mThreadsON = 0;
 
@@ -280,14 +280,14 @@ int main()
     }
 
     if (mlc_ON){
-        double x_goal = 2.6;
-        double y_goal = 0.4;
+        double x_goal = 2;
+        double y_goal = 1.13;
 
-        mp->x = 2.4;
-        mp->y = 0.6;
-        mp->th = -1.3*M_PI/4;
+        cvs->mp->x = 3-0.14-0.0625;
+        cvs->mp->y = 1.13;
+        cvs->mp->th = M_PI;
 
-        while (inputs->t < 3) {
+        while (inputs->t < 20) {
             auto start = high_resolution_clock::now();
 
             get_d2r_data(cvs); // ctrlIn
@@ -295,9 +295,9 @@ int main()
             printf("r_sp_mes_enc = %f | l_sp_mes_enc = %f\n", inputs->r_sp_mes_enc, inputs->l_sp_mes_enc);
             printf("r_sp_mes_odo = %f | l_sp_mes_odo = %f\n", inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
 
-            //mlcPF_out(cvs, v_ref, th_ref);
-            set_speed_ref(cvs,x_goal,y_goal);
+            set_speed_ref(cvs,x_goal,y_goal,0);
             if(mlc->reach_goal){
+                printf("reached goal\n");
                 break;
             }
             set_commands(cvs, mlc->r_sp_ref, mlc->l_sp_ref);

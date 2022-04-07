@@ -16,6 +16,8 @@ typedef struct midLevelCtrl
     double d_mes; ///< measured distance
     double th_ref; ///< theta of reference
     double th_mes; ///< measured theta
+    double sigma;
+    double max_th;
 
     double Kp_d; ///< proportional constant of the PI 'd' controller
     double Ki_d; ///< integral constant of the PI 'd' controller
