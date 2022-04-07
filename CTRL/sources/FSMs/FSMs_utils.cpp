@@ -26,6 +26,7 @@ void sendFromHLCPF(ctrlStruct *cvs,int goForward){
 
 void sendFromMLC(ctrlStruct *cvs,double x_goal,double y_goal){
     get_d2r_data(cvs);
+    dyn_obs_set(cvs);
     set_speed_ref(cvs,x_goal,y_goal);
     if(cvs->mlc->reach_goal){
         motors_stop(cvs);
@@ -39,6 +40,7 @@ void sendFromMLC(ctrlStruct *cvs,double x_goal,double y_goal){
 
 void sendFromMLCPF(ctrlStruct *cvs,double v_ref, double theta_r){
     get_d2r_data(cvs); 
+    dyn_obs_set(cvs);
     mlcPF_out(cvs, v_ref, theta_r);
     set_commands(cvs, cvs->mlcPF->r_sp_ref, cvs->mlcPF->l_sp_ref);
     send_commands(cvs);

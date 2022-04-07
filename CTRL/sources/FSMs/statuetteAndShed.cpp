@@ -16,9 +16,9 @@ void saShed_init(statAndShed *saShed) {
     saShed->go = 0;
 
     int s = 5; //2.2 ;; 1.6 ;; -2.5
-    double x_goalsI[s] = {2,2.05, 2.1, 2.1,2.5};
-    double y_goalsI[s] = {1,1.45, 1.35, 1.2,.45};
-    double thetasI[s] = {-10,-10,-10,-10,-10}; //s
+    double x_goalsI[s] = {2.3,2.22, 2.1, 2.1,2.5};
+    double y_goalsI[s] = {1.62,1.52, 1.35, 1.2,.45};
+    double thetasI[s] = {-2.5,-10,-10,-10,-10}; //s
     double forwardI[s] = {1,1,1,1,1};
     for (int i=0; i<s;i++) {
     	saShed->x_goals[i] = x_goalsI[i];
@@ -60,16 +60,20 @@ void saShed_loop(ctrlStruct *cvs){
     		sendFromHLCPF(cvs,cvs->saShed->forward[0]);
         	if(hlcPF->output){
         		saShed->status = Dpmt2_sas;
-                saShed->output =1;
                 set_goal(cvs,saShed->x_goals[1],saShed->y_goals[1],saShed->thetas[1]);
         	}
         	break;
         }
 
         case Dpmt2_sas:{
+            double sig = cvs->mlcPF->sigma;
+            cvs->mlcPF->sigma = .2;
             sendFromHLCPF(cvs,cvs->saShed->forward[1]);
+            teensy_send(cvs, "A");
+            cvs->mlcPF->sigma = sig;
             if(hlcPF->output){
                 saShed->status = servoShedOut_sas;
+                saShed->output =1;
                 printf("go to servoShedout_ps\n");
             }
             break;

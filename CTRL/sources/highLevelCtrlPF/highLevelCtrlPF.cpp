@@ -15,6 +15,8 @@ void hlcPF_init(highLevelCtrlPF *hlcPF) {
     hlcPF->output_main = 0;
     hlcPF->output = 0;
     hlcPF->d = 0;
+    //
+    hlcPF->nearestObst = 100; //dist
     //param physique
     hlcPF->x_shift = 0.0625;
     //hlcPF->x_shift = 0.035;
@@ -33,11 +35,11 @@ void hlcPF_init(highLevelCtrlPF *hlcPF) {
     hlcPF->goal[0] = 0;hlcPF->goal[1] = 0;
     hlcPF->orientation = -10;
     //repulsive static
-    hlcPF->Eta = 0.025; //.025 = tout tout juste !!
-    hlcPF->Rho = 0.4; // 
+    hlcPF->Eta = 0.2;//.025 = tout tout juste !!
+    hlcPF->Rho = 0.5; // 
     //param dyn obstacle
-    hlcPF->Eta_opp = 0.025*5;
-    hlcPF->Rho_opp = 0.4*5;
+    hlcPF->Eta_opp = 0.025*10;
+    hlcPF->Rho_opp = 0.4;
     //hlcPF->Eta_opp = 0.03;
     //hlcPF->Rho_opp = 0.4;
     //attractive
@@ -47,7 +49,7 @@ void hlcPF_init(highLevelCtrlPF *hlcPF) {
     //tau
     hlcPF->Tau_max = 5;
     hlcPF->tau_max_dist = .8;
-    hlcPF->Tau_min = 1;
+    hlcPF->Tau_min = .01; //change this !!
     hlcPF->tau_min_dist = .1;
     //reorientation
     hlcPF->erreurTh = 0.1;
@@ -113,6 +115,7 @@ void calc_RepulsivePotential(ctrlStruct *cvs) {
         double x1 = x - x_obst[i];
         double y1 = y - y_obst[i];
         double d = sqrt(x1*x1+y1*y1);
+        hlcPF->nearestObst = fmin(d,hlcPF->nearestObst);
         if (d <= R){
             if (d <= front_obst) {
                 if (abs(x-x_obst[i]) <= 0.000001) {

@@ -18,6 +18,7 @@ typedef struct highLevelCtrlPF
     //param physique
     double x_shift ;
     double error ;
+    double nearestObst;
     //references
     double v_ref ;
     double theta_ref;

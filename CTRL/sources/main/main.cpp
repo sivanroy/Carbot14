@@ -37,7 +37,7 @@ int main()
     int cmdON = 0;
     int llcON = 0;
     int mlcPF_ON = 0;
-    int mlc_ON = 1;
+    int mlc_ON = 0;
     int rplON = 0;
     int odoCalib = 0;
     int hlcPFON = 0;
@@ -46,7 +46,7 @@ int main()
     int teensyON = 0;
     int saShedON = 0;
 
-    int mThreadsON = 0;
+    int mThreadsON = 1;
 
     if (mThreadsON) {
         threads_start(cvs);
@@ -56,18 +56,18 @@ int main()
         cvs->mp->y = 0.75;//0.45;//2-0.53;
         cvs->mp->th = M_PI;//0;//M_PI;
 
-        while (inputs->t < 4) {
+        while (inputs->t < 20) {
             auto start = high_resolution_clock::now();
 
             //printf("-------------\nmain loop\n");
-            //esquive_loop(cvs);
-            dyn_obs_set(cvs);
+            esquive_loop(cvs);
+            //dyn_obs_set(cvs);
 
             update_time(cvs);
             auto stop = high_resolution_clock::now();
             auto duration = duration_cast<microseconds>(stop - start);
             printf("duration.count() = %lld us | t = %f\n-------------\n", duration.count(), inputs->t);
-
+            fprintf(cvs->llc_data, "%f,%f,%f,%f,%f,%f,%f\n", inputs->t, mlcPF->r_sp_ref, mlcPF->l_sp_ref, inputs->r_sp_mes_enc, inputs->l_sp_mes_enc, inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
             usleep(dt * 1000000 - duration.count());
         }
 
@@ -327,12 +327,15 @@ int main()
         cvs->mp->y = 1.13;
         cvs->mp->th = M_PI;
 
+        threads_start(cvs);
+
+
         printf("begin test hlcPF\n");
         while (inputs->t < 40) {
             auto start = high_resolution_clock::now();
             double t = inputs->t;
             if (t==0) {
-                xgoal = 2,2;//1.2;
+                xgoal = 2;//2.2;//1.2;
                 ygoal = 1.6;//1.60;
                 forward=1;
                 orientation = -M_PI/2;
@@ -341,12 +344,12 @@ int main()
             } else if (t>10 & t<10.1) {
                 xgoal = 2.7;
                 ygoal = 1.2;
-                forward =-1;
+                forward =1;
                 orientation = M_PI;
                 set_goal(cvs, xgoal, ygoal, orientation);
                 printf("goal B\n");
             } else if (t>20 & t<20.1) {
-                xgoal = 1.3;
+                xgoal = 1;//1.3;
                 ygoal = .5;
                 forward =0;
                 orientation = -M_PI;
@@ -367,13 +370,14 @@ int main()
             //}
 
             mlcPF_out(cvs, hlcPF->v_ref, hlcPF->theta_ref);
+            printf("v_ref %f \n", hlcPF->v_ref);
             //printf("hlcPF->v %f | hlcPF->theta %f\n",hlcPF->v_ref,hlcPF->theta_ref );
             set_commands(cvs, mlcPF->r_sp_ref, mlcPF->l_sp_ref);
             send_commands(cvs);
 
             set_new_position(cvs);
             //printf("cmd_r = %d | cmd_l = %d\n", outputs->r_cmd, outputs->l_cmd);
-            //printf("x = %f | y = %f | th = %f\n", mp->x, mp->y, mp->th);
+            printf("x = %f | y = %f | th = %f\n", mp->x, mp->y, mp->th);
 
             fprintf(cvs->llc_data, "%f,%f,%f,%f,%f,%f,%f\n", inputs->t, mlcPF->r_sp_ref, mlcPF->l_sp_ref, inputs->r_sp_mes_enc, inputs->l_sp_mes_enc, inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
 
@@ -386,6 +390,9 @@ int main()
 
 
         }
+        mt->thread_main_end = 1;
+
+        threads_end(cvs);
     }
 
     if (pushShedON){
@@ -445,7 +452,7 @@ int main()
         cvs->mp->y = 2-0.53;
         cvs->mp->th = M_PI;
 
-        while(inputs->t < 40){
+        while(inputs->t < 10){
             auto start = high_resolution_clock::now();
 
             saShed_loop(cvs);
