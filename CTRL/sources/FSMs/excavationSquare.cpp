@@ -15,7 +15,7 @@ void excSq_init(excSquares *excSq){
     excSq->output = 0;
     excSq->go = 0;
 
-    int s = 1; //2.28 ;; 1.51
+    int s = 3; //2.28 ;; 1.51
     double x_goalsI[s] = {2.41,1,1};
     double y_goalsI[s] = {0.21,1,1};
     double thetasI[s] = {-0.77,-10,-10}; //s
@@ -26,6 +26,7 @@ void excSq_init(excSquares *excSq){
         excSq->thetas[i] = thetasI[i];
         excSq->forward[i] = forwardI[i];
     }
+    printf("excSq initialized\n");
 }
 
 void excSq_launch(ctrlStruct *cvs){

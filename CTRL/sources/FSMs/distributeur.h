@@ -19,7 +19,6 @@ typedef struct distributeurs
 
 void distr_init(distributeurs *distr);
 void distr_loop(ctrlStruct *cvs);
-void distr_loop(ctrlStruct *cvs);
 void distr_launch(ctrlStruct *cvs);
 
 #endif // end of header guard

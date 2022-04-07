@@ -36,6 +36,6 @@ typedef struct midLevelCtrl
 
 void init_midLevelCtrl(midLevelCtrl *mlc);
 void set_d_th_ref_mes(ctrlStruct *cvs, double x_g, double y_g);
-void set_speed_ref(ctrlStruct *cvs, double x_g, double y_g);
+void set_speed_ref(ctrlStruct *cvs, double x_g, double y_g, int goForward = 1);
 
 #endif // end of header guard

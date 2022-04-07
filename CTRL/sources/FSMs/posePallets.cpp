@@ -15,7 +15,7 @@ void pPallets_init(posePallets *pPallets){
     pPallets->output = 0;
     pPallets->go = 0;
 
-    int s = 1; //2.28 ;; 1.51
+    int s = 3; //2.28 ;; 1.51
     double x_goalsI[s] = {2.41,1,1};
     double y_goalsI[s] = {0.21,1,1};
     double thetasI[s] = {-0.77,-10,-10}; //s
@@ -26,6 +26,8 @@ void pPallets_init(posePallets *pPallets){
         pPallets->thetas[i] = thetasI[i];
         pPallets->forward[i] = forwardI[i];
     }
+    printf("ppallets initialized\n");
+
 }
 
 void pPallets_launch(ctrlStruct *cvs){

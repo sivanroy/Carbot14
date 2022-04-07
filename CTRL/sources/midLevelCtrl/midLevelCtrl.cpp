@@ -59,7 +59,7 @@ void set_d_th_ref_mes(ctrlStruct *cvs, double x_g, double y_g)
     if ( sqrt(x_diff*x_diff + y_diff*y_diff) < near_g) mlc->reach_goal = 1;
 }
 
-void set_speed_ref(ctrlStruct *cvs, double x_g, double y_g)
+void set_speed_ref(ctrlStruct *cvs, double x_g, double y_g, int goForward)
 {
     set_d_th_ref_mes(cvs, x_g, y_g);
 
@@ -72,6 +72,12 @@ void set_speed_ref(ctrlStruct *cvs, double x_g, double y_g)
     // calculate errors
     double d_error = mlc->d_mes - mlc->d_ref;
     double th_error = limit_angle(mlc->th_mes - mlc->th_ref);
+
+    //toCheck
+    if (!goForward){
+        d_error = -d_error;
+        th_error = limit_angle(th_error+M_PI);
+    }
 
     // proportional terms
     double d_Pout = mlc->Kp_d * d_error;

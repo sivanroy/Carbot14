@@ -445,7 +445,7 @@ int main()
         cvs->mp->y = 2-0.53;
         cvs->mp->th = M_PI;
 
-        while(inputs->t < 20){
+        while(inputs->t < 40){
             auto start = high_resolution_clock::now();
 
             saShed_loop(cvs);

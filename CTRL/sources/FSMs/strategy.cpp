@@ -10,7 +10,6 @@ enum {S0_s,select_action_s,actionPushShed_s,actionPutPallet1_s,actionPutPallet2_
                 actionStatuette_s,goHome_s};
 
 void strategy_FSM_init(strategy_FSM *stratFSM) {
-
     stratFSM->status = S0_s;
     stratFSM->output = 0;
     stratFSM->timeTillBreak = 15;
@@ -22,6 +21,7 @@ void strategy_FSM_init(strategy_FSM *stratFSM) {
     for (int i = 0; i<s; i++){
             stratFSM->actions[i] = actionsi[i];
     }
+    printf("strategy initialized\n");
     
 }
 

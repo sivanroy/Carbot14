@@ -20,6 +20,7 @@
 #define BUF_SIZE 1
 
 
+
 typedef struct teensyStruct
 {
     int port;

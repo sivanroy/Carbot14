@@ -27,6 +27,7 @@ void pushShed_init(pushShed *pshed) {
         pshed->thetas[i] = thetasI[i];
         pshed->forward[i] = forwardI[i];
     }
+    printf("push shed initialized\n");
 }
 
 void pushShed_launch(ctrlStruct *cvs){

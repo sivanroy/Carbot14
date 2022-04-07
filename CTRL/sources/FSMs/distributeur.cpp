@@ -26,6 +26,7 @@ void distr_init(distributeurs *distr){
         distr->thetas[i] = thetasI[i];
         distr->forward[i] = forwardI[i];
     }
+    printf("sashed initialized\n");
 }
 
 void distr_launch(ctrlStruct *cvs){

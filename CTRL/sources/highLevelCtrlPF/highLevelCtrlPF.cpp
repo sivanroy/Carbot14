@@ -18,7 +18,7 @@ void hlcPF_init(highLevelCtrlPF *hlcPF) {
     //param physique
     hlcPF->x_shift = 0.0625;
     //hlcPF->x_shift = 0.035;
-    hlcPF->error = 0.075;//0.03;
+    hlcPF->error = 0.02;//0.03;
     //references
     hlcPF->v_ref = 0.0;
     hlcPF->theta_ref = 0.0;
@@ -42,13 +42,13 @@ void hlcPF_init(highLevelCtrlPF *hlcPF) {
     //hlcPF->Rho_opp = 0.4;
     //attractive
     double a = 1;
-    hlcPF->d_limit = 0.5;
+    hlcPF->d_limit = 0.2;
     hlcPF->Alpha = a/hlcPF->d_limit;
     //tau
     hlcPF->Tau_max = 5;
     hlcPF->tau_max_dist = .8;
     hlcPF->Tau_min = 1;
-    hlcPF->tau_min_dist = .2;
+    hlcPF->tau_min_dist = .1;
     //reorientation
     hlcPF->erreurTh = 0.1;
     //local minimum

@@ -19,7 +19,6 @@ typedef struct excSquares
 
 void excSq_init(excSquares *excSq);
 void excSq_loop(ctrlStruct *cvs);
-void excSq_loop(ctrlStruct *cvs);
 void excSq_launch(ctrlStruct *cvs);
 
 #endif // end of header guard
