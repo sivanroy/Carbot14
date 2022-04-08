@@ -88,7 +88,7 @@ int rec_ICP(ctrlStruct *cvs, IcpPointToPlane *icp)
     double pt_y;
 
     rec->m = 0;
-    
+
     pthread_mutex_lock(&(mt->mutex_rpl));
     for (i = 0; i < rpl->data_size; i++) {
         a = rpl->a[i];
