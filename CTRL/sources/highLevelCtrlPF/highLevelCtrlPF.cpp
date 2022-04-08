@@ -47,10 +47,10 @@ void hlcPF_init(highLevelCtrlPF *hlcPF) {
     hlcPF->d_limit = 0.2;
     hlcPF->Alpha = a/hlcPF->d_limit;
     //tau
-    hlcPF->Tau_max = 5;
-    hlcPF->tau_max_dist = .8;
-    hlcPF->Tau_min = .01; //change this !!
-    hlcPF->tau_min_dist = .1;
+    hlcPF->Tau_max = 10;
+    hlcPF->tau_max_dist = 1.5;
+    hlcPF->Tau_min = .1; //change this !!
+    hlcPF->tau_min_dist = .2;
     //reorientation
     hlcPF->erreurTh = 0.1;
     //local minimum

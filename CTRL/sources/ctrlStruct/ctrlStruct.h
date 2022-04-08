@@ -88,6 +88,7 @@ typedef struct ctrlStruct
     FILE *rpl_data;
     FILE *op_data;
     FILE *rec_data;
+    FILE *tau_data;
 
 } ctrlStruct;
 

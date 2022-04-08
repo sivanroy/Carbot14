@@ -40,13 +40,13 @@ int main()
     int mlc_ON = 0;
     int rplON = 0;
     int odoCalib = 0;
-    int hlcPFON = 0;
+    int hlcPFON = 1;
     int pushShedON = 0;
     int pushShed_and_sonar_ON = 0;
     int teensyON = 0;
     int saShedON = 0;
 
-    int mThreadsON = 1;
+    int mThreadsON = 0;
 
     if (mThreadsON) {
         threads_start(cvs);
@@ -327,22 +327,22 @@ int main()
         cvs->mp->y = 1.13;
         cvs->mp->th = M_PI;
 
-        threads_start(cvs);
+        //threads_start(cvs);
 
 
         printf("begin test hlcPF\n");
-        while (inputs->t < 40) {
+        while (inputs->t < 30) {
             auto start = high_resolution_clock::now();
             double t = inputs->t;
             if (t==0) {
-                xgoal = 2;//2.2;//1.2;
-                ygoal = 1.6;//1.60;
+                xgoal = 1;//2.2;//1.2;
+                ygoal = 1.5;//1.60;
                 forward=1;
                 orientation = -M_PI/2;
                 set_goal(cvs, xgoal, ygoal, orientation);
                 printf("goal A\n");
             } else if (t>10 & t<10.1) {
-                xgoal = 2.7;
+                xgoal = 2.5;
                 ygoal = 1.2;
                 forward =1;
                 orientation = M_PI;
@@ -358,26 +358,25 @@ int main()
             }
 
             get_d2r_data(cvs); // ctrlIn
-
             //printf("r_sp_mes_enc = %f | l_sp_mes_enc = %f\n", inputs->r_sp_mes_enc, inputs->l_sp_mes_enc);
             //printf("r_sp_mes_odo = %f | l_sp_mes_odo = %f\n", inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
-
             hlcPF_out(cvs, forward);
-
             //if(hlcPF->output) {
                 //hlcPF->v_ref = 0;
                 //hlcPF->theta_ref = 0;
             //}
-
             mlcPF_out(cvs, hlcPF->v_ref, hlcPF->theta_ref);
-            printf("v_ref %f \n", hlcPF->v_ref);
+
+            fprintf(cvs->tau_data, "%f,%f,%f\n", inputs->t, hlcPF->v_ref, tau_compute(cvs));
+
+            //printf("v_ref %f \n", hlcPF->v_ref);
             //printf("hlcPF->v %f | hlcPF->theta %f\n",hlcPF->v_ref,hlcPF->theta_ref );
             set_commands(cvs, mlcPF->r_sp_ref, mlcPF->l_sp_ref);
             send_commands(cvs);
 
             set_new_position(cvs);
             //printf("cmd_r = %d | cmd_l = %d\n", outputs->r_cmd, outputs->l_cmd);
-            printf("x = %f | y = %f | th = %f\n", mp->x, mp->y, mp->th);
+            //printf("x = %f | y = %f | th = %f\n", mp->x, mp->y, mp->th);
 
             fprintf(cvs->llc_data, "%f,%f,%f,%f,%f,%f,%f\n", inputs->t, mlcPF->r_sp_ref, mlcPF->l_sp_ref, inputs->r_sp_mes_enc, inputs->l_sp_mes_enc, inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
 
@@ -390,9 +389,9 @@ int main()
 
 
         }
-        mt->thread_main_end = 1;
+        //mt->thread_main_end = 1;
 
-        threads_end(cvs);
+        //threads_end(cvs);
     }
 
     if (pushShedON){

@@ -86,6 +86,10 @@ ctrlStruct* cvs_init()
     cvs->rec_data = fopen("rec_data.txt", "w");
     if (cvs->rec_data == NULL) printf("Enable to open file rec_data.txt\n");
 
+    cvs->tau_data = fopen("tau_data.txt", "w");
+    if (cvs->tau_data == NULL) printf("Enable to open file tau_data.txt\n");
+
+
     return cvs;
 }
 
@@ -118,6 +122,7 @@ void cvs_free(ctrlStruct *cvs)
     fclose(cvs->rpl_data);
     fclose(cvs->op_data);
     fclose(cvs->rec_data);
+    fclose(cvs->tau_data);
 
     free(cvs);
 }
