@@ -11,6 +11,7 @@
 
 using namespace std::chrono;
 
+using namespace std;
 
 int main()
 {
@@ -30,6 +31,7 @@ int main()
     oppPosition *op = cvs->op;
     mThreadsStruct *mt = cvs->mt;
     teensyStruct *teensy = cvs->teensy;
+    reCalibStruct *rec = cvs->rec;
     double dt = inputs->dt;
 
     int cmdON = 0;
@@ -37,28 +39,133 @@ int main()
     int mlcPF_ON = 0;
     int mlc_ON = 0;
     int rplON = 0;
-    int odoCalib = 1;
+    int odoCalib = 0;
     int hlcPFON = 0;
     int pushShedON = 0;
     int teensyON = 0;
     int pushShed_and_sonar_ON = 0;
+    int icp_test = 0;
+    int icpON = 1;
 
     int mThreadsON = 0;
+
+    if (icpON) {
+        cvs->mp->x = 3-0.14;//2.00;//3-0.14;
+        cvs->mp->y = 1.13;//0.75;//0.445+0.125;//0.45;//2-0.53;
+        cvs->mp->th = M_PI;//0;//M_PI;
+        printf("x = %f | y = %f | th = %f\n",cvs->mp->x, cvs->mp->y, cvs->mp->th);
+
+        IcpPointToPlane icp(rec->map_p,rec->M,2);
+        icp.setMaxIterations(rec->max_iter);
+        icp.setMinDeltaParam(rec->min_delta);
+
+        int i;
+        for (i = 0; i < rec->M*2; i+=2) {
+            fprintf(cvs->icp1_data, "%f,%f\n", rec->map_p[i], rec->map_p[i+1]);
+        }
+        printf("M = %d\n", rec->M);
+        while (rpl->nTurns < 10) {
+            rpl_grabData(cvs);
+            rec_ICP(cvs, &icp);
+        }
+    }
+
+    if (icp_test) {
+        // define a 3 dim problem with 10000 model points
+        // and 10000 template points:
+        int32_t dim = 2;
+        int32_t numM = 1000;
+        int32_t numT = 200;
+
+        // allocate model and template memory
+        double* M = (double*)calloc(2*numM,sizeof(double));
+        double* T = (double*)calloc(2*numT,sizeof(double));
+        double* S = (double*)calloc(2*numT,sizeof(double));
+
+        // set model and template points
+        cout << endl << "Creating model with 10000 points ..." << endl;
+        cout << "Creating template by shifting model by (1,0.5,-1) ..." << endl;
+        int32_t k=0;
+        double x;
+        double xa;
+        double ya;
+        double M_end = (double) 2/numM;
+        double T_end = (double) 2/numT;
+        printf("M_end = %f | T_end = %f\n", M_end, T_end);
+        for (x=0; x<2; x+=M_end) {
+            xa = x;
+            ya = x;
+            M[k * dim + 0] = xa;
+            M[k * dim + 1] = ya;
+            fprintf(cvs->icp1_data, "%f,%f\n", xa, ya);
+            k++;
+        }
+        k = 0;
+        for (x=0; x<2; x+=T_end) {
+            xa = x+0.013;// work until 0.014
+            ya = x+0.013;// + 0.2*(x*0.05); // work until 0.014
+            T[k*dim+0] = xa;
+            T[k*dim+1] = ya;
+            fprintf(cvs->icp2_data, "%f,%f\n", xa, ya);
+            k++;
+        }
+
+        printf("for for\n");
+        // start with identity as initial transformation
+        // in practice you might want to use some kind of prediction here
+        Matrix R = Matrix::eye(dim);
+        Matrix t(dim,1);
+
+        // run point-to-plane ICP (-1 = no outlier threshold)
+        cout << endl << "Running ICP (point-to-plane, no outliers)" << endl;
+        IcpPointToPlane icp(M,numM,dim);
+        icp.fit(T,numT,R,t,-1);
+
+        int i;
+        double Sx;
+        double Sy;
+        for (i = 0; i < numT*2; i+=2) {
+            Sx = R.val[0][0] * T[i] + R.val[0][1] * T[i+1] + t.val[0][0];
+            Sy = R.val[1][0] * T[i] + R.val[1][1] * T[i+1] + t.val[1][0];
+            fprintf(cvs->icp3_data, "%f,%f\n", Sx, Sy);
+            S[i] = Sx;
+            S[i+1] = Sy;
+        }
+
+        // results
+        cout << endl << "Transformation results:" << endl;
+        cout << "R:" << endl << R << endl << endl;
+        cout << "t:" << endl << t << endl << endl;
+        //cout << "Residual:"<<residual;
+
+        // free memory
+        printf("free1\n");
+        //free(M);
+        //free(T);
+        printf("free2\n");
+    }
 
     if (mThreadsON) {
         threads_start(cvs);
 
         pushShed_launch(cvs);
-        cvs->mp->x = 3-0.17;//3-0.14;
-        cvs->mp->y = 0.75;//0.45;//2-0.53;
+        cvs->mp->x = 3-0.14;//3-0.14;
+        cvs->mp->y = 1.13;//0.45;//2-0.53;
         cvs->mp->th = M_PI;//0;//M_PI;
 
-        while (inputs->t < 4) {
+        double t_end = 10;
+        while (inputs->t < t_end) {
             auto start = high_resolution_clock::now();
 
             //printf("-------------\nmain loop\n");
-            //esquive_loop(cvs);
-            dyn_obs_set(cvs);
+            esquive_loop(cvs);
+            //dyn_obs_set(cvs);
+
+            if (inputs->t > t_end - 2) {
+                pthread_mutex_lock(&(mt->mutex_rec));
+                if (rec->rec_flag == 0) rec->rec_flag = 1;
+                pthread_mutex_unlock(&(mt->mutex_rec));
+            }
 
             update_time(cvs);
             auto stop = high_resolution_clock::now();
@@ -415,10 +522,10 @@ int main()
         int B = 0;
         int C = 0;
         int D = 0;
-        while (inputs->t < 15) {
+        while (inputs->t < 5) {
             auto start = high_resolution_clock::now();
 
-            teensy_recv(cvs);
+            //teensy_recv(cvs);
 
             //printf("switch_F : %d\n", teensy->switch_F);
             if (teensy->switch_F && teensy->switch_F_end == 0) {
@@ -427,10 +534,11 @@ int main()
                 teensy->switch_F_end = 1;
             }
 
-            if (inputs->t >= 1 && A == 0) {
+            if (inputs->t >= 2 && A == 0) {
                 teensy_send(cvs, "A");
                 A = 1;
             }
+            /*
             if (inputs->t >= 3 && B == 0) {
                 teensy_send(cvs, "B");
                 B = 1;
@@ -443,7 +551,7 @@ int main()
                 teensy_send(cvs, "D");
                 D = 1;
             }
-
+            */
 
             update_time(cvs);
             auto stop = high_resolution_clock::now();

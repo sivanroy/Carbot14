@@ -242,10 +242,9 @@ def plot_rpl_data():
 
     Data = read_txt_file("../../build/rpl_data.txt", 2)
 
-    map_x = [0,3,3,0,0]
-    map_y = [0,0,2,2,0]
+    Map = read_txt_file("../../build/icp1_data.txt", 2)
     
-    plt.plot(map_x, map_y, label="Map")
+    plt.plot(Map[0], Map[1], label="Map")
     plt.plot(Data[0], Data[1], 'ro', label="rpl_data")
     plt.xlabel("x [m]")
     plt.ylabel("y [m]")
@@ -262,10 +261,9 @@ def plot_op_data():
 
     Data = read_txt_file("../../build/op_data.txt", 2)
 
-    map_x = [0,3,3,0,0]
-    map_y = [0,0,2,2,0]
+    Map = read_txt_file("../../build/icp1_data.txt", 2)
     
-    plt.plot(map_x, map_y, label="Map")
+    plt.plot(Map[0], Map[1], label="Map")
     plt.plot(Data[0], Data[1], 'ro', label="op_data")
     plt.xlabel("x [m]")
     plt.ylabel("y [m]")
@@ -277,35 +275,14 @@ def plot_op_data():
     plt.grid()
     #plt.savefig("op_data2.pdf", format="pdf")
     plt.show()
-    
-def plot_rec_data():
 
-    Data = read_txt_file("../../build/rec_data.txt", 2)
-
-    map_x = [0,3,3,0,0]
-    map_y = [0,0,2,2,0]
-    
-    plt.plot(map_x, map_y, label="Map")
-    plt.plot(Data[0], Data[1], 'ro', label="rec_data")
-    plt.xlabel("x [m]")
-    plt.ylabel("y [m]")
-    plt.title("rec")
-    plt.ylim(-0.1, 2.1)
-    plt.xlim(-0.1, 3.1)
-    #plt.axis("equal")
-    plt.legend()
-    plt.grid()
-    #plt.savefig("op_data2.pdf", format="pdf")
-    plt.show()
-    
 def plot_mp_data():
 
     Data = read_txt_file("../../build/mp_data.txt", 3)
 
-    map_x = [0,3,3,0,0]
-    map_y = [0,0,2,2,0]
+    Map = read_txt_file("../../build/icp1_data.txt", 2)
     
-    plt.plot(map_x, map_y, label="Map")
+    plt.plot(Map[0], Map[1], label="Map")
     plt.plot(Data[0], Data[1], 'ro', label="mp_data")
     plt.xlabel("x [m]")
     plt.ylabel("y [m]")
@@ -317,8 +294,57 @@ def plot_mp_data():
     plt.grid()
     #plt.savefig("mp_data2.pdf", format="pdf")
     plt.show()
+    
+def plot_icp_data():
+    
+    Data1 = read_txt_file("../../build/icp1_data.txt", 2)
+    Data2 = read_txt_file("../../build/icp2_data.txt", 2)
+    Data3 = read_txt_file("../../build/icp3_data.txt", 2)
+    
+    plt.plot(Data1[0], Data1[1], 'ro', label="Map point cloud ", markersize = 2)
+    plt.plot(Data2[0], Data2[1], 'bo', label="rplidar point cloud", markersize = 2)
+    plt.plot(Data3[0], Data3[1], 'o', marker='x', label="Recalibrated point cloud")
+    plt.xlabel("x [m]")
+    plt.ylabel("y [m]")
+    plt.title("ICP algorithm")
+    #plt.ylim(1.75, 2.05)
+    #plt.xlim(1.75, 2.05)
+    #plt.ylim(-0.02, 0.25)
+    #plt.xlim(-0.02, 0.25)
+    #plt.ylim(-1, 3)
+    #plt.xlim(-1, 4)
+    plt.ylim(-0.1, 0.2)
+    plt.xlim(1.6, 2.8)
+    #plt.axis("equal")
+    plt.legend()
+    plt.grid()
+    #plt.savefig("icp_test_stat_5.pdf", format="pdf")
+    plt.show()
+    
+def plot_rec_data():
 
+    Data = read_txt_file("../../build/rec_data.txt", 3)
+
+    Map = read_txt_file("../../build/icp1_data.txt", 2)
+    
+    plt.plot(Map[0], Map[1], label="Map")
+    plt.plot(Data[0], Data[1], 'ro', label="rec_data")
+    plt.xlabel("x [m]")
+    plt.ylabel("y [m]")
+    plt.title("rec")
+    plt.ylim(-0.1, 2.1)
+    plt.xlim(-0.1, 3.1)
+    #plt.axis("equal")
+    plt.legend()
+    plt.grid()
+    #plt.savefig("mp_data2.pdf", format="pdf")
+    plt.show()
+    
+"""
 plot_rpl_data()
 plot_op_data()
 plot_rec_data()
 #plot_mp_data()
+"""
+plot_icp_data()
+plot_rec_data()

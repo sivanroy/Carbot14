@@ -70,6 +70,9 @@ typedef struct ctrlStruct
     FILE *rpl_data;
     FILE *op_data;
     FILE *rec_data;
+    FILE *icp1_data;
+    FILE *icp2_data;
+    FILE *icp3_data;
 
 } ctrlStruct;
 

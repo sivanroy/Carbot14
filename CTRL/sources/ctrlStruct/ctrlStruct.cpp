@@ -71,6 +71,15 @@ ctrlStruct* cvs_init()
     cvs->rec_data = fopen("rec_data.txt", "w");
     if (cvs->rec_data == NULL) printf("Enable to open file rec_data.txt\n");
 
+    cvs->icp1_data = fopen("icp1_data.txt", "w");
+    if (cvs->icp1_data == NULL) printf("Enable to open file icp1_data.txt\n");
+
+    cvs->icp2_data = fopen("icp2_data.txt", "w");
+    if (cvs->icp2_data == NULL) printf("Enable to open file icp2_data.txt\n");
+
+    cvs->icp3_data = fopen("icp3_data.txt", "w");
+    if (cvs->icp3_data == NULL) printf("Enable to open file icp3_data.txt\n");
+
     return cvs;
 }
 
@@ -98,6 +107,9 @@ void cvs_free(ctrlStruct *cvs)
     fclose(cvs->rpl_data);
     fclose(cvs->op_data);
     fclose(cvs->rec_data);
+    fclose(cvs->icp1_data);
+    fclose(cvs->icp2_data);
+    fclose(cvs->icp3_data);
 
     free(cvs);
 }

@@ -13,6 +13,7 @@ void mt_init(mThreadsStruct *mt)
     pthread_mutex_init(&(mt->mutex_op), NULL);
     pthread_mutex_init(&(mt->mutex_mp), NULL);
     pthread_mutex_init(&(mt->mutex_rpl), NULL);
+    pthread_mutex_init(&(mt->mutex_rec), NULL);
 
     mt->thread_main_end = 0;
 }
@@ -84,6 +85,7 @@ void *ctrl_op(void *arg)
     oppPosition *op = cvs->op;
     mThreadsStruct *mt = cvs->mt;
     teensyStruct *teensy = cvs->teensy;
+    reCalibStruct *rec = cvs->rec;
     double dt = inputs->dt;
 
     while (mt->thread_main_end == 0) {
@@ -109,10 +111,20 @@ void *ctrl_rec(void *arg)
     oppPosition *op = cvs->op;
     mThreadsStruct *mt = cvs->mt;
     teensyStruct *teensy = cvs->teensy;
+    reCalibStruct *rec = cvs->rec;
     double dt = inputs->dt;
 
+    IcpPointToPlane icp(rec->map_p,rec->M,2);
+    icp.setMaxIterations(rec->max_iter);
+    icp.setMinDeltaParam(rec->min_delta);
+
+    int flag;
     while (mt->thread_main_end == 0) {
-        rec_ICP(cvs);
+
+        pthread_mutex_lock(&(mt->mutex_rec));
+        flag = rec->rec_flag;
+        pthread_mutex_unlock(&(mt->mutex_rec));
+        if (flag) rec_ICP(cvs, &icp);
         //printf("ctrl_rec\n");
     }
 
@@ -135,6 +147,10 @@ int mutex_destroy(ctrlStruct *cvs)
     }
     if (pthread_mutex_destroy(&(mt->mutex_rpl)) != 0) {
         perror("pthread_mutex_destroy(&(mt->mutex_rpl)) failed\n");
+        err = 1;
+    }
+    if (pthread_mutex_destroy(&(mt->mutex_rec)) != 0) {
+        perror("pthread_mutex_destroy(&(mt->mutex_rec)) failed\n");
         err = 1;
     }
     if (err) return -1;

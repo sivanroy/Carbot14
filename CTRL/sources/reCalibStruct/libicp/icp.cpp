@@ -23,7 +23,7 @@ Street, Fifth Floor, Boston, MA 02110-1301, USA
 using namespace std;
 
 Icp::Icp (double *M,const int32_t M_num,const int32_t dim) :
-  dim(dim), max_iter(200), min_delta(1e-4) {
+  dim(dim), max_iter(100), min_delta(1e-3) {
   
   // check for correct dimensionality
   if (dim!=2 && dim!=3) {
@@ -76,6 +76,7 @@ void Icp::fit (double *T,const int32_t T_num,Matrix &R,Matrix &t,const double in
       active.push_back(i);
   } else {
     active = getInliers(T,T_num,R,t,indist);
+
   }
   
   // run icp
@@ -87,9 +88,17 @@ void Icp::fitIterate(double *T,const int32_t T_num,Matrix &R,Matrix &t,const std
   // check if we have at least 5 active points
   if (active.size()<5)
     return;
-  
+
+  printf("start fitStep loop : max_iter = %d\n", max_iter);
   // iterate until convergence
-  for (int32_t iter=0; iter<max_iter; iter++)
-    if (fitStep(T,T_num,R,t,active)<min_delta)
-      break;
+  for (int32_t iter=0; iter<max_iter; iter++) {//max_iter
+      if (iter == 100) printf("iter = 100\n");
+      double r = fitStep(T,T_num,R,t,active);
+      if (r < min_delta) { //min_delta
+          printf("r = %f | iter : %d\n", r, iter);
+          break;
+      }
+  }
+
+
 }
