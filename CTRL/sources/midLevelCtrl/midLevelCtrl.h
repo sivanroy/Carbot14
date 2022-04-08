@@ -16,6 +16,8 @@ typedef struct midLevelCtrl
     double d_mes; ///< measured distance
     double th_ref; ///< theta of reference
     double th_mes; ///< measured theta
+    double sigma;
+    double max_th;
 
     double Kp_d; ///< proportional constant of the PI 'd' controller
     double Ki_d; ///< integral constant of the PI 'd' controller
@@ -36,6 +38,6 @@ typedef struct midLevelCtrl
 
 void init_midLevelCtrl(midLevelCtrl *mlc);
 void set_d_th_ref_mes(ctrlStruct *cvs, double x_g, double y_g);
-void set_speed_ref(ctrlStruct *cvs, double x_g, double y_g);
+void set_speed_ref(ctrlStruct *cvs, double x_g, double y_g, int goForward = 1);
 
 #endif // end of header guard

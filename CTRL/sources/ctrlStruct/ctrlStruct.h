@@ -26,6 +26,12 @@
 #include "../teensyStruct/teensyStruct.h"
 #include "../multiThreads/multiThreads.h"
 #include "../reCalibStruct/reCalibStruct.h"
+#include "../FSMs/strategy.h"
+#include "../FSMs/FSMs_utils.h"
+#include "../FSMs/statuetteAndShed.h"
+#include "../FSMs/posePallets.h"
+#include "../FSMs/excavationSquare.h"
+#include "../FSMs/distributeur.h"
 
 
 typedef struct ctrlStruct ctrlStruct;
@@ -44,6 +50,12 @@ typedef struct midLevelCtrl midLevelCtrl;
 typedef struct mThreadsStruct mThreadsStruct;
 typedef struct reCalibStruct reCalibStruct;
 
+typedef struct strategy_FSM strategy_FSM;
+typedef struct statAndShed statAndShed;
+typedef struct posePallets posePallets;
+typedef struct excSquares excSquares;
+typedef struct distributeurs distributeurs;
+
 
 typedef struct ctrlStruct
 {
@@ -55,8 +67,14 @@ typedef struct ctrlStruct
     midLevelCtrlPF *mlcPF; ///< middle-level controller of the Potential Field method
     highLevelCtrlPF *hlcPF;
     obstacles *obs;
-    pushShed *pshed;
     midLevelCtrl *mlc;
+
+    strategy_FSM *stratFSM;
+    pushShed *pshed;
+    statAndShed *saShed;
+    distributeurs *distr;
+    excSquares *excSq;
+    posePallets *pPallets;
 
     rplStruct *rpl;
     oppPosition *op;
@@ -73,6 +91,7 @@ typedef struct ctrlStruct
     FILE *icp1_data;
     FILE *icp2_data;
     FILE *icp3_data;
+    FILE *tau_data;
 
 } ctrlStruct;
 

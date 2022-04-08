@@ -4,9 +4,9 @@
 
 #include "../ctrlStruct/ctrlStruct.h"
 
-
 enum {S0_ps,Dpmt1_ps,Dpmt2_ps,servoShedOut,servoShedIn,Rotate1_ps,
-	Close_ps,Dpmt3_ps,Dpmt4_ps,Dpmt5_ps,Dpmt6_ps,Back,GoHome,Push_ps,Ok_ps,NotOk_ps, Dpmt1_es, Close_es};
+    Close_ps,Dpmt3_ps,Dpmt4_ps,Dpmt5_ps,Dpmt6_ps,Back,GoHome,Push_ps,Ok_ps,NotOk_ps, Dpmt1_esquive, Close_esquive};
+
 
 typedef struct pushShed
 {
@@ -17,6 +17,7 @@ typedef struct pushShed
 	double x_goals[10];
 	double y_goals[10];
 	double thetas[10];
+	double forward[10];
 } pushShed;
 
 void pushShed_init(pushShed *pshed);

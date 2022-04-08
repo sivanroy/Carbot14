@@ -339,6 +339,20 @@ def plot_rec_data():
     plt.grid()
     #plt.savefig("mp_data2.pdf", format="pdf")
     plt.show()
+
+def plot_tau_data():
+
+    Data = read_txt_file("../../build/tau_data.txt", 3)
+    plt.plot(Data[0], Data[1], label="speed")
+    plt.plot(Data[0], Data[2], label = "tau")
+    plt.xlabel("t [s]")
+    plt.ylabel("tau [-]")
+    plt.title("tau")
+    #plt.axis("equal")
+    plt.legend()
+    plt.grid()
+    #plt.savefig("mp_data2.pdf", format="pdf")
+    plt.show()
     
 """
 plot_rpl_data()
@@ -348,3 +362,6 @@ plot_rec_data()
 """
 plot_icp_data()
 plot_rec_data()
+
+
+

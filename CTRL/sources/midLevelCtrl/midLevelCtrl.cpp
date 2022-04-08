@@ -17,18 +17,20 @@ void init_midLevelCtrl(midLevelCtrl *mlc)
     mlc->th_ref = 0.0;
     mlc->th_mes = 0.0;
 
-    mlc->Kp_d = 15.0;
+    mlc->Kp_d = 30.0;
+    mlc->sigma = 0.2;
     mlc->Ki_d = 0.0;
     mlc->integral_err_d = 0.0;
+    mlc->max_th = 5;
 
-    mlc->Kp_th = 40.0;
+    mlc->Kp_th = 5.0;
     mlc->Ki_th = 0.0;
     mlc->integral_err_th = 0.0;
 
     mlc->r_sp_ref = 0.0;
     mlc->l_sp_ref = 0.0;
-    mlc->max_sp_ref = 2.5;
-    mlc->min_sp_ref = -2.5;
+    mlc->max_sp_ref = 10;
+    mlc->min_sp_ref = -10;
 
     mlc->reach_goal = 0;
 }
@@ -59,7 +61,7 @@ void set_d_th_ref_mes(ctrlStruct *cvs, double x_g, double y_g)
     if ( sqrt(x_diff*x_diff + y_diff*y_diff) < near_g) mlc->reach_goal = 1;
 }
 
-void set_speed_ref(ctrlStruct *cvs, double x_g, double y_g)
+void set_speed_ref(ctrlStruct *cvs, double x_g, double y_g, int goForward)
 {
     set_d_th_ref_mes(cvs, x_g, y_g);
 
@@ -73,8 +75,14 @@ void set_speed_ref(ctrlStruct *cvs, double x_g, double y_g)
     double d_error = mlc->d_mes - mlc->d_ref;
     double th_error = limit_angle(mlc->th_mes - mlc->th_ref);
 
+    //toCheck
+    if (!goForward){
+        d_error = -d_error;
+        th_error = limit_angle(th_error+M_PI);
+    }
+
     // proportional terms
-    double d_Pout = mlc->Kp_d * d_error;
+    double d_Pout = mlc->Kp_d * d_error * exp(-pow(th_error/mlc->sigma, 2));
     double th_Pout = mlc->Kp_th * th_error;
 
     // integral terms
@@ -86,6 +94,12 @@ void set_speed_ref(ctrlStruct *cvs, double x_g, double y_g)
     // calculate total outputs (commands)
     double d_out = d_Pout + d_Iout;
     double th_out = th_Pout + th_Iout;
+
+    if(th_out>0) {
+        th_out = fmin(th_out,mlc->max_th);
+    } else {
+        th_out = -1*fmin(-1*th_out,mlc->max_th);
+    }
 
     // find reference speeds
     double r_sp_ref = d_out - th_out;

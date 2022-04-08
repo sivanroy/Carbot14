@@ -7,8 +7,7 @@
 #include <cmath> //for sqrt
 
 #include "pushShed.h"
-
-
+#include "FSMs_utils.h"
 
 //enum enum {S0_ps,Dpmt1_ps,Dpmt2_ps,Close_ps,Dpmt3_ps,Dpmt4_ps,Dpmt5_ps,Push_ps,Ok_ps,NotOk_ps};
 
@@ -16,20 +15,19 @@ void pushShed_init(pushShed *pshed) {
     pshed->status = S0_ps;
     pshed->output = 0;
     pshed->go = 1;
-    int s = 7;
-    double x_goalsI[s] = {1,2.28,2.2,2.25,2.52,2.7,2.72};
-    double y_goalsI[s] = {0.75,1.51,1.12,0.85,0.52,0.35,1.3};
+
+    int s = 7; //2.28 ;; 1.51
+    double x_goalsI[s] = {2.28,2.2,2.25,2.52,2.7,2.72,1};
+    double y_goalsI[s] = {1.51,1.12,0.85,0.52,0.35,1.3,1.2};
+    double thetasI[s] = {-10,-10,-10,-10,-10,-10,-10}; //s
+    double forwardI[s] = {1,1,1,1,1,1,-1};
     for (int i=0; i<s;i++) {
     	pshed->x_goals[i] = x_goalsI[i];
     	pshed->y_goals[i] = y_goalsI[i];
+        pshed->thetas[i] = thetasI[i];
+        pshed->forward[i] = forwardI[i];
     }
-    s = 1;
-    double thetasI[4] = {-2.6};
-    for (int j=0; j<s;j++){
-    	pshed->thetas[j] = thetasI[j];
-    }
-
-
+    printf("push shed initialized\n");
 }
 
 void pushShed_launch(ctrlStruct *cvs){
@@ -37,82 +35,6 @@ void pushShed_launch(ctrlStruct *cvs){
 	cvs->pshed->status = S0_ps;
 }
 
-void sendFromMainPot(ctrlStruct *cvs,double x_goal,double y_goal){
-	get_d2r_data(cvs);
-    dyn_obs_set(cvs);
-    main_pot_force(cvs,x_goal,y_goal);
-    if(cvs->hlcPF->output) {
-    	motors_stop(cvs);
-    	return;
-    }
-    mlcPF_out(cvs, cvs->hlcPF->v_ref, cvs->hlcPF->theta_ref);
-    set_commands(cvs, cvs->mlcPF->r_sp_ref, cvs->mlcPF->l_sp_ref);
-    send_commands(cvs);
-    set_new_position(cvs);
-}
-
-void sendFromMLC(ctrlStruct *cvs,double x_goal,double y_goal){
-    get_d2r_data(cvs);
-    set_speed_ref(cvs,x_goal,y_goal);
-    if(cvs->mlc->reach_goal){
-        motors_stop(cvs);
-        return;
-    }
-    set_commands(cvs, cvs->mlc->r_sp_ref, cvs->mlc->l_sp_ref);
-    send_commands(cvs);
-    set_new_position(cvs);
-}
-
-
-void sendFromMLCPF(ctrlStruct *cvs,double v_ref, double theta_r){
-    get_d2r_data(cvs); 
-    mlcPF_out(cvs, v_ref, theta_r);
-    set_commands(cvs, cvs->mlcPF->r_sp_ref, cvs->mlcPF->l_sp_ref);
-    send_commands(cvs);
-    set_new_position(cvs);
-}
-
-void esquive_loop(ctrlStruct *cvs) {
-    pushShed *pshed = cvs->pshed;
-    myPosition *mp = cvs->mp;
-    ctrlIn  *inputs = cvs->inputs;
-    highLevelCtrlPF *hlcPF = cvs->hlcPF;
-    midLevelCtrlPF *mlcPF = cvs->mlcPF;
-    midLevelCtrl *mlc = cvs->mlc;
-    teensyStruct *teensy = cvs->teensy;
-
-    double x = mp->x; double y = mp->y;
-    double xg; double yg;
-
-    switch(pshed->status){
-        case S0_ps:{
-            if(pshed->go){
-                pshed->status = Dpmt1_es;
-                printf("go to dp1\n");
-                pshed->go = 0;
-            }
-            break;
-        }
-        case Dpmt1_es:{
-            //printf("D1\n");
-
-            xg = pshed->x_goals[0];
-            yg = pshed->y_goals[0];
-            sendFromMainPot(cvs,xg,yg);
-            if(hlcPF->output){
-                pshed->status = Close_es;
-                printf("Close\n");
-            }
-
-            break;
-        }
-        case Close_es:{
-            pshed->output = 1;
-            //printf("End simu\n");
-            break;
-        }
-    }
-}
 
 void pushShed_loop(ctrlStruct *cvs){
 	pushShed *pshed = cvs->pshed;
@@ -133,35 +55,25 @@ void pushShed_loop(ctrlStruct *cvs){
         		pshed->status = Dpmt1_ps;
         		printf("go to dp1\n");
         		pshed->go = 0;
+                set_goal(cvs,pshed->x_goals[0],pshed->y_goals[0]);
         	}
             break;
 
         case Dpmt1_ps:{
-            xg = pshed->x_goals[0];
-    		yg = pshed->y_goals[0];
-    		sendFromMainPot(cvs,xg,yg);
+    		sendFromHLCPF(cvs,cvs->pshed->forward[0]);
         	if(hlcPF->output){
         		pshed->status = Dpmt2_ps;
-        		printf("go to Rotate1\n");
+                set_goal(cvs,pshed->x_goals[1],pshed->y_goals[1]);
+        		printf("go to Dpmt2_ps\n");
         	}
         	break;
         }
 
-        case Rotate1_ps:{
-            sendFromMLCPF(cvs,0,pshed->thetas[0]);
-            if( abs(limit_angle(pshed->thetas[0] - mp->th)) < 0.1){
-                pshed->status = Dpmt2_ps;
-                printf("got to dpmt2\n");
-            }
-        	break;
-        }
-
         case Dpmt2_ps:{
-    		xg = pshed->x_goals[1];
-    		yg = pshed->y_goals[1];
-    		sendFromMainPot(cvs,xg,yg);
+    		sendFromHLCPF(cvs);
         	if(hlcPF->output){
-        		pshed->status = servoShedOut;
+                pshed->output=1;
+        		//pshed->status = servoShedOut;
         		printf("go to dp3\n");
         	}
         	break;
@@ -180,7 +92,7 @@ void pushShed_loop(ctrlStruct *cvs){
             mlcPF->min_sp_ref = -2.5;
             xg = pshed->x_goals[2];
         	yg = pshed->y_goals[2];
-        	sendFromMainPot(cvs,xg,yg);
+        	sendFromHLCPF(cvs);//,xg,yg);
         	if(hlcPF->output){
         		pshed->status = Dpmt4_ps;
         		printf("go to dp4\n");
@@ -191,7 +103,7 @@ void pushShed_loop(ctrlStruct *cvs){
         case Dpmt4_ps:{
             xg = pshed->x_goals[3];
         	yg = pshed->y_goals[3];
-        	sendFromMainPot(cvs,xg,yg);
+        	sendFromHLCPF(cvs);//,xg,yg);
         	if(hlcPF->output){
         		pshed->status = Dpmt5_ps;
         		motors_stop(cvs);
@@ -202,7 +114,7 @@ void pushShed_loop(ctrlStruct *cvs){
         case Dpmt5_ps:{
             xg = pshed->x_goals[4];
             yg = pshed->y_goals[4];
-            sendFromMainPot(cvs,xg,yg);
+            sendFromHLCPF(cvs);//,xg,yg);
             if(hlcPF->output){
                 pshed->status = servoShedIn;
                 motors_stop(cvs);
@@ -256,7 +168,7 @@ void pushShed_loop(ctrlStruct *cvs){
             mlcPF->min_sp_ref = -5;
             xg = pshed->x_goals[6];
             yg = pshed->y_goals[6];
-            sendFromMainPot(cvs,xg,yg);
+            sendFromHLCPF(cvs);//,xg,yg);
             if(hlcPF->output){
                 pshed->status = Close_ps;
                 motors_stop(cvs);
@@ -283,3 +195,50 @@ void pushShed_loop(ctrlStruct *cvs){
 
 }
 
+
+
+
+
+
+
+/////ESQUIVE LOOP
+
+void esquive_loop(ctrlStruct *cvs) {
+    pushShed *pshed = cvs->pshed;
+    myPosition *mp = cvs->mp;
+    ctrlIn  *inputs = cvs->inputs;
+    highLevelCtrlPF *hlcPF = cvs->hlcPF;
+    midLevelCtrlPF *mlcPF = cvs->mlcPF;
+    midLevelCtrl *mlc = cvs->mlc;
+    teensyStruct *teensy = cvs->teensy;
+
+    double x = mp->x; double y = mp->y;
+    double xg; double yg;
+
+    switch(pshed->status){
+        case S0_ps:{
+            if(pshed->go){
+                pshed->status = Dpmt1_esquive;
+                printf("go to dp1\n");
+                pshed->go = 0;
+                set_goal(cvs,pshed->x_goals[6],pshed->y_goals[6]);
+            }
+            break;
+        }
+        case Dpmt1_esquive:{
+            //printf("D1\n");
+            sendFromHLCPF(cvs);
+            if(hlcPF->output){
+                pshed->status = Close_esquive;
+                printf("Close\n");
+            }
+
+            break;
+        }
+        case Close_esquive:{
+            pshed->output = 1;
+            //printf("End simu\n");
+            break;
+        }
+    }
+}

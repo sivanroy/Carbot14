@@ -116,12 +116,14 @@ double tau_compute(ctrlStruct *cvs) {
 
     double x_opp = cvs->obs->obs_dyn_x;
     double y_opp = cvs->obs->obs_dyn_y;
-
     double d_opp = sqrt(x_opp*x_opp+y_opp*y_opp);
+
     double d = cvs->hlcPF->d;
+    double d_obst = cvs->hlcPF->nearestObst;
 
     double tau_return = 0;
     double d_return = std::min(d,d_opp);
+    //d_return = std::min(d_return,d_obst);
 
     tau_return = a*d_return+b;
 

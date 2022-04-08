@@ -55,6 +55,21 @@ ctrlStruct* cvs_init()
     cvs->teensy = (teensyStruct*) malloc(sizeof(teensyStruct));
     teensy_init(cvs->teensy);
 
+    cvs->stratFSM = (strategy_FSM *) malloc(sizeof(strategy_FSM));
+    strategy_FSM_init(cvs->stratFSM);
+
+    cvs->saShed = (statAndShed*) malloc(sizeof(statAndShed));
+    saShed_init(cvs->saShed);
+
+    cvs->pPallets = (posePallets*) malloc(sizeof(posePallets));
+    pPallets_init(cvs->pPallets);
+
+    cvs->excSq = (excSquares*) malloc(sizeof(excSquares));
+    excSq_init(cvs->excSq);
+
+    cvs->distr = (distributeurs*) malloc(sizeof(distributeurs));
+    distr_init(cvs->distr);
+
     /*!  txt files  */
     cvs->llc_data = fopen("llc_data.txt", "w");
     if (cvs->llc_data == NULL) printf("Enable to open file llc_data.txt\n");
@@ -80,6 +95,9 @@ ctrlStruct* cvs_init()
     cvs->icp3_data = fopen("icp3_data.txt", "w");
     if (cvs->icp3_data == NULL) printf("Enable to open file icp3_data.txt\n");
 
+    cvs->tau_data = fopen("tau_data.txt", "w");
+    if (cvs->tau_data == NULL) printf("Enable to open file tau_data.txt\n");
+
     return cvs;
 }
 
@@ -101,6 +119,11 @@ void cvs_free(ctrlStruct *cvs)
     free(cvs->mt);
     free(cvs->rec);
     free(cvs->teensy);
+    free(cvs->stratFSM);
+    free(cvs->saShed);
+    free(cvs->pPallets);
+    free(cvs->excSq);
+    free(cvs->distr);
 
     fclose(cvs->llc_data);
     fclose(cvs->mp_data);
@@ -110,6 +133,7 @@ void cvs_free(ctrlStruct *cvs)
     fclose(cvs->icp1_data);
     fclose(cvs->icp2_data);
     fclose(cvs->icp3_data);
+    fclose(cvs->tau_data);
 
     free(cvs);
 }
