@@ -46,9 +46,10 @@ int main()
     int pushShedON = 0;
     int pushShed_and_sonar_ON = 0;
     int icp_test = 0;
-    int icpON = 1;
+    int icpON = 0;
     int teensyON = 0;
     int saShedON = 0;
+    int distON = 1;
 
     int mThreadsON = 0;
 
@@ -554,7 +555,7 @@ int main()
     if (saShedON){
         saShed_launch(cvs);
         printf("sasShedON\n");
-        cvs->mp->x = 3-0.14-0.0625;
+        cvs->mp->x = 3-0.14;
         cvs->mp->y = 2-0.53;
         cvs->mp->th = M_PI;
 
@@ -573,6 +574,30 @@ int main()
             usleep(dt * 1000000 - duration.count());
         }
     }
+
+    if (distON) {
+        distr_launch(cvs);
+        printf("distON\n");
+        cvs->mp->x = 3-0.14;
+        cvs->mp->y = 2-0.53;
+        cvs->mp->th = M_PI;
+
+        while(inputs->t < 20){
+            auto start = high_resolution_clock::now();
+
+            distr_loop(cvs);
+            if(saShed->output) {
+                printf("ended with %d\n",saShed->output);
+                motors_stop(cvs);
+                break;
+            }
+            update_time(cvs);
+            auto stop = high_resolution_clock::now();
+            auto duration = duration_cast<microseconds>(stop - start);
+            usleep(dt * 1000000 - duration.count());
+        }
+
+    }
     
 
     if (teensyON) {
@@ -580,10 +605,10 @@ int main()
         int B = 0;
         int C = 0;
         int D = 0;
-        while (inputs->t < 5) {
+        while (inputs->t < 15) {
             auto start = high_resolution_clock::now();
 
-            //teensy_recv(cvs);
+            teensy_recv(cvs);
 
             //printf("switch_F : %d\n", teensy->switch_F);
             if (teensy->switch_F && teensy->switch_F_end == 0) {

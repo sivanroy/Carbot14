@@ -33,6 +33,7 @@ typedef struct midLevelCtrl
     double min_sp_ref; ///< lower bound of the reference speed
 
     int reach_goal; ///< 1 if goal reached, 0 if not
+    double d;
 
 } midLevelCtrl;
 

@@ -123,7 +123,7 @@ double tau_compute(ctrlStruct *cvs) {
 
     double tau_return = 0;
     double d_return = std::min(d,d_opp);
-    //d_return = std::min(d_return,d_obst);
+    d_return = std::min(d_return,d_obst);
 
     tau_return = a*d_return+b;
 

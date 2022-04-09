@@ -8,7 +8,7 @@
 
 
 
-enum {S0_di,Dpmt1_di,servoShedOut_di,Dpmt2_di,Dpmt3_di};
+enum {S0_di,DpmtHLCPF1_di,OpenDis_di,DpmtMLC_di,GetSamples_di,DpmtHLCPFOut_di};
 
 void distr_init(distributeurs *distr){
     distr->status = S0_di;
@@ -16,10 +16,10 @@ void distr_init(distributeurs *distr){
     distr->go = 0;
 
     int s = 3; //2.28 ;; 1.51
-    double x_goalsI[s] = {2.41,1,1};
-    double y_goalsI[s] = {0.21,1,1};
-    double thetasI[s] = {-0.77,-10,-10}; //s
-    double forwardI[s] = {1,-1,-1};
+    double x_goalsI[s] = {2.5,2.8,1};
+    double y_goalsI[s] = {0.75,.75,1};
+    double thetasI[s] = {-M_PI,-10,-10}; //s
+    double forwardI[s] = {-1,0,-1};
     for (int i=0; i<s;i++) {
     	distr->x_goals[i] = x_goalsI[i];
     	distr->y_goals[i] = y_goalsI[i];
@@ -50,51 +50,56 @@ void distr_loop(ctrlStruct *cvs){
     switch(distr->status){
         case S0_di:
         	if(distr->go){
-        		distr->status = Dpmt1_di;
-                set_goal(cvs,distr->x_goals[0],distr->y_goals[0]);
-        		printf("go to dp1\n");
+        		distr->status = DpmtHLCPF1_di;
+                set_goal(cvs,distr->x_goals[0],distr->y_goals[0],distr->thetas[0]);
+        		printf("go to dpHLCPF1\n");
         		distr->go = 0;
                 distr->output = 0;
         	}
             break;
 
-        case Dpmt1_di:{
+        case DpmtHLCPF1_di:{
     		sendFromHLCPF(cvs,cvs->distr->forward[0]);
         	if(hlcPF->output){
-        		distr->status = servoShedOut_di;
+                printf("goto opendis\n");
+        		distr->status = OpenDis_di;
         	}
         	break;
         }
 
-        case servoShedOut_di: {
-            teensy_send(cvs, "A");
+        case OpenDis_di: {
+            teensy_send(cvs, "L");
             inputs->t = inputs->t + 2;
-            usleep(2000000);
-            distr->status = Dpmt2_di;
-            set_goal(cvs,distr->x_goals[1],distr->y_goals[1]);
-            printf("go to Dpmt2_ps\n");
+            distr->status = DpmtMLC_di;
+            printf("go to dpmtmlc\n");
             break;
         }
 
-        case Dpmt2_di:{
-            sendFromHLCPF(cvs,cvs->distr->forward[1]);
-            if(hlcPF->output){
-                distr->status = Dpmt3_di;
+        case DpmtMLC_di:{
+            sendFromMLC(cvs,distr->x_goals[1],distr->y_goals[1],cvs->distr->forward[1]);
+            if(mlc->reach_goal){
+                distr->status = GetSamples_di;
                 set_goal(cvs,distr->x_goals[2],distr->y_goals[2]);
+                printf("go to GetSamples_di\n");
+            }
+            break;
+        }
+
+        case GetSamples_di:{
+            //sendFromHLCPF(cvs,cvs->distr->forward[1]);
+            if(hlcPF->output){
+                distr->status = DpmtHLCPFOut_di;
                 printf("go to Dpmt2_ps\n");
             }
             break;
         }
 
-        case Dpmt3_di:{
-            sendFromHLCPF(cvs,cvs->distr->forward[1]);
-            if(hlcPF->output){
-                distr->status = S0_di;
-                distr->output = 1;
-                printf("go to Dpmt2_ps\n");
-            }
+        case DpmtHLCPFOut_di: {
+            distr->status = S0_di;
+            distr->output = 1;
             break;
         }
+
         default:
             printf("probleme defautl value in FSM\n");
     }

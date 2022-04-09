@@ -8,7 +8,7 @@
 
 
 
-enum {S0_es,Dpmt1_es,servoShedOut_es,Dpmt2_es,Dpmt3_es};
+enum {S0_es,Dpmt1_es,HLC,Dpmt2_es,Dpmt3_es,servoShedOut_es};
 
 void excSq_init(excSquares *excSq){
     excSq->status = S0_ps;

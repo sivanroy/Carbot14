@@ -107,6 +107,7 @@ void get_d2r_data(ctrlStruct *cvs)
     double r_sp_mes_odo = - r_ticks_odo * rpt_odo/dt;
     double l_sp_mes_odo =   l_ticks_odo * rpt_odo/dt;
     double MAX_enc = 40;
+    
     if (r_sp_mes_enc > -MAX_enc && r_sp_mes_enc < MAX_enc) inputs->r_sp_mes_enc = r_sp_mes_enc;
     if (l_sp_mes_enc > -MAX_enc && l_sp_mes_enc < MAX_enc) inputs->l_sp_mes_enc = l_sp_mes_enc;
     if (r_sp_mes_odo > -MAX_enc && r_sp_mes_odo < MAX_enc) inputs->r_sp_mes_odo = r_sp_mes_odo;
