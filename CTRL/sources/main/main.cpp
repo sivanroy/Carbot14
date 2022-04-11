@@ -39,7 +39,7 @@ int main()
     int cmdON = 0;
     int llcON = 0;
     int mlcPF_ON = 0;
-    int mlc_ON = 0;
+    int mlc_ON = 1;
     int rplON = 0;
     int odoCalib = 0;
     int hlcPFON = 0;
@@ -49,7 +49,7 @@ int main()
     int icpON = 0;
     int teensyON = 0;
     int saShedON = 0;
-    int distON = 1;
+    int distON = 0;
 
     int mThreadsON = 0;
 
@@ -393,11 +393,11 @@ int main()
         double x_goal = 2;
         double y_goal = 1.13;
 
-        cvs->mp->x = 3-0.14-0.0625;
+        cvs->mp->x = 3-0.27;
         cvs->mp->y = 1.13;
         cvs->mp->th = M_PI;
 
-        while (inputs->t < 20) {
+        while (inputs->t < 15) {
             auto start = high_resolution_clock::now();
 
             get_d2r_data(cvs); // ctrlIn
@@ -405,7 +405,7 @@ int main()
             printf("r_sp_mes_enc = %f | l_sp_mes_enc = %f\n", inputs->r_sp_mes_enc, inputs->l_sp_mes_enc);
             printf("r_sp_mes_odo = %f | l_sp_mes_odo = %f\n", inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
 
-            set_speed_ref(cvs,x_goal,y_goal,0);
+            set_speed_ref(cvs,x_goal,y_goal,1);
             if(mlc->reach_goal){
                 printf("reached goal\n");
                 break;
@@ -433,7 +433,7 @@ int main()
     if (hlcPFON) {
         double xgoal = cvs->mp->x;double ygoal=cvs->mp->y;
         int forward;double orientation;
-        cvs->mp->x = 3-0.14-0.0625;
+        cvs->mp->x = 3-0.14;
         cvs->mp->y = 1.13;
         cvs->mp->th = M_PI;
 
@@ -441,11 +441,11 @@ int main()
 
 
         printf("begin test hlcPF\n");
-        while (inputs->t < 30) {
+        while (inputs->t < 10) {
             auto start = high_resolution_clock::now();
             double t = inputs->t;
             if (t==0) {
-                xgoal = 1;//2.2;//1.2;
+                xgoal = 2;//2.2;//1.2;
                 ygoal = 1.5;//1.60;
                 forward=1;
                 orientation = -M_PI/2;
@@ -590,8 +590,8 @@ int main()
             auto start = high_resolution_clock::now();
 
             distr_loop(cvs);
-            if(saShed->output) {
-                printf("ended with %d\n",saShed->output);
+            if(cvs->distr->output) {
+                printf("ended with %d\n",cvs->distr->output);
                 motors_stop(cvs);
                 break;
             }

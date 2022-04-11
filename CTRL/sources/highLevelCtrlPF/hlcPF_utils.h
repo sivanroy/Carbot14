@@ -10,7 +10,7 @@
 //#include "highLevelCtrlPF.h"
 
 
-double tau_compute(ctrlStruct *cvs);
+double tau_compute(ctrlStruct *cvs, int noObst = 0);
 int get_partition_map(ctrlStruct *cvs);
 double theat_g_compute(double diffx,double diffy);
 void compute_incr(ctrlStruct *cvs, double th);

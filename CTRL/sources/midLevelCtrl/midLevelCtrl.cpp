@@ -17,11 +17,11 @@ void init_midLevelCtrl(midLevelCtrl *mlc)
     mlc->th_ref = 0.0;
     mlc->th_mes = 0.0;
 
-    mlc->Kp_d = 30.0;
-    mlc->sigma = 10;
+    mlc->Kp_d = 40.0;
+    mlc->sigma = 0.12;
     mlc->Ki_d = 0.0;
     mlc->integral_err_d = 0.0;
-    mlc->max_th = 10;
+    mlc->max_th = 4;
 
     mlc->Kp_th = 5.0;
     mlc->Ki_th = 0.0;
@@ -29,8 +29,8 @@ void init_midLevelCtrl(midLevelCtrl *mlc)
 
     mlc->r_sp_ref = 0.0;
     mlc->l_sp_ref = 0.0;
-    mlc->max_sp_ref = 10;
-    mlc->min_sp_ref = -10;
+    mlc->max_sp_ref = 8;
+    mlc->min_sp_ref = -8;
 
     mlc->reach_goal = 0;
     mlc->d = 0;

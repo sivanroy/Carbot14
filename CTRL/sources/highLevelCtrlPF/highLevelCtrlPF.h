@@ -67,7 +67,7 @@ void calc_RepulsivePotential(ctrlStruct *cvs);
 *              -1 = NO PREF
 * orientation   -10 = No Orientation*/
 void set_goal(ctrlStruct *cvs, double xgoal, double ygoal, double orientation=-10);
-void main_pot_force(ctrlStruct *cvs, double x_goal, double y_goal,int goForward = 1);
-void hlcPF_out(ctrlStruct *cvs, int goForward = 1);
+void main_pot_force(ctrlStruct *cvs, double x_goal, double y_goal,int goForward = 1, int noObst = 0);
+void hlcPF_out(ctrlStruct *cvs, int goForward = 1,int noObst = 0);
 
 #endif // end of header guard

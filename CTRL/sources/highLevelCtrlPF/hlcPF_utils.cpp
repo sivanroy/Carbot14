@@ -16,8 +16,8 @@ int get_partition_map(ctrlStruct *cvs){
     double x, y, th;
     get_pos(cvs, pos);
     th = pos[2];
-    x = pos[0] + hlcPF->x_shift * cos(th);
-    y = pos[1] + hlcPF->x_shift * sin(th);
+    x = pos[0]+ hlcPF->x_shift * cos(th);
+    y = pos[1]+ hlcPF->x_shift * sin(th);
 
     if(x< 1) {
         if(x>y) {
@@ -110,7 +110,7 @@ void compute_incr(ctrlStruct *cvs, double th) {
 
 //make computation to give a tau dependant of the distance to the opponent (ralentit si trop proche de l'ennemi)
 
-double tau_compute(ctrlStruct *cvs) {
+double tau_compute(ctrlStruct *cvs,int noObst) {
     double tau_max = cvs->hlcPF->Tau_max;
     double tau_min = cvs->hlcPF->Tau_min;
     double tau_max_dist = cvs->hlcPF->tau_max_dist;
@@ -128,7 +128,7 @@ double tau_compute(ctrlStruct *cvs) {
 
     double tau_return = 0;
     double d_return = std::min(d,d_opp);
-    d_return = std::min(d_return,d_obst);
+    if (!noObst) d_return = std::min(d_return,d_obst);
 
     tau_return = a*d_return+b;
 

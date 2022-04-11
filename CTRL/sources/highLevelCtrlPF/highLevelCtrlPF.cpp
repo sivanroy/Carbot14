@@ -19,7 +19,7 @@ void hlcPF_init(highLevelCtrlPF *hlcPF) {
     hlcPF->nearestObst = 100; //dist
     //param physique
     hlcPF->x_shift = 0.0625;
-    hlcPF->error = 0.03;//0.03;
+    hlcPF->error = 0.01;//0.03; --> 0.01 limit de stabilité (.015 stable)
     //references
     hlcPF->v_ref = 0.0;
     hlcPF->theta_ref = 0.0;
@@ -41,12 +41,12 @@ void hlcPF_init(highLevelCtrlPF *hlcPF) {
     hlcPF->Rho_opp = 0.4;
     //attractive
     double a = 1;
-    hlcPF->d_limit = 0.1;
+    hlcPF->d_limit = 0.01;
     hlcPF->Alpha = a/hlcPF->d_limit;
     //tau
     hlcPF->Tau_max = 10;
     hlcPF->tau_max_dist = 1.5;
-    hlcPF->Tau_min = .01; //change this !!
+    hlcPF->Tau_min = .005; //change this !!
     hlcPF->tau_min_dist = .01;
     //reorientation
     hlcPF->erreurTh = 0.05;
@@ -69,8 +69,10 @@ void calc_AttractivePotential(ctrlStruct *cvs,double x_goal,double y_goal) {
     double x, y, th;
     get_pos(cvs, pos);
     th = pos[2];
-    x = pos[0] + hlcPF->x_shift * cos(th);
-    y = pos[1] + hlcPF->x_shift * sin(th);
+    x = pos[0];//+ hlcPF->x_shift * cos(th);
+    y = pos[1];//+ hlcPF->x_shift * sin(th);
+
+    double minF = hlcPF->Fmin;
 
     double x1 = x - x_goal;
     double y1 = y - y_goal;
@@ -101,8 +103,8 @@ void calc_RepulsivePotential(ctrlStruct *cvs) {
     double x, y, th;
     get_pos(cvs, pos);
     th = pos[2];
-    x = pos[0] + hlcPF->x_shift * cos(th);
-    y = pos[1] + hlcPF->x_shift * sin(th);
+    x = pos[0]+ hlcPF->x_shift * cos(th);
+    y = pos[1]+ hlcPF->x_shift * sin(th);
 
     double ETHA =  hlcPF->Eta;     //# Scaling factor repulsive potential
     double front_obst = hlcPF->Rho; //# Influence dimension of obstacle
@@ -177,7 +179,7 @@ void calc_RepulsivePotential(ctrlStruct *cvs) {
     hlcPF->F_rep[1] = Fy;
 }
 
-void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal,int goForward,double orientation){
+void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal,int goForward,double orientation, int noObst){
     highLevelCtrlPF *hlcPF = cvs->hlcPF;
     ctrlIn *inputs = cvs->inputs;
     //reset output
@@ -191,17 +193,22 @@ void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal,int goForward,do
         goalToSendY = hlcPF->goal_local_dodge[1];
         //printf("well in local min\n");
     }
+
     double pos[5];
     double x, y, th;
     get_pos(cvs, pos);
     th = pos[2];
-    x = pos[0] + hlcPF->x_shift * cos(th);
-    y = pos[1] + hlcPF->x_shift * sin(th);
+    x = pos[0]+ hlcPF->x_shift * cos(th);
+    y = pos[1]+ hlcPF->x_shift * sin(th);
+
     double minF = hlcPF->Fmin;
     double error = hlcPF->error;
 
     calc_AttractivePotential(cvs,goalToSendX,goalToSendY);
-    calc_RepulsivePotential(cvs);
+    if(!noObst) calc_RepulsivePotential(cvs);
+    else {
+        hlcPF->F_rep[0]=0; hlcPF->F_rep[1] = 0;
+    }
 
     double F_att_x = hlcPF->F_att[0];
     double F_att_y = hlcPF->F_att[1];
@@ -238,7 +245,7 @@ void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal,int goForward,do
     double d = sqrt((x-x_goal)*(x-x_goal) +(y-y_goal)*(y-y_goal));
     //hlcPF->d  = d;
     //printf("d : %f\n", d);
-    double tau = tau_compute(cvs);
+    double tau = tau_compute(cvs,noObst);
 
     double v_x = tau * F_tot_x;
     double v_y = tau * F_tot_y;
@@ -329,10 +336,12 @@ void set_goal(ctrlStruct *cvs, double xgoal, double ygoal, double orientation) {
     hlcPF->flag_min_local = 0;
 }
 
-void hlcPF_out(ctrlStruct *cvs,int goForward) {
+void hlcPF_out(ctrlStruct *cvs,int goForward,int noObst) {
     highLevelCtrlPF *hlcPF = cvs->hlcPF;
     double *goal = hlcPF->goal;
     double orientation = hlcPF->orientation;
+    myPosition *mp = cvs->mp;
+
 
     double pos[5];
     double x, y, th;
@@ -345,7 +354,7 @@ void hlcPF_out(ctrlStruct *cvs,int goForward) {
     double dy = y - goal[1];
     hlcPF->d = sqrt(dx*dx+dy*dy);
     if(!hlcPF->output_main){
-        main_pot_force(cvs,goal[0],goal[1],goForward,orientation);
+        main_pot_force(cvs,goal[0],goal[1],goForward,orientation,noObst);
     } else if(!hlcPF->output) {
         double dth = limit_angle(orientation - th);
         if(orientation==-10){
