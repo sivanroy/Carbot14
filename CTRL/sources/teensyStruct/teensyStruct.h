@@ -33,6 +33,9 @@ typedef struct teensyStruct
     int switch_F;
     int switch_F_end;
 
+    int switch_B;
+    int switch_B_end;
+
 } teensyStruct;
 
 void teensy_init(teensyStruct *teensy);

@@ -74,7 +74,6 @@ int main()
             break;
         }
     }
-
     if (icp_test) {
         // define a 3 dim problem with 10000 model points
         // and 10000 template points:
@@ -149,7 +148,6 @@ int main()
         //free(T);
         printf("free2\n");
     }
-
     if (mThreadsON) {
         threads_start(cvs);
 
@@ -187,7 +185,6 @@ int main()
         threads_end(cvs);
         printf("th_end : end\n");
     }
-
     if (display_position_ON){
         cvs->mp->x = 3-0.14-0.0625;
         cvs->mp->y = 1.13;
@@ -388,7 +385,6 @@ int main()
         printf("r_ticks_enc_tot = %d | l_ticks_enc_tot = %d\n", r_ticks_enc_tot, l_ticks_enc_tot);
         printf("r_ticks_odo_tot = %d | l_ticks_odo_tot = %d\n", r_ticks_odo_tot, l_ticks_odo_tot);
     }
-
     if (mlc_ON){
         double x_goal = 2;
         double y_goal = 1.13;
@@ -429,7 +425,6 @@ int main()
             usleep(dt * 1000000 - duration.count());
         }
     }
-
     if (hlcPFON) {
         double xgoal = cvs->mp->x;double ygoal=cvs->mp->y;
         int forward;double orientation;
@@ -502,7 +497,6 @@ int main()
 
         //threads_end(cvs);
     }
-
     if (pushShedON){
         pushShed_launch(cvs);
         printf("pushShedON\n");
@@ -525,7 +519,6 @@ int main()
             usleep(dt * 1000000 - duration.count());
         }
     }
-
     if (pushShed_and_sonar_ON){
         pushShed_launch(cvs);
         printf("pushShedON\n");
@@ -552,7 +545,6 @@ int main()
             usleep(dt * 1000000 - duration.count());
         }
     }
-
     if (saShedON){
         saShed_launch(cvs);
         printf("sasShedON\n");
@@ -575,9 +567,8 @@ int main()
             usleep(dt * 1000000 - duration.count());
         }
     }
-
     if (distON) {
-        //threads_start(cvs);
+        threads_start(cvs);
 
         distr_launch(cvs);
         printf("distON\n");
@@ -585,7 +576,7 @@ int main()
         cvs->mp->y = 2-0.53;
         cvs->mp->th = M_PI;
 
-        while(inputs->t < 30){
+        while(inputs->t < 15){
             auto start = high_resolution_clock::now();
 
             distr_loop(cvs);
@@ -599,10 +590,11 @@ int main()
             auto duration = duration_cast<microseconds>(stop - start);
             usleep(dt * 1000000 - duration.count());
         }
-        //mt->thread_main_end = 1;
-        //printf("th_end : start\n");
-        //threads_end(cvs);
-        //printf("th_end : end\n");
+        usleep(1000000);
+        mt->thread_main_end = 1;
+        printf("th_end : start\n");
+        threads_end(cvs);
+        printf("th_end : end\n");
 
     }
     
@@ -625,17 +617,23 @@ int main()
                 teensy->switch_F = 0;
                 teensy->switch_F_end = 1;
             }
+            if (teensy->switch_B && teensy->switch_B_end == 0) {
+                //teensy_send(cvs, "5");
+                printf("Switch back ON\n");
+                teensy->switch_B = 0;
+                teensy->switch_B_end = 1;
+            }
             /*
             if (inputs->t >= 5 && B == 0) {
                 teensy_send(cvs, "B");
                 B = 1;
             }
-             */
+
             if (inputs->t >= 2 && C == 0) {
                 teensy_send(cvs, "C");
                 C = 1;
             }
-             /*
+
             if (inputs->t >= 12 && D == 0) {
                 teensy_send(cvs, "D");
                 D = 1;

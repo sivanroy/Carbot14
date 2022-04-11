@@ -25,6 +25,9 @@ void teensy_init(teensyStruct *teensy)
     teensy->switch_F = 0;
     teensy->switch_F_end = 0;
 
+    teensy->switch_B = 0;
+    teensy->switch_B_end = 0;
+
 }
 
 void teensy_send(ctrlStruct *cvs, const char *data)
@@ -43,7 +46,8 @@ void teensy_recv(ctrlStruct *cvs)
     teensyStruct *teensy;
     teensy = cvs->teensy;
 
-    const char *data;
+    const char *data5;
+    const char *data4;
     const char *dataR1;
     const char *dataR2;
     const char *dataR3;
@@ -54,13 +58,18 @@ void teensy_recv(ctrlStruct *cvs)
         teensy->str_recv[n] = 0;
         printf("Received %i bytes: '%s'\n", n, (char *) teensy->str_recv);
 
-        data = "5";
+        data5 = "5";
+        data4 = "4";
         dataR1 = "1";
         dataR2 = "2";
         dataR3 = "3";
-        strcpy(str, data);
+        strcpy(str, data5);
         if (strcmp((char *) teensy->str_recv, (char *) str) == 0) {
             teensy->switch_F = 1;
+        }
+        strcpy(str, data4);
+        if (strcmp((char *) teensy->str_recv, (char *) str) == 0) {
+            teensy->switch_B = 1;
         }
         strcpy(str, dataR1);
         if (strcmp((char *) teensy->str_recv, (char *) str) == 0) {

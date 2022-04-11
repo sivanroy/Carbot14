@@ -25,6 +25,8 @@ typedef struct oppPosition
     double cluster_r;
     double map_margin;
 
+    int no_opp;
+
     int update_flag;
     double w_limit;
 

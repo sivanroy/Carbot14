@@ -20,7 +20,7 @@ void distr_init(distributeurs *distr){
     int s = 4; //2.28 ;; 1.51
     double x_goalsI[s] = {2.5,2.7,2.85};
     double y_goalsI[s] = {0.75,.75,.75};
-    double thetasI[s] = {-M_PI,-M_PI,-10}; //s
+    double thetasI[s] = {-M_PI,-10,-10}; //s
     double forwardI[s] = {-1,0,0,0};
     for (int i=0; i<s;i++) {
     	distr->x_goals[i] = x_goalsI[i];
@@ -41,11 +41,14 @@ void distr_launch(ctrlStruct *cvs){
 void distr_loop(ctrlStruct *cvs){
 	distributeurs *distr = cvs->distr;
     myPosition *mp = cvs->mp;
+    oppPosition *op = cvs->op;
     ctrlIn  *inputs = cvs->inputs;
     highLevelCtrlPF *hlcPF = cvs->hlcPF;
     midLevelCtrlPF *mlcPF = cvs->mlcPF;
     midLevelCtrl *mlc = cvs->mlc;
     teensyStruct *teensy = cvs->teensy;
+    rplStruct *rpl = cvs->rpl;
+    reCalibStruct *rec = cvs->rec;
 
     double x = mp->x; double y = mp->y;
 
@@ -64,22 +67,32 @@ void distr_loop(ctrlStruct *cvs){
         case DpmtHLCPF1_di:{
     		sendFromHLCPF(cvs,cvs->distr->forward[0]);
         	if(hlcPF->output){
-                printf("goto recalibrate_di\n");
+                printf("go to recalibrate_di\n");
+                op->no_opp = 1;
                 distr->status = recalibrate_di;
         	}
         	break;
         }
 
         case recalibrate_di:{
-            distr->status = OpenDis_di;
-            printf("goto OpenDis_di\n");
+            if (rec->rpl_nTurn_set == 0) {
+                rec->rpl_nTurn = rpl->nTurns + 2;
+                rec->rpl_nTurn_set = 1;
+                printf("rec->rpl_nTurn : %d\n", rec->rpl_nTurn);
+            }
+            if (rpl->nTurns == rec->rpl_nTurn) {
+                rec_ON(cvs);
+                rec->rpl_nTurn_set = 0;
+                distr->status = OpenDis_di;
+                printf("go to OpenDis_di\n");
+            }
             break;
         }
 
         case OpenDis_di: {
             teensy_send(cvs, "M");
             //inputs->t = inputs->t + 2;
-            distr->status = rec1_di;
+            distr->status = DpmtMLC1_di;
             //teensy_send(cvs, "L");
             //inputs->t = inputs->t + 2;
             //distr->status = DpmtMLC1_di;
@@ -87,18 +100,13 @@ void distr_loop(ctrlStruct *cvs){
             set_goal(cvs,distr->x_goals[1],distr->y_goals[1],distr->thetas[1]);
             break;
         }
-        case rec1_di:{
-            //usleep(1000000/4);
-            //haaaaa et le temps ??
-            //rec_ON(cvs);
-            distr->status = DpmtMLC1_di;
-        }
 
         case DpmtMLC1_di:{
+            hlcPF->Tau_max = 5;
             //sendFromMLC(cvs,distr->x_goals[1],distr->y_goals[1],cvs->distr->forward[1]);
             sendFromHLCPF(cvs,distr->forward[1],1);
             if(hlcPF->output){
-                distr->status = DpmtMLC2_di;
+                distr->status = DpmtHLCPFOut_di;
                 set_goal(cvs,distr->x_goals[2],distr->y_goals[2],distr->thetas[2]);
                 printf("go to dpmtmlc2\n");
                 //distr->output = 1;
@@ -123,7 +131,7 @@ void distr_loop(ctrlStruct *cvs){
             //sendFromHLCPF(cvs,cvs->distr->forward[1]);
             if(hlcPF->output){
                 distr->status = DpmtHLCPFOut_di;
-                printf("go to Dpmt2_ps\n");
+                printf("go to DpmtOut_ps\n");
             }
             break;
         }

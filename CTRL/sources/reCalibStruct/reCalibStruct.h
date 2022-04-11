@@ -24,6 +24,10 @@
 typedef struct reCalibStruct
 {
     int rec_flag; ///< flag set by the main thread : 1 if reCalib needed, 0 otherwise
+
+    int rpl_nTurn;
+    int rpl_nTurn_set;
+
     double w_limit; ///< omega limit for the reCalibration [rad/s]
 
     int m; ///< size of the rpl point cloud (rpl_p)

@@ -92,7 +92,6 @@ void Icp::fitIterate(double *T,const int32_t T_num,Matrix &R,Matrix &t,const std
   printf("start fitStep loop : max_iter = %d\n", max_iter);
   // iterate until convergence
   for (int32_t iter=0; iter<max_iter; iter++) {//max_iter
-      if (iter == 100) printf("iter = 100\n");
       double r = fitStep(T,T_num,R,t,active);
       if (r < min_delta) { //min_delta
           printf("r = %f | iter : %d\n", r, iter);

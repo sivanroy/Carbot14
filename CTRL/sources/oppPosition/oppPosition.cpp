@@ -13,6 +13,8 @@ void op_init(oppPosition *op)
     op->cluster_r = 0.05;
     op->map_margin = 0.15;
 
+    op->no_opp = 0;
+
     op->update_flag = 0;
     op->w_limit = 0.5;
     op->x_op = -1;
@@ -77,6 +79,13 @@ void get_opp_pos(ctrlStruct *cvs)
         }
     }
     if (size_op == 0) op->n_opp = 0;
+    else if (op->no_opp) {
+        pthread_mutex_lock(&(mt->mutex_op));
+        op->x_op = -1;
+        op->y_op = -1;
+        op->update_flag = 1;
+        pthread_mutex_unlock(&(mt->mutex_op));
+    }
     else {
         double r_cluster = op->cluster_r;
         int counter_cluster[size_op];

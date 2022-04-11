@@ -11,6 +11,10 @@ using namespace std::chrono;
 void rec_init(reCalibStruct *rec)
 {
     rec->rec_flag = 0;
+
+    rec->rpl_nTurn = 0;
+    rec->rpl_nTurn_set = 0;
+
     rec->w_limit = 1;
 
     rec->m = 0;
@@ -124,9 +128,10 @@ int rec_ICP(ctrlStruct *cvs, IcpPointToPlane *icp)
     th = mp->th;
     new_x = rec->R.val[0][0]*x + rec->R.val[0][1]*y + t.val[0][0];
     new_y = rec->R.val[1][0]*x + rec->R.val[1][1]*y + t.val[0][1];
-    new_th = th + asin(rec->R.val[1][0]);
+    new_th = limit_angle(th + asin(rec->R.val[1][0]));
     if ((new_x > 0 + rec->wall_margin && new_x < 3 - rec->wall_margin) &&
         (new_y > 0 + rec->wall_margin && new_y < 2 - rec->wall_margin)) {
+        printf("Recalib pos\n");
         mp->x = new_x;
         mp->y = new_y;
         mp->th = new_th;
