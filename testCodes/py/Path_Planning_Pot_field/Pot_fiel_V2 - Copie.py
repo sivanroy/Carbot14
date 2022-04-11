@@ -18,8 +18,8 @@ d_limit = 0.20      # Composite potential field limit
 ALPHA = 1/d_limit   # Scaling factor attractive potential
 
 
-front_obst = 0.4 # Influence dimension of obstacle
-ETHA = 0.025 #front_obst**A      # Scaling factor repulsive potential
+front_obst = 0.5 # Influence dimension of obstacle
+ETHA = 0.03 #front_obst**A      # Scaling factor repulsive potential
 
 tau = 5
 

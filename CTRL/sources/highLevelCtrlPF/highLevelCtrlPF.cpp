@@ -34,7 +34,7 @@ void hlcPF_init(highLevelCtrlPF *hlcPF) {
     hlcPF->goal[0] = 0;hlcPF->goal[1] = 0;
     hlcPF->orientation = -10;
     //repulsive static
-    hlcPF->Eta = 0.1;//.025 = tout tout juste !!
+    hlcPF->Eta = 0.03; //large = 0.03 et 0.02 = limit //0.1;//.025 = tout tout juste !!
     hlcPF->Rho = 0.5; // 
     //param dyn obstacle
     hlcPF->Eta_opp = 0.025*10;
