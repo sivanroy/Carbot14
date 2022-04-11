@@ -24,10 +24,10 @@ void sendFromHLCPF(ctrlStruct *cvs,int goForward){
     set_new_position(cvs);
 }
 
-void sendFromMLC(ctrlStruct *cvs,double x_goal,double y_goal){
+void sendFromMLC(ctrlStruct *cvs,double x_goal,double y_goal,int forward){
     get_d2r_data(cvs);
     dyn_obs_set(cvs);
-    set_speed_ref(cvs,x_goal,y_goal);
+    set_speed_ref(cvs,x_goal,y_goal,forward);
     if(cvs->mlc->reach_goal){
         motors_stop(cvs);
         return;

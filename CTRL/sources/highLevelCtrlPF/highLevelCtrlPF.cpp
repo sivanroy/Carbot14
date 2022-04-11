@@ -19,8 +19,7 @@ void hlcPF_init(highLevelCtrlPF *hlcPF) {
     hlcPF->nearestObst = 100; //dist
     //param physique
     hlcPF->x_shift = 0.0625;
-    //hlcPF->x_shift = 0.035;
-    hlcPF->error = 0.02;//0.03;
+    hlcPF->error = 0.05;//0.03;
     //references
     hlcPF->v_ref = 0.0;
     hlcPF->theta_ref = 0.0;
@@ -35,22 +34,20 @@ void hlcPF_init(highLevelCtrlPF *hlcPF) {
     hlcPF->goal[0] = 0;hlcPF->goal[1] = 0;
     hlcPF->orientation = -10;
     //repulsive static
-    hlcPF->Eta = 0.2;//.025 = tout tout juste !!
+    hlcPF->Eta = 0.03; //large = 0.03 et 0.02 = limit //0.1;//.025 = tout tout juste !!
     hlcPF->Rho = 0.5; // 
     //param dyn obstacle
     hlcPF->Eta_opp = 0.025*10;
     hlcPF->Rho_opp = 0.4;
-    //hlcPF->Eta_opp = 0.03;
-    //hlcPF->Rho_opp = 0.4;
     //attractive
     double a = 1;
-    hlcPF->d_limit = 0.2;
+    hlcPF->d_limit = 0.1;
     hlcPF->Alpha = a/hlcPF->d_limit;
     //tau
     hlcPF->Tau_max = 10;
     hlcPF->tau_max_dist = 1.5;
-    hlcPF->Tau_min = .1; //change this !!
-    hlcPF->tau_min_dist = .2;
+    hlcPF->Tau_min = .01; //change this !!
+    hlcPF->tau_min_dist = .01;
     //reorientation
     hlcPF->erreurTh = 0.1;
     //local minimum

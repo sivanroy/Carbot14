@@ -6,7 +6,7 @@
 
 void sendFromHLCPF(ctrlStruct *cvs,int goForward=1);
 
-void sendFromMLC(ctrlStruct *cvs,double x_goal,double y_goal);
+void sendFromMLC(ctrlStruct *cvs,double x_goal,double y_goal, int forward = 1);
 
 void sendFromMLCPF(ctrlStruct *cvs,double v_ref, double theta_r);
 

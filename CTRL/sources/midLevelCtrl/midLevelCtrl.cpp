@@ -18,7 +18,7 @@ void init_midLevelCtrl(midLevelCtrl *mlc)
     mlc->th_mes = 0.0;
 
     mlc->Kp_d = 30.0;
-    mlc->sigma = 0.2;
+    mlc->sigma = 0.3;
     mlc->Ki_d = 0.0;
     mlc->integral_err_d = 0.0;
     mlc->max_th = 5;
@@ -33,6 +33,7 @@ void init_midLevelCtrl(midLevelCtrl *mlc)
     mlc->min_sp_ref = -10;
 
     mlc->reach_goal = 0;
+    mlc->d = 0;
 }
 
 void set_d_th_ref_mes(ctrlStruct *cvs, double x_g, double y_g)
@@ -57,8 +58,9 @@ void set_d_th_ref_mes(ctrlStruct *cvs, double x_g, double y_g)
 
     // goal reached ?
     mlc->reach_goal = 0;
-    double near_g = 0.02;
-    if ( sqrt(x_diff*x_diff + y_diff*y_diff) < near_g) mlc->reach_goal = 1;
+    double near_g = 0.005;
+    mlc->d = sqrt(x_diff*x_diff + y_diff*y_diff);
+    if ( mlc->d < near_g) mlc->reach_goal = 1;
 }
 
 void set_speed_ref(ctrlStruct *cvs, double x_g, double y_g, int goForward)
