@@ -10,7 +10,7 @@
 
 
 
-enum {S0_di,DpmtHLCPF1_di,recalibrate_di,OpenDis_di,DpmtMLC1_di,DpmtMLC2_di,GetSamples_di,DpmtHLCPFOut_di};
+enum {S0_di,DpmtHLCPF1_di,recalibrate_di,OpenDis_di,rec1_di,DpmtMLC1_di,DpmtMLC2_di,GetSamples_di,DpmtHLCPFOut_di};
 
 void distr_init(distributeurs *distr){
     distr->status = S0_di;
@@ -18,10 +18,10 @@ void distr_init(distributeurs *distr){
     distr->go = 0;
 
     int s = 4; //2.28 ;; 1.51
-    double x_goalsI[s] = {2.5,2.8,1};
-    double y_goalsI[s] = {0.75-0.0625,.75,1};
-    double thetasI[s] = {-M_PI,-10,-10}; //s
-    double forwardI[s] = {-1,0,-1,0};
+    double x_goalsI[s] = {2.5,2.7,2.85};
+    double y_goalsI[s] = {0.75,.75,.75};
+    double thetasI[s] = {-M_PI,-M_PI,-10}; //s
+    double forwardI[s] = {-1,0,0,0};
     for (int i=0; i<s;i++) {
     	distr->x_goals[i] = x_goalsI[i];
     	distr->y_goals[i] = y_goalsI[i];
@@ -66,7 +66,6 @@ void distr_loop(ctrlStruct *cvs){
         	if(hlcPF->output){
                 printf("goto recalibrate_di\n");
                 distr->status = recalibrate_di;
-                distr->output = 1;
         	}
         	break;
         }
@@ -85,29 +84,35 @@ void distr_loop(ctrlStruct *cvs){
             //inputs->t = inputs->t + 2;
             //distr->status = DpmtMLC1_di;
             printf("go to dpmtmlc\n");
+            set_goal(cvs,distr->x_goals[1],distr->y_goals[1],distr->thetas[1]);
             break;
         }
         case rec1_di:{
-            usleep(1000000/4);
-            rec_ON(cvs);
-            distr->status = DpmtMLC_di;
+            //usleep(1000000/4);
+            //haaaaa et le temps ??
+            //rec_ON(cvs);
+            distr->status = DpmtMLC1_di;
         }
 
         case DpmtMLC1_di:{
-            sendFromMLC(cvs,distr->x_goals[1],distr->y_goals[1],cvs->distr->forward[1]);
-            if(mlc->reach_goal){
+            //sendFromMLC(cvs,distr->x_goals[1],distr->y_goals[1],cvs->distr->forward[1]);
+            sendFromHLCPF(cvs,distr->forward[1],1);
+            if(hlcPF->output){
                 distr->status = DpmtMLC2_di;
-                set_goal(cvs,distr->x_goals[2],distr->y_goals[2]);
+                set_goal(cvs,distr->x_goals[2],distr->y_goals[2],distr->thetas[2]);
                 printf("go to dpmtmlc2\n");
+                //distr->output = 1;
             }
             break;
         }
 
         case DpmtMLC2_di:{
-            sendFromMLC(cvs,distr->x_goals[2],distr->y_goals[2],cvs->distr->forward[2]);
-            if(mlc->reach_goal){
+            //sendFromMLC(cvs,distr->x_goals[2],distr->y_goals[2],cvs->distr->forward[2]);
+            sendFromHLCPF(cvs,distr->forward[2],1);
+            if(hlcPF->output){
                 distr->status = GetSamples_di;
-                set_goal(cvs,distr->x_goals[3],distr->y_goals[3]);
+                //set_goal(cvs,distr->x_goals[3],distr->y_goals[3]);
+                distr->output = 1;
                 printf("go to GetSamples_di\n");
             }
 

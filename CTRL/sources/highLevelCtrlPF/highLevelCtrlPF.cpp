@@ -19,7 +19,7 @@ void hlcPF_init(highLevelCtrlPF *hlcPF) {
     hlcPF->nearestObst = 100; //dist
     //param physique
     hlcPF->x_shift = 0.0625;
-    hlcPF->error = 0.01;//0.03; --> 0.01 limit de stabilité (.015 stable)
+    hlcPF->error = 0.02;//0.03; --> 0.01 limit de stabilité (.015 stable)
     //references
     hlcPF->v_ref = 0.0;
     hlcPF->theta_ref = 0.0;
@@ -46,7 +46,7 @@ void hlcPF_init(highLevelCtrlPF *hlcPF) {
     //tau
     hlcPF->Tau_max = 10;
     hlcPF->tau_max_dist = 1.5;
-    hlcPF->Tau_min = .005; //change this !!
+    hlcPF->Tau_min = .005; 
     hlcPF->tau_min_dist = .01;
     //reorientation
     hlcPF->erreurTh = 0.05;
@@ -363,6 +363,7 @@ void hlcPF_out(ctrlStruct *cvs,int goForward,int noObst) {
         }
         else if(abs(dth) > hlcPF->erreurTh){
             hlcPF->theta_ref = limit_angle(orientation);
+            //printf("in reorientation\n");
         } else {
             hlcPF->output = 1;
             printf("reoriented\n");

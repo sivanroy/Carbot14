@@ -39,7 +39,7 @@ int main()
     int cmdON = 0;
     int llcON = 0;
     int mlcPF_ON = 0;
-    int mlc_ON = 1;
+    int mlc_ON = 0;
     int rplON = 0;
     int odoCalib = 0;
     int hlcPFON = 0;
@@ -49,7 +49,7 @@ int main()
     int icpON = 0;
     int teensyON = 0;
     int saShedON = 0;
-    int distON = 0;
+    int distON = 1;
 
     int mThreadsON = 0;
 
@@ -434,9 +434,8 @@ int main()
         double xgoal = cvs->mp->x;double ygoal=cvs->mp->y;
         int forward;double orientation;
         cvs->mp->x = 3-0.14;
-        cvs->mp->y = 1.13;
+        cvs->mp->y = 2-0.53;
         cvs->mp->th = M_PI;
-
         //threads_start(cvs);
 
 
@@ -445,17 +444,17 @@ int main()
             auto start = high_resolution_clock::now();
             double t = inputs->t;
             if (t==0) {
-                xgoal = 2;//2.2;//1.2;
-                ygoal = 1.5;//1.60;
+                xgoal = 2.2;//2.2;//1.2;
+                ygoal = 0.75;//1.60;
                 forward=1;
-                orientation = -M_PI/2;
+                orientation = -M_PI;
                 set_goal(cvs, xgoal, ygoal, orientation);
                 printf("goal A\n");
             } else if (t>10 & t<10.1) {
                 xgoal = 2.5;
                 ygoal = 1.2;
                 forward =1;
-                orientation = M_PI;
+                orientation = M_PI/2;
                 set_goal(cvs, xgoal, ygoal, orientation);
                 printf("goal B\n");
             } else if (t>20 & t<20.1) {
@@ -578,7 +577,7 @@ int main()
     }
 
     if (distON) {
-        threads_start(cvs);
+        //threads_start(cvs);
 
         distr_launch(cvs);
         printf("distON\n");
@@ -586,7 +585,7 @@ int main()
         cvs->mp->y = 2-0.53;
         cvs->mp->th = M_PI;
 
-        while(inputs->t < 8){
+        while(inputs->t < 30){
             auto start = high_resolution_clock::now();
 
             distr_loop(cvs);
@@ -600,10 +599,10 @@ int main()
             auto duration = duration_cast<microseconds>(stop - start);
             usleep(dt * 1000000 - duration.count());
         }
-        mt->thread_main_end = 1;
-        printf("th_end : start\n");
-        threads_end(cvs);
-        printf("th_end : end\n");
+        //mt->thread_main_end = 1;
+        //printf("th_end : start\n");
+        //threads_end(cvs);
+        //printf("th_end : end\n");
 
     }
     

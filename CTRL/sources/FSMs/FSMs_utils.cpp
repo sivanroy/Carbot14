@@ -8,11 +8,11 @@
 #include "FSMs_utils.h"
 
 
-void sendFromHLCPF(ctrlStruct *cvs,int goForward){
+void sendFromHLCPF(ctrlStruct *cvs,int goForward,int noWall){
 	get_d2r_data(cvs);
     dyn_obs_set(cvs);
 
-    hlcPF_out(cvs,goForward);
+    hlcPF_out(cvs,goForward,noWall);
     if(cvs->hlcPF->output) {
     	motors_stop(cvs);
         printf("stops\n");

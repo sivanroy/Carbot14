@@ -4,7 +4,7 @@
 #include "../ctrlStruct/ctrlStruct.h"
 
 
-void sendFromHLCPF(ctrlStruct *cvs,int goForward=1);
+void sendFromHLCPF(ctrlStruct *cvs,int goForward=1,int noWall= 0);
 
 void sendFromMLC(ctrlStruct *cvs,double x_goal,double y_goal, int forward = 1);
 
