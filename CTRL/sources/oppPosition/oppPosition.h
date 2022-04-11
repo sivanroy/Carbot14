@@ -26,6 +26,8 @@ typedef struct oppPosition
     double map_margin;
 
     int update_flag;
+    double w_limit;
+
     double x_op;
     double y_op;
 

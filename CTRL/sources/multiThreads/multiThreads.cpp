@@ -90,7 +90,7 @@ void *ctrl_op(void *arg)
 
     while (mt->thread_main_end == 0) {
         rpl_grabData(cvs);
-        get_opp_pos(cvs);
+        if (mp->w < op->w_limit) get_opp_pos(cvs);
     }
     return 0;
 }
@@ -118,13 +118,20 @@ void *ctrl_rec(void *arg)
     icp.setMaxIterations(rec->max_iter);
     icp.setMinDeltaParam(rec->min_delta);
 
+    double pos[5];
+    double w, v;
+
     int flag;
     while (mt->thread_main_end == 0) {
+
+
+        get_pos(cvs, pos);
+        w = pos[3]; v = pos[4];
 
         pthread_mutex_lock(&(mt->mutex_rec));
         flag = rec->rec_flag;
         pthread_mutex_unlock(&(mt->mutex_rec));
-        if (flag) rec_ICP(cvs, &icp);
+        if (flag && (w < rec->w_limit)) rec_ICP(cvs, &icp);
         //printf("ctrl_rec\n");
     }
 

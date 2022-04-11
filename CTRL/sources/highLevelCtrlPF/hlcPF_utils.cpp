@@ -11,9 +11,14 @@
 int get_partition_map(ctrlStruct *cvs){
     highLevelCtrlPF *hlcPF = cvs->hlcPF;
     myPosition *mp = cvs->mp;
-    double th = mp->th;
-    double x = mp->x + hlcPF->x_shift * cos(th);
-    double y = mp->y + hlcPF->x_shift * sin(th);
+
+    double pos[5];
+    double x, y, th;
+    get_pos(cvs, pos);
+    th = pos[2];
+    x = pos[0] + hlcPF->x_shift * cos(th);
+    y = pos[1] + hlcPF->x_shift * sin(th);
+
     if(x< 1) {
         if(x>y) {
             return 3;

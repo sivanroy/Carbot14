@@ -33,6 +33,9 @@ void mp_init(myPosition *mp)
     mp->x = 0.0;
     mp->y = 0.0;
     mp->th = 0.0;
+
+    mp->v = 0.0;
+    mp->w = 0.0;
 }
 
 void set_new_position(ctrlStruct *cvs)
@@ -40,8 +43,6 @@ void set_new_position(ctrlStruct *cvs)
     ctrlIn  *inputs = cvs->inputs;
     myPosition *mp = cvs->mp;
     mThreadsStruct *mt = cvs->mt;
-
-    fprintf(cvs->mp_data, "%f,%f,%f\n", mp->x, mp->y, mp->th);
 
     // measured angular speed of each odo
     double r_sp_mes = inputs->r_sp_mes_odo;
@@ -55,6 +56,9 @@ void set_new_position(ctrlStruct *cvs)
     double ds = (ds_r + ds_l)/2;
     double dth = (ds_r - ds_l)/mp->b;
 
+    mp->v = ds/mp->dt;
+    mp->w = dth/mp->dt;
+
     // delta position of the robot
     double dx = ds * cos(mp->th + dth/2);
     double dy = ds * sin(mp->th + dth/2);
@@ -64,5 +68,21 @@ void set_new_position(ctrlStruct *cvs)
     mp->x = mp->x + dx;
     mp->y = mp->y + dy;
     mp->th = limit_angle(mp->th + dth);
+    pthread_mutex_unlock(&(mt->mutex_mp));
+
+    fprintf(cvs->mp_data, "%f,%f,%f,%f,%f,%f\n", mp->x, mp->y, mp->th, mp->w, mp->v, inputs->t);
+}
+
+void get_pos(ctrlStruct *cvs, double pos[5])
+{
+    myPosition *mp = cvs->mp;
+    mThreadsStruct *mt = cvs->mt;
+
+    pthread_mutex_lock(&(mt->mutex_mp));
+    pos[0] = mp->x;
+    pos[1] = mp->y;
+    pos[2] = mp->th;
+    pos[3] = mp->w;
+    pos[4] = mp->v;
     pthread_mutex_unlock(&(mt->mutex_mp));
 }

@@ -11,6 +11,7 @@ using namespace std::chrono;
 void rec_init(reCalibStruct *rec)
 {
     rec->rec_flag = 0;
+    rec->w_limit = 1;
 
     rec->m = 0;
     rec->M = 1000;
@@ -53,11 +54,14 @@ void rec_init(reCalibStruct *rec)
     rec->R = Matrix::eye(2);
     rec->max_iter = 10;
     rec->min_delta = 1e-3;
+
+    rec->wall_margin = 0.1;
 }
 
 int rec_ICP(ctrlStruct *cvs, IcpPointToPlane *icp)
 {
     myPosition *mp = cvs->mp;
+    oppPosition *op = cvs->op;
     rplStruct *rpl = cvs->rpl;
     mThreadsStruct *mt = cvs->mt;
     reCalibStruct *rec = cvs->rec;
@@ -70,12 +74,10 @@ int rec_ICP(ctrlStruct *cvs, IcpPointToPlane *icp)
     if (update_flag_rpl == 0) return 0;
     printf("recalib start\n");
 
+    double pos[5];
     double x, y, th;
-    pthread_mutex_lock(&(mt->mutex_mp));
-    x = mp->x;
-    y = mp->y;
-    th = mp->th;
-    pthread_mutex_unlock(&(mt->mutex_mp));
+    get_pos(cvs, pos);
+    x = pos[0]; y = pos[1]; th = pos[2];
 
     int i, j;
     int M = rec->M;
@@ -96,7 +98,7 @@ int rec_ICP(ctrlStruct *cvs, IcpPointToPlane *icp)
         pt_or = th - a;
         pt_x = (x + e * cos(th)) + (d * cos(pt_or));//
         pt_y = (y + e * sin(th)) + (d * sin(pt_or));//
-        if (!not_wall(cvs, pt_x, pt_y)) {
+        if (!not_wall(cvs, pt_x, pt_y)) { //!not_wall(cvs, pt_x, pt_y)
             rec->rpl_p[2*rec->m]     = pt_x;
             rec->rpl_p[2*rec->m + 1] = pt_y;
             rec->m++;
@@ -115,9 +117,22 @@ int rec_ICP(ctrlStruct *cvs, IcpPointToPlane *icp)
     auto duration = duration_cast<microseconds>(stop - start);
     printf("rec : duration.count() = %lld us\n-------------\n", duration.count());
 
-    double new_x = rec->R.val[0][0]*x + rec->R.val[0][1]*y + t.val[0][0];
-    double new_y = rec->R.val[1][0]*x + rec->R.val[1][1]*y + t.val[0][1];
-    double new_th = th + asin(rec->R.val[1][0]);
+    double new_x, new_y, new_th;
+    pthread_mutex_lock(&(mt->mutex_mp));
+    x = mp->x;
+    y = mp->y;
+    th = mp->th;
+    new_x = rec->R.val[0][0]*x + rec->R.val[0][1]*y + t.val[0][0];
+    new_y = rec->R.val[1][0]*x + rec->R.val[1][1]*y + t.val[0][1];
+    new_th = th + asin(rec->R.val[1][0]);
+    if ((new_x > 0 + rec->wall_margin && new_x < 3 - rec->wall_margin) &&
+        (new_y > 0 + rec->wall_margin && new_y < 2 - rec->wall_margin)) {
+        mp->x = new_x;
+        mp->y = new_y;
+        mp->th = new_th;
+    }
+    pthread_mutex_unlock(&(mt->mutex_mp));
+
     fprintf(cvs->rec_data, "%f,%f,%f\n", new_x, new_y, new_th);
     printf("tx = %f | ty = %f |  ", t.val[0][0], t.val[0][1]);
     printf("R00 = %f | R01 = %f\n", rec->R.val[0][0], rec->R.val[0][1]);
@@ -136,22 +151,15 @@ int rec_ICP(ctrlStruct *cvs, IcpPointToPlane *icp)
     rec->rec_flag = 0;
     pthread_mutex_unlock(&(mt->mutex_rec));
 
-    /*
-    double closestPoints[m];
-
-    int closest_point_i;
-    double min_dist, dist;
-    for (i = 0; i < m; i++) {
-        min_dist = 99999;
-        for (j = 0; j < M; j++) {
-            dist = sqrt(pow(rec->rpl_p[0][i] - rec->map_p[0][j], 2) + pow(rec->rpl_p[1][i] - rec->map_p[1][j], 2));
-            if (dist < min_dist) {
-                min_dist = dist;
-                closest_point_i = j;
-            }
-        }
-        closestPoints[i] = j;
-    }
-    */
     return 1;
+}
+
+void rec_ON(ctrlStruct *cvs)
+{
+    mThreadsStruct *mt = cvs->mt;
+    reCalibStruct *rec = cvs->rec;
+
+    pthread_mutex_lock(&(mt->mutex_rec));
+    if (rec->rec_flag == 0) rec->rec_flag = 1;
+    pthread_mutex_unlock(&(mt->mutex_rec));
 }

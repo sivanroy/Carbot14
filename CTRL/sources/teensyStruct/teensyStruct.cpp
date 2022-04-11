@@ -44,6 +44,9 @@ void teensy_recv(ctrlStruct *cvs)
     teensy = cvs->teensy;
 
     const char *data;
+    const char *dataR1;
+    const char *dataR2;
+    const char *dataR3;
     char str[BUF_SIZE];
 
     int n = RS232_PollComport(teensy->port, teensy->str_recv, (int) BUF_SIZE);
@@ -52,9 +55,24 @@ void teensy_recv(ctrlStruct *cvs)
         printf("Received %i bytes: '%s'\n", n, (char *) teensy->str_recv);
 
         data = "5";
+        dataR1 = "1";
+        dataR2 = "2";
+        dataR3 = "3";
         strcpy(str, data);
         if (strcmp((char *) teensy->str_recv, (char *) str) == 0) {
             teensy->switch_F = 1;
+        }
+        strcpy(str, dataR1);
+        if (strcmp((char *) teensy->str_recv, (char *) str) == 0) {
+            printf("-----------------  R1  -----------------\n");
+        }
+        strcpy(str, dataR2);
+        if (strcmp((char *) teensy->str_recv, (char *) str) == 0) {
+            printf("-----------------  R2  -----------------\n");
+        }
+        strcpy(str, dataR3);
+        if (strcmp((char *) teensy->str_recv, (char *) str) == 0) {
+            printf("-----------------  R3  -----------------\n");
         }
     }
 }

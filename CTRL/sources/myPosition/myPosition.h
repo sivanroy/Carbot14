@@ -24,10 +24,14 @@ typedef struct myPosition
     double y; ///< position y
     double th; ///< orientation theta
 
+    double v; ///< linear speed of the robot
+    double w; ///< angular speed of the robot
+
 } myPosition;
 
 void mp_init(myPosition *mp);
 void set_new_position(ctrlStruct *cvs);
+void get_pos(ctrlStruct *cvs, double pos[5]);
 double limit_angle(double th);
 
 #endif

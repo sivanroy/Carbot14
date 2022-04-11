@@ -68,9 +68,12 @@ void calc_AttractivePotential(ctrlStruct *cvs,double x_goal,double y_goal) {
     double ALPHA   = hlcPF->Alpha ;
     double d_limit = hlcPF->d_limit  ;
 
-    double th = mp->th;
-    double x = mp->x + hlcPF->x_shift * cos(th);
-    double y = mp->y + hlcPF->x_shift * sin(th);
+    double pos[5];
+    double x, y, th;
+    get_pos(cvs, pos);
+    th = pos[2];
+    x = pos[0] + hlcPF->x_shift * cos(th);
+    y = pos[1] + hlcPF->x_shift * sin(th);
 
     double x1 = x - x_goal;
     double y1 = y - y_goal;
@@ -97,9 +100,12 @@ void calc_RepulsivePotential(ctrlStruct *cvs) {
     obstacles *obs = cvs->obs;
     myPosition *mp = cvs->mp;
 
-    double th = mp->th;
-    double x = mp->x + hlcPF->x_shift * cos(th);
-    double y = mp->y + hlcPF->x_shift * sin(th);
+    double pos[5];
+    double x, y, th;
+    get_pos(cvs, pos);
+    th = pos[2];
+    x = pos[0] + hlcPF->x_shift * cos(th);
+    y = pos[1] + hlcPF->x_shift * sin(th);
 
     double ETHA =  hlcPF->Eta;     //# Scaling factor repulsive potential
     double front_obst = hlcPF->Rho; //# Influence dimension of obstacle
@@ -188,9 +194,12 @@ void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal,int goForward,do
         goalToSendY = hlcPF->goal_local_dodge[1];
         //printf("well in local min\n");
     }
-    double th = mp->th;
-    double x = mp->x + hlcPF->x_shift * cos(th);
-    double y = mp->y + hlcPF->x_shift * sin(th);
+    double pos[5];
+    double x, y, th;
+    get_pos(cvs, pos);
+    th = pos[2];
+    x = pos[0] + hlcPF->x_shift * cos(th);
+    y = pos[1] + hlcPF->x_shift * sin(th);
     double minF = hlcPF->Fmin;
     double error = hlcPF->error;
 
@@ -327,13 +336,21 @@ void hlcPF_out(ctrlStruct *cvs,int goForward) {
     highLevelCtrlPF *hlcPF = cvs->hlcPF;
     double *goal = hlcPF->goal;
     double orientation = hlcPF->orientation;
-    double dx = cvs->mp->x - goal[0];
-    double dy = cvs->mp->y - goal[1];
+
+    double pos[5];
+    double x, y, th;
+    get_pos(cvs, pos);
+    th = pos[2];
+    x = pos[0]+ hlcPF->x_shift * cos(th);
+    y = pos[1]+ hlcPF->x_shift * sin(th);
+
+    double dx = x - goal[0];
+    double dy = y - goal[1];
     hlcPF->d = sqrt(dx*dx+dy*dy);
     if(!hlcPF->output_main){
         main_pot_force(cvs,goal[0],goal[1],goForward,orientation);
     } else if(!hlcPF->output) {
-        double dth = limit_angle(orientation-cvs->mp->th);
+        double dth = limit_angle(orientation - th);
         if(orientation==-10){
             hlcPF->output = 1;
             printf("No re-orientation\n");

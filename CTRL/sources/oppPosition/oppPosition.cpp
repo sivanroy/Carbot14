@@ -14,6 +14,7 @@ void op_init(oppPosition *op)
     op->map_margin = 0.11;
 
     op->update_flag = 0;
+    op->w_limit = 3;
     op->x_op = -1;
     op->y_op = -1;
 }
@@ -43,12 +44,10 @@ void get_opp_pos(ctrlStruct *cvs)
     int size = rpl->data_size;
     double map_margin = op->map_margin;
 
+    double pos[5];
     double x, y, th;
-    pthread_mutex_lock(&(mt->mutex_mp));
-    x = mp->x;
-    y = mp->y;
-    th = mp->th;
-    pthread_mutex_unlock(&(mt->mutex_mp));
+    get_pos(cvs, pos);
+    x = pos[0]; y = pos[1]; th = pos[2];
 
     double e = rpl->e; // distance between center of wheels and center of rplidar
 

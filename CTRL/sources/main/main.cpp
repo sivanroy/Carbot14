@@ -46,11 +46,11 @@ int main()
     int pushShedON = 0;
     int pushShed_and_sonar_ON = 0;
     int icp_test = 0;
-    int icpON = 1;
+    int icpON = 0;
     int teensyON = 0;
     int saShedON = 0;
 
-    int mThreadsON = 0;
+    int mThreadsON = 1;
 
     if (icpON) {
         cvs->mp->x = 3-0.14;//2.00;//3-0.14;
@@ -67,9 +67,10 @@ int main()
             fprintf(cvs->icp1_data, "%f,%f\n", rec->map_p[i], rec->map_p[i+1]);
         }
         printf("M = %d\n", rec->M);
-        while (rpl->nTurns < 10) {
+        while (rpl->nTurns < 3) {
             rpl_grabData(cvs);
             rec_ICP(cvs, &icp);
+            break;
         }
     }
 
@@ -152,23 +153,24 @@ int main()
         threads_start(cvs);
 
         pushShed_launch(cvs);
-        cvs->mp->x = 3-0.14;//3-0.14;
-        cvs->mp->y = 1.13;//0.45;//2-0.53;
-        cvs->mp->th = M_PI;//0;//M_PI;
+        cvs->mp->x = 3-0.94;//3-0.14;
+        cvs->mp->y = 0.795+0.125;//1.13;//0.45;//2-0.53;
+        cvs->mp->th = 0;//0;//M_PI;
 
-        double t_end = 10;
+        double i_time = 0.55;
+        double c_time = 1;
+        double t_end = 1;
         while (inputs->t < t_end) {
 
             auto start = high_resolution_clock::now();
 
-            //printf("-------------\nmain loop\n");
+            //printf("-------------\main loop\n");
             esquive_loop(cvs);
             //dyn_obs_set(cvs);
 
-            if (inputs->t > t_end - 2) {
-                pthread_mutex_lock(&(mt->mutex_rec));
-                if (rec->rec_flag == 0) rec->rec_flag = 1;
-                pthread_mutex_unlock(&(mt->mutex_rec));
+            if (inputs->t > i_time*c_time) {
+                rec_ON(cvs);
+                c_time++;
             }
             update_time(cvs);
             auto stop = high_resolution_clock::now();
@@ -580,10 +582,11 @@ int main()
         int B = 0;
         int C = 0;
         int D = 0;
-        while (inputs->t < 5) {
+        int K = 0;
+        while (inputs->t < 8) {
             auto start = high_resolution_clock::now();
 
-            //teensy_recv(cvs);
+            teensy_recv(cvs);
 
             //printf("switch_F : %d\n", teensy->switch_F);
             if (teensy->switch_F && teensy->switch_F_end == 0) {
@@ -591,21 +594,18 @@ int main()
                 teensy->switch_F = 0;
                 teensy->switch_F_end = 1;
             }
-
-            if (inputs->t >= 2 && A == 0) {
-                teensy_send(cvs, "A");
-                A = 1;
-            }
             /*
-            if (inputs->t >= 3 && B == 0) {
+            if (inputs->t >= 5 && B == 0) {
                 teensy_send(cvs, "B");
                 B = 1;
             }
-            if (inputs->t >= 5 && C == 0) {
+             */
+            if (inputs->t >= 2 && C == 0) {
                 teensy_send(cvs, "C");
                 C = 1;
             }
-            if (inputs->t >= 7 && D == 0) {
+             /*
+            if (inputs->t >= 12 && D == 0) {
                 teensy_send(cvs, "D");
                 D = 1;
             }
