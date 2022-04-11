@@ -283,7 +283,7 @@ def plot_mp_data():
     Map = read_txt_file("../../build/icp1_data.txt", 2)
     
     plt.plot(Map[0], Map[1], label="Map")
-    plt.plot(Data[0], Data[1], 'ro', label="mp_data")
+    plt.plot(Data[0], Data[1], 'ro', label="mp_data", markersize = 1)
     plt.xlabel("x [m]")
     plt.ylabel("y [m]")
     plt.title("mp")
@@ -411,6 +411,6 @@ plot_op_data()
 plot_icp_data()
 plot_rec_data()
 
-plot_rpl_corr()
+#plot_rpl_corr()
 
 

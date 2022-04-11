@@ -19,7 +19,7 @@ void hlcPF_init(highLevelCtrlPF *hlcPF) {
     hlcPF->nearestObst = 100; //dist
     //param physique
     hlcPF->x_shift = 0.0625;
-    hlcPF->error = 0.05;//0.03;
+    hlcPF->error = 0.03;//0.03;
     //references
     hlcPF->v_ref = 0.0;
     hlcPF->theta_ref = 0.0;
@@ -49,7 +49,7 @@ void hlcPF_init(highLevelCtrlPF *hlcPF) {
     hlcPF->Tau_min = .01; //change this !!
     hlcPF->tau_min_dist = .01;
     //reorientation
-    hlcPF->erreurTh = 0.1;
+    hlcPF->erreurTh = 0.05;
     //local minimum
     hlcPF->Fmin = 0.0000002;//0.03;
     hlcPF->flag_min_local = 0;
@@ -338,8 +338,8 @@ void hlcPF_out(ctrlStruct *cvs,int goForward) {
     double x, y, th;
     get_pos(cvs, pos);
     th = pos[2];
-    x = pos[0]+ hlcPF->x_shift * cos(th);
-    y = pos[1]+ hlcPF->x_shift * sin(th);
+    x = pos[0];// + hlcPF->x_shift * cos(th);
+    y = pos[1];// + hlcPF->x_shift * sin(th);
 
     double dx = x - goal[0];
     double dy = y - goal[1];

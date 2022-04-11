@@ -16,13 +16,13 @@ void rec_init(reCalibStruct *rec)
     rec->m = 0;
     rec->M = 1000;
 
-    double map_ref_pts[2][15] = {{0, 0, 0.45, 0.45, 1.17, 1.17, 1.83, 1.83, 2.55, 2.55, 3, 3, 2.49, 0.51, 0},
-                            {0.51, 2, 2, 1.97, 1.97, 2, 2, 1.97, 1.97, 2, 2, 0.51, 0, 0, 0.51}};
-    double d_line[15];
+    double map_ref_pts[2][31] = {{0, 0, 0.055, 0.055, 0, 0, 0.45, 0.45, 1.17, 1.17, 1.275, 1.275, 1.425, 1.425, 1.575, 1.575, 1.725, 1.725, 1.83, 1.83, 2.55, 2.55, 3, 3, 2.945, 2.945, 3, 3, 2.49, 0.51, 0},
+                            {0.51, 0.675, 0.675, 0.825, 0.825, 2, 2, 1.97, 1.97, 2, 2, 1.945, 1.945, 2, 2, 1.945, 1.945, 2, 2, 1.97, 1.97, 2, 2, 0.825, 0.825, 0.675, 0.675, 0.51, 0, 0, 0.51}};
+    double d_line[31];
     double L = 0;
     double x1, x2, y1, y2, dx, dy, d;
     int i, j, n;
-    for (i = 0; i < 14; i++) {
+    for (i = 0; i < 31; i++) {
         x1 = map_ref_pts[0][i];
         x2 = map_ref_pts[0][i+1];
         y1 = map_ref_pts[1][i];
@@ -34,7 +34,7 @@ void rec_init(reCalibStruct *rec)
         d_line[i] = d;
     }
     int k = 0;
-    for (i = 0; i < 14; i++) {
+    for (i = 0; i < 31; i++) {
         n = int(rec->M * d_line[i]/L);
         x1 = map_ref_pts[0][i];
         x2 = map_ref_pts[0][i+1];
@@ -52,7 +52,7 @@ void rec_init(reCalibStruct *rec)
     rec->M = k;
 
     rec->R = Matrix::eye(2);
-    rec->max_iter = 10;
+    rec->max_iter = 20;
     rec->min_delta = 1e-3;
 
     rec->wall_margin = 0.1;

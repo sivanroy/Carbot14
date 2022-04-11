@@ -51,7 +51,7 @@ int main()
     int saShedON = 0;
     int distON = 1;
 
-    int mThreadsON = 1;
+    int mThreadsON = 0;
 
     if (icpON) {
         cvs->mp->x = 3-0.14;//2.00;//3-0.14;
@@ -154,13 +154,13 @@ int main()
         threads_start(cvs);
 
         pushShed_launch(cvs);
-        cvs->mp->x = 3-0.94;//3-0.14;
-        cvs->mp->y = 0.795+0.125;//1.13;//0.45;//2-0.53;
-        cvs->mp->th = 0;//0;//M_PI;
+        cvs->mp->x = 3-0.14;//3-0.94;//3-0.14;
+        cvs->mp->y = 2-0.53;//0.795+0.125;//1.13;//0.45;//2-0.53;
+        cvs->mp->th = M_PI;//0;//M_PI;
 
-        double i_time = 0.55;
+        double i_time = 20;
         double c_time = 1;
-        double t_end = 1;
+        double t_end = 15;
         while (inputs->t < t_end) {
 
             auto start = high_resolution_clock::now();
@@ -578,13 +578,15 @@ int main()
     }
 
     if (distON) {
+        threads_start(cvs);
+
         distr_launch(cvs);
         printf("distON\n");
         cvs->mp->x = 3-0.14;
         cvs->mp->y = 2-0.53;
         cvs->mp->th = M_PI;
 
-        while(inputs->t < 20){
+        while(inputs->t < 8){
             auto start = high_resolution_clock::now();
 
             distr_loop(cvs);
@@ -598,6 +600,10 @@ int main()
             auto duration = duration_cast<microseconds>(stop - start);
             usleep(dt * 1000000 - duration.count());
         }
+        mt->thread_main_end = 1;
+        printf("th_end : start\n");
+        threads_end(cvs);
+        printf("th_end : end\n");
 
     }
     

@@ -18,10 +18,10 @@ void init_midLevelCtrl(midLevelCtrl *mlc)
     mlc->th_mes = 0.0;
 
     mlc->Kp_d = 30.0;
-    mlc->sigma = 0.3;
+    mlc->sigma = 10;
     mlc->Ki_d = 0.0;
     mlc->integral_err_d = 0.0;
-    mlc->max_th = 5;
+    mlc->max_th = 10;
 
     mlc->Kp_th = 5.0;
     mlc->Ki_th = 0.0;

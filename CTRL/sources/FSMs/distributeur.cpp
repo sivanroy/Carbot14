@@ -2,13 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <cmath> //for sqrt
+#include <unistd.h>
+#include <chrono>
 
 #include "distributeur.h"
 #include "FSMs_utils.h"
 
 
 
-enum {S0_di,DpmtHLCPF1_di,OpenDis_di,DpmtMLC_di,GetSamples_di,DpmtHLCPFOut_di};
+enum {S0_di,DpmtHLCPF1_di,OpenDis_di,rec1_di,DpmtMLC_di,GetSamples_di,DpmtHLCPFOut_di};
 
 void distr_init(distributeurs *distr){
     distr->status = S0_di;
@@ -17,7 +19,7 @@ void distr_init(distributeurs *distr){
 
     int s = 3; //2.28 ;; 1.51
     double x_goalsI[s] = {2.5,2.8,1};
-    double y_goalsI[s] = {0.75,.75,1};
+    double y_goalsI[s] = {0.75-0.0625,.75,1};
     double thetasI[s] = {-M_PI,-10,-10}; //s
     double forwardI[s] = {-1,0,-1};
     for (int i=0; i<s;i++) {
@@ -56,6 +58,7 @@ void distr_loop(ctrlStruct *cvs){
         		distr->go = 0;
                 distr->output = 0;
         	}
+        	else motors_stop(cvs);
             break;
 
         case DpmtHLCPF1_di:{
@@ -68,20 +71,27 @@ void distr_loop(ctrlStruct *cvs){
         }
 
         case OpenDis_di: {
-            teensy_send(cvs, "L");
-            inputs->t = inputs->t + 2;
-            distr->status = DpmtMLC_di;
+            teensy_send(cvs, "M");
+            //inputs->t = inputs->t + 2;
+            distr->status = rec1_di;
             printf("go to dpmtmlc\n");
             break;
         }
+        case rec1_di:{
+            usleep(1000000/4);
+            rec_ON(cvs);
+            distr->status = DpmtMLC_di;
+        }
 
         case DpmtMLC_di:{
+
             sendFromMLC(cvs,distr->x_goals[1],distr->y_goals[1],cvs->distr->forward[1]);
             if(mlc->reach_goal){
-                distr->status = GetSamples_di;
+                distr->status = DpmtHLCPFOut_di;
                 set_goal(cvs,distr->x_goals[2],distr->y_goals[2]);
                 printf("go to GetSamples_di\n");
             }
+
             break;
         }
 
@@ -97,6 +107,7 @@ void distr_loop(ctrlStruct *cvs){
         case DpmtHLCPFOut_di: {
             distr->status = S0_di;
             distr->output = 1;
+            printf("end loop\n");
             break;
         }
 
