@@ -21,7 +21,7 @@ void init_midLevelCtrl(midLevelCtrl *mlc)
     mlc->sigma = 0.12;
     mlc->Ki_d = 0.0;
     mlc->integral_err_d = 0.0;
-    mlc->max_th = 4;
+    mlc->max_th = 3;
 
     mlc->Kp_th = 5.0;
     mlc->Ki_th = 0.0;
@@ -29,8 +29,8 @@ void init_midLevelCtrl(midLevelCtrl *mlc)
 
     mlc->r_sp_ref = 0.0;
     mlc->l_sp_ref = 0.0;
-    mlc->max_sp_ref = 8;
-    mlc->min_sp_ref = -8;
+    mlc->max_sp_ref = 7;
+    mlc->min_sp_ref = -7;
 
     mlc->reach_goal = 0;
     mlc->d = 0;
@@ -116,6 +116,13 @@ void set_speed_ref(ctrlStruct *cvs, double x_g, double y_g, int goForward)
         mlc->r_sp_ref = 0.0;
         mlc->l_sp_ref = 0.0;
     } else {
+        if(abs(r_sp_ref)>mlc->max_sp_ref | abs(l_sp_ref)>mlc->l_sp_ref) {
+            //int r1 = 1; int l1 = 1;
+            //if(r_sp_ref<0) r1 = -1;
+            //if(l_sp_ref<0) l1 = -1;
+            r_sp_ref = r_sp_ref / fmax(abs(r_sp_ref),abs(l_sp_ref))*mlc->max_sp_ref;
+            l_sp_ref = l_sp_ref / fmax(abs(r_sp_ref),abs(l_sp_ref))*mlc->max_sp_ref;
+        }  
         mlc->r_sp_ref = r_sp_ref;
         mlc->l_sp_ref = l_sp_ref;
     }

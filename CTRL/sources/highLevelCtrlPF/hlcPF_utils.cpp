@@ -108,6 +108,43 @@ void compute_incr(ctrlStruct *cvs, double th) {
     cvs->hlcPF->dodge_incr = toincr;
 }
 
+
+void set_param_normal(ctrlStruct *cvs){
+    highLevelCtrlPF *hlcPF = cvs->hlcPF;
+    //param physique
+    hlcPF->error = 0.02;//0.03; --> 0.01 limit de stabilité (.015 stable)
+    //attractive
+    double a = 1;
+    hlcPF->d_limit = 0.01;
+    hlcPF->Alpha = a/hlcPF->d_limit;
+    //tau
+    hlcPF->Tau_max = 10;
+    hlcPF->tau_max_dist = 1.5;
+    hlcPF->Tau_min = .01; //0.005;
+    hlcPF->tau_min_dist = .01;
+    //reorientation
+    hlcPF->erreurTh = 0.05;
+    //local minimum
+}
+
+void set_param_prec(ctrlStruct *cvs){
+    highLevelCtrlPF *hlcPF = cvs->hlcPF;
+    //param physique
+    hlcPF->error = 0.02;//0.03; --> 0.01 limit de stabilité (.015 stable)
+    //attractive
+    double a = 1;
+    hlcPF->d_limit = 0.01;
+    hlcPF->Alpha = a/hlcPF->d_limit;
+    //tau
+    hlcPF->Tau_max = 4;
+    hlcPF->tau_max_dist = .2;
+    hlcPF->Tau_min = .1; //0.005;
+    hlcPF->tau_min_dist = .01;
+    //reorientation
+    hlcPF->erreurTh = 0.05;
+    //local minimum
+}
+
 //make computation to give a tau dependant of the distance to the opponent (ralentit si trop proche de l'ennemi)
 
 double tau_compute(ctrlStruct *cvs,int noObst) {
@@ -138,3 +175,7 @@ double tau_compute(ctrlStruct *cvs,int noObst) {
     //distance to opponent
     return tau_return;
 }
+
+
+
+

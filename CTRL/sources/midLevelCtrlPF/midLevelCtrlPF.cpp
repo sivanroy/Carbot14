@@ -16,7 +16,7 @@ void mlcPF_init(midLevelCtrlPF *mlcPF)
     mlcPF->R_odo = 0.022;
 
     mlcPF->Kp_th = 8.0;
-    mlcPF->max_th = 4;
+    mlcPF->max_th = 8;
 
     mlcPF->r_sp_ref = 0.0;
     mlcPF->l_sp_ref = 0.0;
@@ -59,6 +59,8 @@ void mlcPF_out(ctrlStruct *cvs, double v_ref, double th_ref)
     double rout = v_out + th_out;
     double lout = v_out - th_out;
 
+
+    //change 100 !!!!!
     if(rout>100 | lout>100) {
         rout/= fmax(abs(rout),abs(lout))*100;
         lout/= fmax(abs(rout),abs(lout))*100;

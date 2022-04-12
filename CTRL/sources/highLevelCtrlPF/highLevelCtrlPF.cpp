@@ -279,7 +279,6 @@ void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal,int goForward,do
         hlcPF->output_main = 1;
         v = 0; theta = 0;
         printf("goal :: x : %f | y: %f\n", x_goal,y_goal);
-        printf("reoriented\n");
     } 
 
     //LOCAL MINIMUM
