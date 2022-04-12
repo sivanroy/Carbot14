@@ -61,9 +61,9 @@ void mlcPF_out(ctrlStruct *cvs, double v_ref, double th_ref)
 
 
     //change 100 !!!!!
-    if(rout>100 | lout>100) {
-        rout/= fmax(abs(rout),abs(lout))*100;
-        lout/= fmax(abs(rout),abs(lout))*100;
+    if(abs(rout)>mlcPF->max_sp_ref | abs(lout)>mlcPF->max_sp_ref) {
+        rout = rout / fmax(abs(rout),abs(lout))*mlcPF->max_sp_ref;
+        lout = lout / fmax(abs(rout),abs(lout))*mlcPF->max_sp_ref;
     }
     
     mlcPF->r_sp_ref = rout;

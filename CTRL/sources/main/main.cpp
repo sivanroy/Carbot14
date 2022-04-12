@@ -439,7 +439,7 @@ int main()
 
 
         printf("begin test hlcPF\n");
-        while (inputs->t < 20) {
+        while (inputs->t < 15) {
             auto start = high_resolution_clock::now();
             double t = inputs->t;
             if (t==0) {
@@ -594,6 +594,7 @@ int main()
                 break;
             }
             fprintf(cvs->llc_data, "%f,%f,%f,%f,%f,%f,%f\n", inputs->t, mlcPF->r_sp_ref, mlcPF->l_sp_ref, inputs->r_sp_mes_enc, inputs->l_sp_mes_enc, inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
+            fprintf(cvs->tau_data, "%f,%f,%f\n", inputs->t, hlcPF->v_ref, tau_compute(cvs));
 
             update_time(cvs);
             auto stop = high_resolution_clock::now();

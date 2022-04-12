@@ -18,7 +18,7 @@ void distr_init(distributeurs *distr){
     distr->go = 0;
 
     int s = 4; //2.28 ;; 1.51
-    double x_goalsI[s] = {2.5,2.75,2.85};
+    double x_goalsI[s] = {2.5,2.75,3};
     double y_goalsI[s] = {0.75,.75,.75};
     double thetasI[s] = {-M_PI,-M_PI,-10}; //s
     double forwardI[s] = {-1,0,0,0};
