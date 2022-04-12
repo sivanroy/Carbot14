@@ -130,7 +130,7 @@ void set_param_normal(ctrlStruct *cvs){
 void set_param_prec(ctrlStruct *cvs){
     highLevelCtrlPF *hlcPF = cvs->hlcPF;
     //param physique
-    hlcPF->error = 0.02;//0.03; --> 0.01 limit de stabilité (.015 stable)
+    hlcPF->error = 0.015;//0.03; --> 0.01 limit de stabilité (.015 stable)
     //attractive
     double a = 1;
     hlcPF->d_limit = 0.01;
@@ -138,7 +138,7 @@ void set_param_prec(ctrlStruct *cvs){
     //tau
     hlcPF->Tau_max = 4;
     hlcPF->tau_max_dist = .2;
-    hlcPF->Tau_min = .1; //0.005;
+    hlcPF->Tau_min = .001; //0.005;
     hlcPF->tau_min_dist = .01;
     //reorientation
     hlcPF->erreurTh = 0.05;

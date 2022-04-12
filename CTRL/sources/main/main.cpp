@@ -39,7 +39,7 @@ int main()
     int cmdON = 0;
     int llcON = 0;
     int mlcPF_ON = 0;
-    int mlc_ON = 1;
+    int mlc_ON = 0;
     int rplON = 0;
     int odoCalib = 0;
     int hlcPFON = 0;
@@ -49,7 +49,7 @@ int main()
     int icpON = 0;
     int teensyON = 0;
     int saShedON = 0;
-    int distON = 0;
+    int distON = 1;
 
     int mThreadsON = 0;
 
@@ -401,8 +401,8 @@ int main()
 
             get_d2r_data(cvs); // ctrlIn
 
-            //printf("r_sp_mes_enc = %f | l_sp_mes_enc = %f\n", inputs->r_sp_mes_enc, inputs->l_sp_mes_enc);
-            //printf("r_sp_mes_odo = %f | l_sp_mes_odo = %f\n", inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
+            printf("r_sp_mes_enc = %f | l_sp_mes_enc = %f\n", inputs->r_sp_mes_enc, inputs->l_sp_mes_enc);
+            printf("r_sp_mes_odo = %f | l_sp_mes_odo = %f\n", inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
 
             set_speed_ref(cvs,x_goal,y_goal,0);
             if(mlc->reach_goal){
@@ -410,7 +410,7 @@ int main()
                 break;
             }
             set_commands(cvs, mlc->r_sp_ref, mlc->l_sp_ref);
-            //printf("cmd_r = %d | cmd_l = %d\n", outputs->r_cmd, outputs->l_cmd);
+            printf("cmd_r = %d | cmd_l = %d\n", outputs->r_cmd, outputs->l_cmd);
             send_commands(cvs);
 
             set_new_position(cvs);
@@ -432,9 +432,9 @@ int main()
         double xgoal = cvs->mp->x;double ygoal=cvs->mp->y;
         int forward;double orientation;
         set_param_normal(cvs);
-        cvs->mp->x = 3-0.14;
-        cvs->mp->y = 2-0.53;
-        cvs->mp->th = M_PI;
+        cvs->mp->x = 3-0.27;
+        cvs->mp->y = 1.13;
+        cvs->mp->th = 0;
         //threads_start(cvs);
 
 
@@ -443,17 +443,19 @@ int main()
             auto start = high_resolution_clock::now();
             double t = inputs->t;
             if (t==0) {
-                xgoal = 2.5;//2.2;//1.2;
-                ygoal = .75;//1.60;
+                set_param_normal(cvs);
+                xgoal = 2;//2.2;//1.2;
+                ygoal = 1.5;//1.60;
                 forward=-1;
-                orientation = -M_PI;
+                orientation = M_PI/2;
                 set_goal(cvs, xgoal, ygoal, orientation);
                 printf("goal A\n");
             } else if (t>10 & t<10.01) {
-                xgoal = 2.7;
+                set_param_prec(cvs);
+                xgoal = 2;
                 ygoal = .75;
-                forward =-1;
-                orientation = -10;
+                forward =0;
+                orientation = M_PI/2;
                 set_goal(cvs, xgoal, ygoal, orientation);
                 printf("goal B\n");
             } else if (t>20 & t<20.1) {
@@ -479,7 +481,7 @@ int main()
             fprintf(cvs->tau_data, "%f,%f,%f\n", inputs->t, hlcPF->v_ref, tau_compute(cvs));
 
             //printf("v_ref; d %f \n", hlcPF->v_ref,hlcPF->d);
-            printf("hlcPF->v %f | hlcPF->theta %f | d %f \n",hlcPF->v_ref,hlcPF->theta_ref,hlcPF->d );
+            //printf("hlcPF->v %f | hlcPF->theta %f | d %f \n",hlcPF->v_ref,hlcPF->theta_ref,hlcPF->d );
             set_commands(cvs, mlcPF->r_sp_ref, mlcPF->l_sp_ref);
             send_commands(cvs);
 
@@ -498,6 +500,7 @@ int main()
 
 
         }
+        printf("x = %f | y = %f | th = %f\n", mp->x, mp->y, mp->th);
         //mt->thread_main_end = 1;
 
         //threads_end(cvs);
@@ -581,7 +584,7 @@ int main()
         cvs->mp->y = 2-0.53;
         cvs->mp->th = M_PI;
 
-        while(inputs->t < 15){
+        while(inputs->t < 20){
             auto start = high_resolution_clock::now();
 
             distr_loop(cvs);

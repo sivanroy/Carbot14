@@ -17,25 +17,25 @@ void init_midLevelCtrl(midLevelCtrl *mlc)
     mlc->th_ref = 0.0;
     mlc->th_mes = 0.0;
 
-    mlc->Kp_d = 50.0;
+    mlc->Kp_d = 70.0;
     mlc->sigma = 0.12;
     mlc->Ki_d = 0.0;
     mlc->integral_err_d = 0.0;
-    mlc->max_th = 3;
+    mlc->max_th = 4;
 
-    mlc->Kp_th = 5.0;
+    mlc->Kp_th = 4.0;
     mlc->Ki_th = 0.0;
     mlc->integral_err_th = 0.0;
 
     mlc->r_sp_ref = 0.0;
     mlc->l_sp_ref = 0.0;
-    mlc->max_sp_ref = 7;
-    mlc->min_sp_ref = -7;
+    mlc->max_sp_ref = 8;
+    mlc->min_sp_ref = -8;
 
     mlc->reach_goal = 0;
     mlc->d = 0;
 
-    mlc->error = 0.01;
+    mlc->error = 0.05;
 }
 
 void set_d_th_ref_mes(ctrlStruct *cvs, double x_g, double y_g)
