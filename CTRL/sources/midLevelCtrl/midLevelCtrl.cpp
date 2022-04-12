@@ -61,7 +61,7 @@ void set_d_th_ref_mes(ctrlStruct *cvs, double x_g, double y_g)
     // goal reached ?
     mlc->reach_goal = 0;
     mlc->d = sqrt(x_diff*x_diff + y_diff*y_diff);
-    if ( mlc->d < mlc->error) mlc->reach_goal = 1;
+    if (mlc->d < mlc->error) mlc->reach_goal = 1;
 }
 
 void set_speed_ref(ctrlStruct *cvs, double x_g, double y_g, int goForward)
@@ -116,7 +116,7 @@ void set_speed_ref(ctrlStruct *cvs, double x_g, double y_g, int goForward)
         mlc->r_sp_ref = 0.0;
         mlc->l_sp_ref = 0.0;
     } else {
-        if(abs(r_sp_ref)>mlc->max_sp_ref | abs(l_sp_ref)>mlc->l_sp_ref) {
+        if(abs(r_sp_ref)>mlc->max_sp_ref | abs(l_sp_ref)>mlc->max_sp_ref) {
             //int r1 = 1; int l1 = 1;
             //if(r_sp_ref<0) r1 = -1;
             //if(l_sp_ref<0) l1 = -1;

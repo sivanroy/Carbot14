@@ -37,7 +37,7 @@ int main()
 
     int display_position_ON = 0;
     int cmdON = 0;
-    int llcON = 1;
+    int llcON = 0;
     int mlcPF_ON = 0;
     int mlc_ON = 1;
     int rplON = 0;
@@ -389,7 +389,7 @@ int main()
     }
     if (mlc_ON){
 
-        double x_goal = 3-0.47;
+        double x_goal = 3-0.57;
         double y_goal = 1.13;
 
         cvs->mp->x = 3-0.27;
@@ -418,7 +418,7 @@ int main()
 
             fprintf(cvs->llc_data, "%f,%f,%f,%f,%f,%f,%f\n", inputs->t, mlcPF->r_sp_ref, mlcPF->l_sp_ref, inputs->r_sp_mes_enc, inputs->l_sp_mes_enc, inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
 
-            teensy_recv(cvs);
+            //teensy_recv(cvs);
 
             update_time(cvs);
             auto stop = high_resolution_clock::now();

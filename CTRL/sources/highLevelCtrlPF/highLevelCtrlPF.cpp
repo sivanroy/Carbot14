@@ -265,7 +265,7 @@ void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal,int goForward,do
     //to go backward
     if(goForward == 0){
         v = -v;
-        theta = limit_angle(theta + M_PI);p
+        theta = limit_angle(theta + M_PI);
         //printf("go backward\n");
     }
 
