@@ -198,8 +198,8 @@ void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal,int goForward,do
     double x, y, th;
     get_pos(cvs, pos);
     th = pos[2];
-    x = pos[0]+ hlcPF->x_shift * cos(th);
-    y = pos[1]+ hlcPF->x_shift * sin(th);
+    x = pos[0];//+ hlcPF->x_shift * cos(th);
+    y = pos[1];//+ hlcPF->x_shift * sin(th);
 
     double minF = hlcPF->Fmin;
     double error = hlcPF->error;
@@ -265,7 +265,7 @@ void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal,int goForward,do
     //to go backward
     if(goForward == 0){
         v = -v;
-        theta = limit_angle(theta + M_PI);
+        theta = limit_angle(theta + M_PI);p
         //printf("go backward\n");
     }
 

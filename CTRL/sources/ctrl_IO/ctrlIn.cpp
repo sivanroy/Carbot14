@@ -106,12 +106,12 @@ void get_d2r_data(ctrlStruct *cvs)
     double l_sp_mes_enc =   l_ticks_enc * rpt_enc/dt;
     double r_sp_mes_odo = - r_ticks_odo * rpt_odo/dt;
     double l_sp_mes_odo =   l_ticks_odo * rpt_odo/dt;
-    double MAX_enc = 40;
+    double MAX_enc = 15;
     
     if (r_sp_mes_enc > -MAX_enc && r_sp_mes_enc < MAX_enc) inputs->r_sp_mes_enc = r_sp_mes_enc;
     if (l_sp_mes_enc > -MAX_enc && l_sp_mes_enc < MAX_enc) inputs->l_sp_mes_enc = l_sp_mes_enc;
-    if (r_sp_mes_odo > -MAX_enc && r_sp_mes_odo < MAX_enc) inputs->r_sp_mes_odo = r_sp_mes_odo;
-    if (l_sp_mes_odo > -MAX_enc && l_sp_mes_odo < MAX_enc) inputs->l_sp_mes_odo = l_sp_mes_odo;
+    if (r_sp_mes_odo > -MAX_enc*1.4 && r_sp_mes_odo < MAX_enc*1.4) inputs->r_sp_mes_odo = r_sp_mes_odo;
+    if (l_sp_mes_odo > -MAX_enc*1.4 && l_sp_mes_odo < MAX_enc*1.4) inputs->l_sp_mes_odo = l_sp_mes_odo;
 }
 
 void update_time(ctrlStruct *cvs)

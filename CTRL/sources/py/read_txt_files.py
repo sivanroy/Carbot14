@@ -85,6 +85,7 @@ def plot_mlc_data():
 def plot_llc_data():
 
     Data = read_txt_file("../../build/llc_data.txt", 7)
+    Data2 = read_txt_file("../../build/llc_data2.txt", 7)
     
     moy_list = []
     moy = 0
@@ -105,12 +106,11 @@ def plot_llc_data():
             break
     print(t_95)
 
-    plt.plot(Data[0], Data[2], label=r"$\omega_{ref}$", linewidth=2)
-    plt.plot(Data[0], Data[4], label=r"$\omega_{mes,l}$", linewidth=1.2)
-    plt.plot(Data[0], Data[3], label=r"$\omega_{mes,r}$", linewidth=1.2)
+    plt.plot(Data[0], Data[1], label=r"$\omega_{ref}$", linewidth=2)
+    plt.plot(Data[0], Data[5], label=r"$\omega_{mes,r}$", linewidth=1.2)
     plt.xlabel("Time [s]")
     plt.ylabel(r"$\omega$ [rad/s]")
-    plt.title("Wheels speed profile")
+    plt.title("R wheel speed profile")
     #plt.xlim(0, 0.05)
     #plt.ylim(-1, 6)
     #plt.axis([0, 10, -6, 6])
@@ -119,6 +119,47 @@ def plot_llc_data():
     #plt.savefig("speed_profile_zoom.pdf", format="pdf")
     plt.show()
     
+    plt.plot(Data[0], Data[2], label=r"$\omega_{ref}$", linewidth=2)
+    plt.plot(Data[0], Data[6], label=r"$\omega_{mes,l}$", linewidth=1.2)
+    plt.xlabel("Time [s]")
+    plt.ylabel(r"$\omega$ [rad/s]")
+    plt.title("L wheel speed profile")
+    #plt.xlim(0, 0.05)
+    #plt.ylim(-1, 6)
+    #plt.axis([0, 10, -6, 6])
+    plt.legend()
+    plt.grid()
+    #plt.savefig("speed_profile_zoom.pdf", format="pdf")
+    plt.show()
+    
+    plt.plot(Data2[0], Data2[1], label=r"r_Pout", linewidth=2)
+    plt.plot(Data2[0], Data2[3], label=r"r_Iout$", linewidth=1.2)
+    plt.plot(Data2[0], Data2[5], label=r"r_cmd$", linewidth=1.2)
+    plt.xlabel("Time [s]")
+    plt.ylabel(r"[-]")
+    plt.title("llc R")
+    #plt.xlim(0, 0.05)
+    #plt.ylim(-1, 6)
+    #plt.axis([0, 10, -6, 6])
+    plt.legend()
+    plt.grid()
+    #plt.savefig("speed_profile_zoom.pdf", format="pdf")
+    plt.show()
+    
+    plt.plot(Data2[0], Data2[2], label=r"l_Pout", linewidth=2)
+    plt.plot(Data2[0], Data2[4], label=r"l_Iout$", linewidth=1.2)
+    plt.plot(Data2[0], Data2[6], label=r"l_cmd$", linewidth=1.2)
+    plt.xlabel("Time [s]")
+    plt.ylabel(r"[-]")
+    plt.title("llc L")
+    #plt.xlim(0, 0.05)
+    #plt.ylim(-1, 6)
+    #plt.axis([0, 10, -6, 6])
+    plt.legend()
+    plt.grid()
+    #plt.savefig("speed_profile_zoom.pdf", format="pdf")
+    plt.show()
+    """
     plt.plot(Data[0], Data[2], label=r"$\omega_{ref}$", linewidth=2)
     plt.plot(Data[0], Data[6], label=r"$\omega_{mes,l}$", linewidth=1.2)
     plt.plot(Data[0], Data[5], label=r"$\omega_{mes,r}$", linewidth=1.2)
@@ -132,7 +173,7 @@ def plot_llc_data():
     plt.grid()
     #plt.savefig("speed_profile_zoom.pdf", format="pdf")
     plt.show()
-    """
+    
     plt.plot(Data[0], Data[0], label="P")
     plt.plot(Data[0], Data[1], label="I")
     plt.plot(Data[0], Data[2], label="kphi")
@@ -287,8 +328,8 @@ def plot_mp_data():
     plt.xlabel("x [m]")
     plt.ylabel("y [m]")
     plt.title("mp")
-    plt.ylim(-0.1, 2.1)
-    plt.xlim(-0.1, 3.1)
+    #plt.xlim(2.4, 2.6)
+    #plt.ylim(0.6, 0.9)
     #plt.axis("equal")
     plt.legend()
     plt.grid()
@@ -412,5 +453,7 @@ plot_icp_data()
 plot_rec_data()
 
 #plot_rpl_corr()
+plot_llc_data()
+plot_mp_data()
 
 

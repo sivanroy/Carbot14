@@ -20,8 +20,8 @@ void mlcPF_init(midLevelCtrlPF *mlcPF)
 
     mlcPF->r_sp_ref = 0.0;
     mlcPF->l_sp_ref = 0.0;
-    mlcPF->max_sp_ref = 15;
-    mlcPF->min_sp_ref = -15;
+    mlcPF->max_sp_ref = 10;
+    mlcPF->min_sp_ref = -10;
 
     mlcPF->t_start = 0;
 }

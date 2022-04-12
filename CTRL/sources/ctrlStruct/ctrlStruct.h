@@ -84,6 +84,8 @@ typedef struct ctrlStruct
     teensyStruct *teensy;
 
     FILE *llc_data;
+    FILE *llc_data2;
+    FILE *mlc_data;
     FILE *mp_data;
     FILE *rpl_data;
     FILE *op_data;

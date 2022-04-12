@@ -35,6 +35,8 @@ typedef struct midLevelCtrl
     int reach_goal; ///< 1 if goal reached, 0 if not
     double d;
 
+    double error;
+
 } midLevelCtrl;
 
 void init_midLevelCtrl(midLevelCtrl *mlc);

@@ -13,7 +13,7 @@ void llc_init(lowLevelCtrl *llc)
     llc->min = -20;
 
     llc->Kp = 0.7;//0.706;
-    llc->Ki = 8;//39.437;
+    llc->Ki = 10;//39.437;
 
     llc->r_integral_err = 0.0;
     llc->l_integral_err = 0.0;
@@ -76,6 +76,8 @@ void set_commands(ctrlStruct *cvs, double r_sp_ref, double l_sp_ref)
         l_cmd = 0.0;
         llc->l_integral_err = 0.0;
     }
+    fprintf(cvs->llc_data2, "%f,%f,%f,%f,%f,%f,%f\n", inputs->t, r_Pout, l_Pout, r_Iout, l_Iout, r_cmd, l_cmd);
+
     outputs->r_cmd = r_cmd;
     outputs->l_cmd = l_cmd;
 }
