@@ -37,7 +37,7 @@ int main()
 
     int display_position_ON = 0;
     int cmdON = 0;
-    int llcON = 0;
+    int llcON = 1;
     int mlcPF_ON = 0;
     int mlc_ON = 0;
     int rplON = 0;
@@ -49,7 +49,7 @@ int main()
     int icpON = 0;
     int teensyON = 0;
     int saShedON = 0;
-    int distON = 1;
+    int distON = 0;
 
     int mThreadsON = 0;
 
@@ -265,8 +265,8 @@ int main()
             printf("r_sp_mes_odo = %f | l_sp_mes_odo = %f\n", inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
 
             if (inputs->t >= 0 && inputs->t < 3) {
-                r_sp_ref = 10;
-                l_sp_ref = 10;
+                r_sp_ref = -5;
+                l_sp_ref = -5;
             }
 
             else if (inputs->t >= 1.5 && inputs->t < 3) {
@@ -301,12 +301,12 @@ int main()
         }
     }
     if (mlcPF_ON) {
-        mp->th = -M_PI/4;
+        mp->th = -M_PI;
         double v_ref = -0.1;
-        double th_ref = -M_PI/4;
+        double th_ref = -M_PI;
 
         mlcPF->t_start = inputs->t;
-        while (inputs->t < mlcPF->t_start + 2) {
+        while (inputs->t < mlcPF->t_start + 5) {
             auto start = high_resolution_clock::now();
 
             //if (inputs->t >= 2 && inputs->t < 4) th_ref = 0;//-M_PI/4;
@@ -386,14 +386,14 @@ int main()
         printf("r_ticks_odo_tot = %d | l_ticks_odo_tot = %d\n", r_ticks_odo_tot, l_ticks_odo_tot);
     }
     if (mlc_ON){
-        double x_goal = 2;
+        double x_goal = 2.4;
         double y_goal = 1.13;
 
         cvs->mp->x = 3-0.27;
         cvs->mp->y = 1.13;
-        cvs->mp->th = M_PI;
+        cvs->mp->th = 0;
 
-        while (inputs->t < 15) {
+        while (inputs->t < 10) {
             auto start = high_resolution_clock::now();
 
             get_d2r_data(cvs); // ctrlIn
@@ -401,7 +401,7 @@ int main()
             printf("r_sp_mes_enc = %f | l_sp_mes_enc = %f\n", inputs->r_sp_mes_enc, inputs->l_sp_mes_enc);
             printf("r_sp_mes_odo = %f | l_sp_mes_odo = %f\n", inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
 
-            set_speed_ref(cvs,x_goal,y_goal,1);
+            set_speed_ref(cvs,x_goal,y_goal,0);
             if(mlc->reach_goal){
                 printf("reached goal\n");
                 break;
@@ -428,6 +428,7 @@ int main()
     if (hlcPFON) {
         double xgoal = cvs->mp->x;double ygoal=cvs->mp->y;
         int forward;double orientation;
+        set_param_normal(cvs);
         cvs->mp->x = 3-0.14;
         cvs->mp->y = 2-0.53;
         cvs->mp->th = M_PI;
@@ -435,21 +436,21 @@ int main()
 
 
         printf("begin test hlcPF\n");
-        while (inputs->t < 10) {
+        while (inputs->t < 20) {
             auto start = high_resolution_clock::now();
             double t = inputs->t;
             if (t==0) {
-                xgoal = 2.2;//2.2;//1.2;
-                ygoal = 0.75;//1.60;
-                forward=1;
+                xgoal = 2.5;//2.2;//1.2;
+                ygoal = .75;//1.60;
+                forward=-1;
                 orientation = -M_PI;
                 set_goal(cvs, xgoal, ygoal, orientation);
                 printf("goal A\n");
-            } else if (t>10 & t<10.1) {
-                xgoal = 2.5;
-                ygoal = 1.2;
-                forward =1;
-                orientation = M_PI/2;
+            } else if (t>10 & t<10.01) {
+                xgoal = 2.7;
+                ygoal = .75;
+                forward =-1;
+                orientation = -10;
                 set_goal(cvs, xgoal, ygoal, orientation);
                 printf("goal B\n");
             } else if (t>20 & t<20.1) {
@@ -464,17 +465,18 @@ int main()
             get_d2r_data(cvs); // ctrlIn
             //printf("r_sp_mes_enc = %f | l_sp_mes_enc = %f\n", inputs->r_sp_mes_enc, inputs->l_sp_mes_enc);
             //printf("r_sp_mes_odo = %f | l_sp_mes_odo = %f\n", inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
-            hlcPF_out(cvs, forward);
+            hlcPF_out(cvs, forward,1);
             //if(hlcPF->output) {
                 //hlcPF->v_ref = 0;
                 //hlcPF->theta_ref = 0;
+                //break;
             //}
             mlcPF_out(cvs, hlcPF->v_ref, hlcPF->theta_ref);
 
             fprintf(cvs->tau_data, "%f,%f,%f\n", inputs->t, hlcPF->v_ref, tau_compute(cvs));
 
-            //printf("v_ref %f \n", hlcPF->v_ref);
-            //printf("hlcPF->v %f | hlcPF->theta %f\n",hlcPF->v_ref,hlcPF->theta_ref );
+            //printf("v_ref; d %f \n", hlcPF->v_ref,hlcPF->d);
+            printf("hlcPF->v %f | hlcPF->theta %f | d %f \n",hlcPF->v_ref,hlcPF->theta_ref,hlcPF->d );
             set_commands(cvs, mlcPF->r_sp_ref, mlcPF->l_sp_ref);
             send_commands(cvs);
 
