@@ -48,8 +48,8 @@ int main()
     int icp_test = 0;
     int icpON = 0;
     int teensyON = 0;
-    int saShedON = 0;
-    int distON = 1;
+    int saShedON = 1;
+    int distON = 0;
 
     int mThreadsON = 0;
 
@@ -608,15 +608,16 @@ int main()
         printf("th_end : end\n");
 
     }
-    
-
     if (teensyON) {
         int A = 0;
         int B = 0;
         int C = 0;
         int D = 0;
         int K = 0;
-        while (inputs->t < 8) {
+        int Q = 0;
+        int R = 0;
+        int S = 0;
+        while (inputs->t < 13) {
 
             auto start = high_resolution_clock::now();
 
@@ -634,22 +635,34 @@ int main()
                 teensy->switch_B = 0;
                 teensy->switch_B_end = 1;
             }
-            /*
-            if (inputs->t >= 5 && B == 0) {
-                teensy_send(cvs, "B");
+
+            if (inputs->t >= 1 && B == 0) {
+                teensy_send(cvs, "A");
                 B = 1;
             }
 
-            if (inputs->t >= 2 && C == 0) {
+            if (inputs->t >= 3 && C == 0) {
                 teensy_send(cvs, "C");
                 C = 1;
             }
 
-            if (inputs->t >= 12 && D == 0) {
+            if (inputs->t >= 5 && D == 0) {
                 teensy_send(cvs, "D");
                 D = 1;
             }
-            */
+            if (inputs->t >= 7 && R == 0) {
+                teensy_send(cvs, "R");
+                R = 1;
+            }
+            if (inputs->t >= 9 && S == 0) {
+                teensy_send(cvs, "S");
+                S = 1;
+            }
+            if (inputs->t >= 11 && Q == 0) {
+                teensy_send(cvs, "Q");
+                Q = 1;
+            }
+
 
             update_time(cvs);
             auto stop = high_resolution_clock::now();
@@ -659,6 +672,7 @@ int main()
             usleep(dt * 1000000 - duration.count());
         }
     }
+    usleep(2000000);
     motors_stop(cvs);
     teensy_send(cvs, "B");
     usleep(2000000);

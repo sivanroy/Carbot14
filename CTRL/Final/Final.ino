@@ -4,7 +4,8 @@ Communication RPI -> Teensy :
 1 -> Pallet violet (470 Ohm)
 2 -> Pallet jaune (1 kOhm)
 3 -> Pallet rouge (4.7 kOhm)
-5 -> Push under the shed (Dyna ID5)
+4 -> Back switch ON : Flip the pallets (Activate dyna ID4)
+5 -> Front switch ON : Push under the shed (Activate dyna ID5)
 R -> Reset all global variables to 0 (undo)
 A -> Both front servo OUT : hold pallets to push under the shed
 B -> Both front servo IN : release pallets to push under the shed
@@ -21,6 +22,9 @@ M -> Put the flip in initial position (pos: 755)
 N -> Take 1st pallet from stack and drop it at the top of expoisiton gallery (pos: 100)
 O -> Take 1st pallet from stack and drop it at the top of expoisiton gallery (pos: 160)
 P -> Take 1st pallet from stack and drop it at the top of expoisiton gallery (pos: 220)
+Q -> Clamp IN -> release the statuette
+R -> Clamp with its widest opening
+S -> Clamp OUT -> clamps the statuette
 */
 
 #include <Wire.h> //I2C
@@ -49,7 +53,10 @@ int servoIn2 = 180;
 int servoOut2 = 15;
 int servoIn3 = 130;
 int servoOut3 = 195;
-int servoIn4 = 70;
+int servoIn4 = -35;
+int servoOut4 = 28; // Widest : -5
+int servoIn5 = 185; //MAX : 200
+int servoOut5 = 35; //MIN : -25
 
 const int measureResPin = 21;
 int rawMeasure = 0;
@@ -96,9 +103,12 @@ void loop() {
   resetArm();
   resetVariables();
   frontSwitch();
+  backSwitch();
   pushUnderTheShed();
+  clamp();
   frontServos();
   pushCube();
+  pushPallet();
   servoResistance();
   measureResistance();
   moveStepper();
@@ -158,15 +168,33 @@ void twoPallets(){
 }
 */
 
+void clamp(){
+   if (data == "Q"){
+    pwm.setPWM(4, 0, pulseWidth(servoIn4));
+    data = "NULL";
+   }
+   if (data == "R"){
+    pwm.setPWM(4, 0, pulseWidth(-5));
+    data = "NULL";
+   }
+   if (data == "S"){
+    pwm.setPWM(4, 0, pulseWidth(servoOut4));
+    data = "NULL";
+   }
+}
+
+
 void measureResistance(){
   rawMeasure = analogRead(measureResPin);
   if(rawMeasure < 900){
     buffer = rawMeasure * Vin;
     Vout = (buffer)/1024.0;
     R = Rn * Vout/(Vin-Vout);
-    //Serial.print("R: ");
-    //Serial.println(R);
     if (R > 250 && R < 750){
+      pwm.setPWM(5, 0, pulseWidth(servoOut5));
+      delay(950);
+      pwm.setPWM(5, 0, pulseWidth(servoIn5));
+      delay(1500);
       Serial.print("1");
     }
     if (R > 750 && R < 1500){
@@ -359,14 +387,25 @@ void pushUnderTheShed(){
 
 bool frontSwitch(){
   switchFrontState = digitalRead(switchFrontPin);
-  switchBackState = digitalRead(switchBackPin);
   
   if (switchFrontState == HIGH) {
     Serial.print("5");
     return true;
   } 
   if (switchFrontState == LOW) {
-    Serial.print("0");
+    return false;
+  }
+  return false;
+}
+
+bool backSwitch(){
+  switchBackState = digitalRead(switchBackPin);
+  
+  if (switchBackState == HIGH) {
+    Serial.print("4");
+    return true;
+  } 
+  if (switchBackState == LOW) {
     return false;
   }
   return false;
@@ -436,6 +475,7 @@ void setServos(){
   pwm.setPWM(2, 0, pulseWidth(servoIn2));
   pwm.setPWM(3, 0, pulseWidth(servoIn3));
   pwm.setPWM(4, 0, pulseWidth(servoIn4));
+  pwm.setPWM(5, 0, pulseWidth(servoIn5));
   Wire.endTransmission();
 }
 
@@ -468,6 +508,15 @@ void servoResistance(){
   }
 }
 
+void pushPallet(){
+  if (data == "T"){
+    pwm.setPWM(5, 0, pulseWidth(servoOut5));
+    delay(950);
+    pwm.setPWM(5, 0, pulseWidth(servoIn5));
+    delay(1500);
+  }
+}
+  
 void pushCube(){
    if (data == "D"){
       pwm.setPWM(3, 0, pulseWidth(servoOut3));

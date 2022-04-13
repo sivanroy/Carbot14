@@ -3,6 +3,34 @@
  * \brief communication with the teensy
  */
 
+/*!
+Communication RPI -> Teensy :
+1 -> Pallet violet (470 Ohm)
+2 -> Pallet jaune (1 kOhm)
+3 -> Pallet rouge (4.7 kOhm)
+4 -> Back switch ON : Flip the pallets (Activate dyna ID4)
+5 -> Front switch ON : Push under the shed (Activate dyna ID5)
+R -> Reset all global variables to 0 (undo)
+A -> Both front servo OUT : hold pallets to push under the shed
+B -> Both front servo IN : release pallets to push under the shed
+C -> Measure resistance
+D -> Push cube
+F -> Take 1st pallet from stack and drop it at the bottom of expoisiton gallery (pos: 100)
+G -> Take 2nd pallet from stack and drop it at the bottom of expoisiton gallery (pos: 160)
+H -> Take 3rd pallet from stack and drop it at the bottom of expoisiton gallery (pos: 220)
+J
+I
+K -> Lower flip to take pallets from distributor (pos: 255)
+L -> Lift the pallets 90 degrees with the flip (pos: 590)
+M -> Put the flip in initial position (pos: 755)
+N -> Take 1st pallet from stack and drop it at the top of expoisiton gallery (pos: 100)
+O -> Take 1st pallet from stack and drop it at the top of expoisiton gallery (pos: 160)
+P -> Take 1st pallet from stack and drop it at the top of expoisiton gallery (pos: 220)
+Q -> Clamp IN -> release the statuette
+R -> Clamp with its widest opening
+S -> Clamp OUT -> clamps the statuette
+*/
+
 #include "teensyStruct.h"
 
 
@@ -48,9 +76,9 @@ void teensy_recv(ctrlStruct *cvs)
 
     const char *data5;
     const char *data4;
-    const char *dataR1;
-    const char *dataR2;
-    const char *dataR3;
+    const char *data1;
+    const char *data2;
+    const char *data3;
     char str[BUF_SIZE];
 
     int n = RS232_PollComport(teensy->port, teensy->str_recv, (int) BUF_SIZE);
@@ -60,9 +88,9 @@ void teensy_recv(ctrlStruct *cvs)
 
         data5 = "5";
         data4 = "4";
-        dataR1 = "1";
-        dataR2 = "2";
-        dataR3 = "3";
+        data1 = "1";
+        data2 = "2";
+        data3 = "3";
         strcpy(str, data5);
         if (strcmp((char *) teensy->str_recv, (char *) str) == 0) {
             teensy->switch_F = 1;
@@ -71,15 +99,15 @@ void teensy_recv(ctrlStruct *cvs)
         if (strcmp((char *) teensy->str_recv, (char *) str) == 0) {
             teensy->switch_B = 1;
         }
-        strcpy(str, dataR1);
+        strcpy(str, data1);
         if (strcmp((char *) teensy->str_recv, (char *) str) == 0) {
             printf("-----------------  R1  -----------------\n");
         }
-        strcpy(str, dataR2);
+        strcpy(str, data2);
         if (strcmp((char *) teensy->str_recv, (char *) str) == 0) {
             printf("-----------------  R2  -----------------\n");
         }
-        strcpy(str, dataR3);
+        strcpy(str, data3);
         if (strcmp((char *) teensy->str_recv, (char *) str) == 0) {
             printf("-----------------  R3  -----------------\n");
         }
