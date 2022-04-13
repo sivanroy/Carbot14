@@ -17,6 +17,6 @@ void compute_incr(ctrlStruct *cvs, double th);
 
 void set_param_normal(ctrlStruct *cvs);
 void set_param_prec(ctrlStruct *cvs);
-
+void set_param_large(ctrlStruct *cvs);
 
 #endif // end of header guard

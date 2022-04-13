@@ -7,7 +7,6 @@
 #include "FSMs_utils.h"
 
 
-
 enum {S0_sas,Dpmt1_sas,servoShedOut_sas,Dpmt2_sas,Dpmt3_sas,Dpmt4_sas,Dpmt5_sas, servoShedIn_sas};
 
 void saShed_init(statAndShed *saShed) {
@@ -16,9 +15,9 @@ void saShed_init(statAndShed *saShed) {
     saShed->go = 0;
 
     int s = 5; //2.2 ;; 1.6 ;; -2.5
-    double x_goalsI[s] = {2.44,2.33, 2.1, 2.1,2.5};
-    double y_goalsI[s] = {1.55,1.5, 1.35, 1.2,.45};
-    double thetasI[s] = {-1.15*3*M_PI/4,-10,-10,-10,-10}; //s
+    double x_goalsI[s] = {2.44,2.3, 2.5, 2.1,2.5};
+    double y_goalsI[s] = {1.55,1.5, .6, 1.2,.45};
+    double thetasI[s] = {-2.71,-10,-10,-10,-10}; //s
     double forwardI[s] = {1,1,1,1,1};
     for (int i=0; i<s;i++) {
     	saShed->x_goals[i] = x_goalsI[i];
@@ -68,12 +67,10 @@ void saShed_loop(ctrlStruct *cvs){
         }
 
         case Dpmt2_sas:{
-            //double sig = cvs->mlcPF->sigma;
-            //cvs->mlcPF->sigma = .2;
-            //set_param_prec(cvs);
-            sendFromHLCPF(cvs,cvs->saShed->forward[1]);
-            //cvs->mlcPF->sigma = sig;
-            if(hlcPF->output){
+            //set_param_large(cvs);
+            //sendFromHLCPF(cvs,cvs->saShed->forward[1]);
+            sendFromMLCPF(cvs,.1,-2.71);
+            if(cvs->mp->x < 2.35){
                 saShed->status = servoShedOut_sas;
                 printf("go to servoShedout_ps\n");
             }
@@ -82,20 +79,26 @@ void saShed_loop(ctrlStruct *cvs){
 
         case servoShedOut_sas: {
             teensy_send(cvs, "A");
+            usleep(1000000);
             set_goal(cvs,saShed->x_goals[2],saShed->y_goals[2],saShed->thetas[2]);
+            // !!!!!
             printf("go to Dpmt3_ps\n");
             saShed->status = Dpmt3_sas;
-            saShed->output =1;
+            // !!!!!
             break;
         }
 
 
         case Dpmt3_sas:{
+            double sig = cvs->mlcPF->sigma;
+            cvs->mlcPF->sigma = 200;
             sendFromHLCPF(cvs,cvs->saShed->forward[2]);
             teensy_send(cvs, "A");
+            cvs->mlcPF->sigma = sig;
             if(hlcPF->output){
                 saShed->status = Dpmt4_sas;
                 set_goal(cvs,saShed->x_goals[3],saShed->y_goals[3]);
+                saShed->output = 1;
                 printf("go to Dpmt4_ps\n");
             }
             break;
@@ -109,6 +112,7 @@ void saShed_loop(ctrlStruct *cvs){
             cvs->mlcPF->sigma = sig;
             if(hlcPF->output){
                 saShed->status = Dpmt5_sas;
+                saShed->output = 1;
                 set_goal(cvs,saShed->x_goals[4],saShed->y_goals[4]);
                 printf("go to Dpmt5_ps\n");
             }

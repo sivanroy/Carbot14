@@ -20,6 +20,8 @@ void llc_init(lowLevelCtrl *llc)
     llc->kphiOnK = 0.23*(35/24);
 }
 
+
+
 void set_commands(ctrlStruct *cvs, double r_sp_ref, double l_sp_ref)
 {
     // variables declaration

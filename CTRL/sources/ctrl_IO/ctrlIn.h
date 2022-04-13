@@ -42,6 +42,18 @@ typedef struct ctrlIn
 
 void ctrlIn_init(ctrlIn *inputs);
 
+typedef struct lowPassFilter{
+    double value_le;
+    double value_re;
+    double value_lo;
+    double value_ro;
+    double beta;
+}lowPassFilter;
+
+void lpf_init(lowPassFilter *lpf);
+double lpf(ctrlStruct *cvs,double val, int select);
+
+
 unsigned char d2r_enc_address(int encoder, int left, int sonarF);
 int d2r_enc_measure(ctrlStruct *cvs, int encoder, int left, int sonarF ,bool verbose);
 void get_d2r_data(ctrlStruct *cvs);

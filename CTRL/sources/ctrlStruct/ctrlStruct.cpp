@@ -70,12 +70,18 @@ ctrlStruct* cvs_init()
     cvs->distr = (distributeurs*) malloc(sizeof(distributeurs));
     distr_init(cvs->distr);
 
+    cvs->lpf = (lowPassFilter *) malloc(sizeof(lowPassFilter));
+    lpf_init(cvs->lpf);
+
     /*!  txt files  */
     cvs->llc_data = fopen("llc_data.txt", "w");
     if (cvs->llc_data == NULL) printf("Enable to open file llc_data.txt\n");
 
     cvs->llc_data2 = fopen("llc_data2.txt", "w");
     if (cvs->llc_data2 == NULL) printf("Enable to open file llc_data2.txt\n");
+
+    cvs->lpf_data = fopen("lpf_data.txt", "w");
+    if (cvs->lpf_data == NULL) printf("Enable to open file lpf_data.txt\n");
 
     cvs->mlc_data = fopen("mlc_data.txt", "w");
     if (cvs->mlc_data == NULL) printf("Enable to open file mlc_data.txt\n");
@@ -130,9 +136,11 @@ void cvs_free(ctrlStruct *cvs)
     free(cvs->pPallets);
     free(cvs->excSq);
     free(cvs->distr);
+    free(cvs->lpf);
 
     fclose(cvs->llc_data);
     fclose(cvs->llc_data2);
+    fclose(cvs->lpf_data);
     fclose(cvs->mlc_data);
     fclose(cvs->mp_data);
     fclose(cvs->rpl_data);

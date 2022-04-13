@@ -37,7 +37,7 @@ int main()
 
     int display_position_ON = 0;
     int cmdON = 0;
-    int llcON = 0;
+    int llcON = 1;
     int mlcPF_ON = 0;
     int mlc_ON = 0;
     int rplON = 0;
@@ -48,7 +48,7 @@ int main()
     int icp_test = 0;
     int icpON = 0;
     int teensyON = 0;
-    int saShedON = 1;
+    int saShedON = 0;
     int distON = 0;
 
     int mThreadsON = 0;
@@ -256,7 +256,7 @@ int main()
         double r_sp_ref = 0.0;
         double l_sp_ref = 0.0;
 
-        while (inputs->t < 2) {
+        while (inputs->t < 6.5) {
             auto start = high_resolution_clock::now();
 
             get_d2r_data(cvs); // ctrlIn
@@ -264,21 +264,20 @@ int main()
             printf("r_sp_mes_enc = %f | l_sp_mes_enc = %f\n", inputs->r_sp_mes_enc, inputs->l_sp_mes_enc);
             printf("r_sp_mes_odo = %f | l_sp_mes_odo = %f\n", inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
 
-            if (inputs->t >= 0 && inputs->t < 5) {
-                r_sp_ref = -10;
-                l_sp_ref = -10;
-            }
-
-            else if (inputs->t >= 1.5 && inputs->t < 3) {
+            if (inputs->t >= 0 && inputs->t < 2) {
                 r_sp_ref = 10;
                 l_sp_ref = 10;
             }
-                /*
-                else if (inputs->t >= 4 && inputs->t < 6) {
-                    r_cmd = -10;
-                    l_cmd = 10;
-                }
-                */
+
+            else if (inputs->t >= 2 && inputs->t < 4) {
+                r_sp_ref = -10;
+                l_sp_ref = -10;
+            }
+                
+            else if (inputs->t >= 4 && inputs->t < 6) {
+                r_sp_ref = 2;
+                l_sp_ref = 2;
+            }
             else {
                 r_sp_ref = 0;
                 l_sp_ref = 0;
@@ -569,6 +568,7 @@ int main()
                 motors_stop(cvs);
                 break;
             }
+            fprintf(cvs->llc_data, "%f,%f,%f,%f,%f,%f,%f\n", inputs->t, mlcPF->r_sp_ref, mlcPF->l_sp_ref, inputs->r_sp_mes_enc, inputs->l_sp_mes_enc, inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
             update_time(cvs);
             auto stop = high_resolution_clock::now();
             auto duration = duration_cast<microseconds>(stop - start);

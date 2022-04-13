@@ -56,6 +56,7 @@ typedef struct posePallets posePallets;
 typedef struct excSquares excSquares;
 typedef struct distributeurs distributeurs;
 
+typedef struct lowPassFilter lowPassFilter;
 
 typedef struct ctrlStruct
 {
@@ -81,10 +82,13 @@ typedef struct ctrlStruct
     mThreadsStruct *mt;
     reCalibStruct *rec;
 
+    lowPassFilter *lpf;
+
     teensyStruct *teensy;
 
     FILE *llc_data;
     FILE *llc_data2;
+    FILE *lpf_data;
     FILE *mlc_data;
     FILE *mp_data;
     FILE *rpl_data;

@@ -33,6 +33,29 @@ void ctrlIn_init(ctrlIn *inputs)
     inputs->l_back_s = 0.0;
 }
 
+void lpf_init(lowPassFilter *lpf){
+    lpf->value_re = 0;
+    lpf->value_le = 0;
+    lpf->value_ro = 0;
+    lpf->value_lo = 0;
+    lpf->beta = .5 ;
+}
+
+double lpf(ctrlStruct *cvs,double val,int select){
+    double prev;
+    double beta = cvs->lpf->beta;
+    if(select == 0) prev = cvs->lpf->value_re;
+    if(select == 1) prev = cvs->lpf->value_le;
+    if(select == 2) prev = cvs->lpf->value_ro;
+    if(select == 3) prev = cvs->lpf->value_lo;
+    double  out = beta*prev + (1 - beta) * val;
+    if(select == 0) cvs->lpf->value_re = out;
+    if(select == 1) cvs->lpf->value_le = out;
+    if(select == 2) cvs->lpf->value_ro = out;
+    if(select == 3) cvs->lpf->value_lo = out;
+    return out;
+}
+
 unsigned char d2r_enc_address(int encoder, int left, int sonarF)
 {
     unsigned char addr;
@@ -71,7 +94,7 @@ int d2r_enc_measure(ctrlStruct *cvs, int encoder, int left, int sonarF, bool ver
     wiringPiSPIDataRW(inputs->d2r_channel, buffer, 5);
     int count ;
 
-    if(sonarF == -1) count = buffer[4] + (buffer[3] << 8) + (buffer[2] << 16) + (buffer[1] << 24) - 4192;
+    if(sonarF == -1) count = buffer[4] + (buffer[3] << 8) + (buffer[2] << 16) + (buffer[1] << 24) - 400000;
     else count = buffer[4] + (buffer[3] << 8) + (buffer[2] << 16) + (buffer[1] << 24) ;
 
     if (verbose) printf("DE02Rpi::measure %d -> count = %d\n",addr, count);
@@ -106,12 +129,15 @@ void get_d2r_data(ctrlStruct *cvs)
     double l_sp_mes_enc =   l_ticks_enc * rpt_enc/dt;
     double r_sp_mes_odo = - r_ticks_odo * rpt_odo/dt;
     double l_sp_mes_odo =   l_ticks_odo * rpt_odo/dt;
-    double MAX_enc = 15;
+    double MAX_enc = 50;
     
-    if (r_sp_mes_enc > -MAX_enc && r_sp_mes_enc < MAX_enc) inputs->r_sp_mes_enc = r_sp_mes_enc;
-    if (l_sp_mes_enc > -MAX_enc && l_sp_mes_enc < MAX_enc) inputs->l_sp_mes_enc = l_sp_mes_enc;
-    if (r_sp_mes_odo > -MAX_enc*1.4 && r_sp_mes_odo < MAX_enc*1.4) inputs->r_sp_mes_odo = r_sp_mes_odo;
-    if (l_sp_mes_odo > -MAX_enc*1.4 && l_sp_mes_odo < MAX_enc*1.4) inputs->l_sp_mes_odo = l_sp_mes_odo;
+    if (r_sp_mes_enc > -MAX_enc && r_sp_mes_enc < MAX_enc) inputs->r_sp_mes_enc = lpf(cvs,r_sp_mes_enc, 0);
+    if (l_sp_mes_enc > -MAX_enc && l_sp_mes_enc < MAX_enc) inputs->l_sp_mes_enc = lpf(cvs,l_sp_mes_enc,1);
+    if (r_sp_mes_odo > -MAX_enc*1.4 && r_sp_mes_odo < MAX_enc*1.4) inputs->r_sp_mes_odo = lpf(cvs,r_sp_mes_odo,2);
+    if (l_sp_mes_odo > -MAX_enc*1.4 && l_sp_mes_odo < MAX_enc*1.4) inputs->l_sp_mes_odo = lpf(cvs,l_sp_mes_odo,3);
+
+    fprintf(cvs->lpf_data,"%f,%f,%f,%f,%f,%f,%f,%f\n",r_sp_mes_enc,l_sp_mes_enc,r_sp_mes_odo,l_sp_mes_odo,
+        inputs->r_sp_mes_enc,inputs->l_sp_mes_enc,inputs->r_sp_mes_odo,inputs->l_sp_mes_odo);
 }
 
 void update_time(ctrlStruct *cvs)
