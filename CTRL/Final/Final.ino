@@ -86,7 +86,7 @@ void setup() {
   
   pinMode(switchArmPin, INPUT_PULLUP);
   pinMode(switchFrontPin, INPUT_PULLUP);
-  pinMode(switchBackState, INPUT_PULLUP);
+  pinMode(switchBackPin, INPUT_PULLUP);
 
   setArm();
   setServos();
@@ -406,6 +406,7 @@ bool backSwitch(){
     return true;
   } 
   if (switchBackState == LOW) {
+    //Serial.print("0");
     return false;
   }
   return false;

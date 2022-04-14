@@ -54,9 +54,9 @@ int main()
     int mThreadsON = 0;
 
     if (icpON) {
-        cvs->mp->x = 3-0.14;//2.00;//3-0.14;
-        cvs->mp->y = 1.13;//0.75;//0.445+0.125;//0.45;//2-0.53;
-        cvs->mp->th = M_PI;//0;//M_PI;
+        cvs->mp->x = 1.5;//3-0.14;//2.00;//3-0.14;
+        cvs->mp->y = 1;//1.13;//0.75;//0.445+0.125;//0.45;//2-0.53;
+        cvs->mp->th = M_PI/4;//0;//M_PI;
         printf("x = %f | y = %f | th = %f\n",cvs->mp->x, cvs->mp->y, cvs->mp->th);
 
         IcpPointToPlane icp(rec->map_p,rec->M,2);
@@ -273,7 +273,6 @@ int main()
                 r_sp_ref = -10;
                 l_sp_ref = -10;
             }
-                
             else if (inputs->t >= 4 && inputs->t < 6) {
                 r_sp_ref = 2;
                 l_sp_ref = 2;
@@ -375,6 +374,8 @@ int main()
             l_ticks_enc_tot += l_ticks_enc;
             r_ticks_odo_tot += r_ticks_odo;
             l_ticks_odo_tot += l_ticks_odo;
+
+            fprintf(cvs->llc_data, "%f,%d,%d,%d,%d\n",inputs->t,r_ticks_enc,l_ticks_enc,r_ticks_odo,l_ticks_odo);
 
             update_time(cvs);
             auto stop = high_resolution_clock::now();
@@ -672,7 +673,6 @@ int main()
             usleep(dt * 1000000 - duration.count());
         }
     }
-    usleep(2000000);
     motors_stop(cvs);
     teensy_send(cvs, "B");
     usleep(2000000);

@@ -57,7 +57,7 @@ def plot_mlc_data():
 def plot_llc_data():
 
     Data = read_txt_file("../../build/llc_data.txt", 7)
-    Data2 = read_txt_file("../../build/llc_data2.txt", 7)
+    Data2 = read_txt_file("../../build/llc_data2.txt", 9)
     
     moy_list = []
     moy = 0
@@ -78,6 +78,34 @@ def plot_llc_data():
             break
     print(t_95)
 
+    
+
+    plt.plot(Data[0], Data[1], label=r"$\omega_{ref}$", linewidth=2)
+    plt.plot(Data[0], Data[3], label=r"$\omega_{mes,r}$", linewidth=1.2)
+    plt.xlabel("Time [s]")
+    plt.ylabel(r"$\omega$ [rad/s]")
+    plt.title("R wheel speed profile")
+    #plt.xlim(1.95, 2.1)
+    #plt.ylim(-1, 6)
+    #plt.axis([0, 10, -6, 6])
+    plt.legend()
+    plt.grid()
+    #plt.savefig("speed_profile_zoom.pdf", format="pdf")
+    plt.show()
+    
+    plt.plot(Data[0], Data[2], label=r"$\omega_{ref}$", linewidth=2)
+    plt.plot(Data[0], Data[4], label=r"$\omega_{mes,l}$", linewidth=1.2)
+    plt.xlabel("Time [s]")
+    plt.ylabel(r"$\omega$ [rad/s]")
+    plt.title("L wheel speed profile")
+    #plt.xlim(0, 0.05)
+    #plt.ylim(-1, 6)
+    #plt.axis([0, 10, -6, 6])
+    plt.legend()
+    plt.grid()
+    #plt.savefig("speed_profile_zoom.pdf", format="pdf")
+    plt.show()
+    
     plt.plot(Data[0], Data[1], label=r"$\omega_{ref}$", linewidth=2)
     plt.plot(Data[0], Data[3], label=r"$\omega_{mes,r}$", linewidth=1.2)
     plt.xlabel("Time [s]")
@@ -104,6 +132,7 @@ def plot_llc_data():
     #plt.savefig("speed_profile_zoom.pdf", format="pdf")
     plt.show()
     
+    """
     plt.plot(Data2[0], Data2[1], label=r"r_Pout", linewidth=2)
     plt.plot(Data2[0], Data2[3], label=r"r_Iout$", linewidth=1.2)
     plt.plot(Data2[0], Data2[5], label=r"r_cmd$", linewidth=1.2)
@@ -131,7 +160,7 @@ def plot_llc_data():
     plt.grid()
     #plt.savefig("speed_profile_zoom.pdf", format="pdf")
     plt.show()
-    """
+    
     plt.plot(Data[0], Data[2], label=r"$\omega_{ref}$", linewidth=2)
     plt.plot(Data[0], Data[6], label=r"$\omega_{mes,l}$", linewidth=1.2)
     plt.plot(Data[0], Data[5], label=r"$\omega_{mes,r}$", linewidth=1.2)
@@ -176,6 +205,7 @@ def plot_llc_data():
         
     """
 
+
 def plot_lpf_data():
 
     Data = read_txt_file("../../build/lpf_data.txt", 8)
@@ -186,7 +216,7 @@ def plot_lpf_data():
     plt.ylabel(r"$\omega$ [rad/s]")
     plt.title("Enc r")
     #plt.xlim(0, 0.05)
-    plt.ylim(-15, 15)
+    plt.ylim(-20, 20)
     #plt.axis([0, 10, -6, 6])
     plt.legend()
     plt.grid()
@@ -199,7 +229,7 @@ def plot_lpf_data():
     plt.ylabel(r"$\omega$ [rad/s]")
     plt.title("Enc l")
     #plt.xlim(0, 0.05)
-    plt.ylim(-15, 15)
+    plt.ylim(-20, 20)
     #plt.axis([0, 10, -6, 6])
     plt.legend()
     plt.grid()
@@ -212,7 +242,7 @@ def plot_lpf_data():
     plt.ylabel(r"$\omega$ [rad/s]")
     plt.title("Odo r")
     #plt.xlim(0, 0.05)
-    plt.ylim(-15, 15)
+    plt.ylim(-20, 20)
     #plt.axis([0, 10, -6, 6])
     plt.legend()
     plt.grid()
@@ -225,12 +255,44 @@ def plot_lpf_data():
     plt.ylabel(r"$\omega$ [rad/s]")
     plt.title("Odo l")
     #plt.xlim(0, 0.05)
-    plt.ylim(-15, 15)
+    plt.ylim(-20, 20)
     #plt.axis([0, 10, -6, 6])
     plt.legend()
     plt.grid()
     #plt.savefig("speed_profile_zoom.pdf", format="pdf")
     plt.show()
+
+def plot_enc_data():
+    
+    Data = read_txt_file("../../build/llc_data.txt", 5)
+
+    plt.plot(Data[0], Data[1], label=r"$r$", linewidth=2)
+    plt.plot(Data[0], Data[2], label=r"$l$", linewidth=1.2)
+    plt.xlabel("Time [s]")
+    plt.ylabel(r"$Ticks$")
+    plt.title("Enc")
+    #plt.xlim(9.8, 10)
+    #plt.ylim(-1, 6)
+    #plt.axis([0, 10, -6, 6])
+    plt.legend()
+    plt.grid()
+    #plt.savefig("speed_profile_zoom.pdf", format="pdf")
+    plt.show()
+    
+    plt.plot(Data[0], Data[3], label=r"$r$", linewidth=2)
+    plt.plot(Data[0], Data[4], label=r"$l$", linewidth=1.2)
+    plt.xlabel("Time [s]")
+    plt.ylabel(r"$Ticks$")
+    plt.title("Odo")
+    #plt.xlim(9.8, 10)
+    plt.ylim(-1000, 1000)
+    #plt.ylim(-1, 6)
+    #plt.axis([0, 10, -6, 6])
+    plt.legend()
+    plt.grid()
+    #plt.savefig("speed_profile_zoom.pdf", format="pdf")
+    plt.show()
+
 
 def plot_mlc_opti():
 
@@ -484,7 +546,6 @@ plot_llc_data()
 plot_mp_data()
 """
 plot_llc_data()
-#plot_mp_data()
-plot_lpf_data()
+
 
 
