@@ -57,6 +57,7 @@ typedef struct excSquares excSquares;
 typedef struct distributeurs distributeurs;
 
 typedef struct lowPassFilter lowPassFilter;
+typedef struct Chrono Chrono;
 
 typedef struct ctrlStruct
 {
@@ -83,6 +84,7 @@ typedef struct ctrlStruct
     reCalibStruct *rec;
 
     lowPassFilter *lpf;
+    Chrono *chro;
 
     teensyStruct *teensy;
 
