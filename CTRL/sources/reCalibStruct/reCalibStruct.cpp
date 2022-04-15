@@ -8,9 +8,12 @@
 using namespace std::chrono;
 
 
+enum {S0_rec_static, launch_rec_static, firstTry_rec_static, secondTry_rec_static};
+
 void rec_init(reCalibStruct *rec)
 {
     rec->rec_flag = 0;
+    rec->static_status = S0_rec_static;
 
     rec->rpl_nTurn = 0;
     rec->rpl_nTurn_set = 0;
@@ -56,7 +59,8 @@ void rec_init(reCalibStruct *rec)
     rec->M = k;
 
     rec->R = Matrix::eye(2);
-    rec->max_iter = 20;
+    rec->max_iter = 10;
+    rec->iter = 0;
     rec->min_delta = 1e-3;
 
     rec->wall_margin = 0.1;
@@ -116,7 +120,7 @@ int rec_ICP(ctrlStruct *cvs, IcpPointToPlane *icp)
     Matrix t(2,1);
 
     auto start = high_resolution_clock::now();
-    icp->fit(rec->rpl_p,rec->m,rec->R,t,0.01);
+    rec->iter = icp->fit(rec->rpl_p,rec->m,rec->R,t,0.01);
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<microseconds>(stop - start);
     printf("rec : duration.count() = %lld us\n-------------\n", duration.count());
@@ -159,7 +163,7 @@ int rec_ICP(ctrlStruct *cvs, IcpPointToPlane *icp)
     return 1;
 }
 
-void rec_ON(ctrlStruct *cvs)
+int rec_ON(ctrlStruct *cvs)
 {
     mThreadsStruct *mt = cvs->mt;
     reCalibStruct *rec = cvs->rec;
@@ -167,4 +171,56 @@ void rec_ON(ctrlStruct *cvs)
     pthread_mutex_lock(&(mt->mutex_rec));
     if (rec->rec_flag == 0) rec->rec_flag = 1;
     pthread_mutex_unlock(&(mt->mutex_rec));
+
+    if (rec->rec_flag) return 1;
+    return 0;
+}
+
+int rec_static(ctrlStruct *cvs)
+{
+    rplStruct *rpl = cvs->rpl;
+    reCalibStruct *rec = cvs->rec;
+
+    switch (rec->static_status) {
+        case S0_rec_static: {
+            if (rec->iter == 0)  rec->rpl_nTurn = rpl->nTurns + 2;
+            if (rec->iter == -1) rec->rpl_nTurn = rpl->nTurns + 1;
+            rec->static_status = launch_rec_static;
+            return 0;
+        }
+        case launch_rec_static: {
+            if (rpl->nTurns == rec->rpl_nTurn) {
+                if (rec_ON(cvs)) {
+                    if (rec->iter == 0)  rec->static_status = firstTry_rec_static;
+                    if (rec->iter == -1) rec->static_status = secondTry_rec_static;
+                }
+            }
+            return 0;
+        }
+        case firstTry_rec_static: {
+            if (rec->iter > 0) {
+                if (rec->iter < rec->max_iter) {
+                    rec->iter = 0;
+                    rec->static_status = S0_rec_static;
+                    printf("rec_static : firstTry\n");
+                    return 1;
+                } else {
+                    rec->iter = -1;
+                    rec->static_status = S0_rec_static;
+                    return 0;
+                }
+            }
+            return 0;
+        }
+        case secondTry_rec_static: {
+            if (rec->iter > 0) {
+                rec->iter = 0;
+                printf("rec_static : secondTry\n");
+                return 1;
+            }
+            return 0;
+        }
+        default:
+            return 0;
+    }
 }

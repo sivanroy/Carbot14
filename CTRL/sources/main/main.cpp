@@ -37,7 +37,7 @@ int main()
 
     int display_position_ON = 0;
     int cmdON = 0;
-    int llcON = 1;
+    int llcON = 0;
     int mlcPF_ON = 0;
     int mlc_ON = 0;
     int rplON = 0;
@@ -49,14 +49,14 @@ int main()
     int icpON = 0;
     int teensyON = 0;
     int saShedON = 0;
-    int distON = 0;
+    int distON = 1;
 
     int mThreadsON = 0;
 
     if (icpON) {
-        cvs->mp->x = 1.5;//3-0.14;//2.00;//3-0.14;
-        cvs->mp->y = 1;//1.13;//0.75;//0.445+0.125;//0.45;//2-0.53;
-        cvs->mp->th = M_PI/4;//0;//M_PI;
+        cvs->mp->x = 3-0.14;//2.00;//3-0.14;
+        cvs->mp->y = 1.13;//0.75;//0.445+0.125;//0.45;//2-0.53;
+        cvs->mp->th = M_PI;//0;//M_PI;
         printf("x = %f | y = %f | th = %f\n",cvs->mp->x, cvs->mp->y, cvs->mp->th);
 
         IcpPointToPlane icp(rec->map_p,rec->M,2);
@@ -300,12 +300,12 @@ int main()
     }
     if (mlcPF_ON) {
 
-        mp->th = -M_PI;
-        double v_ref = -0.1;
-        double th_ref = -M_PI;
+        mp->th = M_PI;
+        double v_ref = 0.1;
+        double th_ref = M_PI/2;
 
         mlcPF->t_start = inputs->t;
-        while (inputs->t < mlcPF->t_start + 5) {
+        while (inputs->t < mlcPF->t_start + 4) {
 
             auto start = high_resolution_clock::now();
 
@@ -370,12 +370,15 @@ int main()
             int d_sBR = d2r_enc_measure(cvs,-1,0,0, true);
             int d_sBL = d2r_enc_measure(cvs,-1,1,0, true);
 
+
             r_ticks_enc_tot += r_ticks_enc;
             l_ticks_enc_tot += l_ticks_enc;
             r_ticks_odo_tot += r_ticks_odo;
             l_ticks_odo_tot += l_ticks_odo;
 
-            fprintf(cvs->llc_data, "%f,%d,%d,%d,%d\n",inputs->t,r_ticks_enc,l_ticks_enc,r_ticks_odo,l_ticks_odo);
+
+            fprintf(cvs->llc_data, "%d\n",r_ticks_enc);
+            //fprintf(cvs->llc_data, "%f,%d,%d,%d,%d\n",inputs->t,r_ticks_enc,l_ticks_enc,r_ticks_odo,l_ticks_odo);
 
             update_time(cvs);
             auto stop = high_resolution_clock::now();
@@ -432,14 +435,14 @@ int main()
         double xgoal = cvs->mp->x;double ygoal=cvs->mp->y;
         int forward;double orientation;
         set_param_normal(cvs);
-        cvs->mp->x = 3-0.27;
+        cvs->mp->x = 3-0.14;
         cvs->mp->y = 1.13;
-        cvs->mp->th = 0;
+        cvs->mp->th = M_PI;
         //threads_start(cvs);
 
 
         printf("begin test hlcPF\n");
-        while (inputs->t < 15) {
+        while (inputs->t < 10) {
             auto start = high_resolution_clock::now();
             double t = inputs->t;
             if (t==0) {

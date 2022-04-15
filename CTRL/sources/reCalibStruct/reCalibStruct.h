@@ -24,6 +24,7 @@
 typedef struct reCalibStruct
 {
     int rec_flag; ///< flag set by the main thread : 1 if reCalib needed, 0 otherwise
+    int static_status;
 
     int rpl_nTurn;
     int rpl_nTurn_set;
@@ -37,6 +38,7 @@ typedef struct reCalibStruct
 
     Matrix R; ///< rotation matrix of the ICP transformation
     int32_t max_iter; ///< maximum number of iterations of the ICP algorithm
+    int iter;  ///< number of iterations of the ICP algorithm
     double min_delta; ///< minimum delta (error) of iterations of the ICP algorithm
 
     double wall_margin; ///< margin of the walls taken to ensure that the output new position is admissible, in [m]
@@ -45,6 +47,7 @@ typedef struct reCalibStruct
 
 void rec_init(reCalibStruct *rec);
 int rec_ICP(ctrlStruct *cvs, IcpPointToPlane *icp);
-void rec_ON(ctrlStruct *cvs);
+int rec_ON(ctrlStruct *cvs);
+int rec_static(ctrlStruct *cvs);
 
 #endif

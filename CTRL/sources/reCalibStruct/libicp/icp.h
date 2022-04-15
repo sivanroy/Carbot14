@@ -57,12 +57,12 @@ public:
   //         indist .. inlier distance (if <=0: use all points)
   // output: R ....... final rotation matrix
   //         t ....... final translation vector
-  void fit(double *T,const int32_t T_num,Matrix &R,Matrix &t,const double indist);
+  int fit(double *T,const int32_t T_num,Matrix &R,Matrix &t,const double indist);
   
 private:
   
   // iterative fitting
-  void fitIterate(double *T,const int32_t T_num,Matrix &R,Matrix &t,const std::vector<int32_t> &active);
+  int fitIterate(double *T,const int32_t T_num,Matrix &R,Matrix &t,const std::vector<int32_t> &active);
   
   // inherited classes need to overwrite these functions
   virtual double               fitStep(double *T,const int32_t T_num,Matrix &R,Matrix &t,const std::vector<int32_t> &active) = 0;

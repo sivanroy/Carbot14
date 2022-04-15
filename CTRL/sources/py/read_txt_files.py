@@ -228,7 +228,7 @@ def plot_lpf_data():
     plt.xlabel("Time [s]")
     plt.ylabel(r"$\omega$ [rad/s]")
     plt.title("Enc l")
-    #plt.xlim(0, 0.05)
+    #plt.xlim(150, 200)
     plt.ylim(-20, 20)
     #plt.axis([0, 10, -6, 6])
     plt.legend()
@@ -237,7 +237,7 @@ def plot_lpf_data():
     plt.show()
     
     plt.plot(Data[2], label=r"mes", linewidth=2)
-    plt.plot(Data[6], label=r"lpf", linewidth=1.2)
+    #plt.plot(Data[6], label=r"lpf", linewidth=1.2)
     plt.xlabel("Time [s]")
     plt.ylabel(r"$\omega$ [rad/s]")
     plt.title("Odo r")
@@ -250,7 +250,7 @@ def plot_lpf_data():
     plt.show()
     
     plt.plot(Data[3], label=r"mes", linewidth=2)
-    plt.plot(Data[7], label=r"lpf", linewidth=1.2)
+    #plt.plot(Data[7], label=r"lpf", linewidth=1.2)
     plt.xlabel("Time [s]")
     plt.ylabel(r"$\omega$ [rad/s]")
     plt.title("Odo l")
@@ -545,7 +545,8 @@ plot_rec_data()
 plot_llc_data()
 plot_mp_data()
 """
-plot_llc_data()
+#plot_llc_data()
+plot_lpf_data()
 
 
 

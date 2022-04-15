@@ -54,18 +54,18 @@ Icp::~Icp () {
     delete M_tree;
 }
 
-void Icp::fit (double *T,const int32_t T_num,Matrix &R,Matrix &t,const double indist) {
+int Icp::fit (double *T,const int32_t T_num,Matrix &R,Matrix &t,const double indist) {
   
   // make sure we have a model tree
   if (!M_tree) {
     cout << "ERROR: No model available." << endl;
-    return;
+    return -1;
   }
   
   // check for minimum number of points
   if (T_num<5) {
     cout << "ERROR: Icp works only with at least 5 template points" << endl;
-    return;
+    return -1;
   }
   
   // set active points
@@ -80,24 +80,26 @@ void Icp::fit (double *T,const int32_t T_num,Matrix &R,Matrix &t,const double in
   }
   
   // run icp
-  fitIterate(T,T_num,R,t,active);
+  int iter = fitIterate(T,T_num,R,t,active);
+  return iter;
 }
 
-void Icp::fitIterate(double *T,const int32_t T_num,Matrix &R,Matrix &t,const std::vector<int32_t> &active) {
+int Icp::fitIterate(double *T,const int32_t T_num,Matrix &R,Matrix &t,const std::vector<int32_t> &active) {
   
   // check if we have at least 5 active points
   if (active.size()<5)
-    return;
+    return -1;
 
-  printf("start fitStep loop : max_iter = %d\n", max_iter);
+  //printf("start fitStep loop : max_iter = %d\n", max_iter);
   // iterate until convergence
-  for (int32_t iter=0; iter<max_iter; iter++) {//max_iter
+  int iter;
+  for (iter=0; iter<max_iter; iter++) {//max_iter
       double r = fitStep(T,T_num,R,t,active);
       if (r < min_delta) { //min_delta
           printf("r = %f | iter : %d\n", r, iter);
           break;
       }
   }
-
+  return iter;
 
 }

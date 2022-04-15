@@ -68,23 +68,17 @@ void distr_loop(ctrlStruct *cvs){
     		sendFromHLCPF(cvs,cvs->distr->forward[0]);
         	if(hlcPF->output){
                 printf("go to recalibrate_di\n");
-                op->no_opp = 1;
+                //op->no_opp = 1;
                 distr->status = recalibrate_di;
         	}
         	break;
         }
 
         case recalibrate_di:{
-            if (rec->rpl_nTurn_set == 0) {
-                rec->rpl_nTurn = rpl->nTurns + 2;
-                rec->rpl_nTurn_set = 1;
-                printf("rec->rpl_nTurn : %d\n", rec->rpl_nTurn);
-            }
-            if (rpl->nTurns == rec->rpl_nTurn) {
-                rec_ON(cvs);
-                rec->rpl_nTurn_set = 0;
+            if (rec_static(cvs)) {
                 distr->status = OpenDis_di;
-                printf("go to OpenDis_di\n");
+                printf("rec END\n");
+                distr->output = 1;
             }
             break;
         }
