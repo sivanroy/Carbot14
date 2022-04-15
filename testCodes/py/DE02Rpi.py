@@ -42,6 +42,8 @@ class DE02Rpi(object):
             Adr = 0x04
         if(sonar ==1):
             Adr = 0x05
+        if(sonar == 2):
+            Adr = 0x01
         return Adr
 
     def measure(self,encoder=1,left=1,sonar=-1,verbose=0):
@@ -58,6 +60,20 @@ class DE02Rpi(object):
 
 
 #de0 tests
+
+
+de0 = DE02Rpi()
+while(1):
+    A = de0.measure(-1,-1,2)
+    value = A[4] + (A[3] << 8) + (A[2] << 16)
+    if (A[1] >= 128):
+        value = value + ((A[1]-128) << 24 ) - 2**31
+    else :
+        value = value + (A[1] << 24)
+    print(value)
+    time.sleep(0.01)
+
+"""
 de0 = DE02Rpi()
 count = 0
 i = 0
@@ -67,7 +83,7 @@ while(1):
         d2 = de0.measure(sonar=1)
         print("d1:{} cm | d2:{}".format(d1,d2))
         time.sleep(0.01)
-
+"""
 """
 de0 = DE02Rpi()
 count = 0
