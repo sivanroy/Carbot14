@@ -35,6 +35,12 @@ typedef struct midLevelCtrl
     int reach_goal; ///< 1 if goal reached, 0 if not
     double d;
 
+    //check if blocked 
+    double values[200];
+    int size; // !!  à la size < 200
+    int pointer;
+    double val_err;
+
     double error;
 
 } midLevelCtrl;
@@ -42,5 +48,7 @@ typedef struct midLevelCtrl
 void init_midLevelCtrl(midLevelCtrl *mlc);
 void set_d_th_ref_mes(ctrlStruct *cvs, double x_g, double y_g);
 void set_speed_ref(ctrlStruct *cvs, double x_g, double y_g, int goForward = 1);
+
+int check_blocked(ctrlStruct *cvs);
 
 #endif // end of header guard

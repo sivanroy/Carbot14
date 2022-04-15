@@ -35,6 +35,14 @@ void init_midLevelCtrl(midLevelCtrl *mlc)
     mlc->reach_goal = 0;
     mlc->d = 0;
 
+    //double values[200];
+    mlc->size = 200; // !!  à la size < 200
+    mlc->pointer = 0;
+    mlc->val_err = 0.01;
+    for (int i = 0; i< mlc->size; i++) {
+        mlc->values[i] = -1;
+    }
+
     mlc->error = 0.05;
 }
 
@@ -128,5 +136,25 @@ void set_speed_ref(ctrlStruct *cvs, double x_g, double y_g, int goForward)
     }
     fprintf(cvs->mlc_data, "%f,%f,%f,%f,%f,%f,%f\n", cvs->inputs->t, mlc->r_sp_ref, mlc->l_sp_ref, mlc->d_ref, mlc->d_mes, mlc->th_ref, mlc->th_mes);
 
+}
+
+int check_blocked(ctrlStruct *cvs){
+    int pointer = cvs->mlc->pointer;
+    int size  = cvs->mlc->size;
+    double *values = cvs->mlc->values;
+    pointer += 1;
+    pointer %= size;
+    values[pointer] = cvs->mlc->d;
+
+    double dif = 0;
+    for (int i = 0; i < size; i ++) {
+        int p = (pointer+i)%size;
+        int pp = (pointer+i+1)%size;
+        dif += abs(values[p]-values[pp]);
+    }
+    if (dif < cvs->mlc->val_err){
+        return 1;
+    }
+    return 0;
 }
 
