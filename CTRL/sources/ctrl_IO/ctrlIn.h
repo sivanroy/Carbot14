@@ -38,6 +38,9 @@ typedef struct ctrlIn
     double r_back_s;
     double l_back_s;
 
+    int team;
+    int start;
+
 } ctrlIn;
 
 void ctrlIn_init(ctrlIn *inputs);

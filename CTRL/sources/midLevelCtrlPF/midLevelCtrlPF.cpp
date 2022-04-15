@@ -12,16 +12,16 @@ void mlcPF_init(midLevelCtrlPF *mlcPF)
 {
     mlcPF->dt = 0.01;
 
-    mlcPF->sigma = .5;
+    mlcPF->sigma = 1;
     mlcPF->R_odo = 0.022;
 
-    mlcPF->Kp_th = 8.0;
-    mlcPF->max_th = 4;
+    mlcPF->Kp_th = 4.0;
+    mlcPF->max_th = 8;
 
     mlcPF->r_sp_ref = 0.0;
     mlcPF->l_sp_ref = 0.0;
-    mlcPF->max_sp_ref = 10;
-    mlcPF->min_sp_ref = -10;
+    mlcPF->max_sp_ref = 15;
+    mlcPF->min_sp_ref = -15;
 
     mlcPF->t_start = 0;
 }

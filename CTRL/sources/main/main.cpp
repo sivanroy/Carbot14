@@ -49,9 +49,14 @@ int main()
     int icpON = 0;
     int teensyON = 0;
     int saShedON = 0;
-    int distON = 1;
+    int distON = 0;
 
     int mThreadsON = 0;
+
+    int contest = 0;
+    if (contest) {
+        printf("let's go!\n");
+    }
 
     if (icpON) {
         cvs->mp->x = 3-0.14;//2.00;//3-0.14;
@@ -270,12 +275,12 @@ int main()
             }
 
             else if (inputs->t >= 2 && inputs->t < 4) {
-                r_sp_ref = -10;
-                l_sp_ref = -10;
+                r_sp_ref = 0;
+                l_sp_ref = 0;
             }
             else if (inputs->t >= 4 && inputs->t < 6) {
-                r_sp_ref = 2;
-                l_sp_ref = 2;
+                r_sp_ref = -10;
+                l_sp_ref = -10;
             }
             else {
                 r_sp_ref = 0;
@@ -301,12 +306,29 @@ int main()
     if (mlcPF_ON) {
 
         mp->th = M_PI;
-        double v_ref = 0.1;
-        double th_ref = M_PI/2;
+        double v_ref = 0.2;
+        double th_ref = M_PI;
 
         mlcPF->t_start = inputs->t;
-        while (inputs->t < mlcPF->t_start + 4) {
+        while (inputs->t < 9) {
 
+            if (inputs->t >= 0 && inputs->t < 2) {
+                v_ref = 0.2;
+                th_ref = M_PI;
+            }
+
+            else if (inputs->t >= 2 && inputs->t < 4) {
+                v_ref = 0;
+                th_ref = M_PI;
+            }
+            else if (inputs->t >= 4 && inputs->t < 6) {
+                v_ref = -0.2;
+                th_ref = M_PI;
+            }
+            else {
+                v_ref = 0.2;
+                th_ref = M_PI/2;
+            }
             auto start = high_resolution_clock::now();
 
             //if (inputs->t >= 2 && inputs->t < 4) th_ref = 0;//-M_PI/4;
@@ -370,6 +392,7 @@ int main()
             int d_sBR = d2r_enc_measure(cvs,-1,0,0, true);
             int d_sBL = d2r_enc_measure(cvs,-1,1,0, true);
 
+            int data = d2r_enc_measure(cvs,-1, 0, 2 ,true);
 
             r_ticks_enc_tot += r_ticks_enc;
             l_ticks_enc_tot += l_ticks_enc;
@@ -435,9 +458,9 @@ int main()
         double xgoal = cvs->mp->x;double ygoal=cvs->mp->y;
         int forward;double orientation;
         set_param_normal(cvs);
-        cvs->mp->x = 3-0.14;
+        cvs->mp->x = 0.14;
         cvs->mp->y = 1.13;
-        cvs->mp->th = M_PI;
+        cvs->mp->th = 0;
         //threads_start(cvs);
 
 
@@ -447,7 +470,7 @@ int main()
             double t = inputs->t;
             if (t==0) {
                 set_param_normal(cvs);
-                xgoal = 2;//2.2;//1.2;
+                xgoal = 1;//2.2;//1.2;
                 ygoal = 1.5;//1.60;
                 forward=-1;
                 orientation = M_PI/2;

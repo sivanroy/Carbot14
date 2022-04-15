@@ -132,7 +132,6 @@ def plot_llc_data():
     #plt.savefig("speed_profile_zoom.pdf", format="pdf")
     plt.show()
     
-    """
     plt.plot(Data2[0], Data2[1], label=r"r_Pout", linewidth=2)
     plt.plot(Data2[0], Data2[3], label=r"r_Iout$", linewidth=1.2)
     plt.plot(Data2[0], Data2[5], label=r"r_cmd$", linewidth=1.2)
@@ -203,8 +202,7 @@ def plot_llc_data():
     print(m)
     print(T)
         
-    """
-
+    
 
 def plot_lpf_data():
 
@@ -545,7 +543,7 @@ plot_rec_data()
 plot_llc_data()
 plot_mp_data()
 """
-#plot_llc_data()
+plot_llc_data()
 plot_lpf_data()
 
 

@@ -31,6 +31,9 @@ void ctrlIn_init(ctrlIn *inputs)
     inputs->l_front_s = 0.0;
     inputs->r_back_s = 0.0;
     inputs->l_back_s = 0.0;
+
+    inputs->team = -1;
+    inputs->start = -1;
 }
 
 void lpf_init(lowPassFilter *lpf){
@@ -38,7 +41,7 @@ void lpf_init(lowPassFilter *lpf){
     lpf->value_le = 0;
     lpf->value_ro = 0;
     lpf->value_lo = 0;
-    lpf->beta = .5 ;
+    lpf->beta = .85 ;
 }
 
 double lpf(ctrlStruct *cvs,double val,int select){
@@ -62,21 +65,24 @@ unsigned char d2r_enc_address(int encoder, int left, int sonarF)
 
     if(encoder!=-1) {
         if (encoder) {
-            if (left == 1) addr = 0x02;//0x02;//0x04;//0x00; //0x01;
-            else addr = 0x01;//0x01;//0x01;//0x03; //0x00;
+            if (left == 1) addr = 0x02;
+            else addr = 0x01;
         } else {
-            if (left == 1) addr = 0x04;//0x00;//0x02; //0x03;
-            else addr = 0x03;//0x03;//0x01; //0x02;
+            if (left == 1) addr = 0x04;
+            else addr = 0x03;
         }
     }
     else {
-        if(sonarF == 1) {
+        if (sonarF == 2) {
+            addr = 0x00;
+        }
+        else if(sonarF == 1) {
             if (left == 0) addr = 0x05;
-            else addr = 0x06;//0x05; //4
+            else addr = 0x06;
         }
         else {
             if (left == 0) addr = 0x07;
-            else addr = 0x00;//0x05; //4
+            else addr = 0x08;
         }
     }
     return addr;
@@ -99,9 +105,8 @@ int d2r_enc_measure(ctrlStruct *cvs, int encoder, int left, int sonarF, bool ver
         count = buffer[4] + (buffer[3] << 8) + (buffer[2] << 16);// + (buffer[1] << 24)
         if (buffer[1] >= 128) count += ((buffer[1] - 128) << 24) - pow(2,31);
         else count += buffer[1] << 24;
-    }
+    }  
     else count = buffer[4] + (buffer[3] << 8) + (buffer[2] << 16) + (buffer[1] << 24) ;
-
     if (verbose) printf("DE02Rpi::measure %d -> count = %d\n",addr, count);
     return count;
 }
@@ -125,6 +130,14 @@ void get_d2r_data(ctrlStruct *cvs)
     int d_sBR = d2r_enc_measure(cvs,-1,0,0);
     int d_sBL = d2r_enc_measure(cvs,-1,1,0);
 
+    int data = d2r_enc_measure(cvs, -1, 0, 2);
+
+    inputs->start = data%2;
+    if(inputs->team == -1){
+        inputs->team = (data>>1)%2;
+        printf("TEAM %d\n",inputs->team);
+    }
+
     if (d_sFR < 300) inputs->r_front_s = d_sFR;
     if (d_sFL < 300) inputs->l_front_s = d_sFL; 
     if (d_sBR < 300) inputs->r_back_s  = d_sBR;
@@ -137,8 +150,8 @@ void get_d2r_data(ctrlStruct *cvs)
 
     double MAX_enc = 20;
     
-    if (r_sp_mes_enc > -MAX_enc && r_sp_mes_enc < MAX_enc) inputs->r_sp_mes_enc = r_sp_mes_enc;//lpf(cvs,r_sp_mes_enc, 0);
-    if (l_sp_mes_enc > -MAX_enc && l_sp_mes_enc < MAX_enc) inputs->l_sp_mes_enc = l_sp_mes_enc;
+    if (r_sp_mes_enc > -MAX_enc && r_sp_mes_enc < MAX_enc) inputs->r_sp_mes_enc = lpf(cvs,r_sp_mes_enc, 0);
+    if (l_sp_mes_enc > -MAX_enc && l_sp_mes_enc < MAX_enc) inputs->l_sp_mes_enc = lpf(cvs,l_sp_mes_enc,1);
     if (r_sp_mes_odo > -MAX_enc*1.4 && r_sp_mes_odo < MAX_enc*1.4) inputs->r_sp_mes_odo = r_sp_mes_odo;
     if (l_sp_mes_odo > -MAX_enc*1.4 && l_sp_mes_odo < MAX_enc*1.4) inputs->l_sp_mes_odo = l_sp_mes_odo;
 

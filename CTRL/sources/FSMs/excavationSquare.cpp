@@ -7,6 +7,10 @@
 #include "FSMs_utils.h"
 
 
+//4 possibilités 
+//carrés peuvent avoir ete retounré par l'ennemi
+//attention a l'ennemi
+
 
 enum {S0_es,Dpmt1_es,HLC,Dpmt2_es,Dpmt3_es,servoShedOut_es};
 
