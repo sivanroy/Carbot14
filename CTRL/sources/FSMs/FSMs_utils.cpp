@@ -8,6 +8,30 @@
 #include "FSMs_utils.h"
 
 
+void init_chrono(Chrono* chro){
+    chro->begin = 0;
+    chro->time = 0;
+    chro->output = 0;
+}
+
+void setChrono(ctrlStruct *cvs,double enableTime){
+    cvs->chro->begin = cvs->inputs->t;
+    cvs->chro->time = enableTime;    
+    cvs->chro->output = 0;
+}
+
+int checkChrono(ctrlStruct *cvs){
+    double begin = cvs->chro->begin ;
+    double enableTime = cvs->chro->time;    
+    cvs->chro->output = 0;
+    double diff = cvs->inputs->t - begin;
+    if(diff>=enableTime) {
+        cvs->chro->output = 1;
+        return 1;
+    }
+    return 0;
+}
+
 void sendFromHLCPF(ctrlStruct *cvs,int goForward,int noWall){
 	get_d2r_data(cvs);
     dyn_obs_set(cvs);
