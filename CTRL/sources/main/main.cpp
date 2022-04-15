@@ -42,7 +42,7 @@ int main()
     int mlc_ON = 0;
     int rplON = 0;
     int odoCalib = 0;
-    int hlcPFON = 0;
+    int hlcPFON = 1;
     int pushShedON = 0;
     int pushShed_and_sonar_ON = 0;
     int icp_test = 0;

@@ -93,11 +93,9 @@ int d2r_enc_measure(ctrlStruct *cvs, int encoder, int left, int sonarF, bool ver
 
     wiringPiSPIDataRW(inputs->d2r_channel, buffer, 5);
     int count ;
-
     //printf("%x,%x,%x,%x,%x\n", buffer[0], buffer[1], buffer[2], buffer[3], buffer[4]);
     fprintf(cvs->llc_data2,"%x,%x,%x,%x,%x\n", buffer[0], buffer[1], buffer[2], buffer[3], buffer[4]);
     if(sonarF == -1) {
-
         count = buffer[4] + (buffer[3] << 8) + (buffer[2] << 16);// + (buffer[1] << 24)
         if (buffer[1] >= 128) count += ((buffer[1] - 128) << 24) - pow(2,31);
         else count += buffer[1] << 24;
@@ -128,7 +126,7 @@ void get_d2r_data(ctrlStruct *cvs)
     int d_sBL = d2r_enc_measure(cvs,-1,1,0);
 
     if (d_sFR < 300) inputs->r_front_s = d_sFR;
-    if (d_sFL < 300) inputs->l_front_s = d_sFL;
+    if (d_sFL < 300) inputs->l_front_s = d_sFL; 
     if (d_sBR < 300) inputs->r_back_s  = d_sBR;
     if (d_sBL < 300) inputs->l_back_s  = d_sBL;
 
