@@ -19,6 +19,7 @@ void rec_init(reCalibStruct *rec)
     rec->rpl_nTurn_set = 0;
 
     rec->w_limit = 1;
+    rec->v_limit = 0.4;
 
     rec->m = 0;
     rec->M = 1000;
@@ -59,7 +60,7 @@ void rec_init(reCalibStruct *rec)
     rec->M = k;
 
     rec->R = Matrix::eye(2);
-    rec->max_iter = 10;
+    rec->max_iter = 20;
     rec->iter = 0;
     rec->min_delta = 1e-3;
 
@@ -133,16 +134,19 @@ int rec_ICP(ctrlStruct *cvs, IcpPointToPlane *icp)
     new_x = rec->R.val[0][0]*x + rec->R.val[0][1]*y + t.val[0][0];
     new_y = rec->R.val[1][0]*x + rec->R.val[1][1]*y + t.val[0][1];
     new_th = limit_angle(th + asin(rec->R.val[1][0]));
+    fprintf(cvs->rec_data, "%f,%f,%f,%f,%f,%f\n", new_x, new_y, new_th, x, y, th);
+
     if ((new_x > 0 + rec->wall_margin && new_x < 3 - rec->wall_margin) &&
         (new_y > 0 + rec->wall_margin && new_y < 2 - rec->wall_margin)) {
-        printf("Recalib pos\n");
-        mp->x = new_x;
-        mp->y = new_y;
-        mp->th = new_th;
+        if (rec->iter < rec->max_iter) {
+            printf("Recalib pos\n");
+            mp->x = new_x;
+            mp->y = new_y;
+            mp->th = new_th;
+        }
     }
     pthread_mutex_unlock(&(mt->mutex_mp));
 
-    fprintf(cvs->rec_data, "%f,%f,%f\n", new_x, new_y, new_th);
     printf("tx = %f | ty = %f |  ", t.val[0][0], t.val[0][1]);
     printf("R00 = %f | R01 = %f\n", rec->R.val[0][0], rec->R.val[0][1]);
     printf("                                  R10 = %f | R11 = %f\n", rec->R.val[1][0], rec->R.val[1][1]);
@@ -197,9 +201,14 @@ int rec_static(ctrlStruct *cvs)
         case launch_rec_static: {
             if (rpl->nTurns == rec->rpl_nTurn) {
                 if (rec_ON(cvs)) {
+                    //printf("launch_rec_static : rec_ON\n");
                     if (rec->iter == 0)  rec->static_status = firstTry_rec_static;
                     if (rec->iter == -1) rec->static_status = secondTry_rec_static;
                 }
+            }
+            else if (rpl->nTurns > rec->rpl_nTurn) {
+                printf("rec_static : abort\n");
+                return 1;
             }
             return 0;
         }

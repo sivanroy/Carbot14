@@ -30,6 +30,7 @@ typedef struct reCalibStruct
     int rpl_nTurn_set;
 
     double w_limit; ///< omega limit for the reCalibration [rad/s]
+    double v_limit; ///< linear speed limit for the reCalibration [m/s]
 
     int m; ///< size of the rpl point cloud (rpl_p)
     int M; ///< size of the map point cloud (map_p)

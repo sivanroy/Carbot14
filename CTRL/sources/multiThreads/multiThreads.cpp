@@ -88,7 +88,13 @@ void *ctrl_op(void *arg)
     reCalibStruct *rec = cvs->rec;
     double dt = inputs->dt;
 
+    double pos[5];
+    double w, v;
+
     while (mt->thread_main_end == 0) {
+        get_pos(cvs, pos);
+        w = pos[3]; v = pos[4];
+
         rpl_grabData(cvs);
         if (mp->w < op->w_limit) get_opp_pos(cvs);
     }
@@ -123,15 +129,13 @@ void *ctrl_rec(void *arg)
 
     int flag;
     while (mt->thread_main_end == 0) {
-
-
         get_pos(cvs, pos);
         w = pos[3]; v = pos[4];
 
         pthread_mutex_lock(&(mt->mutex_rec));
         flag = rec->rec_flag;
         pthread_mutex_unlock(&(mt->mutex_rec));
-        if (flag && (w < rec->w_limit)) rec_ICP(cvs, &icp);
+        if (flag && (w < rec->w_limit) && (v < rec->v_limit)) rec_ICP(cvs, &icp);
         //printf("ctrl_rec\n");
     }
 

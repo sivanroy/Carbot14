@@ -452,6 +452,9 @@ def plot_icp_data():
     plt.plot(Data1[0], Data1[1], 'ro', label="Map point cloud ", markersize = 2)
     plt.plot(Data2[0], Data2[1], 'bo', label="rplidar point cloud", markersize = 2)
     plt.plot(Data3[0], Data3[1], 'o', marker='x', label="Recalibrated point cloud")
+    plt.plot(Data2[0][0], Data2[1][0], 'go', label="first rplidar point", markersize = 4)
+    plt.plot(Data2[0][len(Data2[0])-1], Data2[1][len(Data2[0])-1], 'o', label="last rplidar point", markersize = 4)
+
     plt.xlabel("x [m]")
     plt.ylabel("y [m]")
     plt.title("ICP algorithm")
@@ -469,24 +472,102 @@ def plot_icp_data():
     #plt.savefig("icp_test_stat_5.pdf", format="pdf")
     plt.show()
     
+    
 def plot_rec_data():
 
-    Data = read_txt_file("../../build/rec_data.txt", 3)
+    rec = read_txt_file("../../build/rec_data.txt", 6)
+    mp = read_txt_file("../../build/mp_data.txt", 6)
 
     Map = read_txt_file("../../build/icp1_data.txt", 2)
-    
-    plt.plot(Map[0], Map[1], label="Map")
-    plt.plot(Data[0], Data[1], 'ro', label="rec_data")
-    plt.xlabel("x [m]")
-    plt.ylabel("y [m]")
-    plt.title("rec")
-    #plt.ylim(-0.1, 2.1)
-    #plt.xlim(-0.1, 3.1)
+    """
+    ####################################################
+    plt.plot(mp[5], mp[3], 'r', label="w")
+    plt.xlabel("t [s]")
+    plt.ylabel("w [rad/s]")
+    plt.title("w")
     #plt.axis("equal")
     plt.legend()
     plt.grid()
     #plt.savefig("mp_data2.pdf", format="pdf")
     plt.show()
+    
+    plt.plot(mp[5], mp[4], 'r', label="v")
+    plt.xlabel("t [s]")
+    plt.ylabel("v [m/s]")
+    plt.title("v")
+    #plt.axis("equal")
+    plt.legend()
+    plt.grid()
+    #plt.savefig("mp_data2.pdf", format="pdf")
+    plt.show()
+    
+    plt.plot(mp[2], 'r', label="th mp")
+    plt.ylabel("th [rad]")
+    plt.title("th mp")
+    #plt.axis("equal")
+    plt.legend()
+    plt.grid()
+    #plt.savefig("mp_data2.pdf", format="pdf")
+    plt.show()
+    
+    plt.plot(rec[2], 'r', label="th rec")
+    plt.ylabel("th [rad]")
+    plt.title("th rec")
+    #plt.axis("equal")
+    plt.legend()
+    plt.grid()
+    #plt.savefig("mp_data2.pdf", format="pdf")
+    plt.show()
+    """
+    ####################################################
+    plt.plot(Map[0], Map[1], label="Map")
+    plt.plot(rec[3], rec[4], 'ro', label="mp_data", markersize = 4)
+    plt.plot(rec[0], rec[1], 'bo', label="rec_data", markersize = 2)
+    plt.xlabel("x [m]")
+    plt.ylabel("y [m]")
+    plt.title("mp vs rec")
+    #plt.ylim(-0.1, 2.1)
+    #plt.xlim(2, 3.1)
+    #plt.axis("equal")
+    plt.legend()
+    plt.grid()
+    #plt.savefig("mp_data2.pdf", format="pdf")
+    plt.show()
+    """
+    ####################################################
+    plt.plot(rec[0], 'r', label="x rec", markersize = 4)
+    plt.plot(rec[3], 'b', label="x mp", markersize = 2)
+    #plt.ylabel("th [rad]")
+    #plt.title("th rec")
+    #plt.axis("equal")
+    plt.legend()
+    plt.grid()
+    #plt.savefig("mp_data2.pdf", format="pdf")
+    plt.show()
+    
+    plt.plot(rec[1], 'r', label="y rec", markersize = 4)
+    plt.plot(rec[4], 'b', label="y mp", markersize = 2)
+    #plt.ylabel("th [rad]")
+    #plt.title("th rec")
+    #plt.axis("equal")
+    plt.legend()
+    plt.grid()
+    #plt.savefig("mp_data2.pdf", format="pdf")
+    plt.show()
+    """
+    err = 0
+    c = 0
+    for i in range(len(rec[0])):
+        dx = rec[0][i] - rec[3][i]
+        err += dx
+        c += 1
+        
+    err = err/c
+    print(err)
+    print("th_rec = ", rec[2][0]*180/pi)
+    print("th_mp = ", rec[5][0]*180/pi)
+    
+# err moy with v_ref = 0.1 : 0.021595764705882307
 
 def plot_tau_data():
 
@@ -543,7 +624,23 @@ plot_rec_data()
 plot_llc_data()
 plot_mp_data()
 """
-plot_icp_data()
+#plot_icp_data()
+plot_rec_data()
+
+"""
+th_mp =  -140.47653170302596
+th_rec =  -136.28735078392694
+
+th_mp =  -141.99836490267293
+th_rec =  -141.8475624109945
+
+th_mp =  -171.7061692844266
+th_rec =  -171.17818867621355
+
+bug sur ligne
+th_mp =  79.89443816441177
+th_rec =  86.07986133752608
+"""
 
 
 
