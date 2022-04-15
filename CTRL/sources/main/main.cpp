@@ -74,7 +74,9 @@ int main()
         }
         printf("M = %d\n", rec->M);
         while (rpl->nTurns < 3) {
+            printf("rpl->nTurns : %d\n", rpl->nTurns);
             rpl_grabData(cvs);
+            printf("ICP go\n");
             rec_ICP(cvs, &icp);
             break;
         }

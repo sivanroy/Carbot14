@@ -183,8 +183,14 @@ int rec_static(ctrlStruct *cvs)
 
     switch (rec->static_status) {
         case S0_rec_static: {
-            if (rec->iter == 0)  rec->rpl_nTurn = rpl->nTurns + 2;
-            if (rec->iter == -1) rec->rpl_nTurn = rpl->nTurns + 1;
+            if (rec->iter == 0)  {
+                rec->rpl_nTurn = rpl->nTurns + 2;
+                printf("S0_rec_static : try 1\n");
+            }
+            if (rec->iter == -1) {
+                rec->rpl_nTurn = rpl->nTurns + 1;
+                printf("S0_rec_static : try 2\n");
+            }
             rec->static_status = launch_rec_static;
             return 0;
         }
