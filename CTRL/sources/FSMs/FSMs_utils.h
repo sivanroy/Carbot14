@@ -4,6 +4,15 @@
 #include "../ctrlStruct/ctrlStruct.h"
 
 
+typedef struct checkBlocked {
+    //check if blocked
+    double values_l[200];
+    double values_r[200];
+    int size; // !!  à la size < 200
+    int pointer;
+    double val_err;
+} checkBlocked;
+
 typedef struct Chrono {
 	double begin;
 	double time;
@@ -11,8 +20,13 @@ typedef struct Chrono {
 } Chrono;
 
 void init_chrono(Chrono* chro);
+void init_checkBlocked(checkBlocked *checkb);
+
+
 void setChrono(ctrlStruct *cvs,double enableTime);
 int checkChrono(ctrlStruct *cvs);
+int checkBlocked(ctrlStruct *cvs);
+
 
 void sendFromHLCPF(ctrlStruct *cvs,int goForward=1,int noWall= 0);
 

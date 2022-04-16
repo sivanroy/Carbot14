@@ -18,7 +18,6 @@ void llc_init(lowLevelCtrl *llc)
     llc->r_integral_err = 0.0;
     llc->l_integral_err = 0.0;
     llc->kphiOnK = 0;//0.23*(35/24);
-
 }
 
 
