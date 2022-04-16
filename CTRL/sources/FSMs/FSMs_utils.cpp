@@ -8,6 +8,16 @@
 #include "FSMs_utils.h"
 
 
+void init_checkBlocked(checkBlocked *checkb) {
+    checkb->size = 200; // !!  à la size < 200
+    checkb->pointer = 0;
+    checkb->val_err = 0.01;
+    for (int i = 0; i< checkb->size; i++) {
+        checkb->values_l[i] = -1;
+        checkb->values_r[i] = -1;
+    }
+}
+
 void init_chrono(Chrono* chro){
     chro->begin = 0;
     chro->time = 0;
@@ -69,4 +79,28 @@ void sendFromMLCPF(ctrlStruct *cvs,double v_ref, double th_ref){
     set_commands(cvs, cvs->mlcPF->r_sp_ref, cvs->mlcPF->l_sp_ref);
     send_commands(cvs);
     set_new_position(cvs);
+}
+
+
+int check_blocked(ctrlStruct *cvs){
+    int pointer = cvs->checkb->pointer;
+    int size  = cvs->checkb->size;
+    double *values_l = cvs->checkb->values_l;
+    double *values_r = cvs->checkb->values_r;
+
+    pointer += 1;
+    pointer %= size;
+    values_l[pointer] = 0;//cvs->llc->;
+    values_r[pointer] = 0;//cvs->llc->;
+
+    double dif = 0;
+    for (int i = 0; i < size; i ++) {
+        int p = (pointer+i)%size;
+        int pp = (pointer+i+1)%size;
+        dif += abs(values_l[p]-values_r[pp]);
+    }
+    if (dif < cvs->checkb->val_err){
+        return 1;
+    }
+    return 0;
 }

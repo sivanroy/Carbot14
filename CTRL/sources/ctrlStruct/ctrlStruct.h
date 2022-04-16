@@ -58,6 +58,7 @@ typedef struct distributeurs distributeurs;
 
 typedef struct lowPassFilter lowPassFilter;
 typedef struct Chrono Chrono;
+typedef struct checkBlocked checkBlocked;
 
 typedef struct ctrlStruct
 {
@@ -85,6 +86,7 @@ typedef struct ctrlStruct
 
     lowPassFilter *lpf;
     Chrono *chro;
+    checkBlocked* checkb;
 
     teensyStruct *teensy;
 

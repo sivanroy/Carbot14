@@ -120,12 +120,12 @@ void set_param_normal(ctrlStruct *cvs){
     //tau
     hlcPF->Tau_max = 10;
     hlcPF->tau_max_dist = 1.5;
-    hlcPF->Tau_min = .01; //0.005;
-    hlcPF->tau_min_dist = .01;
+    hlcPF->Tau_min = 0.2; //0.005;
+    hlcPF->tau_min_dist = 0.1;
     //reorientation
     hlcPF->erreurTh = 0.01;
     //local minimum
-    cvs->mlcPF->sigma = .5;
+    cvs->mlcPF->sigma = 1;
 }
 
 void set_param_prec(ctrlStruct *cvs){
@@ -158,7 +158,7 @@ void set_param_large(ctrlStruct *cvs){
     //tau
     hlcPF->Tau_max = .5;
     hlcPF->tau_max_dist = .2;
-    hlcPF->Tau_min = .01; //0.005;
+    hlcPF->Tau_min = .02; //0.005;
     hlcPF->tau_min_dist = .01;
     //reorientation
     hlcPF->erreurTh = 0.01;
@@ -177,21 +177,24 @@ double tau_compute(ctrlStruct *cvs,int noObst) {
     double a = (tau_min-tau_max)/(tau_min_dist-tau_max_dist);
     double b = tau_min - a*tau_min_dist;
 
-    double x_opp = cvs->obs->obs_dyn_x;
-    double y_opp = cvs->obs->obs_dyn_y;
-    double d_opp = fmax(sqrt(x_opp*x_opp+y_opp*y_opp),0);
+    double d_opp = fmax(cvs->hlcPF->d_opp-0.20,tau_min_dist)/3;
+    printf("d_opp %f\n", d_opp);
 
     double d = cvs->hlcPF->d;
-    double d_obst = fmax(cvs->hlcPF->nearestObst,0);
+    double d_obst = fmax(cvs->hlcPF->nearestObst-0.15,tau_min_dist);
 
     double tau_return = 0;
     double d_return = std::min(d,d_opp);
-    if (!noObst) d_return = std::min(d_return,d_obst);
+    if (!noObst){
+        d_return = std::min(d_return,d_obst);
+        printf("!noobst\n");
+    }
 
     tau_return = a*d_return+b;
 
     if (tau_return <= tau_min) tau_return = tau_min;
     else if (tau_return >= tau_max) tau_return = tau_max;
+    printf("tau return %f\n", tau_return);
 
     //distance to opponent
     return tau_return;

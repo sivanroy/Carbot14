@@ -18,7 +18,6 @@ void llc_init(lowLevelCtrl *llc)
     llc->r_integral_err = 0.0;
     llc->l_integral_err = 0.0;
     llc->kphiOnK = 0;//0.23*(35/24);
-
 }
 
 void set_commands(ctrlStruct *cvs, double r_sp_ref, double l_sp_ref)

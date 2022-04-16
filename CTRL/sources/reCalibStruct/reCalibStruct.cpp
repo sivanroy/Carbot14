@@ -207,10 +207,11 @@ int rec_static(ctrlStruct *cvs)
         }
         case launch_rec_static: {
             if (rpl->nTurns == rec->rpl_nTurn) {
+                printf("rpl->nTurns == rec->rpl_nTurn\n");
                 if (rec_ON(cvs)) {
-                    //printf("launch_rec_static : rec_ON\n");
-                    if (iter == 0)  rec->static_status = firstTry_rec_static;
-                    if (iter == -1) rec->static_status = secondTry_rec_static;
+                    printf("launch_rec_static : rec_ON\n");
+                    if (rec->iter == 0)  rec->static_status = firstTry_rec_static;
+                    if (rec->iter == -1) rec->static_status = secondTry_rec_static;
                     return 0;
                 }
             }
@@ -242,7 +243,6 @@ int rec_static(ctrlStruct *cvs)
         case secondTry_rec_static: {
             if (iter > 0) {
                 printf("rec_static : secondTry\n");
-                return 1;
             }
             pthread_mutex_lock(&(mt->mutex_rec_static));
             rec->iter = 0;

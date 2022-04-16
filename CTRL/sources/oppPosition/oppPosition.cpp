@@ -122,8 +122,8 @@ void get_opp_pos(ctrlStruct *cvs)
             op->x_op = x_op[n_cluster];
             op->y_op = y_op[n_cluster];
             op->update_flag = 1;
-            //fprintf(cvs->op_data, "%f,%f\n", x_op[n_cluster], y_op[n_cluster]);
-            //printf("opp : x_op = %f | y_op = %f\n", op->x_op, op->y_op);
+            //Sfprintf(cvs->op_data, "%f,%f\n", x_op[n_cluster], y_op[n_cluster]);
+            printf("opp : x_op = %f | y_op = %f\n", op->x_op, op->y_op);
             pthread_mutex_unlock(&(mt->mutex_op));
         }
         else {
@@ -131,7 +131,7 @@ void get_opp_pos(ctrlStruct *cvs)
             op->x_op = -1;
             op->y_op = -1;
             op->update_flag = 1;
-            //printf("opp -1 -1 : x_op = %f | y_op = %f\n", op->x_op, op->y_op);
+            printf("opp -1 -1 : x_op = %f | y_op = %f\n", op->x_op, op->y_op);
             pthread_mutex_unlock(&(mt->mutex_op));
         }
     }

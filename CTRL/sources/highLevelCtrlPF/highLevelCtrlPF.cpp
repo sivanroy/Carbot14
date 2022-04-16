@@ -17,6 +17,7 @@ void hlcPF_init(highLevelCtrlPF *hlcPF) {
     hlcPF->d = 0;
     //
     hlcPF->nearestObst = 100; //dist
+    hlcPF->d_opp = 100;
     //param physique
     hlcPF->x_shift = 0.0625;
     hlcPF->error = 0.02;//0.03; --> 0.01 limit de stabilité (.015 stable)
@@ -37,8 +38,8 @@ void hlcPF_init(highLevelCtrlPF *hlcPF) {
     hlcPF->Eta = 0.03; //large = 0.03 et 0.02 = limit //0.1;//.025 = tout tout juste !!
     hlcPF->Rho = 0.5; // 
     //param dyn obstacle
-    hlcPF->Eta_opp = 0.025*10;
-    hlcPF->Rho_opp = 0.4;
+    hlcPF->Eta_opp = 0.025*20;
+    hlcPF->Rho_opp = 0.5;
     //attractive
     double a = 1;
     hlcPF->d_limit = 0.01;
@@ -120,7 +121,7 @@ void calc_RepulsivePotential(ctrlStruct *cvs) {
         double x1 = x - x_obst[i];
         double y1 = y - y_obst[i];
         double d = sqrt(x1*x1+y1*y1);
-        hlcPF->nearestObst = fmin(d,hlcPF->nearestObst);
+        hlcPF->nearestObst = d;
         if (d <= R){
             if (d <= front_obst) {
                 if (abs(x-x_obst[i]) <= 0.000001) {
@@ -152,8 +153,8 @@ void calc_RepulsivePotential(ctrlStruct *cvs) {
         double y1 = y - y_dyn;
         ETHA = hlcPF->Eta_opp;
         front_obst = hlcPF->Rho_opp;
-
         double d = sqrt(x1*x1+y1*y1);
+        hlcPF->d_opp = d;
         if (d <= R){
             if (d <= front_obst) {
                 if (abs(x-x_dyn) <= 0.00001){
