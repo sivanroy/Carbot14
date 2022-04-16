@@ -19,7 +19,7 @@ void hlcPF_init(highLevelCtrlPF *hlcPF) {
     hlcPF->nearestObst = 100; //dist
     hlcPF->d_opp = 100;
     //param physique
-    hlcPF->x_shift = 0.0625;
+    hlcPF->x_shift = 0.075;
     hlcPF->error = 0.02;//0.03; --> 0.01 limit de stabilité (.015 stable)
     //references
     hlcPF->v_ref = 0.0;
@@ -38,7 +38,7 @@ void hlcPF_init(highLevelCtrlPF *hlcPF) {
     hlcPF->Eta = 0.03; //large = 0.03 et 0.02 = limit //0.1;//.025 = tout tout juste !!
     hlcPF->Rho = 0.5; // 
     //param dyn obstacle
-    hlcPF->Eta_opp = 0.025*20;
+    hlcPF->Eta_opp = 0.025*50;
     hlcPF->Rho_opp = 0.5;
     //attractive
     double a = 1;
