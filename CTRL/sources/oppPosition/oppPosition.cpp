@@ -78,8 +78,7 @@ void get_opp_pos(ctrlStruct *cvs)
             //fprintf(cvs->op_data, "%f,%f\n", pt_x, pt_y);
         }
     }
-    if (size_op == 0) op->n_opp = 0;
-    else if (op->no_opp) {
+    if (size_op == 0 || op->no_opp) {
         pthread_mutex_lock(&(mt->mutex_op));
         op->x_op = -1;
         op->y_op = -1;

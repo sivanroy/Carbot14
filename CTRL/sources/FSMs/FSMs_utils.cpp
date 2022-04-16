@@ -72,10 +72,10 @@ void sendFromMLC(ctrlStruct *cvs,double x_goal,double y_goal,int forward){
 }
 
 
-void sendFromMLCPF(ctrlStruct *cvs,double v_ref, double theta_r){
+void sendFromMLCPF(ctrlStruct *cvs,double v_ref, double th_ref){
     get_d2r_data(cvs); 
     dyn_obs_set(cvs);
-    mlcPF_out(cvs, v_ref, theta_r);
+    mlcPF_out(cvs, v_ref, th_ref);
     set_commands(cvs, cvs->mlcPF->r_sp_ref, cvs->mlcPF->l_sp_ref);
     send_commands(cvs);
     set_new_position(cvs);

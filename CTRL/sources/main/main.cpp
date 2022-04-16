@@ -50,6 +50,7 @@ int main()
     int teensyON = 0;
     int saShedON = 0;
     int distON = 0;
+    int icpDynON = 0;
 
     int mThreadsON = 0;
 
@@ -57,7 +58,50 @@ int main()
     if (contest) {
         printf("let's go!\n");
     }
+    if (icpDynON) {
+        threads_start(cvs);
 
+        cvs->mp->x = 3-0.14;//2.00;//3-0.14;
+        cvs->mp->y = 1.13;//0.75;//0.445+0.125;//0.45;//2-0.53;
+        cvs->mp->th = M_PI;//0;//M_PI;
+
+        double v_ref = 0.2;
+        double th_ref = M_PI;
+
+        //op->no_opp = 1;
+        int i = 0;
+        while (inputs->t < 3) {
+            auto start = high_resolution_clock::now();
+
+            sendFromMLCPF(cvs, v_ref, th_ref);
+
+            if (rec_ON(cvs)) {
+                printf("rec #%d : end\n", i++);
+            }
+            /*
+            if (inputs->t >= 1.5 && i == 0) {
+                if (rec_ON(cvs)) {
+                    printf("rec #%d : end\n", i++);
+                }
+            }
+             */
+            update_time(cvs);
+            auto stop = high_resolution_clock::now();
+            auto duration = duration_cast<microseconds>(stop - start);
+            usleep(dt * 1000000 - duration.count());
+        }
+
+        printf("------------- rec static -------------\n");
+        rec->iter = 0;
+        motors_stop(cvs);
+        while (1) if (rec_static(cvs)) break;
+        usleep(2000000);
+
+        mt->thread_main_end = 1;
+        printf("th_end : start ... ");
+        threads_end(cvs);
+        printf("end\n");
+    }
     if (icpON) {
         cvs->mp->x = 3-0.14;//2.00;//3-0.14;
         cvs->mp->y = 1.13;//0.75;//0.445+0.125;//0.45;//2-0.53;
@@ -72,11 +116,15 @@ int main()
         for (i = 0; i < rec->M*2; i+=2) {
             fprintf(cvs->icp1_data, "%f,%f\n", rec->map_p[i], rec->map_p[i+1]);
         }
-        printf("M = %d\n", rec->M);
-        while (rpl->nTurns < 3) {
+        while (rpl->nTurns < 5) {
+            printf("rpl->nTurns : %d\n", rpl->nTurns);
             rpl_grabData(cvs);
-            rec_ICP(cvs, &icp);
-            break;
+            if (rpl->nTurns == 3) {
+                printf("ICP go\n");
+                rec_ICP(cvs, &icp);
+                break;
+            }
+
         }
     }
     if (icp_test) {
@@ -455,40 +503,40 @@ int main()
         }
     }
     if (hlcPFON) {
+        threads_start(cvs);
+
         double xgoal = cvs->mp->x;double ygoal=cvs->mp->y;
         int forward;double orientation;
         set_param_normal(cvs);
-        cvs->mp->x = 0.14;
+        cvs->mp->x = 0.135*2;
         cvs->mp->y = 1.13;
-        cvs->mp->th = 0;
-        //threads_start(cvs);
-
+        cvs->mp->th = M_PI;
 
         printf("begin test hlcPF\n");
-        while (inputs->t < 10) {
+        while (inputs->t < 8) {
             auto start = high_resolution_clock::now();
             double t = inputs->t;
             if (t==0) {
                 set_param_normal(cvs);
-                xgoal = 1;//2.2;//1.2;
-                ygoal = 1.5;//1.60;
-                forward=-1;
-                orientation = M_PI/2;
+                xgoal = 1.5;//2.2;//1.2;
+                ygoal = 1.13;//1.60;
+                forward=0;
+                orientation = 3*M_PI/4;
                 set_goal(cvs, xgoal, ygoal, orientation);
                 printf("goal A\n");
             } else if (t>10 & t<10.01) {
-                set_param_prec(cvs);
+                set_param_normal(cvs);
                 xgoal = 2;
-                ygoal = .75;
-                forward =0;
-                orientation = M_PI/2;
+                ygoal = 1.5;
+                forward =1;
+                orientation = -M_PI/2;
                 set_goal(cvs, xgoal, ygoal, orientation);
                 printf("goal B\n");
             } else if (t>20 & t<20.1) {
-                xgoal = 1;//1.3;
-                ygoal = .5;
-                forward =0;
-                orientation = -M_PI;
+                xgoal = 0.6;//1.3;
+                ygoal = 0.6;
+                forward =1;
+                orientation = M_PI;
                 set_goal(cvs, xgoal, ygoal, orientation);
                 printf("goal c\n");
             }
@@ -526,7 +574,17 @@ int main()
 
 
         }
+        printf("------------- rec static -------------\n");
+        rec->iter = 0;
+        motors_stop(cvs);
+        while (1) if (rec_static(cvs)) break;
         printf("x = %f | y = %f | th = %f\n", mp->x, mp->y, mp->th);
+        usleep(2000000);
+
+        mt->thread_main_end = 1;
+        printf("th_end : start ... ");
+        threads_end(cvs);
+        printf("end\n");
         //mt->thread_main_end = 1;
 
         //threads_end(cvs);
@@ -630,9 +688,9 @@ int main()
         }
         usleep(3000000);
         mt->thread_main_end = 1;
-        printf("th_end : start\n");
+        printf("th_end : start ... ");
         threads_end(cvs);
-        printf("th_end : end\n");
+        printf("end\n");
 
     }
     if (teensyON) {
