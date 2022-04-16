@@ -13,7 +13,8 @@ void mt_init(mThreadsStruct *mt)
     pthread_mutex_init(&(mt->mutex_op), NULL);
     pthread_mutex_init(&(mt->mutex_mp), NULL);
     pthread_mutex_init(&(mt->mutex_rpl), NULL);
-    pthread_mutex_init(&(mt->mutex_rec), NULL);
+    pthread_mutex_init(&(mt->mutex_rec_flag), NULL);
+    pthread_mutex_init(&(mt->mutex_rec_static), NULL);
 
     mt->thread_main_end = 0;
 }
@@ -132,9 +133,9 @@ void *ctrl_rec(void *arg)
         get_pos(cvs, pos);
         w = pos[3]; v = pos[4];
 
-        pthread_mutex_lock(&(mt->mutex_rec));
+        pthread_mutex_lock(&(mt->mutex_rec_flag));
         flag = rec->rec_flag;
-        pthread_mutex_unlock(&(mt->mutex_rec));
+        pthread_mutex_unlock(&(mt->mutex_rec_flag));
         if (flag && (w < rec->w_limit) && (v < rec->v_limit)) rec_ICP(cvs, &icp);
         //printf("ctrl_rec\n");
     }
@@ -160,8 +161,12 @@ int mutex_destroy(ctrlStruct *cvs)
         perror("pthread_mutex_destroy(&(mt->mutex_rpl)) failed\n");
         err = 1;
     }
-    if (pthread_mutex_destroy(&(mt->mutex_rec)) != 0) {
-        perror("pthread_mutex_destroy(&(mt->mutex_rec)) failed\n");
+    if (pthread_mutex_destroy(&(mt->mutex_rec_flag)) != 0) {
+        perror("pthread_mutex_destroy(&(mt->mutex_rec_flag)) failed\n");
+        err = 1;
+    }
+    if (pthread_mutex_destroy(&(mt->mutex_rec_static)) != 0) {
+        perror("pthread_mutex_destroy(&(mt->mutex_rec_static)) failed\n");
         err = 1;
     }
     if (err) return -1;
