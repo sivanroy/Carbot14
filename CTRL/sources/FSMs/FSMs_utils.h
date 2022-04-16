@@ -25,7 +25,7 @@ void init_checkBlocked(checkBlocked *checkb);
 
 void setChrono(ctrlStruct *cvs,double enableTime);
 int checkChrono(ctrlStruct *cvs);
-int checkBlocked(ctrlStruct *cvs);
+int check_blocked(ctrlStruct *cvs);
 
 
 void sendFromHLCPF(ctrlStruct *cvs,int goForward=1,int noWall= 0);

@@ -19,6 +19,7 @@ typedef struct highLevelCtrlPF
     double x_shift ;
     double error ;
     double nearestObst;
+    double d_opp;
     //references
     double v_ref ;
     double theta_ref;

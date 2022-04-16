@@ -58,6 +58,7 @@ int main()
     if (contest) {
         printf("let's go!\n");
     }
+
     if (icpDynON) {
         threads_start(cvs);
 
@@ -206,7 +207,7 @@ int main()
 
         pushShed_launch(cvs);
         cvs->mp->x = 3-0.14;//3-0.94;//3-0.14;
-        cvs->mp->y = 2-0.53;//0.795+0.125;//1.13;//0.45;//2-0.53;
+        cvs->mp->y = 1.13;//2-0.53;//0.795+0.125;//1.13;//0.45;//2-0.53;
         cvs->mp->th = M_PI;//0;//M_PI;
 
         double i_time = 20;
@@ -508,28 +509,28 @@ int main()
         double xgoal = cvs->mp->x;double ygoal=cvs->mp->y;
         int forward;double orientation;
         set_param_normal(cvs);
-        cvs->mp->x = 0.135*2;
+        cvs->mp->x = 3-0.14;
         cvs->mp->y = 1.13;
         cvs->mp->th = M_PI;
 
         printf("begin test hlcPF\n");
-        while (inputs->t < 8) {
+        while (inputs->t < 20) {
             auto start = high_resolution_clock::now();
             double t = inputs->t;
             if (t==0) {
                 set_param_normal(cvs);
-                xgoal = 1.5;//2.2;//1.2;
+                xgoal = 1;//2.2;//1.2;
                 ygoal = 1.13;//1.60;
-                forward=0;
+                forward=-1;
                 orientation = 3*M_PI/4;
                 set_goal(cvs, xgoal, ygoal, orientation);
                 printf("goal A\n");
             } else if (t>10 & t<10.01) {
                 set_param_normal(cvs);
-                xgoal = 2;
-                ygoal = 1.5;
-                forward =1;
-                orientation = -M_PI/2;
+                xgoal = 3-0.2;
+                ygoal = 1.13;
+                forward =-1;
+                orientation = M_PI;
                 set_goal(cvs, xgoal, ygoal, orientation);
                 printf("goal B\n");
             } else if (t>20 & t<20.1) {
@@ -542,9 +543,10 @@ int main()
             }
 
             get_d2r_data(cvs); // ctrlIn
+            dyn_obs_set(cvs);
             //printf("r_sp_mes_enc = %f | l_sp_mes_enc = %f\n", inputs->r_sp_mes_enc, inputs->l_sp_mes_enc);
             //printf("r_sp_mes_odo = %f | l_sp_mes_odo = %f\n", inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
-            hlcPF_out(cvs, forward,1);
+            hlcPF_out(cvs, forward);
             //if(hlcPF->output) {
                 //hlcPF->v_ref = 0;
                 //hlcPF->theta_ref = 0;

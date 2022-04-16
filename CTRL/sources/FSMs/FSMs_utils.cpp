@@ -82,22 +82,24 @@ void sendFromMLCPF(ctrlStruct *cvs,double v_ref, double th_ref){
 }
 
 
-int checkBlocked(ctrlStruct *cvs){
-    int pointer = cvs->llc->pointer;
-    int size  = cvs->llc->size;
-    double *values = cvs->llc->values;
+int check_blocked(ctrlStruct *cvs){
+    int pointer = cvs->checkb->pointer;
+    int size  = cvs->checkb->size;
+    double *values_l = cvs->checkb->values_l;
+    double *values_r = cvs->checkb->values_r;
+
     pointer += 1;
     pointer %= size;
-    values_l[pointer] = cvs->llc->l;
-    values_r[pointer] = cvs->llc->;
+    values_l[pointer] = 0;//cvs->llc->;
+    values_r[pointer] = 0;//cvs->llc->;
 
     double dif = 0;
     for (int i = 0; i < size; i ++) {
         int p = (pointer+i)%size;
         int pp = (pointer+i+1)%size;
-        dif += abs(values[p]-values[pp]);
+        dif += abs(values_l[p]-values_r[pp]);
     }
-    if (dif < cvs->mlc->val_err){
+    if (dif < cvs->checkb->val_err){
         return 1;
     }
     return 0;

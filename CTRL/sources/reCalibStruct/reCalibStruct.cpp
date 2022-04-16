@@ -200,19 +200,23 @@ int rec_static(ctrlStruct *cvs)
         }
         case launch_rec_static: {
             if (rpl->nTurns == rec->rpl_nTurn) {
+                printf("rpl->nTurns == rec->rpl_nTurn\n");
                 if (rec_ON(cvs)) {
-                    //printf("launch_rec_static : rec_ON\n");
+                    printf("launch_rec_static : rec_ON\n");
                     if (rec->iter == 0)  rec->static_status = firstTry_rec_static;
                     if (rec->iter == -1) rec->static_status = secondTry_rec_static;
+
+                    return 0;
                 }
             }
-            else if (rpl->nTurns > rec->rpl_nTurn) {
+            if (rpl->nTurns > rec->rpl_nTurn) {
                 printf("rec_static : abort\n");
                 return 1;
             }
             return 0;
         }
         case firstTry_rec_static: {
+            printf("firstTry\n");
             if (rec->iter > 0) {
                 if (rec->iter < rec->max_iter) {
                     rec->iter = 0;
@@ -228,6 +232,7 @@ int rec_static(ctrlStruct *cvs)
             return 0;
         }
         case secondTry_rec_static: {
+            printf("secondTry\n");
             if (rec->iter > 0) {
                 rec->iter = 0;
                 printf("rec_static : secondTry\n");
