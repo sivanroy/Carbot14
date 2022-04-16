@@ -576,6 +576,8 @@ int main()
         }
         printf("------------- rec static -------------\n");
         rec->iter = 0;
+        mp->w = 0;
+        mp->v = 0;
         motors_stop(cvs);
         while (1) if (rec_static(cvs)) break;
         printf("x = %f | y = %f | th = %f\n", mp->x, mp->y, mp->th);
