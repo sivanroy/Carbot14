@@ -173,12 +173,12 @@ int rec_ON(ctrlStruct *cvs)
     reCalibStruct *rec = cvs->rec;
 
     int flag = 0;
-    pthread_mutex_lock(&(mt->mutex_rec));
+    pthread_mutex_lock(&(mt->mutex_rec_flag));
     if (rec->rec_flag == 0) {
         rec->rec_flag = 1;
         flag = 1;
     }
-    pthread_mutex_unlock(&(mt->mutex_rec));
+    pthread_mutex_unlock(&(mt->mutex_rec_flag));
 
     return flag;
 }
@@ -186,10 +186,11 @@ int rec_ON(ctrlStruct *cvs)
 int rec_static(ctrlStruct *cvs)
 {
     rplStruct *rpl = cvs->rpl;
+    mThreadsStruct *mt = cvs->mt;
     reCalibStruct *rec = cvs->rec;
 
     pthread_mutex_lock(&(mt->mutex_rec_static));
-    int iter = rec->rec_iter;
+    int iter = rec->iter;
     pthread_mutex_unlock(&(mt->mutex_rec_static));
 
     switch (rec->static_status) {
