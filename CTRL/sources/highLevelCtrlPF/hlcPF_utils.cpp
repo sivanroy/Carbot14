@@ -120,7 +120,7 @@ void set_param_normal(ctrlStruct *cvs){
     //tau
     hlcPF->Tau_max = 10;
     hlcPF->tau_max_dist = 1.5;
-    hlcPF->Tau_min = 0.2; //0.005;
+    hlcPF->Tau_min = 0.25; //0.005;
     hlcPF->tau_min_dist = 0.1;
     //reorientation
     hlcPF->erreurTh = 0.01;
@@ -177,7 +177,7 @@ double tau_compute(ctrlStruct *cvs,int noObst) {
     double a = (tau_min-tau_max)/(tau_min_dist-tau_max_dist);
     double b = tau_min - a*tau_min_dist;
 
-    double d_opp = fmax(cvs->hlcPF->d_opp-0.20,tau_min_dist)/3;
+    double d_opp = fmax(cvs->hlcPF->d_opp-0.20,tau_min_dist)/5;
     printf("d_opp %f\n", d_opp);
 
     double d = cvs->hlcPF->d;
