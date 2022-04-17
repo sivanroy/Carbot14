@@ -15,6 +15,7 @@ void mt_init(mThreadsStruct *mt)
     pthread_mutex_init(&(mt->mutex_rpl), NULL);
     pthread_mutex_init(&(mt->mutex_rec_flag), NULL);
     pthread_mutex_init(&(mt->mutex_rec_static), NULL);
+    pthread_mutex_init(&(mt->mutex_od), NULL);
 
     mt->thread_main_end = 0;
 }
@@ -119,6 +120,7 @@ void *ctrl_rec(void *arg)
     mThreadsStruct *mt = cvs->mt;
     teensyStruct *teensy = cvs->teensy;
     reCalibStruct *rec = cvs->rec;
+    objDetection *od = cvs->od;
     double dt = inputs->dt;
 
     IcpPointToPlane icp(rec->map_p,rec->M,2);
@@ -128,18 +130,24 @@ void *ctrl_rec(void *arg)
     double pos[5];
     double w, v;
 
-    int flag;
+    int rec_flag;
+    int od_flag;
     while (mt->thread_main_end == 0) {
         get_pos(cvs, pos);
         w = pos[3]; v = pos[4];
 
         pthread_mutex_lock(&(mt->mutex_rec_flag));
-        flag = rec->rec_flag;
+        rec_flag = rec->rec_flag;
         pthread_mutex_unlock(&(mt->mutex_rec_flag));
-        if (flag && (w < rec->w_limit) && (v < rec->v_limit)) rec_ICP(cvs, &icp);
-        //printf("ctrl_rec\n");
-    }
+        if (rec_flag && (w < rec->w_limit) && (v < rec->v_limit)) rec_ICP(cvs, &icp);
 
+        pthread_mutex_lock(&(mt->mutex_od));
+        od_flag = od->od_flag;
+        pthread_mutex_unlock(&(mt->mutex_od));
+        if (od_flag) {
+            int pallet_n = od_distrib_solver(cvs);
+        }
+    }
     return 0;
 }
 
@@ -167,6 +175,10 @@ int mutex_destroy(ctrlStruct *cvs)
     }
     if (pthread_mutex_destroy(&(mt->mutex_rec_static)) != 0) {
         perror("pthread_mutex_destroy(&(mt->mutex_rec_static)) failed\n");
+        err = 1;
+    }
+    if (pthread_mutex_destroy(&(mt->mutex_od)) != 0) {
+        perror("pthread_mutex_destroy(&(mt->mutex_od)) failed\n");
         err = 1;
     }
     if (err) return -1;

@@ -68,7 +68,7 @@ int rpl_grabData(ctrlStruct *cvs)
         rpl->update_flag = 1;
         pthread_mutex_unlock(&(mt->mutex_rpl));
         //printf("data_size = %d\n", rpl->data_size);
-        printf("nTurns = %d\n", rpl->nTurns);
+        //printf("nTurns = %d\n", rpl->nTurns);
         return 1;
     }
     else return -1;

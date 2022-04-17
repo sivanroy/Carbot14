@@ -52,6 +52,9 @@ ctrlStruct* cvs_init()
     cvs->rec = (reCalibStruct*) malloc(sizeof(reCalibStruct));
     rec_init(cvs->rec);
 
+    cvs->od = (objDetection*) malloc(sizeof(objDetection));
+    od_init(cvs->od);
+
     cvs->teensy = (teensyStruct*) malloc(sizeof(teensyStruct));
     teensy_init(cvs->teensy);
 
@@ -104,6 +107,9 @@ ctrlStruct* cvs_init()
     cvs->rec_data = fopen("rec_data.txt", "w");
     if (cvs->rec_data == NULL) printf("Enable to open file rec_data.txt\n");
 
+    cvs->od_data = fopen("od_data.txt", "w");
+    if (cvs->od_data == NULL) printf("Enable to open file od_data.txt\n");
+
     cvs->icp1_data = fopen("icp1_data.txt", "w");
     if (cvs->icp1_data == NULL) printf("Enable to open file icp1_data.txt\n");
 
@@ -136,6 +142,7 @@ void cvs_free(ctrlStruct *cvs)
     free(cvs->op);
     free(cvs->mt);
     free(cvs->rec);
+    free(cvs->od);
     free(cvs->teensy);
     free(cvs->stratFSM);
     free(cvs->saShed);
@@ -154,6 +161,7 @@ void cvs_free(ctrlStruct *cvs)
     fclose(cvs->rpl_data);
     fclose(cvs->op_data);
     fclose(cvs->rec_data);
+    fclose(cvs->od_data);
     fclose(cvs->icp1_data);
     fclose(cvs->icp2_data);
     fclose(cvs->icp3_data);

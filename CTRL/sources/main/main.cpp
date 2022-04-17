@@ -33,6 +33,7 @@ int main()
     mThreadsStruct *mt = cvs->mt;
     teensyStruct *teensy = cvs->teensy;
     reCalibStruct *rec = cvs->rec;
+    objDetection *od = cvs->od;
     double dt = inputs->dt;
 
     int display_position_ON = 0;
@@ -42,7 +43,7 @@ int main()
     int mlc_ON = 0;
     int rplON = 0;
     int odoCalib = 0;
-    int hlcPFON = 1;
+    int hlcPFON = 0;
     int pushShedON = 0;
     int pushShed_and_sonar_ON = 0;
     int icp_test = 0;
@@ -51,6 +52,7 @@ int main()
     int saShedON = 0;
     int distON = 0;
     int icpDynON = 0;
+    int odON = 1;
 
     int mThreadsON = 0;
 
@@ -59,6 +61,27 @@ int main()
         printf("let's go!\n");
     }
 
+    if (odON) {
+        threads_start(cvs);
+
+        inputs->team = 0;
+
+        cvs->mp->x = 3-0.3;
+        cvs->mp->y = 0.75;
+        cvs->mp->th = M_PI;
+
+        printf("------------- rec static -------------\n");
+        while (1) if (rec_static(cvs)) break;
+        usleep(1000000);
+        printf("----------------- od -----------------\n");
+        while (1) if (od_distrib(cvs, 0, 0) > -10) break;
+        usleep(1000000);
+
+        mt->thread_main_end = 1;
+        printf("th_end : start ... ");
+        threads_end(cvs);
+        printf("end\n");
+    }
     if (icpDynON) {
         threads_start(cvs);
 
@@ -729,7 +752,7 @@ int main()
                 teensy_send(cvs, "A");
                 B = 1;
             }
-
+            /*
             if (inputs->t >= 3 && C == 0) {
                 teensy_send(cvs, "C");
                 C = 1;
@@ -739,6 +762,7 @@ int main()
                 teensy_send(cvs, "D");
                 D = 1;
             }
+             */
             if (inputs->t >= 7 && R == 0) {
                 teensy_send(cvs, "R");
                 R = 1;

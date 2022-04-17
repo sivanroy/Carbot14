@@ -585,6 +585,7 @@ def plot_tau_data():
     
 def plot_rpl_corr():
     
+    
     Data1 = read_txt_file("../../build/icp1_data.txt", 2)
     Data2 = read_txt_file("../../build/icp2_data.txt", 2)
     Data3 = read_txt_file("../../build/icp3_data.txt", 2)
@@ -609,6 +610,34 @@ def plot_rpl_corr():
     #plt.savefig("rpl_wo_corr.pdf", format="pdf")
     plt.show()
     
+def plot_od_data():
+    
+    od = read_txt_file("../../build/od_data.txt", 2)
+    Map = read_txt_file("../../build/icp1_data.txt", 2)
+    
+    dx = 0.0145
+    dxb = 0.0025
+    
+    plt.plot(Map[0], Map[1], label="Map")
+    plt.plot(od[0], od[1], 'ro', label="od_data", markersize = 2)
+    plt.plot([3-0.055+0.017, 3-0.055+0.017], [0.675, 0.825], 'b')
+    plt.plot([3-0.055+0.017*2, 3-0.055+0.017*2], [0.675, 0.825], 'b')
+    plt.plot([3-0.055+0.017-dx, 3-0.055+0.017-dx], [0.675, 0.825], 'r')
+    plt.plot([3-0.055+0.017*2-dx, 3-0.055+0.017*2-dx], [0.675, 0.825], 'r')
+    #plt.plot([3-0.055+dx*0.25, 3-0.055+dx*0.25], [0.675, 0.825], 'g')
+    #plt.plot([3-0.055+0.017+dx*0.25, 3-0.055+0.017+dx*0.25], [0.675, 0.825], 'g')
+    #plt.plot([3-0.055+0.017*2+dx*0.25, 3-0.055+0.017*2+dx*0.25], [0.675, 0.825], 'g')
+    plt.xlabel("x [m]")
+    plt.ylabel("y [m]")
+    plt.title("od")
+    plt.xlim(1.5, 1.8)
+    plt.ylim(1.8, 2.05)
+    #plt.axis("equal")
+    plt.legend()
+    plt.grid()
+    #plt.savefig("mp_data2.pdf", format="pdf")
+    plt.show()
+    
 """
 plot_rpl_data()
 plot_op_data()
@@ -625,7 +654,8 @@ plot_llc_data()
 plot_mp_data()
 """
 #plot_icp_data()
-plot_rec_data()
+#plot_rec_data()
+plot_od_data()
 
 """
 th_mp =  -140.47653170302596

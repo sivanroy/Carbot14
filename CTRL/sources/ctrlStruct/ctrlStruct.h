@@ -26,6 +26,7 @@
 #include "../teensyStruct/teensyStruct.h"
 #include "../multiThreads/multiThreads.h"
 #include "../reCalibStruct/reCalibStruct.h"
+#include "../objDetection/objDetection.h"
 #include "../FSMs/strategy.h"
 #include "../FSMs/FSMs_utils.h"
 #include "../FSMs/statuetteAndShed.h"
@@ -49,6 +50,7 @@ typedef struct teensyStruct teensyStruct;
 typedef struct midLevelCtrl midLevelCtrl;
 typedef struct mThreadsStruct mThreadsStruct;
 typedef struct reCalibStruct reCalibStruct;
+typedef struct objDetection objDetection;
 
 typedef struct strategy_FSM strategy_FSM;
 typedef struct statAndShed statAndShed;
@@ -83,6 +85,7 @@ typedef struct ctrlStruct
     oppPosition *op;
     mThreadsStruct *mt;
     reCalibStruct *rec;
+    objDetection *od;
 
     lowPassFilter *lpf;
     Chrono *chro;
@@ -98,6 +101,7 @@ typedef struct ctrlStruct
     FILE *rpl_data;
     FILE *op_data;
     FILE *rec_data;
+    FILE *od_data;
     FILE *icp1_data;
     FILE *icp2_data;
     FILE *icp3_data;

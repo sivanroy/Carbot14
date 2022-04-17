@@ -107,7 +107,7 @@ int rec_ICP(ctrlStruct *cvs, IcpPointToPlane *icp)
         pt_or = th - a;
         pt_x = (x + e * cos(th)) + (d * cos(pt_or));//
         pt_y = (y + e * sin(th)) + (d * sin(pt_or));//
-        if (!not_wall(cvs, pt_x, pt_y)) { //!not_wall(cvs, pt_x, pt_y)
+        if (!not_wall(cvs, pt_x, pt_y)) {
             rec->rpl_p[2*rec->m]     = pt_x;
             rec->rpl_p[2*rec->m + 1] = pt_y;
             rec->m++;
@@ -211,12 +211,13 @@ int rec_static(ctrlStruct *cvs)
                 printf("rpl->nTurns == rec->rpl_nTurn\n");
                 if (rec_ON(cvs)) {
                     printf("launch_rec_static : rec_ON\n");
-                    if (rec->iter == 0)  rec->static_status = firstTry_rec_static;
-                    if (rec->iter == -1) rec->static_status = secondTry_rec_static;
+                    if (iter == 0)  rec->static_status = firstTry_rec_static;
+                    if (iter == -1) rec->static_status = secondTry_rec_static;
                     return 0;
                 }
             }
             if (rpl->nTurns > rec->rpl_nTurn) {
+                rec->static_status = S0_rec_static;
                 printf("rec_static : abort\n");
                 return 1;
             }
@@ -245,12 +246,13 @@ int rec_static(ctrlStruct *cvs)
             if (iter > 0) {
                 printf("rec_static : secondTry\n");
             }
+            rec->static_status = S0_rec_static;
             pthread_mutex_lock(&(mt->mutex_rec_static));
             rec->iter = 0;
             pthread_mutex_unlock(&(mt->mutex_rec_static));
             return 1;
         }
         default:
-            return 0;
+            return 1;
     }
 }
