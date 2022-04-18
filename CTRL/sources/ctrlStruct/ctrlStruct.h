@@ -33,6 +33,7 @@
 #include "../FSMs/posePallets.h"
 #include "../FSMs/excavationSquare.h"
 #include "../FSMs/distributeur.h"
+#include "../FSMs/poseStatuette.h"
 
 
 typedef struct ctrlStruct ctrlStruct;
@@ -57,6 +58,8 @@ typedef struct statAndShed statAndShed;
 typedef struct posePallets posePallets;
 typedef struct excSquares excSquares;
 typedef struct distributeurs distributeurs;
+typedef struct poseStatuette poseStatuette;
+
 
 typedef struct lowPassFilter lowPassFilter;
 typedef struct Chrono Chrono;
@@ -80,6 +83,7 @@ typedef struct ctrlStruct
     distributeurs *distr;
     excSquares *excSq;
     posePallets *pPallets;
+    poseStatuette *poseStat;
 
     rplStruct *rpl;
     oppPosition *op;

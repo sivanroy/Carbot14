@@ -73,6 +73,9 @@ ctrlStruct* cvs_init()
     cvs->distr = (distributeurs*) malloc(sizeof(distributeurs));
     distr_init(cvs->distr);
 
+    cvs->poseStat = (poseStatuette*) malloc(sizeof(poseStatuette));
+    poseStat_init(cvs->poseStat);
+
     cvs->lpf = (lowPassFilter *) malloc(sizeof(lowPassFilter));
     lpf_init(cvs->lpf);
 
@@ -149,6 +152,7 @@ void cvs_free(ctrlStruct *cvs)
     free(cvs->pPallets);
     free(cvs->excSq);
     free(cvs->distr);
+    free(cvs->poseStat);
     free(cvs->lpf);
     free(cvs->chro);
     free(cvs->checkb);

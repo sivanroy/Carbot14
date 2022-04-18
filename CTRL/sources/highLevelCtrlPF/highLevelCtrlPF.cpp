@@ -281,6 +281,7 @@ void main_pot_force(ctrlStruct *cvs,double x_goal,double y_goal,int goForward,do
         hlcPF->output_main = 1;
         v = 0; theta = 0;
         printf("goal :: x : %f | y: %f\n", x_goal,y_goal);
+        printf("with :: x : %f | y: %f\n",x,y);
     } 
 
     //LOCAL MINIMUM
@@ -360,6 +361,7 @@ void hlcPF_out(ctrlStruct *cvs,int goForward,int noObst) {
     if(!hlcPF->output_main){
         main_pot_force(cvs,goal[0],goal[1],goForward,orientation,noObst);
     } else if(!hlcPF->output) {
+        double kpth = cvs->mlcPF->Kp_th;
         double dth = limit_angle(orientation - th);
         if(orientation==-10){
             hlcPF->output = 1;
@@ -368,11 +370,13 @@ void hlcPF_out(ctrlStruct *cvs,int goForward,int noObst) {
             printf("here\n");
         }
         else if(abs(dth) > hlcPF->erreurTh){
+            cvs->mlcPF->Kp_th = 20;
             hlcPF->theta_ref = limit_angle(orientation);
             //printf("in reorientation\n");
         } else {
             hlcPF->output = 1;
             printf("reoriented\n");
         }
+        cvs->mlcPF->Kp_th = kpth;
     }
 }

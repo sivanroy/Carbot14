@@ -163,7 +163,7 @@ void set_param_large(ctrlStruct *cvs){
     hlcPF->Tau_min = 0.25; //0.005;
     hlcPF->tau_min_dist = 0.1;
     //reorientation
-    hlcPF->erreurTh = 0.015;
+    hlcPF->erreurTh = 0.02;
     //local minimum
     cvs->mlcPF->sigma = .4;
     cvs->mlcPF->Kp_th = 7;

@@ -34,6 +34,7 @@ int main()
     teensyStruct *teensy = cvs->teensy;
     reCalibStruct *rec = cvs->rec;
     objDetection *od = cvs->od;
+    poseStatuette *poseStat = cvs->poseStat;
     double dt = inputs->dt;
 
     int display_position_ON = 0;
@@ -49,10 +50,11 @@ int main()
     int icp_test = 0;
     int icpON = 0;
     int teensyON = 0;
-    int saShedON = 1;
+    int saShedON = 0;
     int distON = 0;
     int icpDynON = 0;
     int odON = 0;
+    int poseStatON = 1;
 
     int mThreadsON = 0;
 
@@ -738,6 +740,47 @@ int main()
         printf("end\n");
 
     }
+
+       if (poseStatON){
+        threads_start(cvs);
+
+        teensy_send(cvs, "R");
+        usleep(1500000);
+        teensy_send(cvs, "B");
+        /*
+        printf("------------- rec static -------------\n");
+        rec->iter = 0;
+        motors_stop(cvs);
+        while (1) if (rec_static(cvs)) break;
+         */
+        //usleep(2000000);
+        poseStat_launch(cvs);
+        printf("poseStat_launched\n");
+        cvs->mp->x = 3-0.25;
+        cvs->mp->y = .74;
+        cvs->mp->th = M_PI;
+
+        while(inputs->t < 30){
+            auto start = high_resolution_clock::now();
+
+            poseStat_loop(cvs);
+            if(poseStat->output) {
+                printf("ended with %d\n",poseStat->output);
+                motors_stop(cvs);
+                break;
+            }
+            fprintf(cvs->llc_data, "%f,%f,%f,%f,%f,%f,%f\n", inputs->t, mlcPF->r_sp_ref, mlcPF->l_sp_ref, inputs->r_sp_mes_enc, inputs->l_sp_mes_enc, inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
+            update_time(cvs);
+            auto stop = high_resolution_clock::now();
+            auto duration = duration_cast<microseconds>(stop - start);
+            usleep(dt * 1000000 - duration.count());
+        }
+        mt->thread_main_end = 1;
+        printf("th_end : start ... ");
+        threads_end(cvs);
+        printf("end\n");
+    }
+
     if (teensyON) {
         int A = 0;
         int B = 0;

@@ -9,7 +9,7 @@
 
 //angle : opposé + pi
 
-enum {S0_sas,Dpmt1_sas,servoShedOut_sas,Dpmt2_sas,Dpmt3_sas,Dpmt4_sas,Dpmt5_sas,Dpmt6_sas,Wait_for_5_sas,Dpmt7_sas, servoShedIn_sas};
+enum {S0_sas,Dpmt1_sas,servoShedOut_sas,Dpmt2_sas,Dpmt3_sas,Dpmt4_sas,Dpmt5_sas,Dpmt6_sas,Wait_for_5_sas,Dpmt7_sas, servoShedIn_sas,Go_to_vitrine_sas};
 
 void saShed_init(statAndShed *saShed) {
     saShed->status = S0_ps;
@@ -192,7 +192,7 @@ void saShed_loop(ctrlStruct *cvs){
             if(hlcPF->output){
                 saShed->status = servoShedIn_sas;
                 //set_goal(cvs,saShed->x_goals[3],saShed->y_goals[3]);
-                printf("go to Dpmt2_ps\n");
+                printf("go to \n");
             }
             break;
         }
