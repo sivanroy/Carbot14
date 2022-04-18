@@ -23,7 +23,8 @@
 
 typedef struct teensyStruct
 {
-    int port;
+    int t_port;
+    int a_port;
     int bdrate;
     char mode[4];
 
@@ -39,6 +40,7 @@ typedef struct teensyStruct
 } teensyStruct;
 
 void teensy_init(teensyStruct *teensy);
+void arduino_send(ctrlStruct *cvs, const char *data);
 void teensy_send(ctrlStruct *cvs, const char *data);
 void teensy_recv(ctrlStruct *cvs);
 

@@ -36,7 +36,8 @@ S -> Clamp OUT -> clamps the statuette
 
 void teensy_init(teensyStruct *teensy)
 {
-    teensy->port = 24;
+    teensy->t_port = 24;
+    teensy->a_port = 10;
     teensy->bdrate = 57600;
     //teensy->mode = {'8','N','1',0};
     teensy->mode[0] = '8';
@@ -58,13 +59,24 @@ void teensy_init(teensyStruct *teensy)
 
 }
 
+void arduino_send(ctrlStruct *cvs, const char *data)
+{
+    teensyStruct *teensy;
+    teensy = cvs->teensy;
+
+    strcpy(teensy->str_send, data);
+    RS232_cputs(teensy->a_port, teensy->str_send);
+    printf("Sent to arduino: '%s'\n", teensy->str_send);
+    //usleep(2000);
+}
+
 void teensy_send(ctrlStruct *cvs, const char *data)
 {
     teensyStruct *teensy;
     teensy = cvs->teensy;
 
     strcpy(teensy->str_send, data);
-    RS232_cputs(teensy->port, teensy->str_send);
+    RS232_cputs(teensy->t_port, teensy->str_send);
     printf("Sent to teensy: '%s'\n", teensy->str_send);
     //usleep(2000);
 }
@@ -81,7 +93,7 @@ void teensy_recv(ctrlStruct *cvs)
     const char *data3;
     char str[BUF_SIZE];
 
-    int n = RS232_PollComport(teensy->port, teensy->str_recv, (int) BUF_SIZE);
+    int n = RS232_PollComport(teensy->t_port, teensy->str_recv, (int) BUF_SIZE);
     if(n > 0) {
         teensy->str_recv[n] = 0;
         printf("Received %i bytes: '%s'\n", n, (char *) teensy->str_recv);
