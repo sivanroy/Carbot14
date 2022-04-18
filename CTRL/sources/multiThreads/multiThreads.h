@@ -29,6 +29,7 @@ typedef struct mThreadsStruct
     pthread_mutex_t mutex_rpl;
     pthread_mutex_t mutex_rec_flag;
     pthread_mutex_t mutex_rec_static;
+    pthread_mutex_t mutex_od;
 
     int thread_main_end;
 
