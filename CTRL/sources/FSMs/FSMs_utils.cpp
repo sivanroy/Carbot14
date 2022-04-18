@@ -9,6 +9,7 @@
 
 
 void init_checkBlocked(checkBlocked *checkb) {
+    //pas fonctionnel du tout
     checkb->size = 200; // !!  à la size < 200
     checkb->pointer = 0;
     checkb->val_err = 0.01;

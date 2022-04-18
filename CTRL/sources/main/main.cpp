@@ -511,21 +511,21 @@ int main()
         set_param_normal(cvs);
         cvs->mp->x = 3-0.14;
         cvs->mp->y = 1.13;
-        cvs->mp->th = M_PI;
+        cvs->mp->th = M_PI/2;
 
         printf("begin test hlcPF\n");
-        while (inputs->t < 20) {
+        while (inputs->t < 10) {
             auto start = high_resolution_clock::now();
             double t = inputs->t;
             if (t==0) {
-                set_param_normal(cvs);
-                xgoal = 1;//2.2;//1.2;
-                ygoal = 1.13;//1.60;
+                set_param_prec(cvs);
+                xgoal = 3-0.14;//2.2;//1.2;
+                ygoal = 1.7;//1.60;
                 forward=-1;
-                orientation = 3*M_PI/4;
+                orientation = M_PI/2;
                 set_goal(cvs, xgoal, ygoal, orientation);
                 printf("goal A\n");
-            } else if (t>10 & t<10.01) {
+            } else if (t>20 & t<20.01) {
                 set_param_normal(cvs);
                 xgoal = 3-0.2;
                 ygoal = 1.13;
@@ -533,7 +533,7 @@ int main()
                 orientation = M_PI;
                 set_goal(cvs, xgoal, ygoal, orientation);
                 printf("goal B\n");
-            } else if (t>20 & t<20.1) {
+            } else if (t>40 & t<40.1) {
                 xgoal = 0.6;//1.3;
                 ygoal = 0.6;
                 forward =1;

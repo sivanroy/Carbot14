@@ -20,6 +20,7 @@ void hlcPF_init(highLevelCtrlPF *hlcPF) {
     hlcPF->d_opp = 100;
     //param physique
     hlcPF->x_shift = 0.075;
+    //check un peu moins -> de base 0.0625
     hlcPF->error = 0.02;//0.03; --> 0.01 limit de stabilité (.015 stable)
     //references
     hlcPF->v_ref = 0.0;

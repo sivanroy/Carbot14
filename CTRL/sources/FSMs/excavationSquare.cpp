@@ -12,7 +12,7 @@
 //attention a l'ennemi
 
 
-enum {S0_es,Dpmt1_es,HLC,Dpmt2_es,Dpmt3_es,servoShedOut_es};
+enum {S0_es,Dpmt1_es,Dpmt2_es,Dpmt3_es,servoShedOut_es};
 
 void excSq_init(excSquares *excSq){
     excSq->status = S0_ps;
@@ -20,10 +20,10 @@ void excSq_init(excSquares *excSq){
     excSq->go = 0;
 
     int s = 3; //2.28 ;; 1.51
-    double x_goalsI[s] = {2.41,1,1};
-    double y_goalsI[s] = {0.21,1,1};
-    double thetasI[s] = {-0.77,-10,-10}; //s
-    double forwardI[s] = {1,-1,-1};
+    double x_goalsI[s] = {2.4,1,1};
+    double y_goalsI[s] = {0.5,1,1};
+    double thetasI[s] = {-M_PI/2,-10,-10}; //s
+    double forwardI[s] = {-1,-1,-1};
     for (int i=0; i<s;i++) {
     	excSq->x_goals[i] = x_goalsI[i];
     	excSq->y_goals[i] = y_goalsI[i];
@@ -49,7 +49,14 @@ void excSq_loop(ctrlStruct *cvs){
     midLevelCtrl *mlc = cvs->mlc;
     teensyStruct *teensy = cvs->teensy;
 
-    double x = mp->x; double y = mp->y;
+    //only if usefull
+    double pos[5];
+    double x, y, th;
+    get_pos(cvs, pos);
+    th = pos[2];
+    x = pos[0];//+ hlcPF->x_shift * cos(th);
+    y = pos[1];//+ hlcPF->x_shift * sin(th);
+
 
     switch(excSq->status){
         case S0_es:

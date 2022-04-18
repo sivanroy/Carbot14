@@ -137,10 +137,10 @@ void set_param_prec(ctrlStruct *cvs){
     hlcPF->d_limit = 0.01;
     hlcPF->Alpha = a/hlcPF->d_limit;
     //tau
-    hlcPF->Tau_max = .2;
+    hlcPF->Tau_max = 1;
     hlcPF->tau_max_dist = .2;
-    hlcPF->Tau_min = .05; //0.005;
-    hlcPF->tau_min_dist = .01;
+    hlcPF->Tau_min = .2; //0.005;
+    hlcPF->tau_min_dist = .05;
     //reorientation
     hlcPF->erreurTh = 0.01;
     //local minimum

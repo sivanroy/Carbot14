@@ -50,14 +50,27 @@ void distr_loop(ctrlStruct *cvs){
     rplStruct *rpl = cvs->rpl;
     reCalibStruct *rec = cvs->rec;
 
-    double x = mp->x; double y = mp->y;
+    set_param_normal(cvs);
+    int TEAM = cvs->inputs->team;
+
+    //only if usefull
+    double pos[5];
+    double x, y, th;
+    get_pos(cvs, pos);
+    th = pos[2];
+    x = pos[0];//+ hlcPF->x_shift * cos(th);
+    y = pos[1];//+ hlcPF->x_shift * sin(th);
+
     set_param_normal(cvs);
     switch(distr->status){
         case S0_di:
         	if(distr->go){
         		distr->status = DpmtHLCPF1_di;
-                set_goal(cvs,distr->x_goals[0],distr->y_goals[0],distr->thetas[0]);
-        		printf("go to dpHLCPF1\n");
+
+                if (TEAM) set_goal(cvs,2.5,.75,M_PI);
+                else set_goal(cvs,.5,.75,0);
+
+                printf("go to dpHLCPF1\n");
         		distr->go = 0;
                 distr->output = 0;
         	}
@@ -65,7 +78,7 @@ void distr_loop(ctrlStruct *cvs){
             break;
 
         case DpmtHLCPF1_di:{
-    		sendFromHLCPF(cvs,cvs->distr->forward[0]);
+    		sendFromHLCPF(cvs,-1);
         	if(hlcPF->output){
                 printf("go to recalibrate_di\n");
                 //op->no_opp = 1;

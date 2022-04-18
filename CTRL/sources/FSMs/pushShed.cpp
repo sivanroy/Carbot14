@@ -45,8 +45,14 @@ void pushShed_loop(ctrlStruct *cvs){
     midLevelCtrl *mlc = cvs->mlc;
     teensyStruct *teensy = cvs->teensy;
 
+    //only if usefull
+    double pos[5];
+    double x, y, th;
+    get_pos(cvs, pos);
+    th = pos[2];
+    x = pos[0];//+ hlcPF->x_shift * cos(th);
+    y = pos[1];//+ hlcPF->x_shift * sin(th);
 
-    double x = mp->x; double y = mp->y;
     double xg; double yg;
 
     switch(pshed->status){
