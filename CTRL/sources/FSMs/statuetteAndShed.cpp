@@ -9,7 +9,7 @@
 
 //angle : opposé + pi
 
-enum {S0_sas,Dpmt1_sas,servoShedOut_sas,Dpmt2_sas,Dpmt3_sas,Dpmt4_sas,Dpmt5_sas, servoShedIn_sas};
+enum {S0_sas,Dpmt1_sas,servoShedOut_sas,Dpmt2_sas,Dpmt3_sas,Dpmt4_sas,Dpmt5_sas,Dpmt6_sas,Dpmt7_sas, servoShedIn_sas};
 
 void saShed_init(statAndShed *saShed) {
     saShed->status = S0_ps;
@@ -97,13 +97,12 @@ void saShed_loop(ctrlStruct *cvs){
             // !!!!!
             if (checkChrono(cvs)) {
                 saShed->status = Dpmt3_sas;
-                if (TEAM) set_goal(cvs,2.2,1.1,-10);
+                if (TEAM) set_goal(cvs,2.15,1.1,-10);
                 else set_goal(cvs,3-2.5,.6,-10);                
                 printf("go to Dpmt3_ps\n");           
             }
             break;
         }
-
 
         case Dpmt3_sas:{
             set_param_large(cvs);
@@ -111,7 +110,7 @@ void saShed_loop(ctrlStruct *cvs){
 
             if(hlcPF->output){
                 saShed->status = Dpmt4_sas;
-                if (TEAM) set_goal(cvs,2.45,.6,-10);
+                if (TEAM) set_goal(cvs,2.2,.8,-10);
                 else set_goal(cvs,3-2.5,.6,-10);   
                 //if (TEAM) set_goal(cvs,2.1,1.2,-10);
                 //else set_goal(cvs,3-2.1,1.2,-10);   
@@ -120,22 +119,59 @@ void saShed_loop(ctrlStruct *cvs){
             break;
         }
 
-        
-
         case Dpmt4_sas:{
             set_param_large(cvs);
             sendFromHLCPF(cvs,1);
+
             if(hlcPF->output){
                 saShed->status = Dpmt5_sas;
-                set_goal(cvs,2.52,.43,-M_PI/4);
+                if (TEAM) set_goal(cvs,2.5,.4,-M_PI/4);
+                else set_goal(cvs,3-2.5,.6,-10);
+                //if (TEAM) set_goal(cvs,2.1,1.2,-10);
+                //else set_goal(cvs,3-2.1,1.2,-10);
                 printf("go to Dpmt5_ps\n");
                 saShed->output = 1;
             }
             break;
         }
-
         case Dpmt5_sas:{
             set_param_large(cvs);
+            sendFromHLCPF(cvs,1,1);
+            if(hlcPF->output){
+                saShed->status = servoShedIn_sas;
+                printf("go to servoShedIn_sas\n");
+                saShed->output = 1;
+            }
+            break;
+        }
+        case servoShedIn_sas: {
+            // !!!!!
+            teensy_send(cvs, "B");
+            saShed->status = Dpmt6_sas;
+            if (TEAM) set_goal(cvs,2.3,.4,-10);
+            else set_goal(cvs,3-2.5,.6,-10);
+            //if (TEAM) set_goal(cvs,2.1,1.2,-10);
+            //else set_goal(cvs,3-2.1,1.2,-10);
+            printf("go to Dpmt6_ps\n");
+            saShed->output = 1;
+            break;
+        }
+
+        case Dpmt6_sas:{
+            set_param_prec(cvs);
+            sendFromHLCPF(cvs,1,1);
+            if(hlcPF->output){
+                saShed->status = Dpmt7_sas;
+                set_goal(cvs,2.52,.43,-M_PI/4);
+                printf("go to Dpmt6_ps\n");
+                saShed->output = 1;
+            }
+            break;
+        }
+
+
+        case Dpmt7_sas:{
+            set_param_prec(cvs);
             sendFromHLCPF(cvs,1,1);
             if(hlcPF->output){
                 saShed->status = servoShedIn_sas;
@@ -145,15 +181,6 @@ void saShed_loop(ctrlStruct *cvs){
             break;
         }
 
-        case servoShedIn_sas: {
-            teensy_send(cvs, "B");
-            inputs->t = inputs->t + 1;
-            usleep(1000000);
-            printf("go to end_ps\n");
-            saShed->status = S0_sas;
-            saShed->output = 1;
-            break;
-        }
 
         default:
             printf("Problem default value in FSM\n");

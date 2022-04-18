@@ -131,7 +131,7 @@ void set_param_normal(ctrlStruct *cvs){
 void set_param_prec(ctrlStruct *cvs){
     highLevelCtrlPF *hlcPF = cvs->hlcPF;
     //param physique
-    hlcPF->error = 0.015;//0.03; --> 0.01 limit de stabilité (.015 stable)
+    hlcPF->error = 0.02;//0.03; --> 0.01 limit de stabilité (.015 stable)
     //attractive
     double a = 1;
     hlcPF->d_limit = 0.01;
@@ -163,7 +163,7 @@ void set_param_large(ctrlStruct *cvs){
     //reorientation
     hlcPF->erreurTh = 0.015;
     //local minimum
-    cvs->mlcPF->sigma = .8;
+    cvs->mlcPF->sigma = .7;
 }
 
 //make computation to give a tau dependant of the distance to the opponent (ralentit si trop proche de l'ennemi)

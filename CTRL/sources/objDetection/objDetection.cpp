@@ -142,7 +142,7 @@ int od_distrib_solver(ctrlStruct *cvs)
     double pallets_y[4];
     double x_pallet, y_pallet;
     int precise_coord;
-    if (inputs->team == 0) { // purple team
+    if (inputs->team) { // purple team
         if (distrib_n == 0) {
             x_pallet = 3 - 0.055;
             y_pallet = 0.75;
