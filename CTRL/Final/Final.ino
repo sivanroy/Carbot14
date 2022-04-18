@@ -19,9 +19,9 @@ I
 K -> Lower flip to take pallets from distributor (pos: 255)
 L -> Lift the pallets 90 degrees with the flip (pos: 590)
 M -> Put the flip in initial position (pos: 755)
-N -> Take 1st pallet from stack and drop it at the top of expoisiton gallery (pos: 100)
-O -> Take 1st pallet from stack and drop it at the top of expoisiton gallery (pos: 160)
-P -> Take 1st pallet from stack and drop it at the top of expoisiton gallery (pos: 220)
+N -> Take 1st pallet from stack and drop it at the top of expositon gallery (pos: 100)
+O -> Take 1st pallet from stack and drop it at the top of expositon gallery (pos: 160)
+P -> Take 1st pallet from stack and drop it at the top of expositon gallery (pos: 220)
 Q -> Clamp IN -> release the statuette
 R -> Clamp with its widest opening
 S -> Clamp OUT -> clamps the statuette
@@ -45,9 +45,9 @@ const int ID1 = 1;
 const int ID4 = 4;
 const int ID5 = 5;
 
-int servoIn0 = -12; //Servo 0 is IN at position -12
-int servoOut0 = 168; //Servo 0 is OUT at position 168
-int servoIn1 = 196;
+int servoIn0 = -14; //Right front servo is IN at position -12
+int servoOut0 = 168; //Right front servo is OUT at position 168
+int servoIn1 = 196; //Left front 
 int servoOut1 = 12;
 int servoIn2 = 180;
 int servoOut2 = 15;
@@ -57,6 +57,12 @@ int servoIn4 = -35;
 int servoOut4 = 28; // Widest : -5
 int servoIn5 = 185; //MAX : 200
 int servoOut5 = 35; //MIN : -25
+
+int flip3P = 650;
+int flip2P = 640;
+int flip1P = 625;
+int flipUp = 800;
+int flipDown = 275;
 
 const int measureResPin = 21;
 int rawMeasure = 0;
@@ -70,6 +76,7 @@ const int switchArmPin = 2;
 const int switchFrontPin = 3;
 const int switchBackPin = 4;
 const int pumpPin = 5;
+const int valvePin = 7;
 int switchArmState = 0; 
 int switchFrontState = 0; 
 int switchBackState = 0; 
@@ -81,13 +88,17 @@ void setup() {
   Serial.begin(9600);
   Wire.begin();
   Dynamixel.setSerial(&Serial3);
+  digitalWrite(9, HIGH);
   Dynamixel.begin(57600,controlPin);
-  
-  
+ 
   pinMode(switchArmPin, INPUT_PULLUP);
   pinMode(switchFrontPin, INPUT_PULLUP);
-  pinMode(switchBackState, INPUT_PULLUP);
-
+  pinMode(switchBackPin, INPUT_PULLUP);
+  
+  pinMode(pumpPin, OUTPUT);
+  pinMode(valvePin, OUTPUT);
+  digitalWrite(valvePin, LOW);
+  
   setArm();
   setServos();
   
@@ -113,60 +124,10 @@ void loop() {
   measureResistance();
   moveStepper();
   flip();
+
+  Dynamixel.moveSpeed(ID4,flipUp,1023);
   delay(10);
 }
-
-/*
-void onePallets(){
-  Wire.beginTransmission(0x0E);
-  goToPosition(100);
-  digitalWrite(pumpPin, HIGH);
-  delay(2000);
-  goToPosition(0);
-  delay(2000);
-  Dynamixel.moveSpeed(ID1,600,512);
-  delay(2000);
-  goToPosition(350);
-  delay(2000);
-  digitalWrite(pumpPin, LOW);
-  delay(2000);
-  goToPosition(0);
-  delay(2000);
-  Dynamixel.moveSpeed(ID1,820,512);
-  Wire.endTransmission();
-}
-
-void twoPallets(){
-  delay(1000);
-  Wire.beginTransmission(0x0E);
-  goToPosition(100);
-  digitalWrite(pumpPin, HIGH);
-  delay(2000);
-  goToPosition(0);
-  delay(2000);
-  Dynamixel.moveSpeed(ID1,600,512);
-  delay(2000);
-  goToPosition(350);
-  delay(2000);
-  digitalWrite(pumpPin, LOW);
-  delay(2000);
-  goToPosition(0);
-  delay(2000);
-  Dynamixel.moveSpeed(ID1,820,512);
-  goToPosition(160);
-  digitalWrite(pumpPin, HIGH);
-  delay(2000);
-  goToPosition(0);
-  delay(2000);
-  Dynamixel.moveSpeed(ID1,600,512);
-  delay(2000);
-  digitalWrite(pumpPin, LOW);
-  delay(2000);
-  Dynamixel.moveSpeed(ID1,820,512);
-  Wire.endTransmission();
-  delay(1000000);
-}
-*/
 
 void clamp(){
    if (data == "Q"){
@@ -208,15 +169,15 @@ void measureResistance(){
 
 void flip(){
   if (data == "K"){
-    Dynamixel.moveSpeed(ID4,255,512);
+    Dynamixel.moveSpeed(ID4,flipDown,512);
     data = "NULL";
   }
   if (data == "L"){
-    Dynamixel.moveSpeed(ID4,590,512);
+    Dynamixel.moveSpeed(ID4,flip3P,512);
     data = "NULL";
   }
   if (data == "M"){
-    Dynamixel.moveSpeed(ID4,755,512);
+    Dynamixel.moveSpeed(ID4,flipUp,512);
     data = "NULL";
   }
 } 
@@ -225,35 +186,37 @@ void moveStepper(){
   setArm();
   
   if (data == "F"){
-    Dynamixel.moveSpeed(ID4,590,1023);
-    delay(2000);
-    
-    Wire.beginTransmission(0x0E);
-    goToPosition(100);
-    digitalWrite(pumpPin, HIGH);
-    delay(2000);
-    goToPosition(0);
-    delay(2000);
-    Dynamixel.moveSpeed(ID1,600,512);
-    delay(2000);
-    goToPosition(350);
-    delay(2000);
-    digitalWrite(pumpPin, LOW);
-    delay(2000);
-    goToPosition(0);
-    delay(2000);
-    Dynamixel.moveSpeed(ID1,820,512);
-    Wire.endTransmission();
+     Dynamixel.moveSpeed(ID4,flip3P,1023);
+      delay(2000);
+      
+      Wire.beginTransmission(0x0E);
+      goToPosition(110);
+      digitalWrite(pumpPin, HIGH);
+      delay(2000);
+      goToPosition(0);
+      delay(2000);
+      Dynamixel.moveSpeed(ID1,600,512);
+      delay(2000);
+      goToPosition(350);
+      delay(2000);
+      digitalWrite(valvePin, HIGH);
+      delay(50);
+      digitalWrite(pumpPin, LOW);
+      digitalWrite(valvePin, LOW);
+      goToPosition(0);
+      delay(2000);
+      Dynamixel.moveSpeed(ID1,820,512);
+      Wire.endTransmission();
     data = "NULL";
   }
   
   
   if (data == "G"){
-    Dynamixel.moveSpeed(ID4,590,1023);
+    Dynamixel.moveSpeed(ID4,flip2P,1023);
     delay(2000);
     
     Wire.beginTransmission(0x0E);
-    goToPosition(160);
+    goToPosition(170);
     digitalWrite(pumpPin, HIGH);
     delay(2000);
     goToPosition(0);
@@ -262,8 +225,10 @@ void moveStepper(){
     delay(2000);
     goToPosition(350);
     delay(2000);
+    digitalWrite(valvePin, HIGH);
+    delay(50);
     digitalWrite(pumpPin, LOW);
-    delay(2000);
+    digitalWrite(valvePin, LOW);
     goToPosition(0);
     delay(2000);
     Dynamixel.moveSpeed(ID1,820,512);
@@ -272,11 +237,11 @@ void moveStepper(){
   }
 
   if (data == "H"){
-    Dynamixel.moveSpeed(ID4,590,1023);
+    Dynamixel.moveSpeed(ID4,flip1P,1023);
     delay(2000);
     
     Wire.beginTransmission(0x0E);
-    goToPosition(220);
+    goToPosition(235);
     digitalWrite(pumpPin, HIGH);
     delay(2000);
     goToPosition(0);
@@ -285,8 +250,10 @@ void moveStepper(){
     delay(2000);
     goToPosition(350);
     delay(2000);
+    digitalWrite(valvePin, HIGH);
+    delay(50);
     digitalWrite(pumpPin, LOW);
-    delay(2000);
+    digitalWrite(valvePin, LOW);
     goToPosition(0);
     delay(2000);
     Dynamixel.moveSpeed(ID1,820,512);
@@ -295,19 +262,21 @@ void moveStepper(){
   }
   
   if (data == "N"){
-    Dynamixel.moveSpeed(ID4,590,1023);
+    Dynamixel.moveSpeed(ID4,flip3P,1023);
     delay(2000);
     
     Wire.beginTransmission(0x0E);
-    goToPosition(100);
+    goToPosition(110);
     digitalWrite(pumpPin, HIGH);
     delay(2000);
     goToPosition(0);
     delay(2000);
     Dynamixel.moveSpeed(ID1,600,512);
     delay(2000);
+    digitalWrite(valvePin, HIGH);
+    delay(50);
     digitalWrite(pumpPin, LOW);
-    delay(2000);
+    digitalWrite(valvePin, LOW);
     Dynamixel.moveSpeed(ID1,820,512);
     Wire.endTransmission();
     data = "NULL";
@@ -315,38 +284,42 @@ void moveStepper(){
   
   
   if (data == "O"){
-    Dynamixel.moveSpeed(ID4,590,1023);
+    Dynamixel.moveSpeed(ID4,flip2P,1023);
     delay(2000);
     
     Wire.beginTransmission(0x0E);
-    goToPosition(160);
+    goToPosition(170);
     digitalWrite(pumpPin, HIGH);
     delay(2000);
     goToPosition(0);
     delay(2000);
     Dynamixel.moveSpeed(ID1,600,512);
     delay(2000);
+    digitalWrite(valvePin, HIGH);
+    delay(50);
     digitalWrite(pumpPin, LOW);
-    delay(2000);
+    digitalWrite(valvePin, LOW);
     Dynamixel.moveSpeed(ID1,820,512);
     Wire.endTransmission();
     data = "NULL";
   }
 
   if (data == "P"){
-    Dynamixel.moveSpeed(ID4,590,1023);
+    Dynamixel.moveSpeed(ID4,flip1P,1023);
     delay(2000);
     
     Wire.beginTransmission(0x0E);
-    goToPosition(220);
+    goToPosition(235);
     digitalWrite(pumpPin, HIGH);
     delay(2000);
     goToPosition(0);
     delay(2000);
     Dynamixel.moveSpeed(ID1,600,512);
     delay(2000);
+    digitalWrite(valvePin, HIGH);
+    delay(50);
     digitalWrite(pumpPin, LOW);
-    delay(2000);
+    digitalWrite(valvePin, LOW);
     Dynamixel.moveSpeed(ID1,820,512);
     Wire.endTransmission();
     data = "NULL";

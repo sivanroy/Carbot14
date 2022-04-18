@@ -667,10 +667,22 @@ int main()
         }
     }
     if (saShedON){
+        threads_start(cvs);
+
+        teensy_send(cvs, "R");
+        usleep(1500000);
+        teensy_send(cvs, "B");
+        /*
+        printf("------------- rec static -------------\n");
+        rec->iter = 0;
+        motors_stop(cvs);
+        while (1) if (rec_static(cvs)) break;
+         */
+        //usleep(2000000);
         saShed_launch(cvs);
         printf("sasShedON\n");
-        cvs->mp->x = 3-0.14;
-        cvs->mp->y = 2-0.53;
+        cvs->mp->x = 3-0.133;
+        cvs->mp->y = 1.467;
         cvs->mp->th = M_PI;
 
         while(inputs->t < 30){
@@ -688,6 +700,10 @@ int main()
             auto duration = duration_cast<microseconds>(stop - start);
             usleep(dt * 1000000 - duration.count());
         }
+        mt->thread_main_end = 1;
+        printf("th_end : start ... ");
+        threads_end(cvs);
+        printf("end\n");
     }
     if (distON) {
         threads_start(cvs);
@@ -751,7 +767,7 @@ int main()
             }
 
             if (inputs->t >= 1 && B == 0) {
-                teensy_send(cvs, "A");
+                //teensy_send(cvs, "A");
                 B = 1;
             }
             /*
@@ -766,7 +782,7 @@ int main()
             }
              */
             if (inputs->t >= 7 && R == 0) {
-                teensy_send(cvs, "R");
+                //teensy_send(cvs, "R");
                 R = 1;
             }
             if (inputs->t >= 9 && S == 0) {
