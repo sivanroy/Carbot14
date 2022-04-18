@@ -16,7 +16,7 @@ void mlcPF_init(midLevelCtrlPF *mlcPF)
     mlcPF->R_odo = 0.022;
 
     mlcPF->Kp_th = 6.0;
-    mlcPF->max_th = 6;
+    mlcPF->max_th = 8;
 
     mlcPF->r_sp_ref = 0.0;
     mlcPF->l_sp_ref = 0.0;

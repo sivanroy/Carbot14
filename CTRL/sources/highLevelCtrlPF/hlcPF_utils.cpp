@@ -119,11 +119,11 @@ void set_param_normal(ctrlStruct *cvs){
     hlcPF->Alpha = a/hlcPF->d_limit;
     //tau
     hlcPF->Tau_max = 10;
-    hlcPF->tau_max_dist = 1.5;
+    hlcPF->tau_max_dist = 1;
     hlcPF->Tau_min = 0.25; //0.005;
     hlcPF->tau_min_dist = 0.1;
     //reorientation
-    hlcPF->erreurTh = 0.01;
+    hlcPF->erreurTh = 0.015;
     //local minimum
     cvs->mlcPF->sigma = 1;
 }
@@ -137,14 +137,14 @@ void set_param_prec(ctrlStruct *cvs){
     hlcPF->d_limit = 0.01;
     hlcPF->Alpha = a/hlcPF->d_limit;
     //tau
-    hlcPF->Tau_max = 1;
+    hlcPF->Tau_max = .25;
     hlcPF->tau_max_dist = .2;
-    hlcPF->Tau_min = .2; //0.005;
-    hlcPF->tau_min_dist = .05;
+    hlcPF->Tau_min = .15; //0.005;
+    hlcPF->tau_min_dist = .1;
     //reorientation
     hlcPF->erreurTh = 0.01;
     //local minimum
-    cvs->mlcPF->sigma = .5;
+    cvs->mlcPF->sigma = .4;
 }
 
 void set_param_large(ctrlStruct *cvs){
@@ -156,14 +156,14 @@ void set_param_large(ctrlStruct *cvs){
     hlcPF->d_limit = 0.01;
     hlcPF->Alpha = a/hlcPF->d_limit;
     //tau
-    hlcPF->Tau_max = .5;
-    hlcPF->tau_max_dist = .2;
-    hlcPF->Tau_min = .02; //0.005;
-    hlcPF->tau_min_dist = .01;
+    hlcPF->Tau_max = 10;
+    hlcPF->tau_max_dist = 1;
+    hlcPF->Tau_min = 0.25; //0.005;
+    hlcPF->tau_min_dist = 0.1;
     //reorientation
-    hlcPF->erreurTh = 0.01;
+    hlcPF->erreurTh = 0.015;
     //local minimum
-    cvs->mlcPF->sigma = .3;
+    cvs->mlcPF->sigma = .8;
 }
 
 //make computation to give a tau dependant of the distance to the opponent (ralentit si trop proche de l'ennemi)
@@ -178,7 +178,7 @@ double tau_compute(ctrlStruct *cvs,int noObst) {
     double b = tau_min - a*tau_min_dist;
 
     double d_opp = fmax(cvs->hlcPF->d_opp-0.20,tau_min_dist)/5;
-    printf("d_opp %f\n", d_opp);
+    //printf("d_opp %f\n", d_opp);
 
     double d = cvs->hlcPF->d;
     double d_obst = fmax(cvs->hlcPF->nearestObst-0.15,tau_min_dist);
@@ -187,14 +187,14 @@ double tau_compute(ctrlStruct *cvs,int noObst) {
     double d_return = std::min(d,d_opp);
     if (!noObst){
         d_return = std::min(d_return,d_obst);
-        printf("!noobst\n");
+        //printf("!noobst\n");
     }
 
     tau_return = a*d_return+b;
 
     if (tau_return <= tau_min) tau_return = tau_min;
     else if (tau_return >= tau_max) tau_return = tau_max;
-    printf("tau return %f\n", tau_return);
+    //printf("tau return %f\n", tau_return);
 
     //distance to opponent
     return tau_return;

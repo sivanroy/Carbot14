@@ -19,7 +19,7 @@ void hlcPF_init(highLevelCtrlPF *hlcPF) {
     hlcPF->nearestObst = 100; //dist
     hlcPF->d_opp = 100;
     //param physique
-    hlcPF->x_shift = 0.075;
+    hlcPF->x_shift = 0.065;
     //check un peu moins -> de base 0.0625
     hlcPF->error = 0.02;//0.03; --> 0.01 limit de stabilité (.015 stable)
     //references
@@ -36,10 +36,10 @@ void hlcPF_init(highLevelCtrlPF *hlcPF) {
     hlcPF->goal[0] = 0;hlcPF->goal[1] = 0;
     hlcPF->orientation = -10;
     //repulsive static
-    hlcPF->Eta = 0.03; //large = 0.03 et 0.02 = limit //0.1;//.025 = tout tout juste !!
-    hlcPF->Rho = 0.5; // 
+    hlcPF->Eta = 0.13; //large = 0.03 et 0.02 = limit //0.1;//.025 = tout tout juste !!
+    hlcPF->Rho = 0.4; // 
     //param dyn obstacle
-    hlcPF->Eta_opp = 0.025*50;
+    hlcPF->Eta_opp = 0.025*60;
     hlcPF->Rho_opp = 0.5;
     //attractive
     double a = 1;
@@ -343,6 +343,9 @@ void hlcPF_out(ctrlStruct *cvs,int goForward,int noObst) {
     double orientation = hlcPF->orientation;
     myPosition *mp = cvs->mp;
 
+    if(hlcPF->output){
+        return;
+    }
 
     double pos[5];
     double x, y, th;
@@ -360,7 +363,9 @@ void hlcPF_out(ctrlStruct *cvs,int goForward,int noObst) {
         double dth = limit_angle(orientation - th);
         if(orientation==-10){
             hlcPF->output = 1;
+            hlcPF->v_ref = 0; hlcPF->theta_ref = th;
             printf("No re-orientation\n");
+            printf("here\n");
         }
         else if(abs(dth) > hlcPF->erreurTh){
             hlcPF->theta_ref = limit_angle(orientation);

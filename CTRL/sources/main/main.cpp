@@ -49,10 +49,10 @@ int main()
     int icp_test = 0;
     int icpON = 0;
     int teensyON = 0;
-    int saShedON = 0;
+    int saShedON = 1;
     int distON = 0;
     int icpDynON = 0;
-    int odON = 1;
+    int odON = 0;
 
     int mThreadsON = 0;
 
@@ -533,26 +533,26 @@ int main()
         int forward;double orientation;
         set_param_normal(cvs);
         cvs->mp->x = 3-0.14;
-        cvs->mp->y = 1.13;
-        cvs->mp->th = M_PI/2;
+        cvs->mp->y = 2-0.53;
+        cvs->mp->th = M_PI;
 
         printf("begin test hlcPF\n");
-        while (inputs->t < 10) {
+        while (inputs->t < 40) {
             auto start = high_resolution_clock::now();
             double t = inputs->t;
             if (t==0) {
-                set_param_prec(cvs);
-                xgoal = 3-0.14;//2.2;//1.2;
+                set_param_normal(cvs);
+                xgoal = 1;//2.2;//1.2;
                 ygoal = 1.7;//1.60;
                 forward=-1;
-                orientation = M_PI/2;
+                orientation = -10;//M_PI/2;
                 set_goal(cvs, xgoal, ygoal, orientation);
                 printf("goal A\n");
             } else if (t>20 & t<20.01) {
                 set_param_normal(cvs);
-                xgoal = 3-0.2;
+                xgoal = 3-0.24;
                 ygoal = 1.13;
-                forward =-1;
+                forward =0;
                 orientation = M_PI;
                 set_goal(cvs, xgoal, ygoal, orientation);
                 printf("goal B\n");
@@ -569,12 +569,14 @@ int main()
             dyn_obs_set(cvs);
             //printf("r_sp_mes_enc = %f | l_sp_mes_enc = %f\n", inputs->r_sp_mes_enc, inputs->l_sp_mes_enc);
             //printf("r_sp_mes_odo = %f | l_sp_mes_odo = %f\n", inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
-            hlcPF_out(cvs, forward);
-            //if(hlcPF->output) {
+            hlcPF_out(cvs, forward );
+            //
+
+            /*if(hlcPF->output) {
                 //hlcPF->v_ref = 0;
                 //hlcPF->theta_ref = 0;
-                //break;
-            //}
+                break;
+            }*/
             mlcPF_out(cvs, hlcPF->v_ref, hlcPF->theta_ref);
 
             fprintf(cvs->tau_data, "%f,%f,%f\n", inputs->t, hlcPF->v_ref, tau_compute(cvs));
@@ -655,7 +657,7 @@ int main()
             }
             if(pshed->output) {
                 printf("ended\n");
-                motors_stop(cvs);
+                //motors_stop(cvs);
                 break;
             }
             update_time(cvs);
@@ -671,7 +673,7 @@ int main()
         cvs->mp->y = 2-0.53;
         cvs->mp->th = M_PI;
 
-        while(inputs->t < 10){
+        while(inputs->t < 30){
             auto start = high_resolution_clock::now();
 
             saShed_loop(cvs);
