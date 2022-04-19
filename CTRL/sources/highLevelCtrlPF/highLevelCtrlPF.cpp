@@ -27,6 +27,7 @@ void hlcPF_init(highLevelCtrlPF *hlcPF) {
     hlcPF->theta_ref = 0.0;
     hlcPF->vx = 0.0;
     hlcPF->vy = 0.0;
+    hlcPF->reorientation = 0;
     //Forces
     hlcPF->F_att[0] = 0; hlcPF->F_att[1] = 0;
     hlcPF->F_rep[0] = 0; hlcPF->F_rep[1] = 0;
@@ -336,6 +337,7 @@ void set_goal(ctrlStruct *cvs, double xgoal, double ygoal, double orientation) {
     hlcPF->output = 0;
     hlcPF->output_main = 0;
     hlcPF->flag_min_local = 0;
+    hlcPF->reorientation = 0;
 }
 
 void hlcPF_out(ctrlStruct *cvs,int goForward,int noObst) {
@@ -370,10 +372,12 @@ void hlcPF_out(ctrlStruct *cvs,int goForward,int noObst) {
             printf("here\n");
         }
         else if(abs(dth) > hlcPF->erreurTh){
+            hlcPF->reorientation = 1;
             cvs->mlcPF->Kp_th = 20;
             hlcPF->theta_ref = limit_angle(orientation);
             //printf("in reorientation\n");
         } else {
+            hlcPF->reorientation = 0;
             hlcPF->output = 1;
             printf("reoriented\n");
         }

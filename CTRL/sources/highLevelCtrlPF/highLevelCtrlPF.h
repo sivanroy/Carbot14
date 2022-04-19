@@ -25,6 +25,7 @@ typedef struct highLevelCtrlPF
     double theta_ref;
     double vx ;
     double vy ;
+    int reorientation;
     //Forces
     double F_att[2];
     double F_rep[2];

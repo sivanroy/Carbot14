@@ -1,11 +1,15 @@
 
 /*
-Communication RPI -> Teensy :
+Communication Teensy -> RPI :
 1 -> Pallet violet (470 Ohm)
 2 -> Pallet jaune (1 kOhm)
 3 -> Pallet rouge (4.7 kOhm)
-4 -> Back switch ON : Flip the pallets (Activate dyna ID4)
-5 -> Front switch ON : Push under the shed (Activate dyna ID5)
+4 -> Back switch ON
+5 -> Front switch ON
+
+Communication RPI -> Teensy :
+5 -> Push under the shed (Activate dyna ID5 OUT)
+6 -> Push under the shed back under the robot (Activate dyna ID5 IN)
 R -> Reset all global variables to 0 (undo)
 A -> Both front servo OUT : hold pallets to push under the shed
 B -> Both front servo IN : release pallets to push under the shed
@@ -23,8 +27,8 @@ N -> Take 1st pallet from stack and drop it at the top of expositon gallery (pos
 O -> Take 1st pallet from stack and drop it at the top of expositon gallery (pos: 160)
 P -> Take 1st pallet from stack and drop it at the top of expositon gallery (pos: 220)
 Q -> Clamp IN -> release the statuette
-R -> Clamp with its widest opening
 S -> Clamp OUT -> clamps the statuette
+U -> Push the measure resistance pallet 
 */
 
 #include <Wire.h> //I2C
@@ -47,22 +51,22 @@ const int ID5 = 5;
 
 int servoIn0 = -14; //Right front servo is IN at position -12
 int servoOut0 = 168; //Right front servo is OUT at position 168
-int servoIn1 = 196; //Left front 
-int servoOut1 = 12;
-int servoIn2 = 180;
+int servoIn1 = 200; //Left front 
+int servoOut1 = 13; 
+int servoIn2 = 180; //Measure res
 int servoOut2 = 15;
-int servoIn3 = 130;
+int servoIn3 = 130; //Push cube
 int servoOut3 = 195;
-int servoIn4 = -35;
-int servoOut4 = 28; // Widest : -5
-int servoIn5 = 185; //MAX : 200
+int servoIn4 = -34; //Clamp
+int servoOut4 = 55;
+int servoIn5 = 185; //MAX : 200 //Push resistance
 int servoOut5 = 35; //MIN : -25
 
-int flip3P = 650;
-int flip2P = 640;
-int flip1P = 625;
-int flipUp = 800;
-int flipDown = 275;
+int flip3P = 670;
+int flip2P = 660;
+int flip1P = 645;
+int flipUp = 820;
+int flipDown = 295;
 
 const int measureResPin = 21;
 int rawMeasure = 0;
@@ -83,9 +87,10 @@ int switchBackState = 0;
 String data = "NULL";
 
 int pushedUnderTheShed = 0; // 1 if it has been pushed
+int pushedUnderTheShedBis = 0;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(57600);
   Wire.begin();
   Dynamixel.setSerial(&Serial3);
   digitalWrite(9, HIGH);
@@ -124,18 +129,13 @@ void loop() {
   measureResistance();
   moveStepper();
   flip();
-
-  Dynamixel.moveSpeed(ID4,flipUp,1023);
+  
   delay(10);
 }
 
 void clamp(){
    if (data == "Q"){
     pwm.setPWM(4, 0, pulseWidth(servoIn4));
-    data = "NULL";
-   }
-   if (data == "R"){
-    pwm.setPWM(4, 0, pulseWidth(-5));
     data = "NULL";
    }
    if (data == "S"){
@@ -186,27 +186,27 @@ void moveStepper(){
   setArm();
   
   if (data == "F"){
-     Dynamixel.moveSpeed(ID4,flip3P,1023);
-      delay(2000);
-      
-      Wire.beginTransmission(0x0E);
-      goToPosition(110);
-      digitalWrite(pumpPin, HIGH);
-      delay(2000);
-      goToPosition(0);
-      delay(2000);
-      Dynamixel.moveSpeed(ID1,600,512);
-      delay(2000);
-      goToPosition(350);
-      delay(2000);
-      digitalWrite(valvePin, HIGH);
-      delay(50);
-      digitalWrite(pumpPin, LOW);
-      digitalWrite(valvePin, LOW);
-      goToPosition(0);
-      delay(2000);
-      Dynamixel.moveSpeed(ID1,820,512);
-      Wire.endTransmission();
+    Dynamixel.moveSpeed(ID4,flip3P,1023);
+    delay(2000);
+  
+    Wire.beginTransmission(0x0E);
+    goToPosition(105);
+    digitalWrite(pumpPin, HIGH);
+    delay(750);
+    goToPosition(0);
+    delay(500);
+    Dynamixel.moveSpeed(ID1,600,1023);
+    delay(500);
+    goToPosition(350);
+    delay(1000);
+    digitalWrite(valvePin, HIGH);
+    delay(50);
+    digitalWrite(pumpPin, LOW);
+    digitalWrite(valvePin, LOW);
+    goToPosition(0);
+    delay(1000);
+    Dynamixel.moveSpeed(ID1,820,1023);
+    Wire.endTransmission();  
     data = "NULL";
   }
   
@@ -214,24 +214,24 @@ void moveStepper(){
   if (data == "G"){
     Dynamixel.moveSpeed(ID4,flip2P,1023);
     delay(2000);
-    
+  
     Wire.beginTransmission(0x0E);
-    goToPosition(170);
+    goToPosition(165);
     digitalWrite(pumpPin, HIGH);
-    delay(2000);
+    delay(1000);
     goToPosition(0);
-    delay(2000);
-    Dynamixel.moveSpeed(ID1,600,512);
-    delay(2000);
+    delay(750);
+    Dynamixel.moveSpeed(ID1,600,1023);
+    delay(500);
     goToPosition(350);
-    delay(2000);
+    delay(1000);
     digitalWrite(valvePin, HIGH);
     delay(50);
     digitalWrite(pumpPin, LOW);
     digitalWrite(valvePin, LOW);
     goToPosition(0);
-    delay(2000);
-    Dynamixel.moveSpeed(ID1,820,512);
+    delay(1000);
+    Dynamixel.moveSpeed(ID1,820,1023);
     Wire.endTransmission();
     data = "NULL";
   }
@@ -239,46 +239,43 @@ void moveStepper(){
   if (data == "H"){
     Dynamixel.moveSpeed(ID4,flip1P,1023);
     delay(2000);
-    
+  
     Wire.beginTransmission(0x0E);
-    goToPosition(235);
+    goToPosition(230);
     digitalWrite(pumpPin, HIGH);
-    delay(2000);
+    delay(1250);
     goToPosition(0);
-    delay(2000);
-    Dynamixel.moveSpeed(ID1,600,512);
-    delay(2000);
+    delay(1000);
+    Dynamixel.moveSpeed(ID1,600,1023);
+    delay(500);
     goToPosition(350);
-    delay(2000);
+    delay(1000);
     digitalWrite(valvePin, HIGH);
     delay(50);
     digitalWrite(pumpPin, LOW);
     digitalWrite(valvePin, LOW);
     goToPosition(0);
-    delay(2000);
-    Dynamixel.moveSpeed(ID1,820,512);
-    Wire.endTransmission();
+    delay(1000);
+    Dynamixel.moveSpeed(ID1,820,1023);
+    Wire.endTransmission(); 
     data = "NULL";
   }
   
   if (data == "N"){
-    Dynamixel.moveSpeed(ID4,flip3P,1023);
-    delay(2000);
-    
     Wire.beginTransmission(0x0E);
-    goToPosition(110);
+    goToPosition(105);
     digitalWrite(pumpPin, HIGH);
-    delay(2000);
+    delay(750);
     goToPosition(0);
-    delay(2000);
-    Dynamixel.moveSpeed(ID1,600,512);
-    delay(2000);
+    delay(500);
+    Dynamixel.moveSpeed(ID1,600,1023);
+    delay(500);
     digitalWrite(valvePin, HIGH);
     delay(50);
     digitalWrite(pumpPin, LOW);
     digitalWrite(valvePin, LOW);
-    Dynamixel.moveSpeed(ID1,820,512);
-    Wire.endTransmission();
+    Dynamixel.moveSpeed(ID1,820,1023);
+    Wire.endTransmission();  
     data = "NULL";
   }
   
@@ -286,20 +283,19 @@ void moveStepper(){
   if (data == "O"){
     Dynamixel.moveSpeed(ID4,flip2P,1023);
     delay(2000);
-    
     Wire.beginTransmission(0x0E);
-    goToPosition(170);
+    goToPosition(165);
     digitalWrite(pumpPin, HIGH);
-    delay(2000);
+    delay(1000);
     goToPosition(0);
-    delay(2000);
-    Dynamixel.moveSpeed(ID1,600,512);
-    delay(2000);
+    delay(750);
+    Dynamixel.moveSpeed(ID1,600,1023);
+    delay(500);
     digitalWrite(valvePin, HIGH);
     delay(50);
     digitalWrite(pumpPin, LOW);
     digitalWrite(valvePin, LOW);
-    Dynamixel.moveSpeed(ID1,820,512);
+    Dynamixel.moveSpeed(ID1,820,1023);
     Wire.endTransmission();
     data = "NULL";
   }
@@ -307,21 +303,21 @@ void moveStepper(){
   if (data == "P"){
     Dynamixel.moveSpeed(ID4,flip1P,1023);
     delay(2000);
-    
+  
     Wire.beginTransmission(0x0E);
-    goToPosition(235);
+    goToPosition(230);
     digitalWrite(pumpPin, HIGH);
-    delay(2000);
+    delay(1250);
     goToPosition(0);
-    delay(2000);
-    Dynamixel.moveSpeed(ID1,600,512);
-    delay(2000);
+    delay(1000);
+    Dynamixel.moveSpeed(ID1,600,1023);
+    delay(500);
     digitalWrite(valvePin, HIGH);
     delay(50);
     digitalWrite(pumpPin, LOW);
     digitalWrite(valvePin, LOW);
-    Dynamixel.moveSpeed(ID1,820,512);
-    Wire.endTransmission();
+    Dynamixel.moveSpeed(ID1,820,1023);
+    Wire.endTransmission(); 
     data = "NULL";
   }
 }
@@ -330,7 +326,11 @@ void goToPosition(int pos){
   tic.setTargetPosition(pos);
   while(tic.getTargetPosition()!= pos){
       tic.setTargetPosition(pos);
-    }
+      if (pos == 0 && armSwitch()){
+        Serial.println("switch");
+        break;
+      }
+   } 
 }
 
 void checkRPI(){
@@ -342,19 +342,27 @@ void checkRPI(){
 void resetVariables(){
   if (data == "R"){
     pushedUnderTheShed = 0;
+    pushedUnderTheShedBis = 0;
     data = "NULL";
   }
 }
-  
+
+
 void pushUnderTheShed(){
   if (data == "5" && pushedUnderTheShed == 0){
     Dynamixel.turn(ID5,RIGTH,1023);
     delay(1100);
-    Dynamixel.turn(ID5,LEFT,1023);
-    delay(1170);
-    Dynamixel.turn(ID5,RIGTH,0);
+    Dynamixel.turn(ID5,LEFT,0);
     data = "NULL";
     pushedUnderTheShed = 1;
+  }
+  if (data == "6" && pushedUnderTheShedBis == 0){
+    Dynamixel.turn(ID5,LEFT,1023);
+    pwm.setPWM(4, 0, pulseWidth(servoOut4));
+    delay(1180);
+    Dynamixel.turn(ID5,RIGTH,0);
+    data = "NULL";
+    pushedUnderTheShedBis = 1;
   }
 }
 
@@ -418,7 +426,7 @@ void setArm(){
     tic.haltAndSetPosition(0);
     Wire.endTransmission();
   }
-  Dynamixel.moveSpeed(ID1,820,50);
+  Dynamixel.moveSpeed(ID1,820,512);
 }
 
 void resetArm(){
@@ -436,7 +444,7 @@ void resetArm(){
     tic.haltAndSetPosition(0);
     Wire.endTransmission();
   }
-  Dynamixel.moveSpeed(ID1,820,50);
+  Dynamixel.moveSpeed(ID1,820,512);
 }
 
 void setServos(){
@@ -482,7 +490,7 @@ void servoResistance(){
 }
 
 void pushPallet(){
-  if (data == "T"){
+  if (data == "U"){
     pwm.setPWM(5, 0, pulseWidth(servoOut5));
     delay(950);
     pwm.setPWM(5, 0, pulseWidth(servoIn5));

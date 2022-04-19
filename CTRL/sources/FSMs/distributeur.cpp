@@ -91,20 +91,19 @@ void distr_loop(ctrlStruct *cvs){
             if (rec_static(cvs)) {
                 distr->status = OpenDis_di;
                 printf("rec END\n");
-                distr->output = 1;
             }
             break;
         }
 
         case OpenDis_di: {
-            teensy_send(cvs, "M");
+            teensy_send(cvs, "K");
             //inputs->t = inputs->t + 2;
             distr->status = DpmtMLC1_di;
             //teensy_send(cvs, "L");
             //inputs->t = inputs->t + 2;
             //distr->status = DpmtMLC1_di;
             printf("go to dpmtmlc\n");
-            set_goal(cvs,distr->x_goals[1],distr->y_goals[1],distr->thetas[1]);
+            set_goal(cvs,2.75,.75,M_PI);
             break;
         }
 
@@ -112,11 +111,11 @@ void distr_loop(ctrlStruct *cvs){
             //hlcPF->Tau_max = 5;
             //sendFromMLC(cvs,distr->x_goals[1],distr->y_goals[1],cvs->distr->forward[1]);
             set_param_prec(cvs);
-            sendFromHLCPF(cvs,distr->forward[1],1);
+            sendFromHLCPF(cvs,0,1);
             if(hlcPF->output){
                 //distr->status = DpmtHLCPFOut_di;
                 distr->status = DpmtMLC2_di;
-                set_goal(cvs,distr->x_goals[2],distr->y_goals[2],distr->thetas[2]);
+                set_goal(cvs,3,.75,0);
                 printf("go to dpmtmlc2\n");
             }
             break;
@@ -125,10 +124,11 @@ void distr_loop(ctrlStruct *cvs){
         case DpmtMLC2_di:{
             //sendFromMLC(cvs,distr->x_goals[2],distr->y_goals[2],cvs->distr->forward[2]);
             set_param_prec(cvs);
-            sendFromHLCPF(cvs,distr->forward[2],1);
-            if(hlcPF->output){
+            sendFromHLCPF(cvs,0,1);
+            teensy_recv(cvs);
+            if(teensy->switch_B){
+                teensy->switch_B = 0;
                 distr->status = GetSamples_di;
-                //set_goal(cvs,distr->x_goals[3],distr->y_goals[3]);
                 distr->output = 1;
                 printf("go to GetSamples_di\n");
             }

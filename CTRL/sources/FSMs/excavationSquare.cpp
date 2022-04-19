@@ -12,24 +12,12 @@
 //attention a l'ennemi
 
 
-enum {S0_es,Dpmt1_es,Dpmt2_es,Dpmt3_es,servoShedOut_es};
+enum {S0_es,Dpmt1_es,Dpmt2_es,Dpmt3_es,Check1_es,Dpmt4_es};
 
 void excSq_init(excSquares *excSq){
     excSq->status = S0_ps;
     excSq->output = 0;
     excSq->go = 0;
-
-    int s = 3; //2.28 ;; 1.51
-    double x_goalsI[s] = {2.4,1,1};
-    double y_goalsI[s] = {0.5,1,1};
-    double thetasI[s] = {-M_PI/2,-10,-10}; //s
-    double forwardI[s] = {-1,-1,-1};
-    for (int i=0; i<s;i++) {
-    	excSq->x_goals[i] = x_goalsI[i];
-    	excSq->y_goals[i] = y_goalsI[i];
-        excSq->thetas[i] = thetasI[i];
-        excSq->forward[i] = forwardI[i];
-    }
     printf("excSq initialized\n");
 }
 
@@ -49,6 +37,9 @@ void excSq_loop(ctrlStruct *cvs){
     midLevelCtrl *mlc = cvs->mlc;
     teensyStruct *teensy = cvs->teensy;
 
+    set_param_normal(cvs);
+    int TEAM = cvs->inputs->team;
+
     //only if usefull
     double pos[5];
     double x, y, th;
@@ -59,52 +50,75 @@ void excSq_loop(ctrlStruct *cvs){
 
 
     switch(excSq->status){
-        case S0_es:
-        	if(excSq->go){
-        		excSq->status = Dpmt1_es;
-                set_goal(cvs,excSq->x_goals[0],excSq->y_goals[0]);
-        		printf("go to dp1\n");
-        		excSq->go = 0;
-        	}
+        case S0_es:{
+            if(excSq->go){
+                excSq->status = Dpmt1_es;
+                if (TEAM) set_goal(cvs,2.5,0.5,M_PI/2);
+                else set_goal(cvs,3-2.44,1.55,limit_angle(2.71+M_PI));
+                printf("go to dp1\n");
+                excSq->go = 0;
+            }
             break;
-
-        case Dpmt1_es:{
-    		sendFromHLCPF(cvs,cvs->excSq->forward[0]);
-        	if(hlcPF->output){
-        		excSq->status = servoShedOut_es;
-        	}
-        	break;
         }
 
-        case servoShedOut_es: {
-            teensy_send(cvs, "A");
-            inputs->t = inputs->t + 2;
-            usleep(2000000);
-            excSq->status = Dpmt2_es;
-            set_goal(cvs,excSq->x_goals[1],excSq->y_goals[1]);
-            printf("go to Dpmt2_ps\n");
+        case Dpmt1_es:{
+            sendFromHLCPF(cvs,-1);
+            if(hlcPF->output){
+                excSq->status = Dpmt2_es;
+                if (TEAM) set_goal(cvs,2.47,0.23,M_PI);
+                else set_goal(cvs,3-2.3,1.5,-10);
+            }
             break;
         }
 
         case Dpmt2_es:{
-            sendFromHLCPF(cvs,cvs->excSq->forward[1]);
+            sendFromHLCPF(cvs,-1,1);
             if(hlcPF->output){
                 excSq->status = Dpmt3_es;
-                set_goal(cvs,excSq->x_goals[2],excSq->y_goals[2]);
-                printf("go to Dpmt2_ps\n");
+                if (TEAM) set_goal(cvs,2.46,0.21,M_PI);
+                else set_goal(cvs,3-2.3,1.5,-10);
             }
             break;
         }
 
         case Dpmt3_es:{
-            sendFromHLCPF(cvs,cvs->excSq->forward[1]);
+            set_param_prec(cvs);
+            sendFromHLCPF(cvs,-1,1);
             if(hlcPF->output){
-                excSq->status = S0_es;
-                excSq->output = 1;
-                printf("go to Dpmt2_ps\n");
+                excSq->status = Check1_es;
+                setChrono(cvs,2);
+                teensy_send(cvs, "C");
+                printf("go to chec1\n");
             }
             break;
         }
+
+
+
+        case Check1_es:{
+            teensy_recv(cvs);
+            if(checkChrono(cvs)){
+                excSq->status = Dpmt4_es;
+                printf("go to servoShedIn_sas\n");
+                if (TEAM) set_goal(cvs,2.275,0.21,M_PI);
+                else set_goal(cvs,3-2.3,1.5,-10);
+            }
+            break;
+        }
+
+        case Dpmt4_es:{
+            set_param_prec(cvs);
+            sendFromHLCPF(cvs,-1,1);
+            if(hlcPF->output){
+                excSq->status = Check1_es;
+                setChrono(cvs,2);
+                teensy_send(cvs, "C");
+                printf("go to chec1\n");
+            }
+            break;
+        }
+
+
         default:
             printf("probleme defautl value in FSM\n");
     }

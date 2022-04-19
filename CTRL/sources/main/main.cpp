@@ -35,6 +35,7 @@ int main()
     reCalibStruct *rec = cvs->rec;
     objDetection *od = cvs->od;
     poseStatuette *poseStat = cvs->poseStat;
+    excSquares *excSq = cvs->excSq;
     double dt = inputs->dt;
 
     int display_position_ON = 0;
@@ -44,17 +45,19 @@ int main()
     int mlc_ON = 0;
     int rplON = 0;
     int odoCalib = 0;
-    int hlcPFON = 0;
+    int hlcPFON = 1;
     int pushShedON = 0;
     int pushShed_and_sonar_ON = 0;
     int icp_test = 0;
     int icpON = 0;
     int teensyON = 0;
-    int saShedON = 1;
-    int distON = 0;
     int icpDynON = 0;
     int odON = 0;
     int poseStatON = 0;
+    int saShedON = 0;
+    int excSqON = 0;
+    int distON = 0;
+
     int arduinoON = 0;
 
     int mThreadsON = 0;
@@ -266,12 +269,12 @@ int main()
         printf("th_end : end\n");
     }
     if (display_position_ON){
-        cvs->mp->x = 3-0.14-0.0625;
+        cvs->mp->x = 3-0.133;
         cvs->mp->y = 1.13;
         cvs->mp->th = M_PI;
 
         mlcPF->t_start = inputs->t;
-        while (inputs->t < 50) {
+        while (inputs->t < 10000) {
             auto start = high_resolution_clock::now();
 
             //if (inputs->t >= 2 && inputs->t < 4) th_ref = 0;//-M_PI/4;
@@ -530,6 +533,7 @@ int main()
         }
     }
     if (hlcPFON) {
+
         threads_start(cvs);
 
         double xgoal = cvs->mp->x;double ygoal=cvs->mp->y;
@@ -540,26 +544,26 @@ int main()
         cvs->mp->th = M_PI;
 
         printf("begin test hlcPF\n");
-        while (inputs->t < 40) {
+        while (inputs->t < 50) {
             auto start = high_resolution_clock::now();
             double t = inputs->t;
             if (t==0) {
-                set_param_normal(cvs);
+                //set_param_prec(cvs);
                 xgoal = 1;//2.2;//1.2;
-                ygoal = 1.7;//1.60;
+                ygoal = 1;//1.60;
                 forward=-1;
-                orientation = -10;//M_PI/2;
+                orientation = M_PI;//M_PI/2;
                 set_goal(cvs, xgoal, ygoal, orientation);
                 printf("goal A\n");
-            } else if (t>20 & t<20.01) {
-                set_param_normal(cvs);
-                xgoal = 3-0.24;
+            } else if (t>25 & t<25.01) {
+                //set_param_prec(cvs);
+                xgoal = 3-0.3;
                 ygoal = 1.13;
-                forward =0;
+                forward =-1;
                 orientation = M_PI;
                 set_goal(cvs, xgoal, ygoal, orientation);
                 printf("goal B\n");
-            } else if (t>40 & t<40.1) {
+            } else if (t>50 & t<50.1) {
                 xgoal = 0.6;//1.3;
                 ygoal = 0.6;
                 forward =1;
@@ -567,27 +571,22 @@ int main()
                 set_goal(cvs, xgoal, ygoal, orientation);
                 printf("goal c\n");
             }
-
             get_d2r_data(cvs); // ctrlIn
-            dyn_obs_set(cvs);
-            //printf("r_sp_mes_enc = %f | l_sp_mes_enc = %f\n", inputs->r_sp_mes_enc, inputs->l_sp_mes_enc);
-            //printf("r_sp_mes_odo = %f | l_sp_mes_odo = %f\n", inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
-            hlcPF_out(cvs, forward );
-            //
+            if(inputs->start){
+                dyn_obs_set(cvs);
+                //printf("r_sp_mes_enc = %f | l_sp_mes_enc = %f\n", inputs->r_sp_mes_enc, inputs->l_sp_mes_enc);
+                //printf("r_sp_mes_odo = %f | l_sp_mes_odo = %f\n", inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
+                hlcPF_out(cvs, forward );
 
-            /*if(hlcPF->output) {
-                //hlcPF->v_ref = 0;
-                //hlcPF->theta_ref = 0;
-                break;
-            }*/
-            mlcPF_out(cvs, hlcPF->v_ref, hlcPF->theta_ref);
+                mlcPF_out(cvs, hlcPF->v_ref, hlcPF->theta_ref);
 
-            fprintf(cvs->tau_data, "%f,%f,%f\n", inputs->t, hlcPF->v_ref, tau_compute(cvs));
+                fprintf(cvs->tau_data, "%f,%f,%f\n", inputs->t, hlcPF->v_ref, tau_compute(cvs));
 
-            //printf("v_ref; d %f \n", hlcPF->v_ref,hlcPF->d);
-            //printf("hlcPF->v %f | hlcPF->theta %f | d %f \n",hlcPF->v_ref,hlcPF->theta_ref,hlcPF->d );
-            set_commands(cvs, mlcPF->r_sp_ref, mlcPF->l_sp_ref);
-            send_commands(cvs);
+                //printf("v_ref; d %f \n", hlcPF->v_ref,hlcPF->d);
+                //printf("hlcPF->v %f | hlcPF->theta %f | d %f \n",hlcPF->v_ref,hlcPF->theta_ref,hlcPF->d );
+                set_commands(cvs, mlcPF->r_sp_ref, mlcPF->l_sp_ref);
+                send_commands(cvs);
+            }
 
             set_new_position(cvs);
             //printf("cmd_r = %d | cmd_l = %d\n", outputs->r_cmd, outputs->l_cmd);
@@ -713,6 +712,12 @@ int main()
     if (distON) {
         threads_start(cvs);
 
+        teensy_send(cvs, "B");
+        usleep(1200000);
+        teensy_send(cvs, "Q");
+        usleep(1200000);
+        teensy_send(cvs, "R");
+
         distr_launch(cvs);
         printf("distON\n");
         cvs->mp->x = 3-0.14;
@@ -741,7 +746,6 @@ int main()
         printf("th_end : start ... ");
         threads_end(cvs);
         printf("end\n");
-
     }
     if (poseStatON){
         threads_start(cvs);
@@ -759,7 +763,7 @@ int main()
         poseStat_launch(cvs);
         printf("poseStat_launched\n");
         cvs->mp->x = 3-0.25;
-        cvs->mp->y = .74;
+        cvs->mp->y = .75;
         cvs->mp->th = M_PI;
 
         while(inputs->t < 30){
@@ -782,12 +786,53 @@ int main()
         threads_end(cvs);
         printf("end\n");
     }
-    if (teensyON) {
-        teensy_send(cvs, "A");
+    if (excSqON){
+        threads_start(cvs);
+
+        teensy_send(cvs, "B");
         usleep(1200000);
         teensy_send(cvs, "Q");
         usleep(1200000);
         teensy_send(cvs, "R");
+        /*
+        printf("------------- rec static -------------\n");
+        rec->iter = 0;
+        motors_stop(cvs);
+        while (1) if (rec_static(cvs)) break;
+         */
+        //usleep(2000000);
+        excSq_launch(cvs);
+        printf("sasShedON\n");
+        cvs->mp->x = 3-0.133;
+        cvs->mp->y = 1.13;
+        cvs->mp->th = M_PI;
+
+        while(inputs->t < 30){
+            auto start = high_resolution_clock::now();
+
+            excSq_loop(cvs);
+            if(excSq->output) {
+                printf("ended with %d\n",excSq->output);
+                motors_stop(cvs);
+                break;
+            }
+            fprintf(cvs->llc_data, "%f,%f,%f,%f,%f,%f,%f\n", inputs->t, mlcPF->r_sp_ref, mlcPF->l_sp_ref, inputs->r_sp_mes_enc, inputs->l_sp_mes_enc, inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
+            update_time(cvs);
+            auto stop = high_resolution_clock::now();
+            auto duration = duration_cast<microseconds>(stop - start);
+            usleep(dt * 1000000 - duration.count());
+        }
+        mt->thread_main_end = 1;
+        printf("th_end : start ... ");
+        threads_end(cvs);
+        printf("end\n");
+    }
+    if (teensyON) {
+        //teensy_send(cvs, "A");
+        //usleep(1200000);
+        //teensy_send(cvs, "Q");
+        //usleep(1200000);
+        //teensy_send(cvs, "R");
 
         int A = 0;
         int B = 0;
@@ -809,30 +854,30 @@ int main()
                 teensy->switch_F = 0;
                 teensy->switch_F_end = 1;
             }
-            if (teensy->switch_B && teensy->switch_B_end == 0) {
+            /*if (teensy->switch_B && teensy->switch_B_end == 0) {
                 //teensy_send(cvs, "5");
                 printf("Switch back ON\n");
                 teensy->switch_B = 0;
                 teensy->switch_B_end = 1;
-            }
+            }*/
 
             if (inputs->t >= 1 && B == 0) {
                 teensy_send(cvs, "5");
                 B = 1;
             }
-            /*
+            
             if (inputs->t >= 3 && C == 0) {
-                teensy_send(cvs, "C");
+                teensy_send(cvs, "K");
                 C = 1;
             }
 
-            if (inputs->t >= 5 && D == 0) {
-                teensy_send(cvs, "D");
+            if (inputs->t >= 6 && D == 0) {
+                //teensy_send(cvs, "O");
                 D = 1;
             }
-             */
-            if (inputs->t >= 4 && R == 0) {
-                teensy_send(cvs, "6");
+             
+            if (inputs->t >= 2 && R == 0) {
+                teensy_send(cvs, "L");
                 R = 1;
             }
 

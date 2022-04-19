@@ -41,6 +41,11 @@ void mlcPF_out(ctrlStruct *cvs, double v_ref, double th_ref)
 
     // proportional terms
     double v_out = (v_ref/mlcPF->R_odo) * exp(-pow(th_error/mlcPF->sigma, 2));
+
+    double KPTH = mlcPF->Kp_th;
+    if(cvs->hlcPF->reorientation){
+        KPTH *= 1.5;
+    }
     double th_out = mlcPF->Kp_th * th_error;
 
     // Restrict to max/min
