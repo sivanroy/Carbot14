@@ -56,16 +56,16 @@ void setup() {
   // some i2c devices dont like this so much so if you're sharing the bus, watch
   // out for this!
   //Wire.setClock(400000);
-  pwm.setPWM(0, 0, pulseWidth(23));
+  pwm.setPWM(0, 0, pulseWidth(-12));
   Serial.println("Start postion servo 0");
 
-  pwm.setPWM(1, 0, pulseWidth(174));
+  pwm.setPWM(1, 0, pulseWidth(196));
   Serial.println("Start position servo 1");
   
   pwm.setPWM(2, 0, pulseWidth(180));
   Serial.println("Set servo 2");
 
-  pwm.setPWM(3, 0, pulseWidth(100));
+  pwm.setPWM(3, 0, pulseWidth(165));
   Serial.println("Set servo 3");
 
   pinMode(switchPin, INPUT_PULLUP);
@@ -87,31 +87,6 @@ void loop() {
   Serial.print("0\n");
   delay(5000);;
   */
-  switchState = digitalRead(switchPin);
-    
-  if (Serial.available() > 0) {
-    data = Serial.readStringUntil('\n');
-    Serial.println(data);
-  }
-
-  if (switchState == HIGH) {
-    Serial.println("Switch is ON");
-  }
-  if (switchState == LOW) {
-    Serial.println("Switch is OFF");
-  }
-  
-  Dynamixel.turn(ID5,RIGTH,0);  
-
-  if (data == "Activate dynamixel" && pushed == 0){
-    Dynamixel.turn(ID5,RIGTH,700);
-    delay(1550);
-    Dynamixel.turn(ID5,LEFT,700);
-    delay(1625);
-    Dynamixel.turn(ID5,RIGTH,0);
-    data = "NULL";
-    pushed = 1;
-  }
   
   /*
   pwm.setPWM(2, 0, pulseWidth(0));
