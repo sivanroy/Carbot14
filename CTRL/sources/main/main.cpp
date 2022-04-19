@@ -45,12 +45,14 @@ int main()
     int mlc_ON = 0;
     int rplON = 0;
     int odoCalib = 0;
-    int hlcPFON = 1;
+    int hlcPFON = 0;
     int pushShedON = 0;
     int pushShed_and_sonar_ON = 0;
     int icp_test = 0;
     int icpON = 0;
     int teensyON = 0;
+    int saShedON = 1;
+    int distON = 0;
     int icpDynON = 0;
     int odON = 0;
     int poseStatON = 0;
