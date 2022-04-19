@@ -50,11 +50,12 @@ int main()
     int icp_test = 0;
     int icpON = 0;
     int teensyON = 0;
-    int saShedON = 0;
+    int saShedON = 1;
     int distON = 0;
     int icpDynON = 0;
     int odON = 0;
-    int poseStatON = 1;
+    int poseStatON = 0;
+    int arduinoON = 0;
 
     int mThreadsON = 0;
 
@@ -671,9 +672,11 @@ int main()
     if (saShedON){
         threads_start(cvs);
 
-        teensy_send(cvs, "R");
-        usleep(1500000);
         teensy_send(cvs, "B");
+        usleep(1200000);
+        teensy_send(cvs, "Q");
+        usleep(1200000);
+        teensy_send(cvs, "R");
         /*
         printf("------------- rec static -------------\n");
         rec->iter = 0;
@@ -740,8 +743,7 @@ int main()
         printf("end\n");
 
     }
-
-       if (poseStatON){
+    if (poseStatON){
         threads_start(cvs);
 
         teensy_send(cvs, "R");
@@ -780,8 +782,13 @@ int main()
         threads_end(cvs);
         printf("end\n");
     }
-
     if (teensyON) {
+        teensy_send(cvs, "A");
+        usleep(1200000);
+        teensy_send(cvs, "Q");
+        usleep(1200000);
+        teensy_send(cvs, "R");
+
         int A = 0;
         int B = 0;
         int C = 0;
@@ -790,7 +797,7 @@ int main()
         int Q = 0;
         int R = 0;
         int S = 0;
-        while (inputs->t < 13) {
+        while (inputs->t < 10) {
 
             auto start = high_resolution_clock::now();
 
@@ -798,7 +805,7 @@ int main()
 
             //printf("switch_F : %d\n", teensy->switch_F);
             if (teensy->switch_F && teensy->switch_F_end == 0) {
-                teensy_send(cvs, "5");
+                printf("Switch front ON\n");
                 teensy->switch_F = 0;
                 teensy->switch_F_end = 1;
             }
@@ -810,7 +817,7 @@ int main()
             }
 
             if (inputs->t >= 1 && B == 0) {
-                //teensy_send(cvs, "A");
+                teensy_send(cvs, "5");
                 B = 1;
             }
             /*
@@ -824,20 +831,42 @@ int main()
                 D = 1;
             }
              */
-            if (inputs->t >= 7 && R == 0) {
-                //teensy_send(cvs, "R");
+            if (inputs->t >= 4 && R == 0) {
+                teensy_send(cvs, "6");
                 R = 1;
             }
-            if (inputs->t >= 9 && S == 0) {
-                teensy_send(cvs, "S");
-                S = 1;
-            }
-            if (inputs->t >= 11 && Q == 0) {
-                teensy_send(cvs, "Q");
-                Q = 1;
-            }
 
+            update_time(cvs);
+            auto stop = high_resolution_clock::now();
+            auto duration = duration_cast<microseconds>(stop - start);
+            //printf("duration.count() = %lld us | t = %f\n-------------\n", duration.count(), inputs->t);
 
+            usleep(dt * 1000000 - duration.count());
+        }
+    }
+    if (arduinoON) {
+        teensy_send(cvs, "A");
+        usleep(1200000);
+        teensy_send(cvs, "Q");
+        usleep(1200000);
+        teensy_send(cvs, "R");
+
+        int one = 0;
+        int two = 0;
+        int three = 0;
+        while (inputs->t < 6) {
+            auto start = high_resolution_clock::now();
+
+            teensy_recv(cvs);
+
+            if (inputs->t >= 1 && one == 0) {
+                one = 1;
+                arduino_send(cvs, "1");
+            }
+            if (inputs->t >= 3 && two == 0) {
+                two = 1;
+                arduino_send(cvs, "K");
+            }
             update_time(cvs);
             auto stop = high_resolution_clock::now();
             auto duration = duration_cast<microseconds>(stop - start);
@@ -848,7 +877,9 @@ int main()
     }
     motors_stop(cvs);
     teensy_send(cvs, "B");
-    usleep(2000000);
+    usleep(1200000);
+    teensy_send(cvs, "Q");
+    usleep(1200000);
     teensy_send(cvs, "R");
     cvs_free(cvs);
 

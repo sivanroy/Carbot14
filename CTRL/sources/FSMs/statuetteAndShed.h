@@ -11,10 +11,6 @@ typedef struct statAndShed
 	int status;
 	int output;
 	int go;
-	double x_goals[10];
-	double y_goals[10];
-	double thetas[10];
-	double forward[10];
 } statAndShed;
 
 void saShed_init(statAndShed *saShed);

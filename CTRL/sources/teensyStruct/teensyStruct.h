@@ -25,7 +25,8 @@ typedef struct teensyStruct
 {
     int t_port;
     int a_port;
-    int bdrate;
+    int t_bdrate;
+    int a_bdrate;
     char mode[4];
 
     char str_send[BUF_SIZE];
