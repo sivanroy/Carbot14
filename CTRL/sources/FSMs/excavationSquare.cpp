@@ -55,7 +55,7 @@ void excSq_loop(ctrlStruct *cvs){
             if(excSq->go){
                 excSq->status = Dpmt1_es;
                 if (TEAM) set_goal(cvs,2.53,0.5,M_PI/2);
-                else set_goal(cvs,3-2.44,1.55,limit_angle(2.71+M_PI));
+                else set_goal(cvs,.65,0.43,2.1);
                 printf("go to dp1\n");
                 excSq->go = 0;
             }
@@ -67,7 +67,7 @@ void excSq_loop(ctrlStruct *cvs){
             if(hlcPF->output){
                 excSq->status = Dpmt2_es;
                 if (TEAM) set_goal(cvs,2.5,0.2,M_PI);
-                else set_goal(cvs,3-2.3,1.5,-10);
+                else set_goal(cvs,.76,.2,M_PI);
             }
             break;
         }
@@ -77,7 +77,7 @@ void excSq_loop(ctrlStruct *cvs){
             if(hlcPF->output){
                 excSq->status = Dpmt1_prec_es;
                 if (TEAM) set_goal(cvs,2.45,0.2,M_PI);
-                else set_goal(cvs,3-2.3,1.5,-10);
+                else set_goal(cvs,.76,.2,M_PI);
             }
             break;
         }
@@ -90,6 +90,7 @@ void excSq_loop(ctrlStruct *cvs){
                 setChrono(cvs,2);
                 //teensy_send(cvs, "C");
                 printf("go to check1\n");
+                excSq->output = 1;
             }
             break;
         }
@@ -109,7 +110,7 @@ void excSq_loop(ctrlStruct *cvs){
                 excSq->status = Dpmt2_prec_es;
                 printf("go to Dpmt2_prec_es\n");
                 if (TEAM) set_goal(cvs,2.265,0.2,M_PI);
-                else set_goal(cvs,3-2.3,1.5,-10);
+                else set_goal(cvs,.97,.2,M_PI);
             }
             break;
         }
@@ -130,13 +131,13 @@ void excSq_loop(ctrlStruct *cvs){
                     excSq->status = Dpmt4_prec_es;
                     printf("go to Dpmt4_prec_es\n");
                     if (TEAM) set_goal(cvs,1.895,0.2,M_PI);
-                    else set_goal(cvs,3-2.3,1.5,-10);
+                    else set_goal(cvs,3-1.895,M_PI);
                 }
                 else if (teensy->R_mes1 == 3) {
                     excSq->status = Dpmt3_prec_es;
                     printf("go to Dpmt3_prec_es\n");
                     if (TEAM) set_goal(cvs,2.08,0.2,M_PI);
-                    else set_goal(cvs,3-2.3,1.5,-10);
+                    else set_goal(cvs,3-2.08,.2,M_PI);
                 }
             }
             break;
@@ -157,7 +158,7 @@ void excSq_loop(ctrlStruct *cvs){
                 excSq->status = Dpmt4_prec_es;
                 printf("go to Dpmt5_es\n");
                 if (TEAM) set_goal(cvs,1.895,0.2,M_PI);
-                else set_goal(cvs,3-2.3,1.5,-10);
+                else set_goal(cvs,3-1.895,.2,M_PI);
             }
             break;
         }
@@ -185,13 +186,13 @@ void excSq_loop(ctrlStruct *cvs){
                     excSq->status = Dpmt7_prec_es;
                     printf("go to Dpmt7_es\n");
                     if (TEAM) set_goal(cvs,1.34,0.2,M_PI);
-                    else set_goal(cvs,3-2.3,1.5,-10);
+                    else set_goal(cvs,1.34,.2,M_PI);
                 }
                 else if (teensy->R_mes4 == 2) {
                     excSq->status = Dpmt5_prec_es;
                     printf("go to Dpmt5_es\n");
                     if (TEAM) set_goal(cvs,1.71,0.2,M_PI);
-                    else set_goal(cvs,3-2.3,1.5,-10);
+                    else set_goal(cvs,1.71,.2,M_PI);
                 }
                 teensy->R1 = 0;
                 teensy->R2 = 0;
@@ -215,7 +216,7 @@ void excSq_loop(ctrlStruct *cvs){
                 excSq->status = Dpmt6_prec_es;
                 printf("go to Dpmt6_es\n");
                 if (TEAM) set_goal(cvs,1.525,0.2,M_PI);
-                else set_goal(cvs,3-2.3,1.5,-10);
+                else set_goal(cvs,3-1.525,.2,M_PI);
             }
             break;
         }
@@ -235,7 +236,7 @@ void excSq_loop(ctrlStruct *cvs){
                 excSq->status = Out_es;
                 printf("go to Out_es\n");
                 if (TEAM) set_goal(cvs,0.8,0.4,M_PI/2);
-                else set_goal(cvs,3-2.3,1.5,-10);
+                else set_goal(cvs,3-.8,.4,M_PI/2);
             }
             break;
         }
@@ -255,7 +256,7 @@ void excSq_loop(ctrlStruct *cvs){
                 excSq->status = Out_es;
                 printf("go to Out_es\n");
                 if (TEAM) set_goal(cvs,0.8,0.4,M_PI/2);
-                else set_goal(cvs,3-2.3,1.5,-10);
+                else set_goal(cvs,3-.8,.4,M_PI/2);
             }
             break;
         }

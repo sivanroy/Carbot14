@@ -85,6 +85,9 @@ ctrlStruct* cvs_init()
     cvs->checkb = (checkBlocked *) malloc(sizeof(checkBlocked));
     init_checkBlocked(cvs->checkb);
 
+    cvs->ghome = (goHome *) malloc(sizeof(goHome));
+    goHome_init(cvs->ghome);
+
     /*!  txt files  */
     cvs->llc_data = fopen("llc_data.txt", "w");
     if (cvs->llc_data == NULL) printf("Enable to open file llc_data.txt\n");
@@ -156,6 +159,7 @@ void cvs_free(ctrlStruct *cvs)
     free(cvs->lpf);
     free(cvs->chro);
     free(cvs->checkb);
+    free(cvs->ghome);
 
     fclose(cvs->llc_data);
     fclose(cvs->llc_data2);

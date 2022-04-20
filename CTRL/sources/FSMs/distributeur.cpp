@@ -81,8 +81,8 @@ void distr_loop(ctrlStruct *cvs){
     		sendFromHLCPF(cvs,-1);
         	if(hlcPF->output){
                 printf("go to recalibrate_di\n");
-                //op->no_opp = 1;
                 distr->status = recalibrate_di;
+                setChrono(cvs,1);
         	}
         	break;
         }
@@ -92,53 +92,49 @@ void distr_loop(ctrlStruct *cvs){
                 distr->status = OpenDis_di;
                 printf("rec END\n");
             }
+            if(checkChrono(cvs)) {
+                printf("pb with lidar rec\n");
+                distr->status = OpenDis_di;
+            }
             break;
         }
 
         case OpenDis_di: {
             teensy_send(cvs, "K");
-            //inputs->t = inputs->t + 2;
             distr->status = DpmtMLC1_di;
-            //teensy_send(cvs, "L");
-            //inputs->t = inputs->t + 2;
-            //distr->status = DpmtMLC1_di;
             printf("go to dpmtmlc\n");
             set_goal(cvs,2.75,.75,M_PI);
             break;
         }
 
         case DpmtMLC1_di:{
-            //hlcPF->Tau_max = 5;
-            //sendFromMLC(cvs,distr->x_goals[1],distr->y_goals[1],cvs->distr->forward[1]);
             set_param_prec(cvs);
             sendFromHLCPF(cvs,0,1);
             if(hlcPF->output){
-                //distr->status = DpmtHLCPFOut_di;
                 distr->status = DpmtMLC2_di;
-                set_goal(cvs,3,.75,0);
+                set_goal(cvs,2.9,.75,0);
                 printf("go to dpmtmlc2\n");
             }
             break;
         }
 
         case DpmtMLC2_di:{
-            //sendFromMLC(cvs,distr->x_goals[2],distr->y_goals[2],cvs->distr->forward[2]);
             set_param_prec(cvs);
             sendFromHLCPF(cvs,0,1);
             teensy_recv(cvs);
             if(teensy->switch_B){
                 teensy->switch_B = 0;
                 distr->status = GetSamples_di;
-                distr->output = 1;
+                teensy_send(cvs,"L");
+                setChrono(cvs,1);
                 printf("go to GetSamples_di\n");
+                set_goal(cvs,3-.35,.75,-10);
             }
-
             break;
         }
 
         case GetSamples_di:{
-            //sendFromHLCPF(cvs,cvs->distr->forward[1]);
-            if(hlcPF->output){
+            if(checkChrono(cvs)){
                 distr->status = DpmtHLCPFOut_di;
                 printf("go to DpmtOut_ps\n");
             }
@@ -146,9 +142,13 @@ void distr_loop(ctrlStruct *cvs){
         }
 
         case DpmtHLCPFOut_di: {
-            distr->status = S0_di;
-            distr->output = 1;
-            printf("end loop\n");
+            set_param_prec(cvs);
+            sendFromHLCPF(cvs,-1,1);
+            if(hlcPF->output){
+                distr->status = S0_di;
+                distr->output = 1;
+                printf("end loop\n");
+            }
             break;
         }
 

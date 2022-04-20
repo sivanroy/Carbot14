@@ -22,18 +22,26 @@ void init_checkBlocked(checkBlocked *checkb) {
 void init_chrono(Chrono* chro){
     chro->begin = 0;
     chro->time = 0;
+    chro->time1 = 0;
+    chro->time2 = 0;
+    chro->begin1 = 0;
+    chro->begin2 = 0;
     chro->output = 0;
 }
 
-void setChrono(ctrlStruct *cvs,double enableTime){
+void setChrono(ctrlStruct *cvs,double enableTime, int i){
     cvs->chro->begin = cvs->inputs->t;
     cvs->chro->time = enableTime;    
     cvs->chro->output = 0;
 }
 
-int checkChrono(ctrlStruct *cvs){
+int checkChrono(ctrlStruct *cvs, int i){
     double begin = cvs->chro->begin ;
+    if (i==1) begin = cvs->chro->begin1;
+    if (i==2) begin = cvs->chro->begin2;
     double enableTime = cvs->chro->time;    
+    if(i == 1)enableTime = cvs->chro->time1;
+    if(i == 2) enableTime = cvs->chro->time2;
     cvs->chro->output = 0;
     double diff = cvs->inputs->t - begin;
     if(diff>=enableTime) {

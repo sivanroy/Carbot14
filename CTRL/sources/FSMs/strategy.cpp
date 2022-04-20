@@ -13,7 +13,7 @@ void strategy_FSM_init(strategy_FSM *stratFSM) {
     stratFSM->status = S0_s;
     stratFSM->output = 0;
     stratFSM->timeTillBreak = 15;
-    stratFSM->timeToComeBack = 75;//1.30 min au total
+    stratFSM->timeToComeBack = 80;//1.30 min au total
 
     int s = 2;
     stratFSM->s = s;
@@ -21,6 +21,7 @@ void strategy_FSM_init(strategy_FSM *stratFSM) {
     for (int i = 0; i<s; i++){
             stratFSM->actions[i] = actionsi[i];
     }
+    stratFSM->pt = 0;
     printf("strategy initialized\n");
     
 }
@@ -40,15 +41,32 @@ void strategy_loop(ctrlStruct *cvs){
     switch(stratFSM->status){
         case S0_s:{
             stratFSM->output=0;
-            stratFSM->status = actionPushShed_s;
+            stratFSM->status = select_action_s;
             printf("goto act\n");
             break;
         }
         case select_action_s:
+            //if () si raté -> échanger l'ordre pour refaire
+            if(stratFSM->pt == stratFSM->s){
+                stratFSM->output = 1;
+                break;
+            }
+            stratFSM->status = stratFSM->actions[stratFSM->pt];
+            stratFSM->pt ++;
             break;
-        case actionPushShed_s:
+
+        case actionPushShed_s:{
+            saShed_loop(cvs);
+            if(cvs->saShed->output){
+                stratFSM->status = select_action_s;
+            }
             break;
+        }
         case goHome_s:
+            goHome_loop(cvs);
+            if(cvs->ghome->output){
+                stratFSM->status = select_action_s;
+            }
             break;
 
         default:
