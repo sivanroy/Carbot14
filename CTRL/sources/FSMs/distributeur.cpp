@@ -82,6 +82,7 @@ void distr_loop(ctrlStruct *cvs){
         	if(hlcPF->output){
                 printf("go to recalibrate_di\n");
                 distr->status = recalibrate_di;
+                setChrono(cvs,1);
         	}
         	break;
         }
@@ -90,6 +91,10 @@ void distr_loop(ctrlStruct *cvs){
             if (rec_static(cvs)) {
                 distr->status = OpenDis_di;
                 printf("rec END\n");
+            }
+            if(checkChrono(cvs)) {
+                printf("pb with lidar rec\n");
+                distr->status = OpenDis_di;
             }
             break;
         }
@@ -107,7 +112,7 @@ void distr_loop(ctrlStruct *cvs){
             sendFromHLCPF(cvs,0,1);
             if(hlcPF->output){
                 distr->status = DpmtMLC2_di;
-                set_goal(cvs,3,.75,0);
+                set_goal(cvs,2.9,.75,0);
                 printf("go to dpmtmlc2\n");
             }
             break;
@@ -120,15 +125,16 @@ void distr_loop(ctrlStruct *cvs){
             if(teensy->switch_B){
                 teensy->switch_B = 0;
                 distr->status = GetSamples_di;
-                distr->output = 1;
+                teensy_send(cvs,"L");
+                setChrono(cvs,1);
                 printf("go to GetSamples_di\n");
+                set_goal(cvs,3-.35,.75,-10);
             }
-
             break;
         }
 
         case GetSamples_di:{
-            if(hlcPF->output){
+            if(checkChrono(cvs)){
                 distr->status = DpmtHLCPFOut_di;
                 printf("go to DpmtOut_ps\n");
             }
@@ -136,9 +142,13 @@ void distr_loop(ctrlStruct *cvs){
         }
 
         case DpmtHLCPFOut_di: {
-            distr->status = S0_di;
-            distr->output = 1;
-            printf("end loop\n");
+            set_param_prec(cvs);
+            sendFromHLCPF(cvs,-1,1);
+            if(hlcPF->output){
+                distr->status = S0_di;
+                distr->output = 1;
+                printf("end loop\n");
+            }
             break;
         }
 

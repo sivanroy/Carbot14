@@ -54,8 +54,8 @@ int main()
     int icpDynON = 0;
     int odON = 0;
     int poseStatON = 0;
-    int saShedON = 1;
-    int excSqON = 0;
+    int saShedON = 0;
+    int excSqON = 1;
     int distON = 0;
 
     int arduinoON = 0;
@@ -63,8 +63,43 @@ int main()
     int mThreadsON = 0;
 
     int contest = 0;
+    int started = 0;
     if (contest) {
         printf("let's go!\n");
+        get_d2r_data(cvs);
+        cvs->mp->x = 3-0.133;
+        cvs->mp->y = 1.467;
+        cvs->mp->th = M_PI;
+        printf("team = %d \n",inputs->team);
+        if(!inputs->team){
+            cvs->mp->x = .133;
+            cvs->mp->th = 0;
+        }
+        threads_start(cvs);
+
+        while(inputs->t < 100){
+            auto start = high_resolution_clock::now();
+            if (!started) {
+                get_d2r_data(cvs);
+                inputs->t = 0;
+                if(inputs->start) {
+                    started = 1; 
+                    printf("START!\n");
+                }
+            }
+
+            if(started){
+                strategy_loop(cvs);
+            }
+
+            update_time(cvs);
+            auto stop = high_resolution_clock::now();
+            auto duration = duration_cast<microseconds>(stop - start);
+            usleep(dt * 1000000 - duration.count());
+        }
+        mt->thread_main_end = 1;
+        printf("th_end : start ... ");
+        threads_end(cvs);
     }
 
     if (odON) {
@@ -269,9 +304,14 @@ int main()
         printf("th_end : end\n");
     }
     if (display_position_ON){
+        get_d2r_data(cvs);
         cvs->mp->x = 3-0.133;
         cvs->mp->y = 1.13;
         cvs->mp->th = M_PI;
+        if(!inputs->team){
+            cvs->mp->x = .133;
+            cvs->mp->th = 0;
+        }
 
         mlcPF->t_start = inputs->t;
         while (inputs->t < 10000) {
@@ -289,6 +329,7 @@ int main()
             auto duration = duration_cast<microseconds>(stop - start);
             usleep(dt * 1000000 - duration.count());
         }
+
     }
     if (cmdON) {
         int r_cmd = 0;
@@ -677,6 +718,7 @@ int main()
         usleep(1200000);
         teensy_send(cvs, "R");
         usleep(1200000);
+
         /*
         printf("------------- rec static -------------\n");
         rec->iter = 0;
@@ -684,12 +726,18 @@ int main()
         while (1) if (rec_static(cvs)) break;
          */
         //usleep(2000000);
-        inputs->team = 1;
+        get_d2r_data(cvs);
+        //inputs->team = 1;
         saShed_launch(cvs);
         printf("sasShedON\n");
         cvs->mp->x = 3-0.133;
         cvs->mp->y = 1.467;
         cvs->mp->th = M_PI;
+        printf("team = %d \n",inputs->team );
+        if(!inputs->team){
+            cvs->mp->x = .133;
+            cvs->mp->th = 0;
+        }
 
         while(inputs->t < 30){
             auto start = high_resolution_clock::now();
@@ -753,6 +801,8 @@ int main()
     if (poseStatON){
         threads_start(cvs);
 
+        get_d2r_data(cvs);
+
         teensy_send(cvs, "R");
         usleep(1200000);
         teensy_send(cvs, "Q");
@@ -769,6 +819,11 @@ int main()
         cvs->mp->x = 3-0.25;
         cvs->mp->y = .75;
         cvs->mp->th = M_PI;
+        if(!inputs->team){
+            cvs->mp->x = .25;
+            cvs->mp->th = 0;
+        }
+
 
         while(inputs->t < 30){
             auto start = high_resolution_clock::now();
@@ -793,6 +848,8 @@ int main()
     if (excSqON){
         threads_start(cvs);
 
+        get_d2r_data(cvs);
+
         teensy_send(cvs, "B");
         usleep(1200000);
         teensy_send(cvs, "Q");
@@ -810,7 +867,10 @@ int main()
         cvs->mp->x = 3-0.133;
         cvs->mp->y = 1.13;
         cvs->mp->th = M_PI;
-
+        if(!inputs->team){
+            cvs->mp->x = .133;
+            cvs->mp->th = 0;
+        }
         while(inputs->t < 30){
             auto start = high_resolution_clock::now();
 
@@ -852,7 +912,7 @@ int main()
         int Q = 0;
         int R = 0;
         int S = 0;
-        while (inputs->t < 2.9) {
+        while (inputs->t < 5.9) {
 
             auto start = high_resolution_clock::now();
 
@@ -882,12 +942,12 @@ int main()
             }
 
             if (inputs->t >= 6 && D == 0) {
-                //teensy_send(cvs, "O");
+                teensy_send(cvs, "M");
                 D = 1;
             }
              
             if (inputs->t >= 8 && R == 0) {
-                teensy_send(cvs, "L");
+                teensy_send(cvs, "M");
                 R = 1;
             }
 

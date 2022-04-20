@@ -16,6 +16,10 @@ typedef struct checkBlocked {
 typedef struct Chrono {
 	double begin;
 	double time;
+	double begin1;
+	double time1;
+	double begin2;
+	double time2;
 	int output;
 } Chrono;
 
@@ -23,8 +27,8 @@ void init_chrono(Chrono* chro);
 void init_checkBlocked(checkBlocked *checkb);
 
 
-void setChrono(ctrlStruct *cvs,double enableTime);
-int checkChrono(ctrlStruct *cvs);
+void setChrono(ctrlStruct *cvs,double enableTime,int i = 0);
+int checkChrono(ctrlStruct *cvs,int i = 0);
 int check_blocked(ctrlStruct *cvs);
 
 
