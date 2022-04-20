@@ -62,11 +62,12 @@ int servoOut4 = 55;
 int servoIn5 = 185; //MAX : 200 //Push resistance
 int servoOut5 = 35; //MIN : -25
 
-int flip3P = 670;
-int flip2P = 660;
-int flip1P = 645;
-int flipUp = 820;
-int flipDown = 295;
+int delta = -245;
+int flip3P = 670 + delta ;
+int flip2P = 660 + delta;
+int flip1P = 645 + delta;
+int flipUp = 820 + delta;
+int flipDown = 295 + delta;
 
 const int measureResPin = 21;
 int rawMeasure = 0;
@@ -169,7 +170,7 @@ void measureResistance(){
 
 void flip(){
   if (data == "K"){
-    Dynamixel.moveSpeed(ID4,flipDown,512);
+    Dynamixel.moveSpeed(ID4,flipDown,160);
     data = "NULL";
   }
   if (data == "L"){
@@ -374,6 +375,7 @@ bool frontSwitch(){
     return true;
   } 
   if (switchFrontState == LOW) {
+    Serial.print("0");
     return false;
   }
   return false;
