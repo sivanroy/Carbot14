@@ -35,6 +35,14 @@ void set_commands(ctrlStruct *cvs, double r_sp_ref, double l_sp_ref)
     double r_sp_mes = inputs->r_sp_mes_enc;
     double l_sp_mes = inputs->l_sp_mes_enc;
 
+    if(inputs->leftWheelBlocked & inputs->rightWheelBlocked){
+        printf("both wheels blocked\n");
+    } else if(inputs->leftWheelBlocked){
+        printf(" leftWheelBlocked\n");
+    } else if(inputs->rightWheelBlocked){
+        printf(" rightWheelBlocked\n");
+    }
+
     //kphi term
     double kphi_r = r_sp_mes * llc->kphiOnK;
     double kphi_l = l_sp_mes * llc->kphiOnK;

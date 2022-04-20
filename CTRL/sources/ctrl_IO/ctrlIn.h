@@ -41,6 +41,9 @@ typedef struct ctrlIn
     int team;
     int start;
 
+    int leftWheelBlocked;
+    int rightWheelBlocked;
+
 } ctrlIn;
 
 void ctrlIn_init(ctrlIn *inputs);

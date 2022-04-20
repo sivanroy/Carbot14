@@ -32,6 +32,9 @@ void ctrlIn_init(ctrlIn *inputs)
     inputs->r_back_s = 0.0;
     inputs->l_back_s = 0.0;
 
+    inputs->leftWheelBlocked = 0;
+    inputs->rightWheelBlocked = 0;
+
     inputs->team = -1;
     inputs->start = -1;
 }
@@ -148,7 +151,11 @@ void get_d2r_data(ctrlStruct *cvs)
     double r_sp_mes_odo = - r_ticks_odo * rpt_odo/dt;
     double l_sp_mes_odo =   l_ticks_odo * rpt_odo/dt;
 
-    //if(r_sp_mes_enc > )
+    inputs->leftWheelBlocked  = 0;
+    inputs->rightWheelBlocked = 0;
+
+    if(abs(r_sp_mes_enc) > abs(r_sp_mes_odo*10))  inputs->rightWheelBlocked = 1;
+    if(abs(l_sp_mes_enc) > abs(l_sp_mes_odo*10)) inputs->leftWheelBlocked = 1;
 
     double MAX_enc = 20;
     

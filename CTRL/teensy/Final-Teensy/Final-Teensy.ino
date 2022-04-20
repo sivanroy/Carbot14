@@ -1,7 +1,6 @@
 
 /*
 Communication Teensy -> RPI :
-0 -> No valid measure
 1 -> Pallet violet (470 Ohm)
 2 -> Pallet jaune (1 kOhm)
 3 -> Pallet rouge (4.7 kOhm)
@@ -29,6 +28,7 @@ O -> Take 1st pallet from stack and drop it at the top of expositon gallery (pos
 P -> Take 1st pallet from stack and drop it at the top of expositon gallery (pos: 220)
 Q -> Clamp IN -> release the statuette
 S -> Clamp OUT -> clamps the statuette
+U -> Push the measure resistance pallet 
 */
 
 #include <Wire.h> //I2C
@@ -51,16 +51,15 @@ const int ID5 = 5;
 
 int servoIn0 = -14; //Right front servo is IN at position -12
 int servoOut0 = 168; //Right front servo is OUT at position 168
-int servoIn1 = 192; //Left front 
-int servoOut1 = 23; 
-int servoIn2 = 140; //Measure resistance // 140
-int servoOut2 = 10;
+int servoIn1 = 200; //Left front 
+int servoOut1 = 13; 
+int servoIn2 = 180; //Measure res
+int servoOut2 = 15;
 int servoIn3 = 130; //Push cube
 int servoOut3 = 195;
 int servoIn4 = -34; //Clamp
 int servoOut4 = 55;
-int servoIn5 = 185; //MAX : 200 //push pallet resistance
-int servoMid5 = 100;
+int servoIn5 = 185; //MAX : 200 //Push resistance
 int servoOut5 = 35; //MIN : -25
 
 int flip3P = 670;
@@ -125,9 +124,12 @@ void loop() {
   clamp();
   frontServos();
   pushCube();
+  pushPallet();
   servoResistance();
+  measureResistance();
   moveStepper();
   flip();
+  
   delay(10);
 }
 
@@ -151,8 +153,7 @@ void measureResistance(){
     R = Rn * Vout/(Vin-Vout);
     if (R > 250 && R < 750){
       pwm.setPWM(5, 0, pulseWidth(servoOut5));
-      delay(500);
-      pwm.setPWM(2, 0, pulseWidth(servoIn2));
+      delay(950);
       pwm.setPWM(5, 0, pulseWidth(servoIn5));
       delay(1500);
       Serial.print("1");
@@ -162,9 +163,6 @@ void measureResistance(){
     }
     if (R > 1500 && R < 6000){
       Serial.print("3");
-    }
-    else {
-      Serial.print("0");
     }
   }
 }
@@ -482,16 +480,21 @@ void frontServos(){
 
 void servoResistance(){
   if (data == "C"){
-      pwm.setPWM(5, 0, pulseWidth(servoMid5));
-      delay(250);
       Wire.beginTransmission(0x40);
       pwm.setPWM(2, 0, pulseWidth(servoOut2));
-      delay(300);
-      measureResistance();
+      delay(2000);
       pwm.setPWM(2, 0, pulseWidth(servoIn2));
-      pwm.setPWM(5, 0, pulseWidth(servoIn5));
       Wire.endTransmission();
       data = "NULL";
+  }
+}
+
+void pushPallet(){
+  if (data == "U"){
+    pwm.setPWM(5, 0, pulseWidth(servoOut5));
+    delay(950);
+    pwm.setPWM(5, 0, pulseWidth(servoIn5));
+    delay(1500);
   }
 }
   

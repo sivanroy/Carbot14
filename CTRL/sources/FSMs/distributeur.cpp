@@ -81,7 +81,6 @@ void distr_loop(ctrlStruct *cvs){
     		sendFromHLCPF(cvs,-1);
         	if(hlcPF->output){
                 printf("go to recalibrate_di\n");
-                //op->no_opp = 1;
                 distr->status = recalibrate_di;
         	}
         	break;
@@ -97,23 +96,16 @@ void distr_loop(ctrlStruct *cvs){
 
         case OpenDis_di: {
             teensy_send(cvs, "K");
-            //inputs->t = inputs->t + 2;
             distr->status = DpmtMLC1_di;
-            //teensy_send(cvs, "L");
-            //inputs->t = inputs->t + 2;
-            //distr->status = DpmtMLC1_di;
             printf("go to dpmtmlc\n");
             set_goal(cvs,2.75,.75,M_PI);
             break;
         }
 
         case DpmtMLC1_di:{
-            //hlcPF->Tau_max = 5;
-            //sendFromMLC(cvs,distr->x_goals[1],distr->y_goals[1],cvs->distr->forward[1]);
             set_param_prec(cvs);
             sendFromHLCPF(cvs,0,1);
             if(hlcPF->output){
-                //distr->status = DpmtHLCPFOut_di;
                 distr->status = DpmtMLC2_di;
                 set_goal(cvs,3,.75,0);
                 printf("go to dpmtmlc2\n");
@@ -122,7 +114,6 @@ void distr_loop(ctrlStruct *cvs){
         }
 
         case DpmtMLC2_di:{
-            //sendFromMLC(cvs,distr->x_goals[2],distr->y_goals[2],cvs->distr->forward[2]);
             set_param_prec(cvs);
             sendFromHLCPF(cvs,0,1);
             teensy_recv(cvs);
@@ -137,7 +128,6 @@ void distr_loop(ctrlStruct *cvs){
         }
 
         case GetSamples_di:{
-            //sendFromHLCPF(cvs,cvs->distr->forward[1]);
             if(hlcPF->output){
                 distr->status = DpmtHLCPFOut_di;
                 printf("go to DpmtOut_ps\n");
