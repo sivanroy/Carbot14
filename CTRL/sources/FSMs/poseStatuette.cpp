@@ -9,7 +9,7 @@
 
 //angle : opposé + pi
 
-enum {S0_pos,Go_to_vitrine_pos,vitrine_prec1_pos,vitrine_prec2_pos,dpmtprec_pos,drop_statuette_pos};
+enum {S0_pos,Go_to_vitrine_pos,vitrine_prec1_pos,vitrine_prec2_pos,dpmtprec_pos,drop_statuette_pos,go_back_prec_pos, rec_pos};
 
 void poseStat_init(poseStatuette *poseStat) {
     poseStat->status = S0_ps;
@@ -52,7 +52,7 @@ void poseStat_loop(ctrlStruct *cvs){
         		poseStat->status = Go_to_vitrine_pos;
         		printf("go to dp1\n");
         		poseStat->go = 0;
-                if (TEAM) set_goal(cvs,2.65,1.35,0.8*M_PI/2);
+                if (TEAM) set_goal(cvs,2.6,1.35,-10);//2.65,1.35,0.6*M_PI/2
                 else set_goal(cvs,3-2.5,.6,-10);    
                 poseStat->status = Go_to_vitrine_pos;
                 break;
@@ -61,10 +61,10 @@ void poseStat_loop(ctrlStruct *cvs){
         
         case Go_to_vitrine_pos:{
             set_param_normal(cvs);
-            sendFromHLCPF(cvs,-1);
+            sendFromHLCPF(cvs,1);
             if(hlcPF->output){
                 poseStat->status = vitrine_prec1_pos;
-                if (TEAM) set_goal(cvs,2.8,1.7,M_PI/2);
+                if (TEAM) set_goal(cvs,2.79,1.7,M_PI/2);
                 else set_goal(cvs,3-2.5,.6,-10);    
                 printf("go to vitrine_prec_pos\n");
             }
@@ -77,30 +77,54 @@ void poseStat_loop(ctrlStruct *cvs){
             if(hlcPF->output){
                 printf("ended\n");
                 poseStat->status = vitrine_prec2_pos;
-                if (TEAM) set_goal(cvs,2.8,1.9,-10);
-                else set_goal(cvs,3-2.5,.6,-10); 
+                if (TEAM) set_goal(cvs,2.82,1.99,-10);
+                else set_goal(cvs,3-2.5,.6,-10);
             }
             break;
         }
 
         case vitrine_prec2_pos:{
             set_param_prec(cvs);
+            hlcPF->Tau_max = .1;
+            hlcPF->Tau_min = .075;
             sendFromHLCPF(cvs,1,1);
             teensy_recv(cvs);
             if (teensy->switch_F) {
                 motors_stop(cvs);
+                teensy_send(cvs, "D");
+                setChrono(cvs,1.2);
                 teensy->switch_F = 0;
+                poseStat->status = drop_statuette_pos;
                 printf("go to Dpmt7_ps\n");
-                poseStat->output =1;
             }
             break;
         }
 
         case drop_statuette_pos:{
+            if (checkChrono(cvs)) {
+                poseStat->status = go_back_prec_pos;
+                if (TEAM) set_goal(cvs,2.75,1.7,M_PI);
+                else set_goal(cvs,3-2.5,.6,-10);
+                printf("go to Dpmt3_ps\n");
+            }
             break;
         }
-
-
+        case go_back_prec_pos:{
+            set_param_prec(cvs);
+            sendFromHLCPF(cvs,0,1);
+            if(hlcPF->output){
+                poseStat->status = rec_pos;
+                printf("rec START\n");
+            }
+            break;
+        }
+        case rec_pos:{
+            if (rec_static(cvs)) {
+                printf("rec END\n");
+                poseStat->output =1;
+            }
+            break;
+        }
         default:
             printf("Problem default value in FSM\n");
     }
