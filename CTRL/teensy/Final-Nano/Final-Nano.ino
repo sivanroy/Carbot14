@@ -21,6 +21,11 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include <FastLED.h>
+#define NUM_LEDS 16
+#define DATA_PIN 2
+
+CRGB leds[NUM_LEDS];
 
 int pinA = 12;
 int pinB = 8;
@@ -44,7 +49,9 @@ String data = "0";
 void setup() {
  Serial.begin(57600);
 
- points = 4;
+ FastLED.addLeds<WS2811, DATA_PIN, GRB>(leds, NUM_LEDS);    
+ 
+ points = 14;
  
  pinMode(pinA, OUTPUT);     
  pinMode(pinB, OUTPUT);     
@@ -64,8 +71,21 @@ void loop() {
  checkRPI();
  count();
  digitDisplay();
+ //ledStrip();
 }
 
+void ledStrip(){
+  for(int i=0; i<NUM_LEDS-3; i++){
+    //leds[i].setRGB(255, 0, 255);
+    //leds[i + 3].setRGB(255, 0, 255);
+    FastLED.show();
+    delay(100);
+    leds[i] = CRGB::Black;
+    FastLED.show();
+    delay(100);
+  }
+  FastLED.show();
+}
 void checkRPI(){
   if (Serial.available() > 0) {
     digitalWrite(D1, HIGH);

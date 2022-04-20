@@ -3,8 +3,8 @@
 
 //Constants
 #define NUM_STRIPS 1
-#define NUM_LEDS 60
-#define BRIGHTNESS 10
+#define NUM_LEDS 50
+#define BRIGHTNESS 150
 #define LED_TYPE WS2812B
 #define COLOR_ORDER BRG//RGB
 #define FASTLED_ALLOW_INTERRUPTS 0
@@ -14,7 +14,7 @@
 #define SPARKING 120
 
 //Parameters
-const int stripPin  = 3;
+const int stripPin  = 13;
 
 //Variables
 bool gReverseDirection  = false;
