@@ -28,8 +28,8 @@ int not_wall(ctrlStruct *cvs, double x, double y)
 
     if ((x > 0 + map_margin && x < 3 - map_margin) && (y > 0 + map_margin && y < 2 - map_margin)) {
 
-        if ((sqrt((x-0)*(x-0) + (y-0)*(y-0)) > (0.51 - map_margin + 0.06)) &&
-                (sqrt((x-3)*(x-3) + (y-0)*(y-0)) > (0.51 - map_margin + 0.06))) {
+        if ((sqrt((x-0)*(x-0) + (y-0)*(y-0)) > (0.51 - map_margin + 0.1)) &&
+                (sqrt((x-3)*(x-3) + (y-0)*(y-0)) > (0.51 - map_margin + 0.1))) {
             return 1;
         }
     }

@@ -443,6 +443,10 @@ def plot_mp_data():
     #plt.savefig("mp_data2.pdf", format="pdf")
     plt.show()
     
+    print("x = ", Data[0][len(Data[0])-1])
+    print("y = ", Data[1][len(Data[0])-1])
+    print("th = ", Data[2][len(Data[0])-1])
+    
 def plot_icp_data():
     
     Data1 = read_txt_file("../../build/icp1_data.txt", 2)

@@ -51,13 +51,11 @@ int main()
     int icp_test = 0;
     int icpON = 0;
     int teensyON = 0;
-    int saShedON = 1;
-    int distON = 0;
     int icpDynON = 0;
     int odON = 0;
     int poseStatON = 0;
     int saShedON = 0;
-    int excSqON = 0;
+    int excSqON = 1;
     int distON = 0;
 
     int arduinoON = 0;
@@ -678,6 +676,7 @@ int main()
         teensy_send(cvs, "Q");
         usleep(1200000);
         teensy_send(cvs, "R");
+        usleep(1200000);
         /*
         printf("------------- rec static -------------\n");
         rec->iter = 0;
@@ -685,6 +684,7 @@ int main()
         while (1) if (rec_static(cvs)) break;
          */
         //usleep(2000000);
+        inputs->team = 1;
         saShed_launch(cvs);
         printf("sasShedON\n");
         cvs->mp->x = 3-0.133;
@@ -719,6 +719,7 @@ int main()
         teensy_send(cvs, "Q");
         usleep(1200000);
         teensy_send(cvs, "R");
+        usleep(1200000);
 
         distr_launch(cvs);
         printf("distON\n");
@@ -753,8 +754,9 @@ int main()
         threads_start(cvs);
 
         teensy_send(cvs, "R");
-        usleep(1500000);
-        teensy_send(cvs, "B");
+        usleep(1200000);
+        teensy_send(cvs, "Q");
+        usleep(1200000);
         /*
         printf("------------- rec static -------------\n");
         rec->iter = 0;
@@ -804,7 +806,7 @@ int main()
          */
         //usleep(2000000);
         excSq_launch(cvs);
-        printf("sasShedON\n");
+        printf("excSqON\n");
         cvs->mp->x = 3-0.133;
         cvs->mp->y = 1.13;
         cvs->mp->th = M_PI;
@@ -835,6 +837,12 @@ int main()
         //teensy_send(cvs, "Q");
         //usleep(1200000);
         //teensy_send(cvs, "R");
+        teensy_send(cvs, "B");
+        usleep(1200000);
+        //teensy_send(cvs, "Q");
+        //usleep(1200000);
+        teensy_send(cvs, "R");
+        usleep(1200000);
 
         int A = 0;
         int B = 0;
@@ -844,7 +852,7 @@ int main()
         int Q = 0;
         int R = 0;
         int S = 0;
-        while (inputs->t < 10) {
+        while (inputs->t < 2.9) {
 
             auto start = high_resolution_clock::now();
 
@@ -864,7 +872,7 @@ int main()
             }*/
 
             if (inputs->t >= 1 && B == 0) {
-                teensy_send(cvs, "5");
+                teensy_send(cvs, "A");
                 B = 1;
             }
             
@@ -878,7 +886,7 @@ int main()
                 D = 1;
             }
              
-            if (inputs->t >= 2 && R == 0) {
+            if (inputs->t >= 8 && R == 0) {
                 teensy_send(cvs, "L");
                 R = 1;
             }
@@ -901,7 +909,7 @@ int main()
         int one = 0;
         int two = 0;
         int three = 0;
-        while (inputs->t < 6) {
+        while (inputs->t < 5) {
             auto start = high_resolution_clock::now();
 
             teensy_recv(cvs);
@@ -925,9 +933,10 @@ int main()
     motors_stop(cvs);
     teensy_send(cvs, "B");
     usleep(1200000);
-    teensy_send(cvs, "Q");
-    usleep(1200000);
+    //teensy_send(cvs, "Q");
+    //usleep(1200000);
     teensy_send(cvs, "R");
+    usleep(1200000);
     cvs_free(cvs);
 
     return 0;

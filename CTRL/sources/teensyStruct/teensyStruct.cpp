@@ -73,13 +73,13 @@ void teensy_init(teensyStruct *teensy)
     {
         printf("teensy : can not open teensy comport\n");
     }
-    usleep(500000);
+    usleep(100000);
 
     if(RS232_OpenComport(teensy->a_port, teensy->a_bdrate, teensy->mode, 0))
     {
         printf("teensy : can not open arduino comport\n");
     }
-    usleep(500000);
+    usleep(100000);
 
     teensy->switch_F = 0;
     teensy->switch_F_end = 0;
@@ -87,6 +87,11 @@ void teensy_init(teensyStruct *teensy)
     teensy->switch_B = 0;
     teensy->switch_B_end = 0;
 
+    teensy->R1 = 0;
+    teensy->R2 = 0;
+    teensy->R3 = 0;
+    teensy->R_mes1 = 0;
+    teensy->R_mes4 = 0;
 }
 
 void arduino_send(ctrlStruct *cvs, const char *data)
@@ -142,14 +147,17 @@ void teensy_recv(ctrlStruct *cvs) {
         }
         strcpy(str, data1);
         if (strcmp((char *) teensy->str_recv, (char *) str) == 0) {
+            teensy->R1 = 1;
             printf("-----------------  R1  -----------------\n");
         }
         strcpy(str, data2);
         if (strcmp((char *) teensy->str_recv, (char *) str) == 0) {
+            teensy->R2 = 1;
             printf("-----------------  R2  -----------------\n");
         }
         strcpy(str, data3);
         if (strcmp((char *) teensy->str_recv, (char *) str) == 0) {
+            teensy->R3 = 1;
             printf("-----------------  R3  -----------------\n");
         }
     }
