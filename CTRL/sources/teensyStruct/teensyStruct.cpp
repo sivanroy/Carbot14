@@ -87,11 +87,17 @@ void teensy_init(teensyStruct *teensy)
     teensy->switch_B = 0;
     teensy->switch_B_end = 0;
 
+    teensy->no_switch = 1;
+
+    teensy->no_R = 0;
     teensy->R1 = 0;
     teensy->R2 = 0;
     teensy->R3 = 0;
     teensy->R_mes1 = 0;
     teensy->R_mes4 = 0;
+    teensy->R_mes5 = 0;
+    teensy->R_mes6 = 0;
+    teensy->R_mes7 = 0;
 }
 
 void arduino_send(ctrlStruct *cvs, const char *data)
@@ -122,6 +128,8 @@ void teensy_recv(ctrlStruct *cvs) {
 
     const char *data5;
     const char *data4;
+    const char *dataX;
+    const char *data0;
     const char *data1;
     const char *data2;
     const char *data3;
@@ -130,10 +138,12 @@ void teensy_recv(ctrlStruct *cvs) {
     int n = RS232_PollComport(teensy->t_port, teensy->str_recv, (int) BUF_SIZE);
     if (n > 0) {
         teensy->str_recv[n] = 0;
-        printf("Received %i bytes: '%s'\n", n, (char *) teensy->str_recv);
+        //printf("Received %i bytes: '%s'\n", n, (char *) teensy->str_recv);
 
         data5 = "5";
         data4 = "4";
+        dataX = "X";
+        data0 = "0";
         data1 = "1";
         data2 = "2";
         data3 = "3";
@@ -144,6 +154,17 @@ void teensy_recv(ctrlStruct *cvs) {
         strcpy(str, data4);
         if (strcmp((char *) teensy->str_recv, (char *) str) == 0) {
             teensy->switch_B = 1;
+        }
+        strcpy(str, dataX);
+        if (strcmp((char *) teensy->str_recv, (char *) str) == 0) {
+            teensy->no_switch = 0;
+            teensy->switch_F = 0;
+            teensy->switch_B = 0;
+        }
+        strcpy(str, data0);
+        if (strcmp((char *) teensy->str_recv, (char *) str) == 0) {
+            teensy->no_R = 1;
+            printf("-----------------  R0  -----------------\n");
         }
         strcpy(str, data1);
         if (strcmp((char *) teensy->str_recv, (char *) str) == 0) {

@@ -85,8 +85,9 @@ void poseStat_loop(ctrlStruct *cvs){
 
         case vitrine_prec2_pos:{
             set_param_prec(cvs);
-            hlcPF->Tau_max = .1;
-            hlcPF->Tau_min = .075;
+            hlcPF->Tau_max = .15;
+            hlcPF->Tau_min = .1;
+            mlcPF->sigma = 0.5;
             sendFromHLCPF(cvs,1,1);
             teensy_recv(cvs);
             if (teensy->switch_F) {

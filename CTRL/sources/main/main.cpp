@@ -577,22 +577,41 @@ int main()
 
         threads_start(cvs);
 
+        get_d2r_data(cvs);
+        //inputs->team = 1;
+        saShed_launch(cvs);
+        printf("hlcPFON\n");
+        cvs->mp->x = 3-0.133;
+        cvs->mp->y = 1.467;
+        cvs->mp->th = M_PI;
+        printf("team = %d \n",inputs->team );
+        if(!inputs->team){
+            teensy_send(cvs, "2");
+            cvs->mp->x = .133;
+            cvs->mp->th = 0;
+        }
+        else teensy_send(cvs, "1");
         double xgoal = cvs->mp->x;double ygoal=cvs->mp->y;
         int forward;double orientation;
         set_param_normal(cvs);
+        //inputs->team = 1;
         cvs->mp->x = 3-0.14;
         cvs->mp->y = 2-0.53;
         cvs->mp->th = M_PI;
 
         printf("begin test hlcPF\n");
-        while (inputs->t < 50) {
+        while (inputs->t < 5) {
             auto start = high_resolution_clock::now();
             double t = inputs->t;
             if (t==0) {
-                //set_param_prec(cvs);
-                xgoal = 1;//2.2;//1.2;
-                ygoal = 1;//1.60;
-                forward=-1;
+                set_param_prec(cvs);
+                hlcPF->Tau_max = .15;
+                hlcPF->Tau_min = .1;
+                mlcPF->sigma = 0.5;
+                //cvs->mlcPF->Kp_th = 10;
+                xgoal = 3-0.4;//2.2;//1.2;
+                ygoal = 2-0.55;//1.60;
+                forward=1;
                 orientation = M_PI;//M_PI/2;
                 set_goal(cvs, xgoal, ygoal, orientation);
                 printf("goal A\n");
@@ -612,24 +631,10 @@ int main()
                 set_goal(cvs, xgoal, ygoal, orientation);
                 printf("goal c\n");
             }
-            get_d2r_data(cvs); // ctrlIn
-            if(inputs->start){
-                dyn_obs_set(cvs);
-                //printf("r_sp_mes_enc = %f | l_sp_mes_enc = %f\n", inputs->r_sp_mes_enc, inputs->l_sp_mes_enc);
-                //printf("r_sp_mes_odo = %f | l_sp_mes_odo = %f\n", inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
-                hlcPF_out(cvs, forward );
+            //get_d2r_data(cvs); // ctrlIn
+            sendFromHLCPF(cvs,1,1);
 
-                mlcPF_out(cvs, hlcPF->v_ref, hlcPF->theta_ref);
-
-                fprintf(cvs->tau_data, "%f,%f,%f\n", inputs->t, hlcPF->v_ref, tau_compute(cvs));
-
-                //printf("v_ref; d %f \n", hlcPF->v_ref,hlcPF->d);
-                //printf("hlcPF->v %f | hlcPF->theta %f | d %f \n",hlcPF->v_ref,hlcPF->theta_ref,hlcPF->d );
-                set_commands(cvs, mlcPF->r_sp_ref, mlcPF->l_sp_ref);
-                send_commands(cvs);
-            }
-
-            set_new_position(cvs);
+            //set_new_position(cvs);
             //printf("cmd_r = %d | cmd_l = %d\n", outputs->r_cmd, outputs->l_cmd);
             //printf("x = %f | y = %f | th = %f\n", mp->x, mp->y, mp->th);
 
@@ -735,12 +740,15 @@ int main()
         cvs->mp->th = M_PI;
         printf("team = %d \n",inputs->team );
         if(!inputs->team){
+            teensy_send(cvs, "2");
             cvs->mp->x = .133;
             cvs->mp->th = 0;
         }
+        else teensy_send(cvs, "1");
 
         while(inputs->t < 30){
             auto start = high_resolution_clock::now();
+            teensy_recv(cvs);
 
             saShed_loop(cvs);
             if(saShed->output) {
@@ -774,9 +782,17 @@ int main()
         cvs->mp->x = 3-0.14;
         cvs->mp->y = 2-0.53;
         cvs->mp->th = M_PI;
+        if(!inputs->team) {
+            teensy_send(cvs, "2");
+            cvs->mp->x = 0.14;
+            cvs->mp->y = 2-0.53;
+            cvs->mp->th = 0;
+        }
+        else teensy_send(cvs, "1");
 
         while(inputs->t < 20){
             auto start = high_resolution_clock::now();
+            teensy_recv(cvs);
 
             distr_loop(cvs);
             if(cvs->distr->output) {
@@ -820,13 +836,15 @@ int main()
         cvs->mp->y = .75;
         cvs->mp->th = M_PI;
         if(!inputs->team){
+            teensy_send(cvs, "2");
             cvs->mp->x = .25;
             cvs->mp->th = 0;
         }
-
+        else teensy_send(cvs, "1");
 
         while(inputs->t < 30){
             auto start = high_resolution_clock::now();
+            teensy_recv(cvs);
 
             poseStat_loop(cvs);
             if(poseStat->output) {
@@ -851,9 +869,9 @@ int main()
         get_d2r_data(cvs);
 
         teensy_send(cvs, "B");
-        usleep(1200000);
+        usleep(200000);
         teensy_send(cvs, "Q");
-        usleep(1200000);
+        usleep(200000);
         teensy_send(cvs, "R");
         /*
         printf("------------- rec static -------------\n");
@@ -868,11 +886,14 @@ int main()
         cvs->mp->y = 1.13;
         cvs->mp->th = M_PI;
         if(!inputs->team){
+            teensy_send(cvs, "2");
             cvs->mp->x = .133;
             cvs->mp->th = 0;
         }
-        while(inputs->t < 30){
+        else teensy_send(cvs, "1");
+        while(inputs->t < 50){
             auto start = high_resolution_clock::now();
+            teensy_recv(cvs);
 
             excSq_loop(cvs);
             if(excSq->output) {
@@ -903,6 +924,7 @@ int main()
         //usleep(1200000);
         teensy_send(cvs, "R");
         usleep(1200000);
+        teensy_send(cvs, "1");
 
         int A = 0;
         int B = 0;
@@ -912,25 +934,29 @@ int main()
         int Q = 0;
         int R = 0;
         int S = 0;
-        while (inputs->t < 5.9) {
+        while (inputs->t < 10) {
 
             auto start = high_resolution_clock::now();
 
             teensy_recv(cvs);
 
             //printf("switch_F : %d\n", teensy->switch_F);
-            if (teensy->switch_F && teensy->switch_F_end == 0) {
+            if (teensy->switch_F) {
                 printf("Switch front ON\n");
-                teensy->switch_F = 0;
+                //teensy->switch_F = 0;
                 teensy->switch_F_end = 1;
             }
-            /*if (teensy->switch_B && teensy->switch_B_end == 0) {
+            if (teensy->switch_B) {
                 //teensy_send(cvs, "5");
                 printf("Switch back ON\n");
-                teensy->switch_B = 0;
+                //teensy->switch_B = 0;
                 teensy->switch_B_end = 1;
-            }*/
-
+            }
+            if (inputs->t >= 3 && C == 0) {
+                teensy_send(cvs, "C");
+                C = 1;
+            }
+            /*
             if (inputs->t >= 1 && B == 0) {
                 teensy_send(cvs, "A");
                 B = 1;
@@ -950,7 +976,7 @@ int main()
                 teensy_send(cvs, "M");
                 R = 1;
             }
-
+            */
             update_time(cvs);
             auto stop = high_resolution_clock::now();
             auto duration = duration_cast<microseconds>(stop - start);
