@@ -20,7 +20,7 @@ D -> Push cube
 F -> Take 1st pallet from stack and drop it at the bottom of expoisiton gallery (pos: 100)
 G -> Take 2nd pallet from stack and drop it at the bottom of expoisiton gallery (pos: 160)
 H -> Take 3rd pallet from stack and drop it at the bottom of expoisiton gallery (pos: 220)
-J
+J -> Special position that helps to take pallets with the flip
 I -> Arm drops pallet and reset its position
 K -> Lower flip to take pallets from distributor (pos: 255)
 L -> Lift the pallets 90 degrees with the flip (pos: 590)
@@ -77,7 +77,7 @@ int servoIn5 = 185; //MAX : 200 //Push resistance
 int servoMid5 = 90;
 int servoOut5 = 35; //MIN : -25
 
-int delta = 220;
+int delta = 150;
 int flip3P = 670 + delta;
 int flip2P = 660 + delta;
 int flip1P = 645 + delta;
@@ -187,17 +187,20 @@ void clamp(){
    }
 }
 
-
-
 void flip(){
   if (data == "K"){
     Dynamixel.moveSpeed(ID4,flipDown,512);
     data = "NULL";
   }
-  if (data == "L"){
-    Dynamixel.moveSpeed(ID4,flip3P,140);
+  if (data == "J"){
+    Dynamixel.moveSpeed(ID4,flipDown + 100,160); //SIMON (flip3P - flipDown = 375)
     data = "NULL";
   }
+  if (data == "L"){
+    Dynamixel.moveSpeed(ID4,flip3P,160);
+    data = "NULL";
+  }
+  
   if (data == "M"){
     Dynamixel.moveSpeed(ID4,flipUp,512);
     data = "NULL";
