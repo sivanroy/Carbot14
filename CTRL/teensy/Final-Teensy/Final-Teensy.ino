@@ -74,10 +74,10 @@ int servoOut3 = 195;
 int servoIn4 = -34; //Clamp //25
 int servoOut4 = 65;
 int servoIn5 = 185; //MAX : 200 //Push resistance
-int servoMid5 = 100;
+int servoMid5 = 90;
 int servoOut5 = 35; //MIN : -25
 
-int delta = 25;
+int delta = 150;
 int flip3P = 670 + delta;
 int flip2P = 660 + delta;
 int flip1P = 645 + delta;
@@ -109,8 +109,10 @@ String data = "NULL";
 int pushedUnderTheShed = 0; // 1 if it has been pushed
 int pushedUnderTheShedBis = 0;
 
-String team;
+String team = "violet";
 int usingArm = 0;
+
+int resistanceLoop = 0;
 
 void setup() {
   Serial.begin(57600);
@@ -186,43 +188,6 @@ void clamp(){
 }
 
 
-void measureResistance(){
-  rawMeasure = analogRead(measureResPin);
-  buffer = rawMeasure * Vin;
-  Vout = (buffer)/1024.0;
-  R = Rn * Vout/(Vin-Vout);
-  if (R > 250 && R < 750){
-    if (team == "violet"){
-      Wire.beginTransmission(0x40);
-      pwm.setPWM(5, 0, pulseWidth(servoOut5));
-      delay(950);
-      pwm.setPWM(5, 0, pulseWidth(servoIn5));
-      delay(1500);
-      Wire.endTransmission();  
-
-    }
-    Serial.print("1");
-  }
-  else if (R > 750 && R < 1500){
-    if (team == "yellow"){
-      Wire.beginTransmission(0x40);
-      pwm.setPWM(5, 0, pulseWidth(servoOut5));
-      delay(500);
-      pwm.setPWM(2, 0, pulseWidth(servoIn2));
-      pwm.setPWM(5, 0, pulseWidth(servoIn5)); 
-      delay(1500);
-      Wire.endTransmission();  
-
-    }
-    Serial.print("2");
-  }
-  else if (R > 1500 && R < 6000){
-    Serial.print("3");
-  }
-  else {
-    Serial.print("0");
-  }
-}
 
 void flip(){
   if (data == "K"){
@@ -385,7 +350,6 @@ void resetVariables(){
   }
 }
 
-
 void pushUnderTheShed(){
   if (data == "5" && pushedUnderTheShed == 0){
     Dynamixel.turn(ID5,RIGTH,1023);
@@ -397,7 +361,7 @@ void pushUnderTheShed(){
   if (data == "6" && pushedUnderTheShedBis == 0){
     Dynamixel.turn(ID5,LEFT,1023);
     Wire.beginTransmission(0x40);
-    pwm.setPWM(0, 0, pulseWidth(servoIn4));
+    pwm.setPWM(4, 0, pulseWidth(servoOut4));
     Wire.endTransmission();
     delay(1180);
     Dynamixel.turn(ID5,RIGTH,0);
@@ -529,14 +493,52 @@ void frontServos(){
   }
 }
 
+void measureResistance(){
+  rawMeasure = analogRead(measureResPin);
+  buffer = rawMeasure * Vin;
+  Vout = (buffer)/1024.0;
+  R = Rn * Vout/(Vin-Vout);
+  if (R > 250 && R < 750){
+    if (team == "violet"){
+      Wire.beginTransmission(0x40);
+      pwm.setPWM(5, 0, pulseWidth(servoOut5));
+      delay(350);
+      Wire.endTransmission();  
+    }
+    Serial.print("1");
+  }
+  else if (R > 750 && R < 1500){
+    if (team == "yellow"){
+      Wire.beginTransmission(0x40);
+      pwm.setPWM(5, 0, pulseWidth(servoOut5));
+      delay(350);
+      Wire.endTransmission();  
+
+    }
+    Serial.print("2");
+  }
+  else if (R > 1500 && R < 6000){
+    Serial.print("3");
+  }
+  else {
+    Serial.print("0");
+    if (resistanceLoop < 10){
+      resistanceLoop++;
+      measureResistance();
+      delay(5);
+    }
+  }
+}
+
 void servoResistance(){
    if (data == "C"){
+       Wire.beginTransmission(0x40);
        pwm.setPWM(5, 0, pulseWidth(servoMid5));
        delay(250);
-       Wire.beginTransmission(0x40);
        pwm.setPWM(2, 0, pulseWidth(servoOut2));
-       delay(300);
+       delay(450);
        measureResistance();
+       resistanceLoop = 0;
        pwm.setPWM(2, 0, pulseWidth(servoIn2));
        pwm.setPWM(5, 0, pulseWidth(servoIn5));
        Wire.endTransmission();
@@ -548,7 +550,7 @@ void pushResistance(){
   if (data == "T"){
     Wire.beginTransmission(0x40);
     pwm.setPWM(5, 0, pulseWidth(servoOut5));
-    delay(700);
+    delay(900);
     pwm.setPWM(5, 0, pulseWidth(servoIn5));
     Wire.endTransmission();
     data = "NULL";
