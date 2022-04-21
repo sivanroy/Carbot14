@@ -21,13 +21,20 @@ void rpl_init(rplStruct *rpl)
 int rpl_config(rplStruct *rpl)
 {
     u_result res = rpl->lidar->connect("/dev/ttyUSB0", 115200);
-    if (!(IS_OK(res))) return -1;
+    if (!(IS_OK(res))) {
+        return -1;
+        printf("is not ok lidar !\n");
+    }
 
     std::vector<rp::standalone::rplidar::RplidarScanMode> scanModes;
     rpl->lidar->getAllSupportedScanModes(scanModes);
 
     rp::standalone::rplidar::RplidarScanMode scanMode;
-    rpl->lidar->startMotor();
+    res = rpl->lidar->startMotor();
+    if (!(IS_OK(res))) {
+        return -1;
+        printf("is not ok start motor lidar !\n");
+    }
     rpl->lidar->startScan(0,1);
 
     return 1;
@@ -78,7 +85,7 @@ void rpl_stop(ctrlStruct *cvs)
 {
     rplStruct *rpl = cvs->rpl;
 
-    rpl->lidar->stop();
+    //rpl->lidar->stop();
     rp::standalone::rplidar::RPlidarDriver::DisposeDriver(rpl->lidar);
     rpl->lidar = NULL;
 }

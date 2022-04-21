@@ -14,6 +14,7 @@ typedef struct strategy_FSM
     double timeToComeBack;
 
     int actions[10];
+    int timing[10];
     int pt;
 
 } strategy_FSM;

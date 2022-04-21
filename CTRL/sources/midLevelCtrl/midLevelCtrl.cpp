@@ -10,7 +10,7 @@
 
 void init_midLevelCtrl(midLevelCtrl *mlc)
 {
-    mlc->dt = 0.01;
+    mlc->dt = 0.003;
 
     mlc->d_ref = 0.0;
     mlc->d_mes = 0.0;

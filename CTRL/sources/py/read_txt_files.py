@@ -107,7 +107,7 @@ def plot_llc_data():
     plt.show()
     
     plt.plot(Data[0], Data[1], label=r"$\omega_{ref}$", linewidth=2)
-    plt.plot(Data[0], Data[3], label=r"$\omega_{mes,r}$", linewidth=1.2)
+    plt.plot(Data[0], Data[5], label=r"$\omega_{mes,r}$", linewidth=1.2)
     plt.xlabel("Time [s]")
     plt.ylabel(r"$\omega$ [rad/s]")
     plt.title("R wheel speed profile")
@@ -120,7 +120,7 @@ def plot_llc_data():
     plt.show()
     
     plt.plot(Data[0], Data[2], label=r"$\omega_{ref}$", linewidth=2)
-    plt.plot(Data[0], Data[4], label=r"$\omega_{mes,l}$", linewidth=1.2)
+    plt.plot(Data[0], Data[6], label=r"$\omega_{mes,l}$", linewidth=1.2)
     plt.xlabel("Time [s]")
     plt.ylabel(r"$\omega$ [rad/s]")
     plt.title("L wheel speed profile")
@@ -422,7 +422,7 @@ def plot_mp_data():
     plt.grid()
     #plt.savefig("mp_data2.pdf", format="pdf")
     plt.show()
-    
+    """
     plt.plot(Data[5], Data[3], 'r', label="w")
     plt.xlabel("t [s]")
     plt.ylabel("w [rad/s]")
@@ -442,7 +442,7 @@ def plot_mp_data():
     plt.grid()
     #plt.savefig("mp_data2.pdf", format="pdf")
     plt.show()
-    
+    """
     print("x = ", Data[0][len(Data[0])-1])
     print("y = ", Data[1][len(Data[0])-1])
     print("th = ", Data[2][len(Data[0])-1])
@@ -658,7 +658,7 @@ plot_llc_data()
 plot_mp_data()
 """
 #plot_icp_data()
-plot_mp_data()
+plot_llc_data()
 #plot_od_data()
 
 """

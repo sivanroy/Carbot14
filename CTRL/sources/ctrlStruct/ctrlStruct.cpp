@@ -13,6 +13,17 @@ ctrlStruct* cvs_init()
     ctrlStruct *cvs;
     cvs = (ctrlStruct*) malloc(sizeof(ctrlStruct));
 
+    cvs->teensy = (teensyStruct*) malloc(sizeof(teensyStruct));
+    teensy_init(cvs->teensy);
+    usleep(1000);
+    printf("ici\n");
+
+
+    cvs->rpl = (rplStruct*) malloc(sizeof(rplStruct));
+    rpl_init(cvs->rpl);
+    usleep(1000);
+    printf("la\n");
+
     cvs->inputs = (ctrlIn*) malloc(sizeof(ctrlIn));
     ctrlIn_init(cvs->inputs);
 
@@ -40,8 +51,6 @@ ctrlStruct* cvs_init()
     cvs->pshed = (pushShed*) malloc(sizeof(pushShed));
     pushShed_init(cvs->pshed);
 
-    cvs->rpl = (rplStruct*) malloc(sizeof(rplStruct));
-    rpl_init(cvs->rpl);
 
     cvs->op = (oppPosition*) malloc(sizeof(oppPosition));
     op_init(cvs->op);
@@ -55,8 +64,7 @@ ctrlStruct* cvs_init()
     cvs->od = (objDetection*) malloc(sizeof(objDetection));
     od_init(cvs->od);
 
-    cvs->teensy = (teensyStruct*) malloc(sizeof(teensyStruct));
-    teensy_init(cvs->teensy);
+
 
     cvs->stratFSM = (strategy_FSM *) malloc(sizeof(strategy_FSM));
     strategy_FSM_init(cvs->stratFSM);
@@ -135,7 +143,7 @@ void cvs_free(ctrlStruct *cvs)
 {
     can_free(cvs);
     mutex_destroy(cvs);
-    //rpl_stop(cvs);
+    rpl_stop(cvs);
 
     free(cvs->inputs);
     free(cvs->outputs);

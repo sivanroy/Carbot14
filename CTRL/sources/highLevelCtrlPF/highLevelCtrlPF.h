@@ -57,6 +57,8 @@ typedef struct highLevelCtrlPF
     double begin_min_local_dodge;
     double goal_local_dodge[2];
     double dodge_incr;
+
+    double Kp_th_reorient;
 } highLevelCtrlPF;
 
 void hlcPF_init(highLevelCtrlPF *hlcPF);

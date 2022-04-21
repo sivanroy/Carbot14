@@ -38,11 +38,17 @@ typedef struct teensyStruct
     int switch_B;
     int switch_B_end;
 
+    int no_switch;
+
+    int no_R;
     int R1;
     int R2;
     int R3;
     int R_mes1;
     int R_mes4;
+    int R_mes5;
+    int R_mes6;
+    int R_mes7;
 
 } teensyStruct;
 

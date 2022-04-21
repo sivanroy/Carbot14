@@ -8,7 +8,7 @@
 
 void llc_init(lowLevelCtrl *llc)
 {
-    llc->dt = 0.01;
+    llc->dt = 0.003;
     llc->max = 20;
     llc->min = -20;
 
@@ -36,11 +36,11 @@ void set_commands(ctrlStruct *cvs, double r_sp_ref, double l_sp_ref)
     double l_sp_mes = inputs->l_sp_mes_enc;
 
     if(inputs->leftWheelBlocked & inputs->rightWheelBlocked){
-        printf("both wheels blocked\n");
+        //printf("both wheels blocked\n");
     } else if(inputs->leftWheelBlocked){
-        printf(" leftWheelBlocked\n");
+        //printf(" leftWheelBlocked\n");
     } else if(inputs->rightWheelBlocked){
-        printf(" rightWheelBlocked\n");
+        //printf(" rightWheelBlocked\n");
     }
 
     //kphi term

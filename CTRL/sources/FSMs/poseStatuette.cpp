@@ -48,7 +48,7 @@ void poseStat_loop(ctrlStruct *cvs){
 
     switch(poseStat->status){
         case S0_pos:
-        	if(poseStat->go){
+        	//if(poseStat->go){
         		poseStat->status = Go_to_vitrine_pos;
         		printf("go to dp1\n");
         		poseStat->go = 0;
@@ -56,7 +56,7 @@ void poseStat_loop(ctrlStruct *cvs){
                 else set_goal(cvs,.4,1.35,-10);    
                 poseStat->status = Go_to_vitrine_pos;
                 break;
-        	}
+        	//
             break;
         
         case Go_to_vitrine_pos:{
@@ -64,7 +64,7 @@ void poseStat_loop(ctrlStruct *cvs){
             sendFromHLCPF(cvs,1);
             if(hlcPF->output){
                 poseStat->status = vitrine_prec1_pos;
-                if (TEAM) set_goal(cvs,2.79,1.7,M_PI/2);
+                if (TEAM) set_goal(cvs,2.75,1.7,M_PI/2);
                 else set_goal(cvs,.21,1.7,M_PI/2);    
                 printf("go to vitrine_prec_pos\n");
             }
@@ -85,8 +85,9 @@ void poseStat_loop(ctrlStruct *cvs){
 
         case vitrine_prec2_pos:{
             set_param_prec(cvs);
-            hlcPF->Tau_max = .1;
-            hlcPF->Tau_min = .075;
+            hlcPF->Tau_max = .15;
+            hlcPF->Tau_min = .1;
+            mlcPF->sigma = 0.5;
             sendFromHLCPF(cvs,1,1);
             teensy_recv(cvs);
             if (teensy->switch_F) {
