@@ -59,6 +59,8 @@ void hlcPF_init(highLevelCtrlPF *hlcPF) {
     hlcPF->begin_min_local_dodge = 0;
     hlcPF->goal_local_dodge[0] = 0; hlcPF->goal_local_dodge[1] = 0;
     hlcPF->dodge_incr = 0;
+
+    hlcPF->Kp_th_reorient = 20;
 }
 
 
@@ -373,7 +375,7 @@ void hlcPF_out(ctrlStruct *cvs,int goForward,int noObst) {
         }
         else if(abs(dth) > hlcPF->erreurTh){
             hlcPF->reorientation = 1;
-            cvs->mlcPF->Kp_th = 20;
+            cvs->mlcPF->Kp_th = hlcPF->Kp_th_reorient;
             hlcPF->theta_ref = limit_angle(orientation);
             //printf("in reorientation\n");
         } else {
