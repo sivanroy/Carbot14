@@ -19,7 +19,7 @@ ALPHA = 1/d_limit   # Scaling factor attractive potential
 
 
 front_obst = 0.5 # Influence dimension of obstacle
-ETHA = 0.03 #front_obst**A      # Scaling factor repulsive potential
+ETHA = 0.025 #front_obst**A      # Scaling factor repulsive potential
 
 tau = 5
 
@@ -276,11 +276,11 @@ plt.grid()
 #ax.set_title('Potential Field');
 plt.show()
 
-"""ax = plt.axes(projection='3d')
+ax = plt.axes(projection='3d')
 ax.plot_surface(X, Y, pmap ,rstride=1, cstride=1,cmap='viridis', edgecolor='none')
 ax.view_init(70, -30)
 plt.grid()
-plt.show()"""
+plt.show()
 
 
 

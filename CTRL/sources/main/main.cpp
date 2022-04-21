@@ -45,7 +45,7 @@ int main()
     int mlc_ON = 0;
     int rplON = 0;
     int odoCalib = 0;
-    int hlcPFON = 0;
+    int hlcPFON = 1;
     int pushShedON = 0;
     int pushShed_and_sonar_ON = 0;
     int icp_test = 0;
@@ -56,7 +56,7 @@ int main()
     int poseStatON = 0;
     int saShedON = 0;
     int excSqON = 0;
-    int distON = 1;
+    int distON = 0;
 
     int arduinoON = 0;
 

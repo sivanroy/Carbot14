@@ -66,9 +66,9 @@ void strategy_loop(ctrlStruct *cvs){
             break;
         }
 
-        case poseStatuette_s{
+        case poseStatuette_s:{
             poseStat_loop(cvs);
-            if(cvs->poseStat | checkChrono(cvs,1)){
+            if(cvs->poseStat->output | checkChrono(cvs,1)){
                 stratFSM->status = select_action_s;
             }
             break;

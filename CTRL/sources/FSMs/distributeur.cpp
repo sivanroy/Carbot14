@@ -71,6 +71,7 @@ void distr_loop(ctrlStruct *cvs){
                 printf("go to recalibrate_di\n");
                 distr->status = recalibrate_di;
                 setChrono(cvs,2);
+                set_commands(cvs,0,0);
         	}
         	break;
         }
@@ -102,6 +103,8 @@ void distr_loop(ctrlStruct *cvs){
                 distr->status = DpmtMLC2_di;
                 set_goal(cvs,2.9,.75,0);
                 printf("go to dpmtmlc2\n");
+                set_commands(cvs,0,0);
+                setChrono(cvs,2);
             }
             break;
         }
@@ -114,9 +117,13 @@ void distr_loop(ctrlStruct *cvs){
                 teensy->switch_B = 0;
                 distr->status = GetSamples_di;
                 teensy_send(cvs,"L");
-                setChrono(cvs,1);
+                setChrono(cvs,.1);
                 printf("go to GetSamples_di\n");
                 set_goal(cvs,3-.35,.75,-10);
+            } else if (checkChrono(cvs)){
+                distr->status = DpmtHLCPF1_di;
+                if (TEAM) set_goal(cvs,2.5,.75,M_PI);
+                else set_goal(cvs,.5,.75,0);
             }
             break;
         }

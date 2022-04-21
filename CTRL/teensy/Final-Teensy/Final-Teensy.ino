@@ -77,7 +77,7 @@ int servoIn5 = 185; //MAX : 200 //Push resistance
 int servoMid5 = 90;
 int servoOut5 = 35; //MIN : -25
 
-int delta = 150;
+int delta = 220;
 int flip3P = 670 + delta;
 int flip2P = 660 + delta;
 int flip1P = 645 + delta;
@@ -195,7 +195,7 @@ void flip(){
     data = "NULL";
   }
   if (data == "L"){
-    Dynamixel.moveSpeed(ID4,flip3P,160);
+    Dynamixel.moveSpeed(ID4,flip3P,140);
     data = "NULL";
   }
   if (data == "M"){
