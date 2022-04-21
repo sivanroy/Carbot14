@@ -16,18 +16,6 @@ void distr_init(distributeurs *distr){
     distr->status = S0_di;
     distr->output = 0;
     distr->go = 0;
-
-    int s = 4; //2.28 ;; 1.51
-    double x_goalsI[s] = {2.5,2.75,3};
-    double y_goalsI[s] = {0.75,.75,.75};
-    double thetasI[s] = {-M_PI,-M_PI,-10}; //s
-    double forwardI[s] = {-1,0,0,0};
-    for (int i=0; i<s;i++) {
-    	distr->x_goals[i] = x_goalsI[i];
-    	distr->y_goals[i] = y_goalsI[i];
-        distr->thetas[i] = thetasI[i];
-        distr->forward[i] = forwardI[i];
-    }
     printf("sashed initialized\n");
 }
 
@@ -82,7 +70,7 @@ void distr_loop(ctrlStruct *cvs){
         	if(hlcPF->output){
                 printf("go to recalibrate_di\n");
                 distr->status = recalibrate_di;
-                setChrono(cvs,1);
+                setChrono(cvs,2);
         	}
         	break;
         }
