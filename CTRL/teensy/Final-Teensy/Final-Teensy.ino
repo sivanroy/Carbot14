@@ -363,9 +363,6 @@ void pushUnderTheShed(){
   }
   if (data == "6" && pushedUnderTheShedBis == 0){
     Dynamixel.turn(ID5,LEFT,1023);
-    Wire.beginTransmission(0x40);
-    pwm.setPWM(4, 0, pulseWidth(servoOut4));
-    Wire.endTransmission();
     delay(1180);
     Dynamixel.turn(ID5,RIGTH,0);
     data = "NULL";
