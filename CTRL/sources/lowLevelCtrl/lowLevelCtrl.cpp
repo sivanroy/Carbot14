@@ -8,7 +8,7 @@
 
 void llc_init(lowLevelCtrl *llc)
 {
-    llc->dt = 0.01;
+    llc->dt = 0.003;
     llc->max = 20;
     llc->min = -20;
 

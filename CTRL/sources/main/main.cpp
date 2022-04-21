@@ -648,7 +648,7 @@ int main()
             auto stop = high_resolution_clock::now();
             auto duration = duration_cast<microseconds>(stop - start);
 
-            //printf("duration.count() = %lld us | t = %f\n-------------\n", duration.count(), inputs->t);
+            printf("duration.count() = %lld us | t = %f\n-------------\n", duration.count(), inputs->t);
             usleep(dt * 1000000 - duration.count());
 
 

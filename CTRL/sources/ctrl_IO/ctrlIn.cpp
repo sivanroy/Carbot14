@@ -10,7 +10,7 @@ void ctrlIn_init(ctrlIn *inputs)
 {
     /*!  Time variables  */
     inputs->t = 0.0;
-    inputs->dt = 0.01;
+    inputs->dt = 0.003;
 
     /*!  Global variables  */
     inputs->radPerTick_enc = 2 * M_PI/(8192 * 19);
