@@ -30,8 +30,19 @@ void init_chrono(Chrono* chro){
 }
 
 void setChrono(ctrlStruct *cvs,double enableTime, int i){
-    cvs->chro->begin = cvs->inputs->t;
-    cvs->chro->time = enableTime;    
+    if(i==0){
+        cvs->chro->begin = cvs->inputs->t;
+        cvs->chro->time = enableTime;    
+    }
+    if(i==1){
+        cvs->chro->begin1 = cvs->inputs->t;
+        cvs->chro->time1 = enableTime;  
+    }
+    if(i==2){
+        cvs->chro->begin2 = cvs->inputs->t;
+        cvs->chro->time2 = enableTime;  
+    }
+
     cvs->chro->output = 0;
 }
 

@@ -45,7 +45,7 @@ int main()
     int mlc_ON = 0;
     int rplON = 0;
     int odoCalib = 0;
-    int hlcPFON = 1;
+    int hlcPFON = 0;
     int pushShedON = 0;
     int pushShed_and_sonar_ON = 0;
     int icp_test = 0;
@@ -59,14 +59,14 @@ int main()
     int distON = 0;
 
     int arduinoON = 0;
-
     int mThreadsON = 0;
 
-    int contest = 0;
+    int contest = 1;
     int started = 0;
     if (contest) {
         printf("let's go!\n");
         get_d2r_data(cvs);
+        arduino_send(cvs,"R");
         cvs->mp->x = 3-0.133;
         cvs->mp->y = 1.467;
         cvs->mp->th = M_PI;
@@ -74,11 +74,14 @@ int main()
         if(!inputs->team){
             cvs->mp->x = .133;
             cvs->mp->th = 0;
-        }
+            teensy_send(cvs,"2");
+        } else teensy_send(cvs, "1");
         threads_start(cvs);
 
-        while(inputs->t < 100){
+        while(inputs->t < 99){
             auto start = high_resolution_clock::now();
+            teensy_recv(cvs);
+
             if (!started) {
                 get_d2r_data(cvs);
                 inputs->t = 0;
@@ -97,6 +100,7 @@ int main()
             auto duration = duration_cast<microseconds>(stop - start);
             usleep(dt * 1000000 - duration.count());
         }
+        printf("ENDED\n");
         mt->thread_main_end = 1;
         printf("th_end : start ... ");
         threads_end(cvs);
@@ -605,12 +609,12 @@ int main()
             double t = inputs->t;
             if (t==0) {
                 set_param_prec(cvs);
-                hlcPF->Tau_max = .15;
-                hlcPF->Tau_min = .1;
-                mlcPF->sigma = 0.5;
+                //hlcPF->Tau_max = .15;
+                //hlcPF->Tau_min = .1;
+                //mlcPF->sigma = 0.5;
                 //cvs->mlcPF->Kp_th = 10;
                 xgoal = 3-0.4;//2.2;//1.2;
-                ygoal = 2-0.55;//1.60;
+                ygoal = 2-0.53;//1.60;
                 forward=1;
                 orientation = M_PI;//M_PI/2;
                 set_goal(cvs, xgoal, ygoal, orientation);
@@ -790,7 +794,7 @@ int main()
         }
         else teensy_send(cvs, "1");
 
-        while(inputs->t < 20){
+        while(inputs->t < 30){
             auto start = high_resolution_clock::now();
             teensy_recv(cvs);
 
@@ -867,7 +871,7 @@ int main()
         threads_start(cvs);
 
         get_d2r_data(cvs);
-
+        arduino_send(cvs,"R");
         teensy_send(cvs, "B");
         usleep(200000);
         teensy_send(cvs, "Q");

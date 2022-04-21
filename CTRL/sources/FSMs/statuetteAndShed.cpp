@@ -48,14 +48,14 @@ void saShed_loop(ctrlStruct *cvs){
 
     switch(saShed->status){
         case S0_sas:{
-        	if(saShed->go){
+        	//if(saShed->go){
         		saShed->status = Dpmt1_sas;
                 if (TEAM) set_goal(cvs,2.48,1.55,-2.73);//2.47,1.55,-2.75
                 else set_goal(cvs,3-2.48,1.55,limit_angle(2.73+M_PI));
         		printf("go to dp1\n");
         		saShed->go = 0;
                 //saShed->output = 1;
-            }
+            //}
             break;
         }
 
@@ -176,7 +176,8 @@ void saShed_loop(ctrlStruct *cvs){
                 if (TEAM) set_goal(cvs,2.98,0.01,-10);//2.73,.30,-10
                 else set_goal(cvs,0.0,.07,-10);
                 printf("go to Dpmt6_ps\n");
-                teensy_send(cvs, "5");
+
+                //teensy_send(cvs, "5");
                 //saShed->output = 1;
             }
 
@@ -195,6 +196,8 @@ void saShed_loop(ctrlStruct *cvs){
                 teensy_send(cvs, "6");
                 teensy->switch_F = 0;
                 saShed->status = Wait_for_stat_sas;
+                arduino_send(cvs,"A");
+                teensy_send(cvs, "5");
                 //saShed->output = 1;
             }
             break;
@@ -236,6 +239,9 @@ void saShed_loop(ctrlStruct *cvs){
                 teensy_send(cvs, "D");
                 teensy->switch_F = 0;
                 saShed->status = Wait_for_cube_sas;
+                arduino_send(cvs,"A");
+
+                teensy_send(cvs,"5");
                 //saShed->output = 1;
             }
             break;

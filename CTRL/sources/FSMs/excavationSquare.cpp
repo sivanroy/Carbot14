@@ -54,13 +54,13 @@ void excSq_loop(ctrlStruct *cvs){
 
     switch(excSq->status){
         case S0_es:{
-            if(excSq->go){
+            //if(excSq->go){
                 excSq->status = Dpmt1_es;
                 if (TEAM) set_goal(cvs,2.53,0.5,M_PI/2);
                 else set_goal(cvs,.65,0.43,2.1);
                 printf("go to dp1\n");
                 excSq->go = 0;
-            }
+            //}
             break;
         }
 
@@ -159,13 +159,17 @@ void excSq_loop(ctrlStruct *cvs){
                     printf("1 : go to Dpmt4_prec_es\n");
                     if (TEAM) set_goal(cvs,1.895-0.01,0.21,M_PI);
                     else set_goal(cvs,3-1.895,M_PI);
-                }
+                }//else if PROBLEME COINCEEEE
                 else if (teensy->R_mes1 == 3) {
                     excSq->status = rec3_es;
                     printf("3 : go to Dpmt3_prec_es\n");
                     if (TEAM) set_goal(cvs,2.08-0.01,0.21,M_PI);
                     else set_goal(cvs,3-2.08,.2,M_PI);
+                } else {
+                    printf("R_mes1 : %d \n", teensy->R_mes1);
                 }
+
+                // else ???
             }
             break;
         }
