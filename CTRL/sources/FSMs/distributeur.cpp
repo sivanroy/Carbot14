@@ -92,7 +92,8 @@ void distr_loop(ctrlStruct *cvs){
             teensy_send(cvs, "K");
             distr->status = DpmtMLC1_di;
             printf("go to dpmtmlc\n");
-            set_goal(cvs,2.75,.75,M_PI);
+            if (TEAM) set_goal(cvs,2.75,.75,M_PI);
+            else set_goal(cvs,0.25,.75,0);
             break;
         }
 
@@ -101,7 +102,8 @@ void distr_loop(ctrlStruct *cvs){
             sendFromHLCPF(cvs,0,1);
             if(hlcPF->output){
                 distr->status = DpmtMLC2_di;
-                set_goal(cvs,2.9,.75,0);
+                if (TEAM) set_goal(cvs,2.9,.75,0);
+                else set_goal(cvs,0.1,.75,0);
                 printf("go to dpmtmlc2\n");
                 set_commands(cvs,0,0);
                 setChrono(cvs,2);
@@ -111,15 +113,18 @@ void distr_loop(ctrlStruct *cvs){
 
         case DpmtMLC2_di:{
             set_param_prec(cvs);
+            hlcPF->Tau_max = .15;
+            hlcPF->Tau_min = .1;
+            mlcPF->sigma = 0.5;
             sendFromHLCPF(cvs,0,1);
-            teensy_recv(cvs);
             if(teensy->switch_B){
                 teensy->switch_B = 0;
                 distr->status = GetSamples_di;
                 teensy_send(cvs,"L");
                 setChrono(cvs,.1);
                 printf("go to GetSamples_di\n");
-                set_goal(cvs,3-.35,.75,-10);
+                if (TEAM) set_goal(cvs,3-.35,.75,-10);
+                else set_goal(cvs,.35,.75,-10);
             } else if (checkChrono(cvs)){
                 distr->status = DpmtHLCPF1_di;
                 if (TEAM) set_goal(cvs,2.5,.75,M_PI);
@@ -138,6 +143,9 @@ void distr_loop(ctrlStruct *cvs){
 
         case DpmtHLCPFOut_di: {
             set_param_prec(cvs);
+            hlcPF->Tau_max = .15;
+            hlcPF->Tau_min = .1;
+            mlcPF->sigma = 0.5;
             sendFromHLCPF(cvs,-1,1);
             if(hlcPF->output){
                 distr->status = S0_di;

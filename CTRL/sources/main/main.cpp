@@ -54,14 +54,14 @@ int main()
     int icpDynON = 0;
     int odON = 0;
     int poseStatON = 0;
-    int saShedON = 0;
+    int saShedON = 1;
     int excSqON = 0;
     int distON = 0;
 
     int arduinoON = 0;
     int mThreadsON = 0;
 
-    int contest = 1;
+    int contest = 0;
     int started = 0;
     if (contest) {
         printf("let's go!\n");
@@ -613,7 +613,8 @@ int main()
                 //hlcPF->Tau_min = .1;
                 //mlcPF->sigma = 0.5;
                 //cvs->mlcPF->Kp_th = 10;
-                xgoal = 3-0.4;//2.2;//1.2;
+                hlcPF->error = 0.09;
+                xgoal = 3-0.6;//2.2;//1.2;
                 ygoal = 2-0.53;//1.60;
                 forward=1;
                 orientation = M_PI;//M_PI/2;
@@ -775,11 +776,11 @@ int main()
         threads_start(cvs);
 
         teensy_send(cvs, "B");
-        usleep(1200000);
+        usleep(200000);
         teensy_send(cvs, "Q");
-        usleep(1200000);
+        usleep(200000);
         teensy_send(cvs, "R");
-        usleep(1200000);
+        usleep(200000);
 
         distr_launch(cvs);
         printf("distON\n");
@@ -812,7 +813,6 @@ int main()
             auto duration = duration_cast<microseconds>(stop - start);
             usleep(dt * 1000000 - duration.count());
         }
-        usleep(3000000);
         mt->thread_main_end = 1;
         printf("th_end : start ... ");
         threads_end(cvs);
@@ -824,9 +824,9 @@ int main()
         get_d2r_data(cvs);
 
         teensy_send(cvs, "R");
-        usleep(1200000);
-        teensy_send(cvs, "Q");
-        usleep(1200000);
+        usleep(200000);
+        teensy_send(cvs, "S");
+        usleep(200000);
         /*
         printf("------------- rec static -------------\n");
         rec->iter = 0;

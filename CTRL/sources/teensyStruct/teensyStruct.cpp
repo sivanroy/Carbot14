@@ -74,13 +74,13 @@ void teensy_init(teensyStruct *teensy)
         printf("teensy : can not open teensy comport\n");
     }
     usleep(100000);
-
+    /*
     if(RS232_OpenComport(teensy->a_port, teensy->a_bdrate, teensy->mode, 0))
     {
         printf("teensy : can not open arduino comport\n");
     }
     usleep(100000);
-
+    */
     teensy->switch_F = 0;
     teensy->switch_F_end = 0;
 

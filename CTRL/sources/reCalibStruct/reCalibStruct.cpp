@@ -99,6 +99,7 @@ int rec_ICP(ctrlStruct *cvs, IcpPointToPlane *icp)
     double pt_y;
 
     rec->m = 0;
+    double out_map_margin = 0.2;
 
     pthread_mutex_lock(&(mt->mutex_rpl));
     for (i = 0; i < rpl->data_size; i++) {
@@ -108,10 +109,12 @@ int rec_ICP(ctrlStruct *cvs, IcpPointToPlane *icp)
         pt_x = (x + e * cos(th)) + (d * cos(pt_or));//
         pt_y = (y + e * sin(th)) + (d * sin(pt_or));//
         if (!not_wall(cvs, pt_x, pt_y)) {
-            rec->rpl_p[2*rec->m]     = pt_x;
-            rec->rpl_p[2*rec->m + 1] = pt_y;
-            rec->m++;
-            fprintf(cvs->icp2_data, "%f,%f\n", pt_x, pt_y);
+            if ((pt_x > -out_map_margin && pt_y > -out_map_margin) && (pt_x < 3+out_map_margin && pt_y < 2+out_map_margin)) {
+                rec->rpl_p[2*rec->m]     = pt_x;
+                rec->rpl_p[2*rec->m + 1] = pt_y;
+                rec->m++;
+                fprintf(cvs->icp2_data, "%f,%f\n", pt_x, pt_y);
+            }
         }
     }
     rpl->update_flag = 0;
@@ -195,6 +198,7 @@ int rec_static(ctrlStruct *cvs)
 
     switch (rec->static_status) {
         case S0_rec_static: {
+            if (rpl->rpl_bug) return 1;
             if (iter == 0)  {
                 rec->rpl_nTurn = rpl->nTurns + 2;
                 printf("S0_rec_static : try 1\n");
@@ -207,6 +211,7 @@ int rec_static(ctrlStruct *cvs)
             return 0;
         }
         case launch_rec_static: {
+            if (rpl->rpl_bug) return 1;
             if (rpl->nTurns == rec->rpl_nTurn) {
                 printf("rpl->nTurns == rec->rpl_nTurn\n");
                 if (rec_ON(cvs)) {
@@ -224,6 +229,7 @@ int rec_static(ctrlStruct *cvs)
             return 0;
         }
         case firstTry_rec_static: {
+            if (rpl->rpl_bug) return 1;
             if (iter > 0) {
                 if (iter < rec->max_iter) {
                     pthread_mutex_lock(&(mt->mutex_rec_static));
@@ -243,6 +249,7 @@ int rec_static(ctrlStruct *cvs)
             return 0;
         }
         case secondTry_rec_static: {
+            if (rpl->rpl_bug) return 1;
             if (iter > 0) {
                 printf("rec_static : secondTry\n");
             }

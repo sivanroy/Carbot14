@@ -27,8 +27,8 @@ void strategy_FSM_init(strategy_FSM *stratFSM) {
     
 }
 
-void checkIfEnd(cvs){
-    if (inputs->t >= cvs->stratFSM->timeToComeBack)stratFSM->status = goHome_s;
+void checkIfEnd(ctrlStruct *cvs){
+    if (cvs->inputs->t >= cvs->stratFSM->timeToComeBack) cvs->stratFSM->status = goHome_s;
 }
 
 
