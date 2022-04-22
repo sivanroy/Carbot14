@@ -270,6 +270,7 @@ void saShed_loop(ctrlStruct *cvs){
                 arduino_send(cvs,"5");
                 teensy->switch_F = 0;
                 saShed->status = Wait_for_stat_sas;
+                saShed->gotStat = 1;
                 //arduino_send(cvs,"A");
 
                 //teensy_send(cvs,"5");
