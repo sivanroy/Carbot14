@@ -53,7 +53,7 @@ void excSq_loop(ctrlStruct *cvs){
     y = pos[1];//+ hlcPF->x_shift * sin(th);
 
 
-    if (!TEAM) {
+    if (TEAM) {
         switch (excSq->status) {
             case S0_es: {
                 if (excSq->go) {

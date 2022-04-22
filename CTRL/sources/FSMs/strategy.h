@@ -13,6 +13,7 @@ typedef struct strategy_FSM
     double timeTillBreak;
     double timeToComeBack;
 
+
     int actions[10];
     int timing[10];
     int pt;

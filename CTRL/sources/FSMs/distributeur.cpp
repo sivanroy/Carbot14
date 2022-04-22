@@ -121,7 +121,7 @@ void distr_loop(ctrlStruct *cvs){
                 teensy->switch_B = 0;
                 distr->status = GetSamples_di;
                 teensy_send(cvs,"L");
-                setChrono(cvs,.1);
+                //setChrono(cvs,.1);
                 printf("go to GetSamples_di\n");
                 if (TEAM) set_goal(cvs,3-.35,.75,-10);
                 else set_goal(cvs,.35,.75,-10);

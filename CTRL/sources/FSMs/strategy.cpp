@@ -16,7 +16,7 @@ void strategy_FSM_init(strategy_FSM *stratFSM) {
 
     int s = 4;
     stratFSM->s = s;
-    double timingi[s] = {30,30,30,100};
+    double timingi[s] = {35,30,30,100};
     int actionsi[s] = {actionPushShed_s,poseStatuette_s,excavation_squares_s,goHome_s}; 
     for (int i = 0; i<s; i++){
             stratFSM->actions[i] = actionsi[i];
@@ -61,6 +61,9 @@ void strategy_loop(ctrlStruct *cvs){
             setChrono(cvs,stratFSM->timing[stratFSM->pt],1);
             stratFSM->pt ++;
             checkIfEnd(cvs);
+            if(stratFSM->status == poseStatuette_s & !cvs->saShed->gotStat){
+                stratFSM->status = select_action_s;
+            }
             break;
 
         case actionPushShed_s:{

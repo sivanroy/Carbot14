@@ -53,7 +53,7 @@ void poseStat_loop(ctrlStruct *cvs){
         		poseStat->status = Go_to_vitrine_pos;
         		printf("go to dp1\n");
         		poseStat->go = 0;
-                if (TEAM) set_goal(cvs,2.6,1.35,-10);//2.65,1.35,0.6*M_PI/2
+                if (TEAM) set_goal(cvs,2.6,1.35,M_PI/2);//-10);//2.65,1.35,0.6*M_PI/2
                 else set_goal(cvs,.4,1.35,-10);    
                 poseStat->status = Go_to_vitrine_pos;
                 break;
@@ -62,7 +62,7 @@ void poseStat_loop(ctrlStruct *cvs){
         
         case Go_to_vitrine_pos:{
             set_param_normal(cvs);
-            sendFromHLCPF(cvs,1);
+            sendFromHLCPF(cvs,-1);
             if(hlcPF->output){
                 motors_stop(cvs);
                 set_commands(cvs,0,0);
@@ -105,6 +105,7 @@ void poseStat_loop(ctrlStruct *cvs){
             if (teensy->switch_F) {
                 motors_stop(cvs);
                 teensy_send(cvs, "Q");
+                arduino_send(cvs,"K");
                 setChrono(cvs,1.2);
                 teensy->switch_F = 0;
                 poseStat->status = drop_statuette_pos;

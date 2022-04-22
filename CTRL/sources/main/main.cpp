@@ -50,12 +50,12 @@ int main()
     int pushShed_and_sonar_ON = 0;
     int icp_test = 0;
     int icpON = 0;
-    int teensyON = 0;
+    int teensyON = 1;
     int icpDynON = 0;
     int odON = 0;
     int poseStatON = 0;
     int saShedON = 0;
-    int excSqON = 1;
+    int excSqON = 0;
     int distON = 0;
 
     int arduinoON = 0;
@@ -963,7 +963,8 @@ int main()
                 teensy->switch_B_end = 1;
             }
             if (inputs->t >= 3 && C == 0) {
-                teensy_send(cvs, "C");
+                teensy_send(cvs, "5");
+                arduino_send(cvs,"5");
                 C = 1;
             }
             /*
