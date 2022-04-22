@@ -26,6 +26,10 @@ void excSq_init(excSquares *excSq){
     printf("excSq initialized\n");
 }
 
+
+//ajouter un chrono pour outes
+
+
 void excSq_launch(ctrlStruct *cvs){
 	cvs->excSq->go = 1;
 	cvs->excSq->status = S0_ps;
@@ -60,13 +64,13 @@ void excSq_loop(ctrlStruct *cvs){
     if (TEAM) {
         switch (excSq->status) {
             case S0_es: {
-                if (excSq->go) {
+                //if (excSq->go) {
                     excSq->status = Dpmt1_es;
                     if (TEAM) set_goal(cvs, 2.53, 0.5, M_PI / 2);
                     else set_goal(cvs, .65, 0.5, M_PI / 2);
                     printf("go to dp1\n");
                     excSq->go = 0;
-                }
+                //}
                 break;
             }
 
@@ -83,7 +87,7 @@ void excSq_loop(ctrlStruct *cvs){
             }
 
             case Dpmt2_es: {
-                sendFromHLCPF(cvs, -1, 1);
+                sendFromHLCPF(cvs, -1, 1,1);
                 if (hlcPF->output) {
                     motors_stop(cvs);
                     set_commands(cvs, 0, 0);
@@ -106,7 +110,7 @@ void excSq_loop(ctrlStruct *cvs){
                 hlcPF->Tau_max = .15;
                 hlcPF->Tau_min = .1;
                 mlcPF->sigma = 0.5;
-                sendFromHLCPF(cvs, -1, 1);
+                sendFromHLCPF(cvs, -1, 1,1);
                 if (hlcPF->output) {
                     motors_stop(cvs);
                     set_commands(cvs, 0, 0);
@@ -159,7 +163,7 @@ void excSq_loop(ctrlStruct *cvs){
                 hlcPF->Tau_max = .15;
                 hlcPF->Tau_min = .1;
                 mlcPF->sigma = 0.5;
-                sendFromHLCPF(cvs, -1, 1);
+                sendFromHLCPF(cvs, -1, 1,1);
                 if (hlcPF->output) {
                     motors_stop(cvs);
                     set_commands(cvs, 0, 0);
@@ -216,7 +220,7 @@ void excSq_loop(ctrlStruct *cvs){
                 hlcPF->Tau_max = .15;
                 hlcPF->Tau_min = .1;
                 mlcPF->sigma = 0.5;
-                sendFromHLCPF(cvs, -1, 1);
+                sendFromHLCPF(cvs, -1, 1,1);
                 if (hlcPF->output) {
                     motors_stop(cvs);
                     set_commands(cvs, 0, 0);
@@ -240,7 +244,7 @@ void excSq_loop(ctrlStruct *cvs){
                 hlcPF->Tau_max = .15;
                 hlcPF->Tau_min = .1;
                 mlcPF->sigma = 0.5;
-                sendFromHLCPF(cvs, -1, 1);
+                sendFromHLCPF(cvs, -1, 1,1);
                 if (hlcPF->output) {
                     motors_stop(cvs);
                     set_commands(cvs, 0, 0);
@@ -283,7 +287,7 @@ void excSq_loop(ctrlStruct *cvs){
                 hlcPF->Tau_max = .15;
                 hlcPF->Tau_min = .1;
                 mlcPF->sigma = 0.5;
-                sendFromHLCPF(cvs, -1, 1);
+                sendFromHLCPF(cvs, -1, 1 ,1);
                 if (hlcPF->output) {
                     motors_stop(cvs);
                     set_commands(cvs, 0, 0);
@@ -349,7 +353,7 @@ void excSq_loop(ctrlStruct *cvs){
                 hlcPF->Tau_max = .15;
                 hlcPF->Tau_min = .1;
                 mlcPF->sigma = 0.5;
-                sendFromHLCPF(cvs, -1, 1);
+                sendFromHLCPF(cvs, -1, 1,1);
                 if (hlcPF->output) {
                     motors_stop(cvs);
                     set_commands(cvs, 0, 0);
@@ -373,7 +377,7 @@ void excSq_loop(ctrlStruct *cvs){
                 hlcPF->Tau_max = .15;
                 hlcPF->Tau_min = .1;
                 mlcPF->sigma = 0.5;
-                sendFromHLCPF(cvs, -1, 1);
+                sendFromHLCPF(cvs, -1, 1,1);
                 if (hlcPF->output) {
                     motors_stop(cvs);
                     set_commands(cvs, 0, 0);
@@ -459,7 +463,7 @@ void excSq_loop(ctrlStruct *cvs){
                 hlcPF->Tau_max = .15;
                 hlcPF->Tau_min = .1;
                 mlcPF->sigma = 0.5;
-                sendFromHLCPF(cvs, -1, 1);
+                sendFromHLCPF(cvs, -1, 1,1);
                 if (hlcPF->output) {
                     motors_stop(cvs);
                     set_commands(cvs, 0, 0);
@@ -483,7 +487,7 @@ void excSq_loop(ctrlStruct *cvs){
                 hlcPF->Tau_max = .15;
                 hlcPF->Tau_min = .1;
                 mlcPF->sigma = 0.5;
-                sendFromHLCPF(cvs, -1, 1);
+                sendFromHLCPF(cvs, -1, 1,1);
                 if (hlcPF->output) {
                     motors_stop(cvs);
                     set_commands(cvs, 0, 0);
@@ -568,7 +572,7 @@ void excSq_loop(ctrlStruct *cvs){
                 hlcPF->Tau_max = .15;
                 hlcPF->Tau_min = .1;
                 mlcPF->sigma = 0.5;
-                sendFromHLCPF(cvs, -1, 1);
+                sendFromHLCPF(cvs, -1, 1,1);
                 if (hlcPF->output) {
                     motors_stop(cvs);
                     set_commands(cvs, 0, 0);
@@ -592,7 +596,7 @@ void excSq_loop(ctrlStruct *cvs){
                 hlcPF->Tau_max = .15;
                 hlcPF->Tau_min = .1;
                 mlcPF->sigma = 0.5;
-                sendFromHLCPF(cvs, -1, 1);
+                sendFromHLCPF(cvs, -1, 1,1);
                 if (hlcPF->output) {
                     motors_stop(cvs);
                     set_commands(cvs, 0, 0);
@@ -662,7 +666,7 @@ void excSq_loop(ctrlStruct *cvs){
             }
 
             case Dpmt2_es:{
-                sendFromHLCPF(cvs,-1,1);
+                sendFromHLCPF(cvs,-1,1,1);
                 if(hlcPF->output){
                     motors_stop(cvs);
                     set_commands(cvs,0,0);
@@ -684,7 +688,7 @@ void excSq_loop(ctrlStruct *cvs){
                 hlcPF->Tau_max = .15;
                 hlcPF->Tau_min = .1;
                 mlcPF->sigma = 0.5;
-                sendFromHLCPF(cvs,-1,1);
+                sendFromHLCPF(cvs,-1,1,1);
                 if(hlcPF->output){
                     motors_stop(cvs);
                     set_commands(cvs,0,0);
@@ -749,7 +753,7 @@ void excSq_loop(ctrlStruct *cvs){
                 hlcPF->Tau_max = .15;
                 hlcPF->Tau_min = .1;
                 mlcPF->sigma = 0.5;
-                sendFromHLCPF(cvs,-1,1);
+                sendFromHLCPF(cvs,-1,1,1);
                 if(hlcPF->output){
                     motors_stop(cvs);
                     set_commands(cvs,0,0);
@@ -773,7 +777,7 @@ void excSq_loop(ctrlStruct *cvs){
                 hlcPF->Tau_max = .15;
                 hlcPF->Tau_min = .1;
                 mlcPF->sigma = 0.5;
-                sendFromHLCPF(cvs,-1,1);
+                sendFromHLCPF(cvs,-1,1,1);
                 if(hlcPF->output){
                     motors_stop(cvs);
                     set_commands(cvs,0,0);
@@ -859,7 +863,7 @@ void excSq_loop(ctrlStruct *cvs){
                 hlcPF->Tau_max = .15;
                 hlcPF->Tau_min = .1;
                 mlcPF->sigma = 0.5;
-                sendFromHLCPF(cvs,-1,1);
+                sendFromHLCPF(cvs,-1,1,1);
                 if(hlcPF->output){
                     motors_stop(cvs);
                     set_commands(cvs,0,0);
@@ -883,7 +887,7 @@ void excSq_loop(ctrlStruct *cvs){
                 hlcPF->Tau_max = .15;
                 hlcPF->Tau_min = .1;
                 mlcPF->sigma = 0.5;
-                sendFromHLCPF(cvs,-1,1);
+                sendFromHLCPF(cvs,-1,1,1);
                 if(hlcPF->output){
                     motors_stop(cvs);
                     set_commands(cvs,0,0);
@@ -969,7 +973,7 @@ void excSq_loop(ctrlStruct *cvs){
                 hlcPF->Tau_max = .15;
                 hlcPF->Tau_min = .1;
                 mlcPF->sigma = 0.5;
-                sendFromHLCPF(cvs,-1,1);
+                sendFromHLCPF(cvs,-1,1,1);
                 if(hlcPF->output){
                     motors_stop(cvs);
                     set_commands(cvs,0,0);
@@ -993,7 +997,7 @@ void excSq_loop(ctrlStruct *cvs){
                 hlcPF->Tau_max = .15;
                 hlcPF->Tau_min = .1;
                 mlcPF->sigma = 0.5;
-                sendFromHLCPF(cvs,-1,1);
+                sendFromHLCPF(cvs,-1,1,1);
                 if(hlcPF->output){
                     motors_stop(cvs);
                     set_commands(cvs,0,0);
@@ -1035,7 +1039,7 @@ void excSq_loop(ctrlStruct *cvs){
                 hlcPF->Tau_max = .15;
                 hlcPF->Tau_min = .1;
                 mlcPF->sigma = 0.5;
-                sendFromHLCPF(cvs,-1,1);
+                sendFromHLCPF(cvs,-1,1,1);
                 if(hlcPF->output){
                     motors_stop(cvs);
                     set_commands(cvs,0,0);
@@ -1090,7 +1094,7 @@ void excSq_loop(ctrlStruct *cvs){
                 hlcPF->Tau_max = .15;
                 hlcPF->Tau_min = .1;
                 mlcPF->sigma = 0.5;
-                sendFromHLCPF(cvs,-1,1);
+                sendFromHLCPF(cvs,-1,1,1);
                 if(hlcPF->output){
                     motors_stop(cvs);
                     set_commands(cvs,0,0);
@@ -1149,7 +1153,7 @@ void excSq_loop(ctrlStruct *cvs){
                 hlcPF->Tau_max = .15;
                 hlcPF->Tau_min = .1;
                 mlcPF->sigma = 0.5;
-                sendFromHLCPF(cvs,-1,1);
+                sendFromHLCPF(cvs,-1,1,1);
                 if(hlcPF->output){
                     motors_stop(cvs);
                     set_commands(cvs,0,0);
@@ -1173,7 +1177,7 @@ void excSq_loop(ctrlStruct *cvs){
                 hlcPF->Tau_max = .15;
                 hlcPF->Tau_min = .1;
                 mlcPF->sigma = 0.5;
-                sendFromHLCPF(cvs,-1,1);
+                sendFromHLCPF(cvs,-1,1,1);
                 if(hlcPF->output){
                     motors_stop(cvs);
                     set_commands(cvs,0,0);

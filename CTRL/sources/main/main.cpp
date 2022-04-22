@@ -50,13 +50,13 @@ int main()
     int pushShed_and_sonar_ON = 0;
     int icp_test = 0;
     int icpON = 0;
-    int teensyON = 1;
+    int teensyON = 0;
     int icpDynON = 0;
     int odON = 0;
     int poseStatON = 0;
     int saShedON = 0;
     int excSqON = 0;
-    int distON = 0;
+    int distON = 1;
 
     int arduinoON = 0;
     int mThreadsON = 0;
