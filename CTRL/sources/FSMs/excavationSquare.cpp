@@ -124,11 +124,11 @@ void excSq_loop(ctrlStruct *cvs){
                     if (excSq->at_least_one == 0) {
                         excSq->at_least_one = 1;
                         arduino_send(cvs,"A");
-                        excSq->pts_flag[1] == 1;
+                        excSq->pts_flag[1] = 1;
                     } else {
                         if (excSq->pts_flag[1] == 0) {
                             arduino_send(cvs,"5");
-                            excSq->pts_flag[1] == 1;
+                            excSq->pts_flag[1] = 1;
                         }
                     }
                 } else if (teensy->R3) {
@@ -174,11 +174,11 @@ void excSq_loop(ctrlStruct *cvs){
                 if (excSq->at_least_one == 0) {
                     excSq->at_least_one = 1;
                     arduino_send(cvs,"A");
-                    excSq->pts_flag[2] == 1;
+                    excSq->pts_flag[2] = 1;
                 } else {
                     if (excSq->pts_flag[2] == 0) {
                         arduino_send(cvs,"5");
-                        excSq->pts_flag[2] == 1;
+                        excSq->pts_flag[2] = 1;
                     }
                 }
                 if (checkChrono(cvs)) {
@@ -255,11 +255,11 @@ void excSq_loop(ctrlStruct *cvs){
                 if (excSq->at_least_one == 0) {
                     excSq->at_least_one = 1;
                     arduino_send(cvs,"A");
-                    excSq->pts_flag[3] == 1;
+                    excSq->pts_flag[3] = 1;
                 } else {
                     if (excSq->pts_flag[3] == 0) {
                         arduino_send(cvs,"5");
-                        excSq->pts_flag[3] == 1;
+                        excSq->pts_flag[3] = 1;
                     }
                 }
                 if (checkChrono(cvs)) {
@@ -300,11 +300,11 @@ void excSq_loop(ctrlStruct *cvs){
                     if (excSq->at_least_one == 0) {
                         excSq->at_least_one = 1;
                         arduino_send(cvs,"A");
-                        excSq->pts_flag[4] == 1;
+                        excSq->pts_flag[4] = 1;
                     } else {
                         if (excSq->pts_flag[4] == 0) {
                             arduino_send(cvs,"5");
-                            excSq->pts_flag[4] == 1;
+                            excSq->pts_flag[4] = 1;
                         }
                     }
                 } else if (teensy->R2) {
@@ -390,11 +390,11 @@ void excSq_loop(ctrlStruct *cvs){
                     if (excSq->at_least_one == 0) {
                         excSq->at_least_one = 1;
                         arduino_send(cvs,"A");
-                        excSq->pts_flag[5] == 1;
+                        excSq->pts_flag[5] = 1;
                     } else {
                         if (excSq->pts_flag[5] == 0) {
                             arduino_send(cvs,"5");
-                            excSq->pts_flag[5] == 1;
+                            excSq->pts_flag[5] = 1;
                         }
                     }
                 } else if (teensy->R2) {
@@ -431,11 +431,11 @@ void excSq_loop(ctrlStruct *cvs){
                 if (excSq->at_least_one == 0) {
                     excSq->at_least_one = 1;
                     arduino_send(cvs,"A");
-                    excSq->pts_flag[5] == 1;
+                    excSq->pts_flag[5] = 1;
                 } else {
                     if (excSq->pts_flag[5] == 0) {
                         arduino_send(cvs,"5");
-                        excSq->pts_flag[5] == 1;
+                        excSq->pts_flag[5] = 1;
                     }
                 }
                 if (checkChrono(cvs)) {
@@ -500,11 +500,11 @@ void excSq_loop(ctrlStruct *cvs){
                     if (excSq->at_least_one == 0) {
                         excSq->at_least_one = 1;
                         arduino_send(cvs,"A");
-                        excSq->pts_flag[6] == 1;
+                        excSq->pts_flag[6] = 1;
                     } else {
                         if (excSq->pts_flag[6] == 0) {
                             arduino_send(cvs,"5");
-                            excSq->pts_flag[6] == 1;
+                            excSq->pts_flag[6] = 1;
                         }
                     }
                 } else if (teensy->R2) {
@@ -540,11 +540,11 @@ void excSq_loop(ctrlStruct *cvs){
                 if (excSq->at_least_one == 0) {
                     excSq->at_least_one = 1;
                     arduino_send(cvs,"A");
-                    excSq->pts_flag[6] == 1;
+                    excSq->pts_flag[6] = 1;
                 } else {
                     if (excSq->pts_flag[6] == 0) {
                         arduino_send(cvs,"5");
-                        excSq->pts_flag[6] == 1;
+                        excSq->pts_flag[6] = 1;
                     }
                 }
                 if (checkChrono(cvs)) {
@@ -607,11 +607,11 @@ void excSq_loop(ctrlStruct *cvs){
                 if (excSq->at_least_one == 0) {
                     excSq->at_least_one = 1;
                     arduino_send(cvs,"A");
-                    excSq->pts_flag[7] == 1;
+                    excSq->pts_flag[7] = 1;
                 } else {
                     if (excSq->pts_flag[7] == 0) {
                         arduino_send(cvs,"5");
-                        excSq->pts_flag[7] == 1;
+                        excSq->pts_flag[7] = 1;
                     }
                 }
                 if (checkChrono(cvs)) {
@@ -705,11 +705,11 @@ void excSq_loop(ctrlStruct *cvs){
                     if (excSq->at_least_one == 0) {
                         excSq->at_least_one = 1;
                         arduino_send(cvs,"A");
-                        excSq->pts_flag[1] == 1;
+                        excSq->pts_flag[1] = 1;
                     } else {
                         if (excSq->pts_flag[1] == 0) {
                             arduino_send(cvs,"5");
-                            excSq->pts_flag[1] == 1;
+                            excSq->pts_flag[1] = 1;
                         }
                     }
                 }
@@ -793,11 +793,11 @@ void excSq_loop(ctrlStruct *cvs){
                     if (excSq->at_least_one == 0) {
                         excSq->at_least_one = 1;
                         arduino_send(cvs,"A");
-                        excSq->pts_flag[2] == 1;
+                        excSq->pts_flag[2] = 1;
                     } else {
                         if (excSq->pts_flag[2] == 0) {
                             arduino_send(cvs,"5");
-                            excSq->pts_flag[2] == 1;
+                            excSq->pts_flag[2] = 1;
                         }
                     }
                 }
@@ -832,11 +832,11 @@ void excSq_loop(ctrlStruct *cvs){
                 if (excSq->at_least_one == 0) {
                     excSq->at_least_one = 1;
                     arduino_send(cvs,"A");
-                    excSq->pts_flag[2] == 1;
+                    excSq->pts_flag[2] = 1;
                 } else {
                     if (excSq->pts_flag[2] == 0) {
                         arduino_send(cvs,"5");
-                        excSq->pts_flag[2] == 1;
+                        excSq->pts_flag[2] = 1;
                     }
                 }
                 if(checkChrono(cvs)){
@@ -903,11 +903,11 @@ void excSq_loop(ctrlStruct *cvs){
                     if (excSq->at_least_one == 0) {
                         excSq->at_least_one = 1;
                         arduino_send(cvs,"A");
-                        excSq->pts_flag[3] == 1;
+                        excSq->pts_flag[3] = 1;
                     } else {
                         if (excSq->pts_flag[3] == 0) {
                             arduino_send(cvs,"5");
-                            excSq->pts_flag[3] == 1;
+                            excSq->pts_flag[3] = 1;
                         }
                     }
                 }
@@ -942,11 +942,11 @@ void excSq_loop(ctrlStruct *cvs){
                 if (excSq->at_least_one == 0) {
                     excSq->at_least_one = 1;
                     arduino_send(cvs,"A");
-                    excSq->pts_flag[3] == 1;
+                    excSq->pts_flag[3] = 1;
                 } else {
                     if (excSq->pts_flag[3] == 0) {
                         arduino_send(cvs,"5");
-                        excSq->pts_flag[3] == 1;
+                        excSq->pts_flag[3] = 1;
                     }
                 }
                 if(checkChrono(cvs)){
@@ -1008,11 +1008,11 @@ void excSq_loop(ctrlStruct *cvs){
                 if (excSq->at_least_one == 0) {
                     excSq->at_least_one = 1;
                     arduino_send(cvs,"A");
-                    excSq->pts_flag[4] == 1;
+                    excSq->pts_flag[4] = 1;
                 } else {
                     if (excSq->pts_flag[4] == 0) {
                         arduino_send(cvs,"5");
-                        excSq->pts_flag[4] == 1;
+                        excSq->pts_flag[4] = 1;
                     }
                 }
                 if(checkChrono(cvs)){
@@ -1055,11 +1055,11 @@ void excSq_loop(ctrlStruct *cvs){
                     if (excSq->at_least_one == 0) {
                         excSq->at_least_one = 1;
                         arduino_send(cvs,"A");
-                        excSq->pts_flag[5] == 1;
+                        excSq->pts_flag[5] = 1;
                     } else {
                         if (excSq->pts_flag[5] == 0) {
                             arduino_send(cvs,"5");
-                            excSq->pts_flag[5] == 1;
+                            excSq->pts_flag[5] = 1;
                         }
                     }
                 }
@@ -1105,11 +1105,11 @@ void excSq_loop(ctrlStruct *cvs){
                 if (excSq->at_least_one == 0) {
                     excSq->at_least_one = 1;
                     arduino_send(cvs,"A");
-                    excSq->pts_flag[6] == 1;
+                    excSq->pts_flag[6] = 1;
                 } else {
                     if (excSq->pts_flag[6] == 0) {
                         arduino_send(cvs,"5");
-                        excSq->pts_flag[6] == 1;
+                        excSq->pts_flag[6] = 1;
                     }
                 }
                 if(checkChrono(cvs)){
@@ -1188,11 +1188,11 @@ void excSq_loop(ctrlStruct *cvs){
                 if (excSq->at_least_one == 0) {
                     excSq->at_least_one = 1;
                     arduino_send(cvs,"A");
-                    excSq->pts_flag[7] == 1;
+                    excSq->pts_flag[7] = 1;
                 } else {
                     if (excSq->pts_flag[7] == 0) {
                         arduino_send(cvs,"5");
-                        excSq->pts_flag[7] == 1;
+                        excSq->pts_flag[7] = 1;
                     }
                 }
                 if(checkChrono(cvs)){
