@@ -54,8 +54,8 @@ int main()
     int icpDynON = 0;
     int odON = 0;
     int poseStatON = 0;
-    int saShedON = 1;
-    int excSqON = 0;
+    int saShedON = 0;
+    int excSqON = 1;
     int distON = 0;
 
     int arduinoON = 0;
@@ -111,15 +111,21 @@ int main()
 
         inputs->team = 0;
 
-        cvs->mp->x = 3-0.3;
+        cvs->mp->x = 0.3;
         cvs->mp->y = 0.75;
-        cvs->mp->th = M_PI;
+        cvs->mp->th = 0;
 
         printf("------------- rec static -------------\n");
-        while (1) if (rec_static(cvs)) break;
+        while (1) {
+            if (rec_static(cvs)) break;
+            dyn_obs_set(cvs);
+        }
         usleep(1000000);
         printf("----------------- od -----------------\n");
-        while (1) if (od_distrib(cvs, 0, 0) > -10) break;
+        while (1) {
+            if (od_distrib(cvs, 0, 0) > -10) break;
+            dyn_obs_set(cvs);
+        }
         usleep(1000000);
 
         mt->thread_main_end = 1;
@@ -723,11 +729,11 @@ int main()
         threads_start(cvs);
 
         teensy_send(cvs, "B");
-        usleep(1200000);
+        usleep(200000);
         teensy_send(cvs, "Q");
-        usleep(1200000);
+        usleep(200000);
         teensy_send(cvs, "R");
-        usleep(1200000);
+        usleep(200000);
 
         /*
         printf("------------- rec static -------------\n");
