@@ -524,8 +524,8 @@ void excSq_loop(ctrlStruct *cvs){
                     if (teensy->R_mes6 == 1) {
                         excSq->status = Out_es;
                         printf("1 : go to Out_es\n");
-                        if (TEAM) set_goal(cvs, 0.9, 0.4, M_PI / 2);
-                        else set_goal(cvs, 0.9, 0.4, M_PI / 2);
+                        if (TEAM) set_goal(cvs, 1.1, 0.3, -10);
+                        else set_goal(cvs, 1.1, 0.3, -10);
                     } else if (teensy->R_mes6 == 2) {
                         excSq->status = rec7_es;
                         printf("2 : go to rec7_es\n");
@@ -554,8 +554,8 @@ void excSq_loop(ctrlStruct *cvs){
                 if (checkChrono(cvs)) {
                     excSq->status = Out_es;
                     printf("go to Out_es\n");
-                    if (TEAM) set_goal(cvs, 0.9, 0.4, M_PI / 2);
-                    else set_goal(cvs, 0.9, 0.4, M_PI / 2);
+                    if (TEAM) set_goal(cvs, 1.1, 0.3, -10);
+                    else set_goal(cvs, 1.1, 0.3, -10);
                 }
                 break;
             }
@@ -621,14 +621,14 @@ void excSq_loop(ctrlStruct *cvs){
                 if (checkChrono(cvs)) {
                     excSq->status = Out_es;
                     printf("go to Out_es\n");
-                    if (TEAM) set_goal(cvs, 0.9, 0.4, M_PI / 2);
-                    else set_goal(cvs, 0.9, 0.4, M_PI / 2);
+                    if (TEAM) set_goal(cvs, 1.1, 0.3, -10);
+                    else set_goal(cvs, 1.1, 0.3, -10);
                 }
                 break;
             }
             case Out_es: {
                 set_param_normal(cvs);
-                sendFromHLCPF(cvs, 1);
+                sendFromHLCPF(cvs, 1,1);
                 if (hlcPF->output) {
                     motors_stop(cvs);
                     set_commands(cvs, 0, 0);
@@ -636,7 +636,7 @@ void excSq_loop(ctrlStruct *cvs){
                     excSq->output = 1;
                 }
                 break;
-            }
+            
             default:
                 printf("probleme defautl value in FSM\n");
                 excSq->output = 1;

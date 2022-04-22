@@ -61,7 +61,7 @@ int main()
     int arduinoON = 0;
     int mThreadsON = 0;
 
-    int contest = 0;
+    int contest = 1;
     int started = 0;
     if (contest) {
         printf("let's go!\n");
