@@ -53,7 +53,7 @@ int main()
     int teensyON = 1;
     int icpDynON = 0;
     int odON = 0;
-    int poseStatON = 1;
+    int poseStatON = 0;
     int saShedON = 0;
     int excSqON = 0;
     int distON = 0;
@@ -944,7 +944,7 @@ int main()
         int Q = 0;
         int R = 0;
         int S = 0;
-        while (inputs->t < 6) {
+        while (inputs->t < 9) {
 
             auto start = high_resolution_clock::now();
 
@@ -972,7 +972,7 @@ int main()
                 B = 1;
             }
 
-            if (inputs->t >= 5 && A == 0) {
+            if (inputs->t >= 8 && A == 0) {
                 teensy_send(cvs, "Q");
                 A = 1;
             }
