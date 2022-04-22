@@ -205,6 +205,7 @@ void saShed_loop(ctrlStruct *cvs){
             hlcPF->Tau_max = .15;
             hlcPF->Tau_min = .1;
             mlcPF->sigma = 0.5;
+            hlcPF->error = 0.01;
             sendFromHLCPF(cvs,0,1);
             if(hlcPF->output){
                 motors_stop(cvs);
