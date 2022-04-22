@@ -202,7 +202,7 @@ void saShed_loop(ctrlStruct *cvs){
                 teensy_send(cvs, "6");
                 teensy->switch_F = 0;
                 saShed->status = rec_push_sas;
-                //arduino_send(cvs,"A");
+                arduino_send(cvs,"A");
                 //teensy_send(cvs, "5");
                 //saShed->output = 1;
             }
