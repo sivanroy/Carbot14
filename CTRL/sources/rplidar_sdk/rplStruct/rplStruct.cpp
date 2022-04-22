@@ -16,6 +16,7 @@ void rpl_init(rplStruct *rpl)
     rpl->data_size = 0;
     rpl->nTurns = 0;
     rpl->update_flag = 0;
+    rpl->rpl_bug = 0;
 }
 
 int rpl_config(rplStruct *rpl)
@@ -76,9 +77,13 @@ int rpl_grabData(ctrlStruct *cvs)
         pthread_mutex_unlock(&(mt->mutex_rpl));
         //printf("data_size = %d\n", rpl->data_size);
         //printf("nTurns = %d\n", rpl->nTurns);
+        rpl->rpl_bug = 0;
         return 1;
     }
-    else return -1;
+    else {
+        rpl->rpl_bug = 1;
+        return -1;
+    }
 }
 
 void rpl_stop(ctrlStruct *cvs)

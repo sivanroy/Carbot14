@@ -62,15 +62,19 @@ int checkChrono(ctrlStruct *cvs, int i){
     return 0;
 }
 
-void sendFromHLCPF(ctrlStruct *cvs,int goForward,int noWall){
+void sendFromHLCPF(ctrlStruct *cvs,int goForward,int noWall,int stopIf, double d_max){
 	get_d2r_data(cvs);
     dyn_obs_set(cvs);
-
     hlcPF_out(cvs,goForward,noWall);
     if(cvs->hlcPF->output) {
     	motors_stop(cvs);
         printf("stops\n");
     	return;
+    } else if (stopIf & cvs->hlcPF->d_opp < d_max){
+        motors_stop(cvs);
+        set_commands(cvs,0,0);
+        //printf("opposant detecté\n");
+        return;
     }
     mlcPF_out(cvs, cvs->hlcPF->v_ref, cvs->hlcPF->theta_ref);
     set_commands(cvs, cvs->mlcPF->r_sp_ref, cvs->mlcPF->l_sp_ref);

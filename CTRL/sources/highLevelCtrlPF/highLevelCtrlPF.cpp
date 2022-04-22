@@ -359,6 +359,13 @@ void hlcPF_out(ctrlStruct *cvs,int goForward,int noObst) {
     x = pos[0];// + hlcPF->x_shift * cos(th);
     y = pos[1];// + hlcPF->x_shift * sin(th);
 
+    double x_dyn = cvs->obs->obs_dyn_x;
+    double y_dyn = cvs->obs->obs_dyn_y;
+    double x1o = x+ hlcPF->x_shift * cos(th) - x_dyn;
+    double y1o = y+ hlcPF->x_shift * sin(th) - y_dyn;
+    double d_opp = sqrt(x1o*x1o+y1o*y1o);
+    hlcPF->d_opp = d_opp;
+
     double dx = x - goal[0];
     double dy = y - goal[1];
     hlcPF->d = sqrt(dx*dx+dy*dy);

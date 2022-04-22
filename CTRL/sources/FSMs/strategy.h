@@ -13,13 +13,17 @@ typedef struct strategy_FSM
     double timeTillBreak;
     double timeToComeBack;
 
+
     int actions[10];
     int timing[10];
+    double maxTiming[10];
+    double maxt;
     int pt;
 
 } strategy_FSM;
 
 void strategy_FSM_init(strategy_FSM *stratFSM);
+void checkIfEnd(ctrlStruct *cvs);
 void strategy_loop(ctrlStruct *cvs);
 
 

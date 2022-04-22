@@ -148,7 +148,7 @@ void set_param_prec(ctrlStruct *cvs){
     //local minimum
     cvs->mlcPF->sigma = .3;
     cvs->mlcPF->Kp_th = 7;
-    hlcPF->Kp_th_reorient = 300;
+    hlcPF->Kp_th_reorient = 500;
 }
 
 void set_param_large(ctrlStruct *cvs){

@@ -16,19 +16,22 @@ void strategy_FSM_init(strategy_FSM *stratFSM) {
 
     int s = 4;
     stratFSM->s = s;
-    double timingi[s] = {30,30,30,100};
+    double timingi[s] = {35,30,30,100};
+    double maxtimingi[s] = {35,60,85,100}; 
+    double maxt = 0;
     int actionsi[s] = {actionPushShed_s,poseStatuette_s,excavation_squares_s,goHome_s}; 
     for (int i = 0; i<s; i++){
             stratFSM->actions[i] = actionsi[i];
             stratFSM->timing[i]  = timingi[i];
+            stratFSM->maxTiming[i] = maxtimingi[i];
     }
     stratFSM->pt = 0;
     printf("strategy initialized\n");
     
 }
 
-void checkIfEnd(cvs){
-    if (inputs->t >= cvs->stratFSM->timeToComeBack)stratFSM->status = goHome_s;
+void checkIfEnd(ctrlStruct *cvs){
+    if (cvs->inputs->t >= cvs->stratFSM->timeToComeBack) cvs->stratFSM->status = goHome_s;
 }
 
 
@@ -57,10 +60,14 @@ void strategy_loop(ctrlStruct *cvs){
                 break;
             }
             stratFSM->status = stratFSM->actions[stratFSM->pt];
+            stratFSM->maxt = stratFSM->maxTiming[stratFSM->pt];
             printf("action selected : %d\n", stratFSM->actions[stratFSM->pt]);
             setChrono(cvs,stratFSM->timing[stratFSM->pt],1);
             stratFSM->pt ++;
             checkIfEnd(cvs);
+            if(stratFSM->status == poseStatuette_s & !cvs->saShed->gotStat){
+                stratFSM->status = select_action_s;
+            }
             break;
 
         case actionPushShed_s:{
@@ -69,7 +76,7 @@ void strategy_loop(ctrlStruct *cvs){
                 printf("failed actionPushShed_s /: !\n");
                 stratFSM->status = select_action_s;
                 teensy_send(cvs,"B");
-            } else if(checkChrono(cvs,1)){
+            } else if(checkChrono(cvs,1) & stratFSM->maxt < inputs->t){
                 printf("failed checkChrono pushshed\n");
                 stratFSM->status = select_action_s;
                 teensy_send(cvs,"B");
@@ -84,7 +91,8 @@ void strategy_loop(ctrlStruct *cvs){
             poseStat_loop(cvs);
             if(cvs->poseStat->output == -1){
                 printf("failed poseStat /: !\n");
-            } if(cvs->poseStat->output | checkChrono(cvs,1)){
+                stratFSM->status = select_action_s;
+            } if(cvs->poseStat->output | (checkChrono(cvs,1)& stratFSM->maxt < inputs->t) ) {
                 stratFSM->status = select_action_s;
             }
             checkIfEnd(cvs);
@@ -96,8 +104,8 @@ void strategy_loop(ctrlStruct *cvs){
             if(cvs->poseStat->output == -1){
                 printf("failed excSquares /: !\n");
                 stratFSM->status = select_action_s;
-            } else if(checkChrono(cvs,1)){
-                printf("failed checkChrono pushshed\n");
+            } else if(checkChrono(cvs,1) & stratFSM->maxt < inputs->t){
+                printf("failed checkChrono excavation_squares_s\n");
                 stratFSM->status = select_action_s;
             } else if(cvs->excSq->output){
                 printf("ended with succes\n");

@@ -32,7 +32,7 @@ int checkChrono(ctrlStruct *cvs,int i = 0);
 int check_blocked(ctrlStruct *cvs);
 
 
-void sendFromHLCPF(ctrlStruct *cvs,int goForward=1,int noWall= 0);
+void sendFromHLCPF(ctrlStruct *cvs,int goForward=1,int noWall = 0,int stopIf = 0,double d_max = 0.3);
 
 void sendFromMLC(ctrlStruct *cvs,double x_goal,double y_goal, int forward = 1);
 

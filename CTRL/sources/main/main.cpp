@@ -56,7 +56,7 @@ int main()
     int poseStatON = 0;
     int saShedON = 0;
     int excSqON = 0;
-    int distON = 0;
+    int distON = 1;
 
     int arduinoON = 0;
     int mThreadsON = 0;
@@ -111,15 +111,21 @@ int main()
 
         inputs->team = 0;
 
-        cvs->mp->x = 3-0.3;
+        cvs->mp->x = 0.3;
         cvs->mp->y = 0.75;
-        cvs->mp->th = M_PI;
+        cvs->mp->th = 0;
 
         printf("------------- rec static -------------\n");
-        while (1) if (rec_static(cvs)) break;
+        while (1) {
+            if (rec_static(cvs)) break;
+            dyn_obs_set(cvs);
+        }
         usleep(1000000);
         printf("----------------- od -----------------\n");
-        while (1) if (od_distrib(cvs, 0, 0) > -10) break;
+        while (1) {
+            if (od_distrib(cvs, 0, 0) > -10) break;
+            dyn_obs_set(cvs);
+        }
         usleep(1000000);
 
         mt->thread_main_end = 1;
@@ -613,7 +619,8 @@ int main()
                 //hlcPF->Tau_min = .1;
                 //mlcPF->sigma = 0.5;
                 //cvs->mlcPF->Kp_th = 10;
-                xgoal = 3-0.4;//2.2;//1.2;
+                hlcPF->error = 0.09;
+                xgoal = 3-0.6;//2.2;//1.2;
                 ygoal = 2-0.53;//1.60;
                 forward=1;
                 orientation = M_PI;//M_PI/2;
@@ -722,11 +729,11 @@ int main()
         threads_start(cvs);
 
         teensy_send(cvs, "B");
-        usleep(1200000);
+        usleep(200000);
         teensy_send(cvs, "Q");
-        usleep(1200000);
+        usleep(200000);
         teensy_send(cvs, "R");
-        usleep(1200000);
+        usleep(200000);
 
         /*
         printf("------------- rec static -------------\n");
@@ -775,11 +782,11 @@ int main()
         threads_start(cvs);
 
         teensy_send(cvs, "B");
-        usleep(1200000);
+        usleep(200000);
         teensy_send(cvs, "Q");
-        usleep(1200000);
+        usleep(200000);
         teensy_send(cvs, "R");
-        usleep(1200000);
+        usleep(200000);
 
         distr_launch(cvs);
         printf("distON\n");
@@ -812,7 +819,6 @@ int main()
             auto duration = duration_cast<microseconds>(stop - start);
             usleep(dt * 1000000 - duration.count());
         }
-        usleep(3000000);
         mt->thread_main_end = 1;
         printf("th_end : start ... ");
         threads_end(cvs);
@@ -824,9 +830,9 @@ int main()
         get_d2r_data(cvs);
 
         teensy_send(cvs, "R");
-        usleep(1200000);
-        teensy_send(cvs, "Q");
-        usleep(1200000);
+        usleep(200000);
+        teensy_send(cvs, "S");
+        usleep(200000);
         /*
         printf("------------- rec static -------------\n");
         rec->iter = 0;
@@ -923,11 +929,11 @@ int main()
         //usleep(1200000);
         //teensy_send(cvs, "R");
         teensy_send(cvs, "B");
-        usleep(1200000);
+        usleep(200000);
         //teensy_send(cvs, "Q");
         //usleep(1200000);
         teensy_send(cvs, "R");
-        usleep(1200000);
+        usleep(200000);
         teensy_send(cvs, "1");
 
         int A = 0;
@@ -938,7 +944,7 @@ int main()
         int Q = 0;
         int R = 0;
         int S = 0;
-        while (inputs->t < 10) {
+        while (inputs->t < 9) {
 
             auto start = high_resolution_clock::now();
 
@@ -956,21 +962,21 @@ int main()
                 //teensy->switch_B = 0;
                 teensy->switch_B_end = 1;
             }
-            if (inputs->t >= 3 && C == 0) {
-                teensy_send(cvs, "C");
-                C = 1;
-            }
-            /*
-            if (inputs->t >= 1 && B == 0) {
-                teensy_send(cvs, "A");
-                B = 1;
-            }
-            
-            if (inputs->t >= 3 && C == 0) {
-                teensy_send(cvs, "K");
+            if (inputs->t >= 2 && C == 0) {
+                teensy_send(cvs, "Y");
                 C = 1;
             }
 
+            if (inputs->t >= 4 && B == 0) {
+                teensy_send(cvs, "S");
+                B = 1;
+            }
+
+            if (inputs->t >= 8 && A == 0) {
+                teensy_send(cvs, "Q");
+                A = 1;
+            }
+            /*
             if (inputs->t >= 6 && D == 0) {
                 teensy_send(cvs, "M");
                 D = 1;

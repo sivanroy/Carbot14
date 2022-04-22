@@ -36,6 +36,7 @@ typedef struct rplStruct
     int data_size;
     int nTurns;
     int update_flag;
+    int rpl_bug;
     double a[RPL_MAX_DATA_SIZE];
     double d[RPL_MAX_DATA_SIZE];
     double q[RPL_MAX_DATA_SIZE];
