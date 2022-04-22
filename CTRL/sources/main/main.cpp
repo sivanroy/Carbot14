@@ -53,7 +53,7 @@ int main()
     int teensyON = 1;
     int icpDynON = 0;
     int odON = 0;
-    int poseStatON = 0;
+    int poseStatON = 1;
     int saShedON = 0;
     int excSqON = 0;
     int distON = 0;
@@ -929,11 +929,11 @@ int main()
         //usleep(1200000);
         //teensy_send(cvs, "R");
         teensy_send(cvs, "B");
-        usleep(1200000);
+        usleep(200000);
         //teensy_send(cvs, "Q");
         //usleep(1200000);
         teensy_send(cvs, "R");
-        usleep(1200000);
+        usleep(200000);
         teensy_send(cvs, "1");
 
         int A = 0;
@@ -944,7 +944,7 @@ int main()
         int Q = 0;
         int R = 0;
         int S = 0;
-        while (inputs->t < 10) {
+        while (inputs->t < 6) {
 
             auto start = high_resolution_clock::now();
 
@@ -962,22 +962,21 @@ int main()
                 //teensy->switch_B = 0;
                 teensy->switch_B_end = 1;
             }
-            if (inputs->t >= 3 && C == 0) {
-                teensy_send(cvs, "5");
-                arduino_send(cvs,"5");
-                C = 1;
-            }
-            /*
-            if (inputs->t >= 1 && B == 0) {
-                teensy_send(cvs, "A");
-                B = 1;
-            }
-            
-            if (inputs->t >= 3 && C == 0) {
-                teensy_send(cvs, "K");
+            if (inputs->t >= 2 && C == 0) {
+                teensy_send(cvs, "Y");
                 C = 1;
             }
 
+            if (inputs->t >= 4 && B == 0) {
+                teensy_send(cvs, "S");
+                B = 1;
+            }
+
+            if (inputs->t >= 5 && A == 0) {
+                teensy_send(cvs, "Q");
+                A = 1;
+            }
+            /*
             if (inputs->t >= 6 && D == 0) {
                 teensy_send(cvs, "M");
                 D = 1;

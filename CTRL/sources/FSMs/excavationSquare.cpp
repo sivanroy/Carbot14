@@ -14,9 +14,10 @@
 
 enum {S0_es,Dpmt1_es,Dpmt2_es,Dpmt1_prec_es,Check1_es,Dpmt2_prec_es,Check2_es,Dpmt3_prec_es,Check3_es,Dpmt4_prec_es,
         Check4_es,Dpmt5_prec_es,Check5_es,Dpmt6_prec_es,Check6_es,Dpmt7_prec_es,Check7_es,Out_es,
-    Dpmt3_noR_es,Dpmt5_noR_es,Check5_noR_es,Dpmt6_noR_es,Check6_noR_es,Dpmt7_noR_es,
+    Dpmt1_noR_es,Check1_noR_es,Dpmt2_noR_es,Check2_noR_es,Dpmt3_noR_es,Check3_noR_es,Dpmt4_noR_es,Check4_noR_es,
+    Dpmt5_noR_es,Check5_noR_es,Dpmt6_noR_es,Check6_noR_es,Dpmt7_noR_es,
     rec1_es,rec2_es,rec3_es,rec4_es,rec5_es,rec6_es,rec7_es,
-    rec3_noR_es,rec5_noR_es,rec6_noR_es,rec7_noR_es};
+    rec1_noR_es,rec2_noR_es,rec3_noR_es,rec4_noR_es,rec5_noR_es,rec6_noR_es,rec7_noR_es};
 
 void excSq_init(excSquares *excSq){
     excSq->status = S0_ps;
@@ -29,6 +30,9 @@ void excSq_launch(ctrlStruct *cvs){
 	cvs->excSq->go = 1;
 	cvs->excSq->status = S0_ps;
     cvs->excSq->output = 0;
+
+    cvs->excSq->at_least_one = 0;
+    for (int i = 0; i < 8; i++) cvs->excSq->pts_flag[i] = 0;
 }
 
 
@@ -117,6 +121,16 @@ void excSq_loop(ctrlStruct *cvs){
             case Check1_es: {
                 if (teensy->R1) {
                     teensy->R_mes1 = 1;
+                    if (excSq->at_least_one == 0) {
+                        excSq->at_least_one = 1;
+                        arduino_send(cvs,"A");
+                        excSq->pts_flag[1] == 1;
+                    } else {
+                        if (excSq->pts_flag[1] == 0) {
+                            arduino_send(cvs,"5");
+                            excSq->pts_flag[1] == 1;
+                        }
+                    }
                 } else if (teensy->R3) {
                     teensy->R_mes1 = 3;
                 }
@@ -157,6 +171,16 @@ void excSq_loop(ctrlStruct *cvs){
                 break;
             }
             case Check2_es: {
+                if (excSq->at_least_one == 0) {
+                    excSq->at_least_one = 1;
+                    arduino_send(cvs,"A");
+                    excSq->pts_flag[2] == 1;
+                } else {
+                    if (excSq->pts_flag[2] == 0) {
+                        arduino_send(cvs,"5");
+                        excSq->pts_flag[2] == 1;
+                    }
+                }
                 if (checkChrono(cvs)) {
                     if (teensy->R_mes1 == 1) {
                         excSq->status = rec4_es;
@@ -228,6 +252,16 @@ void excSq_loop(ctrlStruct *cvs){
                 break;
             }
             case Check3_es: {
+                if (excSq->at_least_one == 0) {
+                    excSq->at_least_one = 1;
+                    arduino_send(cvs,"A");
+                    excSq->pts_flag[3] == 1;
+                } else {
+                    if (excSq->pts_flag[3] == 0) {
+                        arduino_send(cvs,"5");
+                        excSq->pts_flag[3] == 1;
+                    }
+                }
                 if (checkChrono(cvs)) {
                     excSq->status = rec4_es;
                     printf("go to rec4_es\n");
@@ -263,6 +297,16 @@ void excSq_loop(ctrlStruct *cvs){
             case Check4_es: {
                 if (teensy->R1) {
                     teensy->R_mes4 = 1;
+                    if (excSq->at_least_one == 0) {
+                        excSq->at_least_one = 1;
+                        arduino_send(cvs,"A");
+                        excSq->pts_flag[4] == 1;
+                    } else {
+                        if (excSq->pts_flag[4] == 0) {
+                            arduino_send(cvs,"5");
+                            excSq->pts_flag[4] == 1;
+                        }
+                    }
                 } else if (teensy->R2) {
                     teensy->R_mes4 = 2;
                 } else if (teensy->no_R) {
@@ -343,6 +387,16 @@ void excSq_loop(ctrlStruct *cvs){
             case Check5_noR_es: {
                 if (teensy->R1) {
                     teensy->R_mes5 = 1;
+                    if (excSq->at_least_one == 0) {
+                        excSq->at_least_one = 1;
+                        arduino_send(cvs,"A");
+                        excSq->pts_flag[5] == 1;
+                    } else {
+                        if (excSq->pts_flag[5] == 0) {
+                            arduino_send(cvs,"5");
+                            excSq->pts_flag[5] == 1;
+                        }
+                    }
                 } else if (teensy->R2) {
                     teensy->R_mes5 = 2;
                 } else if (teensy->no_R) {
@@ -374,6 +428,16 @@ void excSq_loop(ctrlStruct *cvs){
                 break;
             }
             case Check5_es: {
+                if (excSq->at_least_one == 0) {
+                    excSq->at_least_one = 1;
+                    arduino_send(cvs,"A");
+                    excSq->pts_flag[5] == 1;
+                } else {
+                    if (excSq->pts_flag[5] == 0) {
+                        arduino_send(cvs,"5");
+                        excSq->pts_flag[5] == 1;
+                    }
+                }
                 if (checkChrono(cvs)) {
                     excSq->status = rec6_es;
                     printf("go to rec6_es\n");
@@ -433,6 +497,16 @@ void excSq_loop(ctrlStruct *cvs){
             case Check6_noR_es: {
                 if (teensy->R1) {
                     teensy->R_mes6 = 1;
+                    if (excSq->at_least_one == 0) {
+                        excSq->at_least_one = 1;
+                        arduino_send(cvs,"A");
+                        excSq->pts_flag[6] == 1;
+                    } else {
+                        if (excSq->pts_flag[6] == 0) {
+                            arduino_send(cvs,"5");
+                            excSq->pts_flag[6] == 1;
+                        }
+                    }
                 } else if (teensy->R2) {
                     teensy->R_mes6 = 2;
                 } else if (teensy->no_R) {
@@ -463,6 +537,16 @@ void excSq_loop(ctrlStruct *cvs){
                 break;
             }
             case Check6_es: {
+                if (excSq->at_least_one == 0) {
+                    excSq->at_least_one = 1;
+                    arduino_send(cvs,"A");
+                    excSq->pts_flag[6] == 1;
+                } else {
+                    if (excSq->pts_flag[6] == 0) {
+                        arduino_send(cvs,"5");
+                        excSq->pts_flag[6] == 1;
+                    }
+                }
                 if (checkChrono(cvs)) {
                     excSq->status = Out_es;
                     printf("go to Out_es\n");
@@ -520,6 +604,16 @@ void excSq_loop(ctrlStruct *cvs){
                 break;
             }
             case Check7_es: {
+                if (excSq->at_least_one == 0) {
+                    excSq->at_least_one = 1;
+                    arduino_send(cvs,"A");
+                    excSq->pts_flag[7] == 1;
+                } else {
+                    if (excSq->pts_flag[7] == 0) {
+                        arduino_send(cvs,"5");
+                        excSq->pts_flag[7] == 1;
+                    }
+                }
                 if (checkChrono(cvs)) {
                     excSq->status = Out_es;
                     printf("go to Out_es\n");
@@ -549,7 +643,7 @@ void excSq_loop(ctrlStruct *cvs){
             case S0_es:{
                 if(excSq->go){
                     excSq->status = Dpmt1_es;
-                    set_goal(cvs,1.965,0.5,M_PI/2);
+                    set_goal(cvs,1.965,0.48,M_PI/2);
                     printf("go to dp1\n");
                     excSq->go = 0;
                 }
@@ -608,15 +702,37 @@ void excSq_loop(ctrlStruct *cvs){
                 }
                 else if (teensy->R2) {
                     teensy->R_mes1 = 2;
+                    if (excSq->at_least_one == 0) {
+                        excSq->at_least_one = 1;
+                        arduino_send(cvs,"A");
+                        excSq->pts_flag[1] == 1;
+                    } else {
+                        if (excSq->pts_flag[1] == 0) {
+                            arduino_send(cvs,"5");
+                            excSq->pts_flag[1] == 1;
+                        }
+                    }
                 }
                 if(checkChrono(cvs)){
                     teensy->no_R = 0;
                     teensy->R1 = 0;
                     teensy->R2 = 0;
                     teensy->R3 = 0;
-                    excSq->status = rec2_es;
-                    printf("go to rec2_es\n");
-                    set_goal(cvs,0.8525+0.1,.21,M_PI);
+                    if (teensy->R_mes1 == 1) {
+                        excSq->status = rec2_es;
+                        printf("1 : go to rec2_es\n");
+                        set_goal(cvs,1.71-0.01,.21,M_PI);
+                    }
+                    else if (teensy->R_mes1 == 2) {
+                        excSq->status = rec4_es;
+                        printf("2 : go to rec4_es\n");
+                        set_goal(cvs,1.34-0.01,.21,M_PI);
+                    }
+                    else if (teensy->R_mes1 == 0 || teensy->R_mes1 == 3) {
+                        excSq->status = rec2_noR_es;
+                        printf("0 : go to rec2_noR_es\n");
+                        set_goal(cvs,1.71-0.01,.21,M_PI);
+                    }
                 }
                 break;
             }
@@ -638,31 +754,95 @@ void excSq_loop(ctrlStruct *cvs){
                     motors_stop(cvs);
                     set_commands(cvs,0,0);
                     excSq->status = Check2_es;
-                    teensy_send(cvs, "T");
                     setChrono(cvs,2);
+                    teensy_send(cvs, "T");
                     printf("go to Check2_es\n");
                 }
                 break;
             }
-            case Check2_es:{
+            case rec2_noR_es:{
+                if (rec_static(cvs)) {
+                    printf("rec2_noR_es END : go to Dpmt2_noR_es\n");
+                    excSq->status = Dpmt2_noR_es;
+                }
+                break;
+            }
+            case Dpmt2_noR_es:{
+                //set_param_normal(cvs);
+                set_param_prec(cvs);
+                hlcPF->Tau_max = .15;
+                hlcPF->Tau_min = .1;
+                mlcPF->sigma = 0.5;
+                sendFromHLCPF(cvs,-1,1);
+                if(hlcPF->output){
+                    motors_stop(cvs);
+                    set_commands(cvs,0,0);
+                    excSq->status = Check2_noR_es;
+                    setChrono(cvs,2);
+                    teensy_send(cvs, "C");
+                    printf("go to Check2_noR_es\n");
+                }
+                break;
+            }
+            case Check2_noR_es:{
+                if (teensy->R1) {
+                    teensy->R_mes2 = 1;
+                }
+                else if (teensy->R2) {
+                    teensy->R_mes2 = 2;
+                    if (excSq->at_least_one == 0) {
+                        excSq->at_least_one = 1;
+                        arduino_send(cvs,"A");
+                        excSq->pts_flag[2] == 1;
+                    } else {
+                        if (excSq->pts_flag[2] == 0) {
+                            arduino_send(cvs,"5");
+                            excSq->pts_flag[2] == 1;
+                        }
+                    }
+                }
+                else if (teensy->no_R) {
+                    teensy->R_mes2 = 0;
+                }
                 if(checkChrono(cvs)){
-                    if (teensy->R_mes1 == 1) {
-                        excSq->status = rec4_es;
-                        printf("1 : go to rec4_es\n");
-                        set_goal(cvs,1.2225+0.1,0.21,M_PI);
-                    }
-                    else if (teensy->R_mes1 == 3) {
+                    teensy->no_R = 0;
+                    teensy->R1 = 0;
+                    teensy->R2 = 0;
+                    teensy->R3 = 0;
+                    printf("1 OR 2 :\n");
+                    if (teensy->R_mes2 == 2) {
                         excSq->status = rec3_es;
-                        printf("3 : go to rec3_es\n");
-                        set_goal(cvs,1.0375+0.12,.21,M_PI);
+                        printf("1 : go to rec3_es\n");
+                        set_goal(cvs,1.521-0.01,.21,M_PI);
                     }
-                    else if (teensy->R_mes1 == 0 || teensy->R_mes1 == 2) {
+                    else if (teensy->R_mes2 == 1) {
+                        excSq->status = rec4_es;
+                        printf("2 : go to rec4_es\n");
+                        set_goal(cvs,1.34-0.01,.21,M_PI);
+                    }
+                    else if (teensy->R_mes2 == 0 || teensy->R_mes2 == 3) {
                         excSq->status = rec3_noR_es;
                         printf("0 : go to rec3_noR_es\n");
-                        set_goal(cvs,1.0375+0.1,.21,M_PI);
-                    } else {
-                        printf("R_mes1 : %d \n", teensy->R_mes1);
+                        set_goal(cvs,1.521-0.01,.21,M_PI);
                     }
+                }
+                break;
+            }
+            case Check2_es:{
+                if (excSq->at_least_one == 0) {
+                    excSq->at_least_one = 1;
+                    arduino_send(cvs,"A");
+                    excSq->pts_flag[2] == 1;
+                } else {
+                    if (excSq->pts_flag[2] == 0) {
+                        arduino_send(cvs,"5");
+                        excSq->pts_flag[2] == 1;
+                    }
+                }
+                if(checkChrono(cvs)){
+                    excSq->status = rec3_es;
+                    printf("go to rec3_es\n");
+                    set_goal(cvs,1.521-0.01,0.21,M_PI);
                 }
                 break;
             }
@@ -707,18 +887,72 @@ void excSq_loop(ctrlStruct *cvs){
                 if(hlcPF->output){
                     motors_stop(cvs);
                     set_commands(cvs,0,0);
-                    excSq->status = Check3_es;
+                    excSq->status = Check3_noR_es;
                     setChrono(cvs,2);
                     teensy_send(cvs, "C");
-                    printf("go to Check3_es\n");
+                    printf("go to Check3_noR_es\n");
+                }
+                break;
+            }
+            case Check3_noR_es:{
+                if (teensy->R1) {
+                    teensy->R_mes3 = 1;
+                }
+                else if (teensy->R2) {
+                    teensy->R_mes3 = 2;
+                    if (excSq->at_least_one == 0) {
+                        excSq->at_least_one = 1;
+                        arduino_send(cvs,"A");
+                        excSq->pts_flag[3] == 1;
+                    } else {
+                        if (excSq->pts_flag[3] == 0) {
+                            arduino_send(cvs,"5");
+                            excSq->pts_flag[3] == 1;
+                        }
+                    }
+                }
+                else if (teensy->no_R) {
+                    teensy->R_mes3 = 0;
+                }
+                if(checkChrono(cvs)){
+                    teensy->no_R = 0;
+                    teensy->R1 = 0;
+                    teensy->R2 = 0;
+                    teensy->R3 = 0;
+                    printf("1 OR 2 :\n");
+                    if (teensy->R_mes3 == 1) {
+                        excSq->status = rec4_es;
+                        printf("1 : go to rec4_es\n");
+                        set_goal(cvs,1.34-0.01,.21,M_PI);
+                    }
+                    else if (teensy->R_mes3 == 2) {
+                        excSq->status = rec5_es;
+                        printf("2 : go to rec5_es\n");
+                        set_goal(cvs,1.155-0.01,.21,M_PI);
+                    }
+                    else if (teensy->R_mes3 == 0 || teensy->R_mes2 == 3) {
+                        excSq->status = rec4_noR_es;
+                        printf("0 : go to rec4_noR_es\n");
+                        set_goal(cvs,1.34-0.01,.21,M_PI);
+                    }
                 }
                 break;
             }
             case Check3_es:{
+                if (excSq->at_least_one == 0) {
+                    excSq->at_least_one = 1;
+                    arduino_send(cvs,"A");
+                    excSq->pts_flag[3] == 1;
+                } else {
+                    if (excSq->pts_flag[3] == 0) {
+                        arduino_send(cvs,"5");
+                        excSq->pts_flag[3] == 1;
+                    }
+                }
                 if(checkChrono(cvs)){
-                    excSq->status = rec4_es;
-                    printf("go to rec4_es\n");
-                    set_goal(cvs,1.2225+0.1,0.21,M_PI);
+                    excSq->status = rec5_es;
+                    printf("go to rec5_es\n");
+                    set_goal(cvs,1.155-0.01,0.21,M_PI);
                 }
                 break;
             }
@@ -741,41 +975,50 @@ void excSq_loop(ctrlStruct *cvs){
                     set_commands(cvs,0,0);
                     excSq->status = Check4_es;
                     setChrono(cvs,2);
+                    teensy_send(cvs, "T");
+                    printf("go to Check4_es\n");
+                }
+                break;
+            }
+            case rec4_noR_es:{
+                if (rec_static(cvs)) {
+                    printf("rec4_noR_es END : go to Dpmt4_noR_es\n");
+                    excSq->status = Dpmt4_noR_es;
+                }
+                break;
+            }
+            case Dpmt4_noR_es:{
+                //set_param_normal(cvs);
+                set_param_prec(cvs);
+                hlcPF->Tau_max = .15;
+                hlcPF->Tau_min = .1;
+                mlcPF->sigma = 0.5;
+                sendFromHLCPF(cvs,-1,1);
+                if(hlcPF->output){
+                    motors_stop(cvs);
+                    set_commands(cvs,0,0);
+                    excSq->status = Check4_es;
+                    setChrono(cvs,2);
                     teensy_send(cvs, "C");
                     printf("go to Check4_es\n");
                 }
                 break;
             }
             case Check4_es:{
-                if (teensy->R1) {
-                    teensy->R_mes4 = 1;
-                }
-                else if (teensy->R2) {
-                    teensy->R_mes4 = 2;
-                }
-                else if (teensy->no_R) {
-                    teensy->R_mes4 = 0;
+                if (excSq->at_least_one == 0) {
+                    excSq->at_least_one = 1;
+                    arduino_send(cvs,"A");
+                    excSq->pts_flag[4] == 1;
+                } else {
+                    if (excSq->pts_flag[4] == 0) {
+                        arduino_send(cvs,"5");
+                        excSq->pts_flag[4] == 1;
+                    }
                 }
                 if(checkChrono(cvs)){
-                    teensy->no_R = 0;
-                    teensy->R1 = 0;
-                    teensy->R2 = 0;
-                    teensy->R3 = 0;
-                    if (teensy->R_mes4 == 1) {
-                        excSq->status = rec7_es;
-                        printf("1 : go to rec7_es\n");
-                        set_goal(cvs,1.7775+0.1,.21,M_PI);
-                    }
-                    else if (teensy->R_mes4 == 2) {
-                        excSq->status = rec5_es;
-                        printf("2 : go to rec5_es\n");
-                        set_goal(cvs,1.4075+0.1,.21,M_PI);
-                    }
-                    else if (teensy->R_mes4 == 0 || teensy->R_mes4 == 3) {
-                        excSq->status = rec5_noR_es;
-                        printf("0 : go to rec5_noR_es\n");
-                        set_goal(cvs,1.4075+0.1,.21,M_PI);
-                    }
+                    excSq->status = rec5_es;
+                    printf("go to rec5_es\n");
+                    set_goal(cvs,1.34-0.01,0.21,M_PI);
                 }
                 break;
             }
@@ -798,41 +1041,27 @@ void excSq_loop(ctrlStruct *cvs){
                     set_commands(cvs,0,0);
                     excSq->status = Check5_es;
                     setChrono(cvs,2);
-                    teensy_send(cvs, "T");
+                    teensy_send(cvs, "C");
                     printf("go to Check5_es\n");
                 }
                 break;
             }
-            case rec5_noR_es:{
-                if (rec_static(cvs)) {
-                    printf("rec5_noR_es END : go to Dpmt5_noR_es\n");
-                    excSq->status = Dpmt5_noR_es;
-                }
-                break;
-            }
-            case Dpmt5_noR_es:{
-                //set_param_normal(cvs);
-                set_param_prec(cvs);
-                hlcPF->Tau_max = .15;
-                hlcPF->Tau_min = .1;
-                mlcPF->sigma = 0.5;
-                sendFromHLCPF(cvs,-1,1);
-                if(hlcPF->output){
-                    motors_stop(cvs);
-                    set_commands(cvs,0,0);
-                    excSq->status = Check5_noR_es;
-                    setChrono(cvs,2);
-                    teensy_send(cvs, "C");
-                    printf("go to Check5_noR_es\n");
-                }
-                break;
-            }
-            case Check5_noR_es:{
+            case Check5_es:{
                 if (teensy->R1) {
                     teensy->R_mes5 = 1;
                 }
                 else if (teensy->R2) {
                     teensy->R_mes5 = 2;
+                    if (excSq->at_least_one == 0) {
+                        excSq->at_least_one = 1;
+                        arduino_send(cvs,"A");
+                        excSq->pts_flag[5] == 1;
+                    } else {
+                        if (excSq->pts_flag[5] == 0) {
+                            arduino_send(cvs,"5");
+                            excSq->pts_flag[5] == 1;
+                        }
+                    }
                 }
                 else if (teensy->no_R) {
                     teensy->R_mes5 = 0;
@@ -842,31 +1071,9 @@ void excSq_loop(ctrlStruct *cvs){
                     teensy->R1 = 0;
                     teensy->R2 = 0;
                     teensy->R3 = 0;
-                    printf("1 OR 2 :\n");
-                    if (teensy->R_mes5 == 1) {
-                        excSq->status = rec6_es;
-                        printf("1 : go to rec6_es\n");
-                        set_goal(cvs,1.5925+0.1,.21,M_PI);
-                    }
-                    else if (teensy->R_mes5 == 2) {
-                        excSq->status = rec7_es;
-                        printf("2 : go to rec7_es\n");
-                        set_goal(cvs,1.7775+0.1,.21,M_PI);
-                    }
-                    else if (teensy->R_mes5 == 0 || teensy->R_mes5 == 3) {
-                        excSq->status = rec6_noR_es;
-                        printf("0 : go to rec6_noR_es\n");
-                        set_goal(cvs,1.5925+0.01,.21,M_PI);
-                    }
-                }
-                break;
-            }
-            case Check5_es:{
-                if(checkChrono(cvs)){
                     excSq->status = rec6_es;
                     printf("go to rec6_es\n");
-                    if (TEAM) set_goal(cvs,1.525-0.01,0.21,M_PI);
-                    else set_goal(cvs,3-1.525+0.01,.2,M_PI);
+                    set_goal(cvs,0.97-0.01,0.21,M_PI);
                 }
                 break;
             }
@@ -894,68 +1101,38 @@ void excSq_loop(ctrlStruct *cvs){
                 }
                 break;
             }
-            case rec6_noR_es:{
-                if (rec_static(cvs)) {
-                    printf("rec6_noR_es END : go to Dpmt6_noR_es\n");
-                    excSq->status = Dpmt6_noR_es;
-                }
-                break;
-            }
-            case Dpmt6_noR_es:{
-                //set_param_normal(cvs);
-                set_param_prec(cvs);
-                hlcPF->Tau_max = .15;
-                hlcPF->Tau_min = .1;
-                mlcPF->sigma = 0.5;
-                sendFromHLCPF(cvs,-1,1);
-                if(hlcPF->output){
-                    motors_stop(cvs);
-                    set_commands(cvs,0,0);
-                    excSq->status = Check6_noR_es;
-                    setChrono(cvs,2);
-                    teensy_send(cvs, "C");
-                    printf("go to Check6_noR_es\n");
-                }
-                break;
-            }
-            case Check6_noR_es:{
-                if (teensy->R1) {
-                    teensy->R_mes6 = 1;
-                }
-                else if (teensy->R2) {
-                    teensy->R_mes6 = 2;
-                }
-                else if (teensy->no_R) {
-                    teensy->R_mes6 = 0;
+            case Check6_es:{
+                if (excSq->at_least_one == 0) {
+                    excSq->at_least_one = 1;
+                    arduino_send(cvs,"A");
+                    excSq->pts_flag[6] == 1;
+                } else {
+                    if (excSq->pts_flag[6] == 0) {
+                        arduino_send(cvs,"5");
+                        excSq->pts_flag[6] == 1;
+                    }
                 }
                 if(checkChrono(cvs)){
                     teensy->no_R = 0;
                     teensy->R1 = 0;
                     teensy->R2 = 0;
                     teensy->R3 = 0;
-                    if (teensy->R_mes6 == 1) {
-                        excSq->status = Out_es;
-                        printf("1 : go to Out_es\n");
-                        set_goal(cvs,0.9,0.4,M_PI/2);
-                    }
-                    else if (teensy->R_mes6 == 2) {
+                    printf("1 OR 2 :\n");
+                    if (teensy->R_mes5 == 1) {
                         excSq->status = rec7_es;
-                        printf("2 : go to rec7_es\n");
-                        set_goal(cvs,1.7775+0.01,.21,M_PI);
+                        printf("1 : go to rec7_es\n");
+                        set_goal(cvs,0.785-0.01,.21,M_PI);
                     }
-                    else if (teensy->R_mes6 == 0 || teensy->R_mes6 == 3) {
+                    else if (teensy->R_mes5 == 2) {
+                        excSq->status = Out_es;
+                        printf("2 : go to Out_es\n");
+                        set_goal(cvs,0.5,0.5,M_PI/2);
+                    }
+                    else if (teensy->R_mes5 == 0 || teensy->R_mes5 == 3) {
                         excSq->status = rec7_noR_es;
                         printf("0 : go to rec7_noR_es\n");
-                        set_goal(cvs,1.7775+0.01,.21,M_PI);
+                        set_goal(cvs,0.785-0.01,.21,M_PI);
                     }
-                }
-                break;
-            }
-            case Check6_es:{
-                if(checkChrono(cvs)){
-                    excSq->status = Out_es;
-                    printf("go to Out_es\n");
-                    set_goal(cvs,0.9,0.4,M_PI/2);
                 }
                 break;
             }
@@ -1008,10 +1185,20 @@ void excSq_loop(ctrlStruct *cvs){
                 break;
             }
             case Check7_es:{
+                if (excSq->at_least_one == 0) {
+                    excSq->at_least_one = 1;
+                    arduino_send(cvs,"A");
+                    excSq->pts_flag[7] == 1;
+                } else {
+                    if (excSq->pts_flag[7] == 0) {
+                        arduino_send(cvs,"5");
+                        excSq->pts_flag[7] == 1;
+                    }
+                }
                 if(checkChrono(cvs)){
                     excSq->status = Out_es;
                     printf("go to Out_es\n");
-                    set_goal(cvs,0.9,0.4,M_PI/2);
+                    set_goal(cvs,0.5,0.5,M_PI/2);
                 }
                 break;
             }

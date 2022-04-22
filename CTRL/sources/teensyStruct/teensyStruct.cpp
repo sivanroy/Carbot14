@@ -94,6 +94,8 @@ void teensy_init(teensyStruct *teensy)
     teensy->R2 = 0;
     teensy->R3 = 0;
     teensy->R_mes1 = 0;
+    teensy->R_mes2 = 0;
+    teensy->R_mes3 = 0;
     teensy->R_mes4 = 0;
     teensy->R_mes5 = 0;
     teensy->R_mes6 = 0;

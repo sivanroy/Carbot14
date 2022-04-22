@@ -15,6 +15,9 @@ typedef struct excSquares
 	double y_goals[10];
 	double thetas[10];
 	double forward[10];
+
+	int at_least_one;
+	int pts_flag[8];
 } excSquares;
 
 void excSq_init(excSquares *excSq);

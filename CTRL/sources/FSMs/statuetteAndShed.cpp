@@ -246,6 +246,7 @@ void saShed_loop(ctrlStruct *cvs){
                 motors_stop(cvs);
                 set_commands(cvs,0,0);
                 saShed->status = Dpmt8_sas;
+                teensy_send(cvs, "Y");
                 if (TEAM) set_goal(cvs,2.83,0.16,-10);//2.73,.30,-10
                 else set_goal(cvs,0.16,.17,-10);
                 printf("go to Dpmt8_ps\n");
