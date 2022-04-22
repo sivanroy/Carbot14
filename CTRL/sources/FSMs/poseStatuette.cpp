@@ -53,8 +53,8 @@ void poseStat_loop(ctrlStruct *cvs){
         		poseStat->status = Go_to_vitrine_pos;
         		printf("go to dp1\n");
         		poseStat->go = 0;
-                if (TEAM) set_goal(cvs,2.6,1.35,M_PI/2);//-10);//2.65,1.35,0.6*M_PI/2
-                else set_goal(cvs,.4,1.35,-10);    
+                if (TEAM) set_goal(cvs,2.58,1.25,1.4*M_PI/4);//2.65,1.35,0.6*M_PI/2
+                else set_goal(cvs,.4,1.25,limit_angle(-1.4*M_PI/4 + M_PI));
                 poseStat->status = Go_to_vitrine_pos;
                 break;
         	//
@@ -74,7 +74,7 @@ void poseStat_loop(ctrlStruct *cvs){
         case rec_pos:{
             if (rec_static(cvs)) {
                 poseStat->status = vitrine_prec1_pos;
-                if (TEAM) set_goal(cvs,2.75,1.7,M_PI/2);
+                if (TEAM) set_goal(cvs,2.78,1.7,M_PI/2);
                 else set_goal(cvs,.25,1.7,M_PI/2);
                 printf("go to vitrine_prec_pos\n");
             }
@@ -89,7 +89,7 @@ void poseStat_loop(ctrlStruct *cvs){
                 set_commands(cvs,0,0);
                 printf("ended\n");
                 poseStat->status = vitrine_prec2_pos;
-                if (TEAM) set_goal(cvs,2.82,1.99,-10);
+                if (TEAM) set_goal(cvs,2.78,1.99,-10);
                 else set_goal(cvs,.25,1.99,-10);
             }
             break;
@@ -117,7 +117,7 @@ void poseStat_loop(ctrlStruct *cvs){
         case drop_statuette_pos:{
             if (checkChrono(cvs)) {
                 poseStat->status = go_back_prec_pos;
-                if (TEAM) set_goal(cvs,2.75,1.6,M_PI);
+                if (TEAM) set_goal(cvs,2.8,1.6,-1.2*M_PI/2);
                 else set_goal(cvs,.25,1.6,0);
                 printf("go to Dpmt3_ps\n");
             }

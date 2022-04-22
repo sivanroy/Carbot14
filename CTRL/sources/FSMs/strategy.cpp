@@ -102,7 +102,7 @@ void strategy_loop(ctrlStruct *cvs){
                 printf("failed excSquares /: !\n");
                 stratFSM->status = select_action_s;
             } else if(checkChrono(cvs,1)){
-                printf("failed checkChrono pushshed\n");
+                printf("failed checkChrono excavation_squares_s\n");
                 stratFSM->status = select_action_s;
             } else if(cvs->excSq->output){
                 printf("ended with succes\n");

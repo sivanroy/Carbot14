@@ -45,6 +45,8 @@ typedef struct teensyStruct
     int R2;
     int R3;
     int R_mes1;
+    int R_mes2;
+    int R_mes3;
     int R_mes4;
     int R_mes5;
     int R_mes6;
