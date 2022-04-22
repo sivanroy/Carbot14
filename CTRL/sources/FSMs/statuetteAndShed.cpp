@@ -127,7 +127,7 @@ void saShed_loop(ctrlStruct *cvs){
             if(hlcPF->output){
                 saShed->status = Dpmt5_sas;
                 if (TEAM) set_goal(cvs,2.49,.57,-M_PI/4);
-                else set_goal(cvs,3-2.49,.57,-3*M_PI/4);
+                else set_goal(cvs,3-2.47,.57,-3*M_PI/4);
                 printf("go to Dpmt5_sas\n");
             }
             break;
