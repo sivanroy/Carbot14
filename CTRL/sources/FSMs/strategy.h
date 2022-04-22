@@ -16,6 +16,7 @@ typedef struct strategy_FSM
 
     int actions[10];
     int timing[10];
+    double maxTiming[10];
     int pt;
 
 } strategy_FSM;

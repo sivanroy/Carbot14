@@ -22,6 +22,7 @@ void strategy_FSM_init(strategy_FSM *stratFSM) {
     for (int i = 0; i<s; i++){
             stratFSM->actions[i] = actionsi[i];
             stratFSM->timing[i]  = timingi[i];
+            stratFSM->maxTiming[i] = maxtimingi[i];
     }
     stratFSM->pt = 0;
     printf("strategy initialized\n");

@@ -20,12 +20,13 @@ D -> Push cube
 F -> Take 1st pallet from stack and drop it at the bottom of expoisiton gallery (pos: 100)
 G -> Take 2nd pallet from stack and drop it at the bottom of expoisiton gallery (pos: 160)
 H -> Take 3rd pallet from stack and drop it at the bottom of expoisiton gallery (pos: 220)
+
 J
+
+Y -> open clamp 
+
 I -> Arm drops pallet and reset its position
-K -> Lower flip to take pallets from distributor (pos: 255)
-L -> Lift the pallets 90 degrees with the flip (pos: 590)
-M -> Put the flip in initial position (pos: 755)
-N -> Take 1st pallet from stack and drop it at the top of expositon gallery (pos: 100)
+K -> Take 1st pallet from stack and drop it at the top of expositon gallery (pos: 100)
 O -> Take 1st pallet from stack and drop it at the top of expositon gallery (pos: 160)
 P -> Take 1st pallet from stack and drop it at the top of expositon gallery (pos: 220)
 Q -> Clamp IN -> release the statuette
@@ -366,9 +367,6 @@ void pushUnderTheShed(){
   }
   if (data == "6" && pushedUnderTheShedBis == 0){
     Dynamixel.turn(ID5,LEFT,1023);
-    Wire.beginTransmission(0x40);
-    pwm.setPWM(4, 0, pulseWidth(servoOut4));
-    Wire.endTransmission();
     delay(1180);
     Dynamixel.turn(ID5,RIGTH,0);
     data = "NULL";
