@@ -20,7 +20,7 @@ D -> Push cube
 F -> Take 1st pallet from stack and drop it at the bottom of expoisiton gallery (pos: 100)
 G -> Take 2nd pallet from stack and drop it at the bottom of expoisiton gallery (pos: 160)
 H -> Take 3rd pallet from stack and drop it at the bottom of expoisiton gallery (pos: 220)
-J -> Special position that helps to take pallets with the flip
+J
 I -> Arm drops pallet and reset its position
 K -> Lower flip to take pallets from distributor (pos: 255)
 L -> Lift the pallets 90 degrees with the flip (pos: 590)
@@ -35,7 +35,6 @@ X -> Front and back switches are OFF
 a -> Homologation push under the shed + clamp OUT
 b -> Homologation push under the shed + clamp IN
 c -> Homologation arm + flip OUT
-d -> Homologation arm + flip IN
 e -> Homologation measure resistance + push OUT
 f -> Homologation measure resistance + push IN
 g -> All mechanisms OUT
@@ -71,18 +70,19 @@ int servoIn2 = 145; //Measure resistance // 140
 int servoOut2 = 15;
 int servoIn3 = 130; //Push cube
 int servoOut3 = 195;
-int servoIn4 = -34; //Clamp //25
-int servoOut4 = 65;
+int servoIn4 = 30;//-34; //Clamp //25
+int servoInter4 = 42;
+int servoOut4 = 106;//65;
 int servoIn5 = 185; //MAX : 200 //Push resistance
 int servoMid5 = 90;
 int servoOut5 = 35; //MIN : -25
 
 int delta = 150;
-int flip3P = 670 + delta;
-int flip2P = 660 + delta;
-int flip1P = 645 + delta;
-int flipUp = 820 + delta;
-int flipDown = 295 + delta;
+int flip3P = 680 + delta;
+int flip2P = 670 + delta;
+int flip1P = 670 + delta;
+int flipUp = 800 + delta;
+int flipDown = 340 + delta;
 
 int pos3P = 105;
 int pos2P = 165;
@@ -185,22 +185,25 @@ void clamp(){
     Wire.endTransmission();  
     data = "NULL";
    }
+   if (data == "Y"){
+    Wire.beginTransmission(0x40);
+    pwm.setPWM(4, 0, pulseWidth(servoInter4));
+    Wire.endTransmission();  
+    data = "NULL";
+   }
 }
+
+
 
 void flip(){
   if (data == "K"){
     Dynamixel.moveSpeed(ID4,flipDown,512);
     data = "NULL";
   }
-  if (data == "J"){
-    Dynamixel.moveSpeed(ID4,flipDown + 100,160); //SIMON (flip3P - flipDown = 375)
-    data = "NULL";
-  }
   if (data == "L"){
     Dynamixel.moveSpeed(ID4,flip3P,160);
     data = "NULL";
   }
-  
   if (data == "M"){
     Dynamixel.moveSpeed(ID4,flipUp,512);
     data = "NULL";
@@ -363,6 +366,9 @@ void pushUnderTheShed(){
   }
   if (data == "6" && pushedUnderTheShedBis == 0){
     Dynamixel.turn(ID5,LEFT,1023);
+    Wire.beginTransmission(0x40);
+    pwm.setPWM(4, 0, pulseWidth(servoOut4));
+    Wire.endTransmission();
     delay(1180);
     Dynamixel.turn(ID5,RIGTH,0);
     data = "NULL";
