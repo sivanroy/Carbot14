@@ -160,6 +160,7 @@ void saShed_loop(ctrlStruct *cvs){
             hlcPF->Tau_max = 1;
             hlcPF->Tau_min = 0.2;
             mlcPF->sigma = .7;
+            hlcPF->error = 0.02;
             hlcPF->Kp_th_reorient = 500;
 
             if(checkChrono(cvs,2)){
