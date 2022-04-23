@@ -56,7 +56,7 @@ int main()
     int poseStatON = 0;
     int saShedON = 0;
     int excSqON = 0;
-    int distON = 1;
+    int distON = 0;
 
     int arduinoON = 0;
     int mThreadsON = 0;
