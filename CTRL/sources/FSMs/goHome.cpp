@@ -51,12 +51,14 @@ void goHome_loop(ctrlStruct *cvs){
             sendFromHLCPF(cvs,-1);
             if(hlcPF->output){
                 ghome->status = dp2_gh;
-                if (TEAM) set_goal(cvs,2.75,1.3,0); //2.32,1.51
-                else set_goal(cvs,0.25,1.3,M_PI);
+                if (TEAM) set_goal(cvs,2.65,1.3,0); //2.32,1.51
+                else set_goal(cvs,0.35,1.3,M_PI);
                 arduino_send(cvs,"K");
             }
             break;
         }
+
+
 
         case dp2_gh:{
             set_param_prec(cvs);

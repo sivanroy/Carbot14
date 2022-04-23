@@ -67,12 +67,12 @@ void poseStat_loop(ctrlStruct *cvs){
                 motors_stop(cvs);
                 set_commands(cvs,0,0);
                 poseStat->status = rec_pos;
-
+                setChrono(cvs,.2);
             }
             break;
         }
         case rec_pos:{
-            if (rec_static(cvs)) {
+            if (rec_static(cvs) | checkChrono(cvs)) {
                 poseStat->status = vitrine_prec1_pos;
                 if (TEAM) set_goal(cvs,2.78,1.7,M_PI/2);
                 else set_goal(cvs,.25,1.7,M_PI/2);
@@ -128,12 +128,13 @@ void poseStat_loop(ctrlStruct *cvs){
             sendFromHLCPF(cvs,0,1);
             if(hlcPF->output){
                 poseStat->status = rec_out_pos;
+                setChrono(cvs,0.2);
                 printf("rec START\n");
             }
             break;
         }
         case rec_out_pos:{
-            if (rec_static(cvs)) {
+            if (rec_static(cvs)|checkChrono(cvs)) {
                 printf("rec END\n");
                 poseStat->output =1;
             }
