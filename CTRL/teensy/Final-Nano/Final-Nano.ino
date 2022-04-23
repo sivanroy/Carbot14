@@ -55,10 +55,10 @@ String data = "0";
 void setup() {
  Serial.begin(57600);
  FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
- FastLED.setBrightness(255);
+ FastLED.setBrightness(130);
  //FastLED.addLeds<WS2811, DATA_PIN, GRB>(leds, NUM_LEDS);    
  
- points = 14;
+ points = 4;
  
  pinMode(pinA, OUTPUT);     
  pinMode(pinB, OUTPUT);     
@@ -87,18 +87,22 @@ void ledStrip(){
 
 void scoreBlink(){
   for(int i=0; i<30; i++){
-        fill_solid(leds, NUM_LEDS, CRGB::White); 
+        fill_solid(leds, NUM_LEDS, CRGB::Red); 
         FastLED.show();
-        checkRPI();
-        count();
-        digitDisplay();
-        delay(8);
+        for(int j=0; j<6; j++){
+          checkRPI();
+          count();
+          digitDisplay();
+          delay(5);
+        }
         fill_solid(leds, NUM_LEDS, CRGB::Black); 
         FastLED.show();
-        checkRPI();
-        count();
-        digitDisplay();
-        delay(8);
+        for(int j=0; j<6; j++){
+          checkRPI();
+          count();
+          digitDisplay();
+          delay(5);
+        }
       }
 }
 
@@ -178,41 +182,49 @@ void checkRPI(){
 void count() {
   if (data == "1"){
     points = points + 1;
+    started = 1;
     data = "0";
     scoreBlink();
   }
   if (data == "2"){
     points = points + 2;
+    started = 1;
     data = "0";
     scoreBlink();
   }
   if (data == "3"){
     points = points + 3;
+    started = 1;
     data = "0";
     scoreBlink();
   }
   if (data == "5"){
     points = points + 5;
+    started = 1;
     data = "0";
     scoreBlink();
   }
   if (data == "6"){
     points = points + 6;
+    started = 1;
     data = "0";
     scoreBlink();
   }
   if (data == "A"){
     points = points + 10;
+    started = 1;
     data = "0";
     scoreBlink();
   }
   if (data == "F"){
     points = points + 15;
+    started = 1;
     data = "0";
     scoreBlink();
   }
   if (data == "K"){
     points = points + 20;
+    started = 1;
     data = "0";
     scoreBlink();
   }

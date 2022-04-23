@@ -36,6 +36,7 @@ X -> Front and back switches are OFF
 a -> Homologation push under the shed + clamp OUT
 b -> Homologation push under the shed + clamp IN
 c -> Homologation arm + flip OUT
+d -> Homologation arm + flip IN
 e -> Homologation measure resistance + push OUT
 f -> Homologation measure resistance + push IN
 g -> All mechanisms OUT
@@ -68,14 +69,14 @@ int servoOut0 = 168; //Right front servo is OUT at position 168
 int servoIn1 = 209; //Left front 
 int servoOut1 = 37; 
 int servoIn2 = 145; //Measure resistance // 140
-int servoOut2 = 15;
+int servoOut2 = 20;
 int servoIn3 = 130; //Push cube
 int servoOut3 = 195;
 int servoIn4 = 30;//-34; //Clamp //25
 int servoInter4 = 42;
-int servoOut4 = 109;//65;
+int servoOut4 = 111;//65;
 int servoIn5 = 185; //MAX : 200 //Push resistance
-int servoMid5 = 90;
+int servoMid5 = 100;
 int servoOut5 = 35; //MIN : -25
 
 int delta = 150;
