@@ -40,6 +40,8 @@ typedef struct ctrlIn
 
     int team;
     int start;
+    int option1;
+    int option2;
 
     int leftWheelBlocked;
     int rightWheelBlocked;
