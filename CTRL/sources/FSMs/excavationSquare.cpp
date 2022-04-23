@@ -82,7 +82,7 @@ void excSq_loop(ctrlStruct *cvs){
                     motors_stop(cvs);
                     set_commands(cvs, 0, 0);
                     excSq->status = rec_start_es;
-                    if (TEAM) set_goal(cvs, 2.45, 0.25, M_PI);
+                    if (TEAM) set_goal(cvs, 2.45, 0.24, M_PI);
                     else set_goal(cvs, .68, 0.25, 0.8 * M_PI);
                     setChrono(cvs,wait);
                 }
@@ -693,7 +693,7 @@ void excSq_loop(ctrlStruct *cvs){
                     motors_stop(cvs);
                     set_commands(cvs,0,0);
                     excSq->status = rec_start_es;
-                    set_goal(cvs,1.935,0.25,M_PI);
+                    set_goal(cvs,1.935,0.24,M_PI);
                     //setChrono(cvs, 5);
                     setChrono(cvs,wait);
                 }
