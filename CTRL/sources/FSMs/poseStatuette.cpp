@@ -45,7 +45,7 @@ void poseStat_loop(ctrlStruct *cvs){
     x = pos[0];//+ hlcPF->x_shift * cos(th);
     y = pos[1];//+ hlcPF->x_shift * sin(th);
 
-
+    double wait = 0.6;
 
     switch(poseStat->status){
         case S0_pos:
@@ -118,7 +118,7 @@ void poseStat_loop(ctrlStruct *cvs){
             if (checkChrono(cvs)) {
                 poseStat->status = go_back_prec_pos;
                 if (TEAM) set_goal(cvs,2.8,1.6,-1.2*M_PI/2);
-                else set_goal(cvs,.25,1.6,0);
+                else set_goal(cvs,.25,1.6,-M_PI/4);
                 printf("go to Dpmt3_ps\n");
             }
             break;
@@ -128,7 +128,7 @@ void poseStat_loop(ctrlStruct *cvs){
             sendFromHLCPF(cvs,0,1);
             if(hlcPF->output){
                 poseStat->status = rec_out_pos;
-                setChrono(cvs,0.2);
+                setChrono(cvs,wait);
                 printf("rec START\n");
             }
             break;
