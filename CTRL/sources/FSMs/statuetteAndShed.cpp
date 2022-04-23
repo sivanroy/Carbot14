@@ -50,13 +50,7 @@ void saShed_loop(ctrlStruct *cvs){
 
     //double d_opp = cvs->hlcPF->d_opp;
     double dmax = 0.35;
-
-    """double x_dyn = cvs->obs->obs_dyn_x;
-    double y_dyn = cvs->obs->obs_dyn_y;
-    double x1o = x+ hlcPF->x_shift * cos(th) - x_dyn;
-    double y1o = y+ hlcPF->x_shift * sin(th) - y_dyn;
-    double d_opp = sqrt(x1o*x1o+y1o*y1o);
-    hlcPF->d_opp = d_opp;"""
+    double wait = 0.6;
 
     switch(saShed->status){
         case S0_sas:{
@@ -99,7 +93,7 @@ void saShed_loop(ctrlStruct *cvs){
             //mlcPF->sigma = 0.5;
             if(checkChrono(cvs,2)){
                 saShed->status = rec_push_sas;
-                setChrono(cvs,0.2);
+                setChrono(cvs,wait);
             } else sendFromHLCPF(cvs,1,1,1);
             if(hlcPF->output ){
                 saShed->status = servoShedOut_sas;
@@ -128,7 +122,7 @@ void saShed_loop(ctrlStruct *cvs){
             set_param_prec(cvs);
             if(checkChrono(cvs,2)){
                 saShed->status = rec_push_sas;
-                setChrono(cvs,0.2);
+                setChrono(cvs,wait);
             } else sendFromHLCPF(cvs,1,1,1);
             if(hlcPF->output){
                 saShed->status = Dpmt4_sas;
@@ -147,13 +141,13 @@ void saShed_loop(ctrlStruct *cvs){
             mlcPF->sigma = .8;
             if(checkChrono(cvs,2)){
                 saShed->status = rec_push_sas;
-                setChrono(cvs,0.2);
+                setChrono(cvs,wait);
             }else sendFromHLCPF(cvs,1,1,1);
 
             if(hlcPF->output){
                 saShed->status = Dpmt5_sas;
                 if (TEAM) set_goal(cvs,2.49,.57,-M_PI/4);
-                else set_goal(cvs,3-2.47,.57,-3*M_PI/4);
+                else set_goal(cvs,3-2.45,.55,-3*M_PI/4);
                 printf("go to Dpmt5_sas\n");
             }
             break;
@@ -168,13 +162,13 @@ void saShed_loop(ctrlStruct *cvs){
 
             if(checkChrono(cvs,2)){
                 saShed->status = rec_push_sas;
-                setChrono(cvs,0.2);
+                setChrono(cvs,wait);
             }else sendFromHLCPF(cvs,1,1,1);
             if(hlcPF->output){
                 motors_stop(cvs);
                 set_commands(cvs,0,0);
                 saShed->status = rec_sas;
-                setChrono(cvs,0.2);
+                setChrono(cvs,wait);
                 printf("rec START\n");
                 teensy_send(cvs, "B");
             }
@@ -216,10 +210,10 @@ void saShed_loop(ctrlStruct *cvs){
             else if (checkChrono(cvs)) {
                 motors_stop(cvs);
                 set_commands(cvs,0,0);
-                //teensy_send(cvs, "6");
+                teensy_send(cvs, "6");
                 teensy->switch_F = 0;
                 saShed->status = rec_push_sas;
-                setChrono(cvs,0.2);
+                setChrono(cvs,wait);
             }
             break;
         }
@@ -228,7 +222,7 @@ void saShed_loop(ctrlStruct *cvs){
             sendFromHLCPF(cvs,-1);
             if(hlcPF->output){
                 saShed->status = rec_push_sas;
-                setChrono(cvs,0.2);
+                setChrono(cvs,wait);
             }
             break;
         }
@@ -290,7 +284,7 @@ void saShed_loop(ctrlStruct *cvs){
         case Wait_for_stat_sas:{
             if (checkChrono(cvs)){
                 saShed->status = rec_stat_sas;
-                setChrono(cvs,0.2);
+                setChrono(cvs,wait);
 
             }
             break;
@@ -300,7 +294,7 @@ void saShed_loop(ctrlStruct *cvs){
                 printf("rec END\n");
                 saShed->status = Dpmt9_sas;
                 if (TEAM) set_goal(cvs,2.58,0.5,-M_PI/4);//2.73,.30,-10
-                else set_goal(cvs,0.56,.47,-10);
+                else set_goal(cvs,0.57,.47,-10);
             }
             break;
         }

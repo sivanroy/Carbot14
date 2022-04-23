@@ -996,11 +996,7 @@ int main()
         }
     }
     if (arduinoON) {
-        teensy_send(cvs, "A");
-        usleep(1200000);
-        teensy_send(cvs, "Q");
-        usleep(1200000);
-        teensy_send(cvs, "R");
+        arduino_send(cvs, "R");
 
         int one = 0;
         int two = 0;
