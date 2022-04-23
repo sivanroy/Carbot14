@@ -118,7 +118,7 @@ void poseStat_loop(ctrlStruct *cvs){
             if (checkChrono(cvs)) {
                 poseStat->status = go_back_prec_pos;
                 if (TEAM) set_goal(cvs,2.8,1.6,-1.2*M_PI/2);
-                else set_goal(cvs,.25,1.6,0);
+                else set_goal(cvs,.25,1.6,-M_PI/4);
                 printf("go to Dpmt3_ps\n");
             }
             break;

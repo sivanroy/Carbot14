@@ -17,7 +17,7 @@ enum {S0_es,Dpmt1_es,Dpmt2_es,Dpmt1_prec_es,Check1_es,Dpmt2_prec_es,Check2_es,Dp
     Dpmt1_noR_es,Check1_noR_es,Dpmt2_noR_es,Check2_noR_es,Dpmt3_noR_es,Check3_noR_es,Dpmt4_noR_es,Check4_noR_es,
     Dpmt5_noR_es,Check5_noR_es,Dpmt6_noR_es,Check6_noR_es,Dpmt7_noR_es,
     rec1_es,rec2_es,rec3_es,rec4_es,rec5_es,rec6_es,rec7_es,
-    rec1_noR_es,rec2_noR_es,rec3_noR_es,rec4_noR_es,rec5_noR_es,rec6_noR_es,rec7_noR_es};
+    rec1_noR_es,rec2_noR_es,rec3_noR_es,rec4_noR_es,rec5_noR_es,rec6_noR_es,rec7_noR_es,rec_start_es};
 
 void excSq_init(excSquares *excSq){
     excSq->status = S0_ps;
@@ -79,14 +79,20 @@ void excSq_loop(ctrlStruct *cvs){
                 if (hlcPF->output) {
                     motors_stop(cvs);
                     set_commands(cvs, 0, 0);
-                    excSq->status = Dpmt2_es;
-                    if (TEAM) set_goal(cvs, 2.5, 0.2, M_PI);
+                    excSq->status = rec_start_es;
+                    if (TEAM) set_goal(cvs, 2.47, 0.25, M_PI);
                     else set_goal(cvs, .68, 0.25, 0.8 * M_PI);
                     setChrono(cvs, 5);
                 }
                 break;
             }
-
+            case rec_start_es:{
+                if (rec_static(cvs)) {
+                    printf("rec_start_es END : go to Dpmt2_es\n");
+                    excSq->status = Dpmt2_es;
+                }
+                break;
+            }
             case Dpmt2_es: {
                 sendFromHLCPF(cvs, -1, 1,1);
                 if (hlcPF->output) {
@@ -101,6 +107,8 @@ void excSq_loop(ctrlStruct *cvs){
                     motors_stop(cvs);
                     set_commands(cvs, 0, 0);
                     excSq->status = Dpmt1_es;
+                    if (TEAM) set_goal(cvs, 2.53, 0.5, M_PI / 2);
+                    else set_goal(cvs, .65, 0.5, M_PI / 2);
                 }
                 break;
             }
@@ -667,12 +675,12 @@ void excSq_loop(ctrlStruct *cvs){
     else {
         switch(excSq->status){
             case S0_es:{
-                if(excSq->go){
+                //if(excSq->go){
                     excSq->status = Dpmt1_es;
                     set_goal(cvs,1.965,0.48,M_PI/2);
                     printf("go to dp1\n");
                     excSq->go = 0;
-                }
+                //}
                 break;
             }
 
@@ -681,9 +689,16 @@ void excSq_loop(ctrlStruct *cvs){
                 if(hlcPF->output){
                     motors_stop(cvs);
                     set_commands(cvs,0,0);
-                    excSq->status = Dpmt2_es;
-                    set_goal(cvs,1.935,0.2,M_PI);
+                    excSq->status = rec_start_es;
+                    set_goal(cvs,1.935,0.25,M_PI);
                     setChrono(cvs, 5);
+                }
+                break;
+            }
+            case rec_start_es:{
+                if (rec_static(cvs)) {
+                    printf("rec_start_es END : go to Dpmt2_es\n");
+                    excSq->status = Dpmt2_es;
                 }
                 break;
             }
@@ -701,6 +716,7 @@ void excSq_loop(ctrlStruct *cvs){
                     motors_stop(cvs);
                     set_commands(cvs, 0, 0);
                     excSq->status = Dpmt1_es;
+                    set_goal(cvs,1.965,0.48,M_PI/2);
                 }
                 break;
             }

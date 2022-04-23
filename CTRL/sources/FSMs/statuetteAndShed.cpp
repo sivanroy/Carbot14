@@ -176,6 +176,7 @@ void saShed_loop(ctrlStruct *cvs){
                 saShed->status = rec_sas;
                 setChrono(cvs,0.2);
                 printf("rec START\n");
+                teensy_send(cvs, "B");
             }
             break;
         }
@@ -187,7 +188,6 @@ void saShed_loop(ctrlStruct *cvs){
                 else set_goal(cvs,3-2.83,.16,-10);
                 printf("go to Dpmt6_ps\n");
                 setChrono(cvs,2);
-                teensy_send(cvs, "B");
                 teensy_send(cvs, "5");
                 //if (TEAM) set_goal(cvs, 2.58, .46, -M_PI / 4);
                 //else set_goal(cvs, .45, .42, -3 * M_PI / 4);
