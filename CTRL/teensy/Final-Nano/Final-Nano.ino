@@ -16,16 +16,21 @@
 * A -> +10 : + 10 points if the replica is on the pedestal at the end of the game;
 * F -> +15 : + 15 points if the statuette is inside the display cabinet at the end of the game;
 * K -> +20 : + 20 points if all the team robots are inside either the camp either the excavation site;
+* R -> Reset points to 4
+* C -> Display C14
 */
 
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
 #include <FastLED.h>
-#define NUM_LEDS 13
+#define NUM_LEDS 60
 #define LED_PIN 2
 
 CRGB leds[NUM_LEDS];
+
+const int BUFFER_SIZE = 1;
+char buf[BUFFER_SIZE];
 
 int pinA = 12;
 int pinB = 8;
@@ -44,6 +49,7 @@ int points;
 int currDigit = D1;
 int len = 0;
 
+int started = 0;
 String data = "0";
 
 void setup() {
@@ -76,7 +82,24 @@ void loop() {
 }
 
 void ledStrip(){
-  rainbowBeat();
+  //
+}
+
+void scoreBlink(){
+  for(int i=0; i<30; i++){
+        fill_solid(leds, NUM_LEDS, CRGB::White); 
+        FastLED.show();
+        checkRPI();
+        count();
+        digitDisplay();
+        delay(8);
+        fill_solid(leds, NUM_LEDS, CRGB::Black); 
+        FastLED.show();
+        checkRPI();
+        count();
+        digitDisplay();
+        delay(8);
+      }
 }
 
 void sawTooth(){
@@ -147,11 +170,8 @@ void rainbowBeat(){
 
 void checkRPI(){
   if (Serial.available() > 0) {
-    digitalWrite(D1, HIGH);
-    digitalWrite(D2, HIGH);
-    digitalWrite(D3, HIGH);
-    digitalWrite(D4, HIGH);
-    data = Serial.readStringUntil('\n');
+    Serial.readBytes(buf, BUFFER_SIZE);
+    data = buf[0];
   }
 }
 
@@ -159,37 +179,46 @@ void count() {
   if (data == "1"){
     points = points + 1;
     data = "0";
+    scoreBlink();
   }
   if (data == "2"){
     points = points + 2;
     data = "0";
+    scoreBlink();
   }
   if (data == "3"){
     points = points + 3;
     data = "0";
+    scoreBlink();
   }
   if (data == "5"){
     points = points + 5;
     data = "0";
+    scoreBlink();
   }
   if (data == "6"){
     points = points + 6;
     data = "0";
+    scoreBlink();
   }
   if (data == "A"){
     points = points + 10;
     data = "0";
+    scoreBlink();
   }
   if (data == "F"){
     points = points + 15;
     data = "0";
+    scoreBlink();
   }
   if (data == "K"){
     points = points + 20;
     data = "0";
+    scoreBlink();
   }
   if (data == "R"){
     points = 4;
+    started = 1;
     data = "0";
   }
 }
@@ -250,32 +279,30 @@ void digitDisplay(){
       currDigit = D4;
     } 
 
-    if (strPoints.charAt(i) == '0'){
+    if (started == 0 || data == "C"){
       digitalWrite(D1, HIGH);
       digitalWrite(D2, HIGH);
       digitalWrite(D3, HIGH);
       digitalWrite(D4, HIGH);
       
-      digitalWrite(currDigit, LOW);
+      digitalWrite(D2, LOW);
       
       digitalWrite(pinA, HIGH);   
-      digitalWrite(pinB, HIGH);   
-      digitalWrite(pinC, HIGH);   
+      digitalWrite(pinB, LOW);   
+      digitalWrite(pinC, LOW);   
       digitalWrite(pinD, HIGH);   
       digitalWrite(pinE, HIGH);   
       digitalWrite(pinF, HIGH);   
       digitalWrite(pinG, LOW); 
 
       delay(5);
-    }
 
-    if (strPoints.charAt(i) == '1'){
       digitalWrite(D1, HIGH);
       digitalWrite(D2, HIGH);
       digitalWrite(D3, HIGH);
       digitalWrite(D4, HIGH);
       
-      digitalWrite(currDigit, LOW);
+      digitalWrite(D3, LOW);
 
       digitalWrite(pinA, LOW);   
       digitalWrite(pinB, HIGH);   
@@ -286,53 +313,13 @@ void digitDisplay(){
       digitalWrite(pinG, LOW);
 
       delay(5);
-    }
 
-    if (strPoints.charAt(i) == '2'){
-      digitalWrite(D1, HIGH);
-      digitalWrite(D2, HIGH);
-      digitalWrite(D3, HIGH);
-      digitalWrite(D4, HIGH);
-      
-      digitalWrite(currDigit, LOW);
-      
-      digitalWrite(pinA, HIGH);   
-      digitalWrite(pinB, HIGH);   
-      digitalWrite(pinC, LOW);   
-      digitalWrite(pinD, HIGH);   
-      digitalWrite(pinE, HIGH);   
-      digitalWrite(pinF, LOW);   
-      digitalWrite(pinG, HIGH); 
-
-      delay(5);
-    }
-
-    if (strPoints.charAt(i) == '3'){
-      digitalWrite(D1, HIGH);
-      digitalWrite(D2, HIGH);
-      digitalWrite(D3, HIGH);
-      digitalWrite(D4, HIGH);
-      
-      digitalWrite(currDigit, LOW);
-
-      digitalWrite(pinA, HIGH);   
-      digitalWrite(pinB, HIGH);   
-      digitalWrite(pinC, HIGH);   
-      digitalWrite(pinD, HIGH);   
-      digitalWrite(pinE, LOW);   
-      digitalWrite(pinF, LOW);   
-      digitalWrite(pinG, HIGH);
-
-      delay(5);
-    }
-
-    if (strPoints.charAt(i) == '4'){
       digitalWrite(D1, HIGH);
       digitalWrite(D2, HIGH);
       digitalWrite(D3, HIGH);
       digitalWrite(D4, HIGH);
 
-      digitalWrite(currDigit, LOW);
+      digitalWrite(D4, LOW);
 
       digitalWrite(pinA, LOW);   
       digitalWrite(pinB, HIGH);   
@@ -343,101 +330,200 @@ void digitDisplay(){
       digitalWrite(pinG, HIGH);
 
       delay(5);
+
+      started = 0;
     }
-    
-    if (strPoints.charAt(i) == '5'){
-      digitalWrite(D1, HIGH);
-      digitalWrite(D2, HIGH);
-      digitalWrite(D3, HIGH);
-      digitalWrite(D4, HIGH);
+    if (started == 1){
       
-      digitalWrite(currDigit, LOW);
-
-      digitalWrite(pinA, HIGH);   
-      digitalWrite(pinB, LOW);   
-      digitalWrite(pinC, HIGH);   
-      digitalWrite(pinD, HIGH);   
-      digitalWrite(pinE, LOW);   
-      digitalWrite(pinF, HIGH);   
-      digitalWrite(pinG, HIGH);
-
-      delay(5);
-    }
-
-    if (strPoints.charAt(i) == '6'){
-      digitalWrite(D1, HIGH);
-      digitalWrite(D2, HIGH);
-      digitalWrite(D3, HIGH);
-      digitalWrite(D4, HIGH);
+      if (strPoints.charAt(i) == '0'){
+        digitalWrite(D1, HIGH);
+        digitalWrite(D2, HIGH);
+        digitalWrite(D3, HIGH);
+        digitalWrite(D4, HIGH);
+        
+        digitalWrite(currDigit, LOW);
+        
+        digitalWrite(pinA, HIGH);   
+        digitalWrite(pinB, HIGH);   
+        digitalWrite(pinC, HIGH);   
+        digitalWrite(pinD, HIGH);   
+        digitalWrite(pinE, HIGH);   
+        digitalWrite(pinF, HIGH);   
+        digitalWrite(pinG, LOW); 
+  
+        delay(5);
+      }
+  
+      if (strPoints.charAt(i) == '1'){
+        digitalWrite(D1, HIGH);
+        digitalWrite(D2, HIGH);
+        digitalWrite(D3, HIGH);
+        digitalWrite(D4, HIGH);
+        
+        digitalWrite(currDigit, LOW);
+  
+        digitalWrite(pinA, LOW);   
+        digitalWrite(pinB, HIGH);   
+        digitalWrite(pinC, HIGH);   
+        digitalWrite(pinD, LOW);   
+        digitalWrite(pinE, LOW);   
+        digitalWrite(pinF, LOW);   
+        digitalWrite(pinG, LOW);
+  
+        delay(5);
+      }
+  
+      if (strPoints.charAt(i) == '2'){
+        digitalWrite(D1, HIGH);
+        digitalWrite(D2, HIGH);
+        digitalWrite(D3, HIGH);
+        digitalWrite(D4, HIGH);
+        
+        digitalWrite(currDigit, LOW);
+        
+        digitalWrite(pinA, HIGH);   
+        digitalWrite(pinB, HIGH);   
+        digitalWrite(pinC, LOW);   
+        digitalWrite(pinD, HIGH);   
+        digitalWrite(pinE, HIGH);   
+        digitalWrite(pinF, LOW);   
+        digitalWrite(pinG, HIGH); 
+  
+        delay(5);
+      }
+  
+      if (strPoints.charAt(i) == '3'){
+        digitalWrite(D1, HIGH);
+        digitalWrite(D2, HIGH);
+        digitalWrite(D3, HIGH);
+        digitalWrite(D4, HIGH);
+        
+        digitalWrite(currDigit, LOW);
+  
+        digitalWrite(pinA, HIGH);   
+        digitalWrite(pinB, HIGH);   
+        digitalWrite(pinC, HIGH);   
+        digitalWrite(pinD, HIGH);   
+        digitalWrite(pinE, LOW);   
+        digitalWrite(pinF, LOW);   
+        digitalWrite(pinG, HIGH);
+  
+        delay(5);
+      }
+  
+      if (strPoints.charAt(i) == '4'){
+        digitalWrite(D1, HIGH);
+        digitalWrite(D2, HIGH);
+        digitalWrite(D3, HIGH);
+        digitalWrite(D4, HIGH);
+  
+        digitalWrite(currDigit, LOW);
+  
+        digitalWrite(pinA, LOW);   
+        digitalWrite(pinB, HIGH);   
+        digitalWrite(pinC, HIGH);   
+        digitalWrite(pinD, LOW);   
+        digitalWrite(pinE, LOW);   
+        digitalWrite(pinF, HIGH);   
+        digitalWrite(pinG, HIGH);
+  
+        delay(5);
+      }
       
-      digitalWrite(currDigit, LOW);
-
-      digitalWrite(pinA, HIGH);   
-      digitalWrite(pinB, LOW);   
-      digitalWrite(pinC, HIGH);   
-      digitalWrite(pinD, HIGH);   
-      digitalWrite(pinE, HIGH);   
-      digitalWrite(pinF, HIGH);   
-      digitalWrite(pinG, HIGH); 
-
-      delay(5);
-    }
-    
-    if (strPoints.charAt(i) == '7'){
-      digitalWrite(D1, HIGH);
-      digitalWrite(D2, HIGH);
-      digitalWrite(D3, HIGH);
-      digitalWrite(D4, HIGH);
+      if (strPoints.charAt(i) == '5'){
+        digitalWrite(D1, HIGH);
+        digitalWrite(D2, HIGH);
+        digitalWrite(D3, HIGH);
+        digitalWrite(D4, HIGH);
+        
+        digitalWrite(currDigit, LOW);
+  
+        digitalWrite(pinA, HIGH);   
+        digitalWrite(pinB, LOW);   
+        digitalWrite(pinC, HIGH);   
+        digitalWrite(pinD, HIGH);   
+        digitalWrite(pinE, LOW);   
+        digitalWrite(pinF, HIGH);   
+        digitalWrite(pinG, HIGH);
+  
+        delay(5);
+      }
+  
+      if (strPoints.charAt(i) == '6'){
+        digitalWrite(D1, HIGH);
+        digitalWrite(D2, HIGH);
+        digitalWrite(D3, HIGH);
+        digitalWrite(D4, HIGH);
+        
+        digitalWrite(currDigit, LOW);
+  
+        digitalWrite(pinA, HIGH);   
+        digitalWrite(pinB, LOW);   
+        digitalWrite(pinC, HIGH);   
+        digitalWrite(pinD, HIGH);   
+        digitalWrite(pinE, HIGH);   
+        digitalWrite(pinF, HIGH);   
+        digitalWrite(pinG, HIGH); 
+  
+        delay(5);
+      }
       
-      digitalWrite(currDigit, LOW);
-
-      digitalWrite(pinA, HIGH);   
-      digitalWrite(pinB, HIGH);   
-      digitalWrite(pinC, HIGH);   
-      digitalWrite(pinD, LOW);   
-      digitalWrite(pinE, LOW);   
-      digitalWrite(pinF, LOW);   
-      digitalWrite(pinG, LOW);
-
-      delay(5);
-    }
-
-    if (strPoints.charAt(i) == '8'){
-      digitalWrite(D1, HIGH);
-      digitalWrite(D2, HIGH);
-      digitalWrite(D3, HIGH);
-      digitalWrite(D4, HIGH);
-      
-      digitalWrite(currDigit, LOW);
-
-      digitalWrite(pinA, HIGH);   
-      digitalWrite(pinB, HIGH);   
-      digitalWrite(pinC, HIGH);   
-      digitalWrite(pinD, HIGH);   
-      digitalWrite(pinE, HIGH);   
-      digitalWrite(pinF, HIGH);   
-      digitalWrite(pinG, HIGH);
-
-      delay(5);
-    }
-
-    if (strPoints.charAt(i) == '9'){
-      digitalWrite(D1, HIGH);
-      digitalWrite(D2, HIGH);
-      digitalWrite(D3, HIGH);
-      digitalWrite(D4, HIGH);
-      
-      digitalWrite(currDigit, LOW);
-
-      digitalWrite(pinA, HIGH);   
-      digitalWrite(pinB, HIGH);   
-      digitalWrite(pinC, HIGH);   
-      digitalWrite(pinD, HIGH);   
-      digitalWrite(pinE, LOW);   
-      digitalWrite(pinF, HIGH);   
-      digitalWrite(pinG, HIGH);
-
-      delay(5);
+      if (strPoints.charAt(i) == '7'){
+        digitalWrite(D1, HIGH);
+        digitalWrite(D2, HIGH);
+        digitalWrite(D3, HIGH);
+        digitalWrite(D4, HIGH);
+        
+        digitalWrite(currDigit, LOW);
+  
+        digitalWrite(pinA, HIGH);   
+        digitalWrite(pinB, HIGH);   
+        digitalWrite(pinC, HIGH);   
+        digitalWrite(pinD, LOW);   
+        digitalWrite(pinE, LOW);   
+        digitalWrite(pinF, LOW);   
+        digitalWrite(pinG, LOW);
+  
+        delay(5);
+      }
+  
+      if (strPoints.charAt(i) == '8'){
+        digitalWrite(D1, HIGH);
+        digitalWrite(D2, HIGH);
+        digitalWrite(D3, HIGH);
+        digitalWrite(D4, HIGH);
+        
+        digitalWrite(currDigit, LOW);
+  
+        digitalWrite(pinA, HIGH);   
+        digitalWrite(pinB, HIGH);   
+        digitalWrite(pinC, HIGH);   
+        digitalWrite(pinD, HIGH);   
+        digitalWrite(pinE, HIGH);   
+        digitalWrite(pinF, HIGH);   
+        digitalWrite(pinG, HIGH);
+  
+        delay(5);
+      }
+  
+      if (strPoints.charAt(i) == '9'){
+        digitalWrite(D1, HIGH);
+        digitalWrite(D2, HIGH);
+        digitalWrite(D3, HIGH);
+        digitalWrite(D4, HIGH);
+        
+        digitalWrite(currDigit, LOW);
+  
+        digitalWrite(pinA, HIGH);   
+        digitalWrite(pinB, HIGH);   
+        digitalWrite(pinC, HIGH);   
+        digitalWrite(pinD, HIGH);   
+        digitalWrite(pinE, LOW);   
+        digitalWrite(pinF, HIGH);   
+        digitalWrite(pinG, HIGH);
+  
+        delay(5);
+      }
     }
   }
 }
