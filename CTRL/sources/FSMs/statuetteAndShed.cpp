@@ -183,6 +183,7 @@ void saShed_loop(ctrlStruct *cvs){
                 printf("go to Dpmt6_ps\n");
                 setChrono(cvs,2);
                 teensy_send(cvs, "5");
+                teensy_send(cvs, "B");
                 //if (TEAM) set_goal(cvs, 2.58, .46, -M_PI / 4);
                 //else set_goal(cvs, .45, .42, -3 * M_PI / 4);
             }
@@ -354,6 +355,7 @@ void saShed_loop(ctrlStruct *cvs){
             sendFromHLCPF(cvs,0,1);
             if(hlcPF->output){
                 set_commands(cvs,0,0);
+                teensy_send(cvs, "B");
                 saShed->output = 1;
             }
             break;
