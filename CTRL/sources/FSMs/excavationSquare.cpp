@@ -61,7 +61,7 @@ void excSq_loop(ctrlStruct *cvs){
     y = pos[1];//+ hlcPF->x_shift * sin(th);
 
     double wait = 0.6;
-    double dy = 0.02
+    double dy = 0.02;
 
     if (TEAM) {
         switch (excSq->status) {

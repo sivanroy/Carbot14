@@ -311,6 +311,7 @@ void saShed_loop(ctrlStruct *cvs){
                 if (TEAM) set_goal(cvs,2.77,.25,-10);
                 else set_goal(cvs,.23,.25,-10);
                 printf("go to Dpmt10_ps\n");
+                setChrono(cvs,1.5);
                 //teensy_send(cvs, "B");
                 //teensy_send(cvs, "5");
                 //saShed->output = 1;
@@ -325,7 +326,7 @@ void saShed_loop(ctrlStruct *cvs){
             mlcPF->sigma = 0.5;
             //cvs->mlcPF->Kp_th = 10;
             sendFromHLCPF(cvs,1,1);
-            if (teensy->switch_F) {
+            if (teensy->switch_F|checkChrono(cvs)) {
                 motors_stop(cvs);
                 set_commands(cvs,0,0);
                 setChrono(cvs,0.5);
