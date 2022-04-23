@@ -989,7 +989,7 @@ void excSq_loop(ctrlStruct *cvs){
                         excSq->status = rec5_es;
                         setChrono(cvs,wait);
                         printf("2 : go to rec5_es\n");
-                        set_goal(cvs,1.155,.21,M_PI);
+                        set_goal(cvs,1.155+0.02,.21,M_PI);
                     }
                     else if (teensy->R_mes3 == 0 || teensy->R_mes2 == 3) {
                         excSq->status = rec4_noR_es;
@@ -1015,7 +1015,7 @@ void excSq_loop(ctrlStruct *cvs){
                     excSq->status = rec5_es;
                     setChrono(cvs,wait);
                     printf("go to rec5_es\n");
-                    set_goal(cvs,1.155,0.21,M_PI);
+                    set_goal(cvs,1.155+0.02,0.21,M_PI);
                 }
                 break;
             }
@@ -1082,7 +1082,7 @@ void excSq_loop(ctrlStruct *cvs){
                     excSq->status = rec5_es;
                     setChrono(cvs,wait);
                     printf("go to rec5_es\n");
-                    set_goal(cvs,1.34,0.21,M_PI);
+                    set_goal(cvs,1.155+0.02,0.21,M_PI);
                 }
                 break;
             }
@@ -1111,8 +1111,8 @@ void excSq_loop(ctrlStruct *cvs){
                 break;
             }
             case Check5_es:{
-                if (teensy->R1) {
-                    teensy->R_mes5 = 1;
+                if (teensy->R3) {
+                    teensy->R_mes5 = 3;
                 }
                 else if (teensy->R2) {
                     teensy->R_mes5 = 2;
@@ -1127,7 +1127,7 @@ void excSq_loop(ctrlStruct *cvs){
                         }
                     }
                 }
-                else if (teensy->no_R) {
+                else if (teensy->no_R || teensy->R1) {
                     teensy->R_mes5 = 0;
                 }
                 if(checkChrono(cvs)){
@@ -1138,7 +1138,7 @@ void excSq_loop(ctrlStruct *cvs){
                     excSq->status = rec6_es;
                     setChrono(cvs,wait);
                     printf("go to rec6_es\n");
-                    set_goal(cvs,0.97,0.21,M_PI);
+                    set_goal(cvs,0.97+0.01,0.21,M_PI);
                 }
                 break;
             }
@@ -1183,22 +1183,22 @@ void excSq_loop(ctrlStruct *cvs){
                     teensy->R2 = 0;
                     teensy->R3 = 0;
                     printf("1 OR 2 :\n");
-                    if (teensy->R_mes5 == 1) {
+                    if (teensy->R_mes5 == 3) {
                         excSq->status = rec7_es;
                         setChrono(cvs,wait);
                         printf("1 : go to rec7_es\n");
-                        set_goal(cvs,0.785,.21,M_PI);
+                        set_goal(cvs,0.785+0.02,.21,M_PI);
                     }
                     else if (teensy->R_mes5 == 2) {
                         excSq->status = Out_es;
                         printf("2 : go to Out_es\n");
                         set_goal(cvs,0.5,0.5,M_PI/2);
                     }
-                    else if (teensy->R_mes5 == 0 || teensy->R_mes5 == 3) {
+                    else if (teensy->R_mes5 == 0 || teensy->R_mes5 == 1) {
                         excSq->status = rec7_noR_es;
                         setChrono(cvs,wait);
                         printf("0 : go to rec7_noR_es\n");
-                        set_goal(cvs,0.785,.21,M_PI);
+                        set_goal(cvs,0.785+0.02,.21,M_PI);
                     }
                 }
                 break;
