@@ -52,7 +52,7 @@ int main()
     int icpON = 0;
     int teensyON = 0;
     int icpDynON = 0;
-    int odON = 1;
+    int odON = 0;
     int poseStatON = 0;
     int saShedON = 0;
     int excSqON = 0;
@@ -61,7 +61,8 @@ int main()
     int arduinoON = 0;
     int mThreadsON = 0;
 
-    int contest = 0;
+    int avoidOpponent = 0;
+    int contest = 1;
     int started = 0;
     if (contest) {
         printf("let's go!\n");
@@ -105,6 +106,75 @@ int main()
         mt->thread_main_end = 1;
         printf("th_end : start ... ");
         threads_end(cvs);
+    }
+
+    if (avoidOpponent){
+        threads_start(cvs);
+        get_d2r_data(cvs);
+        //inputs->team = 1;
+        saShed_launch(cvs);
+        printf("hlcPFON\n");
+        cvs->mp->x = 3-0.133;
+        cvs->mp->y = 1.467;
+        cvs->mp->th = M_PI;
+        printf("team = %d \n",inputs->team );
+        if(!inputs->team){
+            teensy_send(cvs, "2");
+            cvs->mp->x = .133;
+            cvs->mp->th = 0;
+        }
+        else teensy_send(cvs, "1");
+        double xgoal = cvs->mp->x;double ygoal=cvs->mp->y;
+        int forward;double orientation;
+        set_param_normal(cvs);
+        //inputs->team = 1;
+        cvs->mp->x = 3-0.14;
+        cvs->mp->y = 2-0.53;
+        cvs->mp->th = M_PI;
+
+        printf("begin test hlcPavoid oppoent \n");
+        while (inputs->t < 75) {
+            auto start = high_resolution_clock::now();
+            double t = inputs->t;
+            if (t==0) {
+                xgoal = 1;//2.2;//1.2;
+                ygoal = 1;//1.60;
+                forward=-1;
+                orientation = M_PI;//M_PI/2;
+                set_goal(cvs, xgoal, ygoal, orientation);
+                printf("goal A\n");
+            } else if (t>25 & t<25.01) {
+                //set_param_prec(cvs);
+                xgoal = 2;
+                ygoal = 1;
+                forward =-1;
+                orientation = M_PI;
+                set_goal(cvs, xgoal, ygoal, orientation);
+                printf("goal B\n");
+            } else if (t>50 & t<50.1) {
+                xgoal = 1;//1.3;
+                ygoal = 1;
+                forward = -1;
+                orientation = M_PI;
+                set_goal(cvs, xgoal, ygoal, orientation);
+                printf("goal c\n");
+            }
+            //get_d2r_data(cvs); // ctrlIn
+            sendFromHLCPF(cvs,forward);
+
+            //set_new_position(cvs);
+            //printf("cmd_r = %d | cmd_l = %d\n", outputs->r_cmd, outputs->l_cmd);
+            //printf("x = %f | y = %f | th = %f\n", mp->x, mp->y, mp->th);
+
+            fprintf(cvs->llc_data, "%f,%f,%f,%f,%f,%f,%f\n", inputs->t, mlcPF->r_sp_ref, mlcPF->l_sp_ref, inputs->r_sp_mes_enc, inputs->l_sp_mes_enc, inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
+
+            update_time(cvs);
+            auto stop = high_resolution_clock::now();
+            auto duration = duration_cast<microseconds>(stop - start);
+
+            //printf("duration.count() = %lld us | t = %f\n-------------\n", duration.count(), inputs->t);
+            usleep(dt * 1000000 - duration.count());
+        }
     }
 
     if (odON) {
