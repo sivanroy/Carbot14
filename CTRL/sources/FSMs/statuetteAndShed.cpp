@@ -51,12 +51,12 @@ void saShed_loop(ctrlStruct *cvs){
     //double d_opp = cvs->hlcPF->d_opp;
     double dmax = 0.35;
 
-    double x_dyn = cvs->obs->obs_dyn_x;
+    """double x_dyn = cvs->obs->obs_dyn_x;
     double y_dyn = cvs->obs->obs_dyn_y;
     double x1o = x+ hlcPF->x_shift * cos(th) - x_dyn;
     double y1o = y+ hlcPF->x_shift * sin(th) - y_dyn;
     double d_opp = sqrt(x1o*x1o+y1o*y1o);
-    hlcPF->d_opp = d_opp;
+    hlcPF->d_opp = d_opp;"""
 
     switch(saShed->status){
         case S0_sas:{
@@ -75,7 +75,7 @@ void saShed_loop(ctrlStruct *cvs){
         case Dpmt1_sas:{
             set_param_normal(cvs);
             hlcPF->error = 0.03;
-            printf("d_opp : %f\n",cvs->hlcPF->d_opp);
+            //printf("d_opp : %f\n",cvs->hlcPF->d_opp);
             if(checkChrono(cvs,2)){
                 saShed->status = dpmt_si_echec;
                 if (TEAM) set_goal(cvs,2.48,1.55,-2.73);//2.47,1.55,-2.75
