@@ -61,6 +61,7 @@ void excSq_loop(ctrlStruct *cvs){
     y = pos[1];//+ hlcPF->x_shift * sin(th);
 
     double wait = 0.6;
+    double dy = 0.02
 
     if (TEAM) {
         switch (excSq->status) {
@@ -83,14 +84,15 @@ void excSq_loop(ctrlStruct *cvs){
                     excSq->status = rec_start_es;
                     if (TEAM) set_goal(cvs, 2.47, 0.25, M_PI);
                     else set_goal(cvs, .68, 0.25, 0.8 * M_PI);
-                    setChrono(cvs, 5);
+                    setChrono(cvs,wait);
                 }
                 break;
             }
             case rec_start_es:{
-                if (rec_static(cvs)) {
+                if (rec_static(cvs) | checkChrono(cvs)) {
                     printf("rec_start_es END : go to Dpmt2_es\n");
                     excSq->status = Dpmt2_es;
+                    setChrono(cvs, 5);
                 }
                 break;
             }

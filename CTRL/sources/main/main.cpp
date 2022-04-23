@@ -52,7 +52,7 @@ int main()
     int icpON = 0;
     int teensyON = 0;
     int icpDynON = 0;
-    int odON = 0;
+    int odON = 1;
     int poseStatON = 0;
     int saShedON = 0;
     int excSqON = 0;
@@ -61,7 +61,7 @@ int main()
     int arduinoON = 0;
     int mThreadsON = 0;
 
-    int contest = 1;
+    int contest = 0;
     int started = 0;
     if (contest) {
         printf("let's go!\n");
@@ -77,6 +77,7 @@ int main()
             teensy_send(cvs,"2");
         } else teensy_send(cvs, "1");
         threads_start(cvs);
+        teensy_send(cvs, "Q");
 
         while(inputs->t < 99){
             auto start = high_resolution_clock::now();
