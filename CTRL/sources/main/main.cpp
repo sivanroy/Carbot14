@@ -55,14 +55,14 @@ int main()
     int odON = 0;
     int poseStatON = 0;
     int saShedON = 0;
-    int excSqON = 0;
+    int excSqON = 1;
     int distON = 0;
 
     int arduinoON = 0;
     int mThreadsON = 0;
 
     int avoidOpponent = 0;
-    int contest = 1;
+    int contest = 0;
     int started = 0;
     if (contest) {
         printf("let's go!\n");
@@ -972,7 +972,7 @@ int main()
             cvs->mp->th = 0;
         }
         else teensy_send(cvs, "1");
-        while(inputs->t < 50){
+        while(inputs->t < 60){
             auto start = high_resolution_clock::now();
             teensy_recv(cvs);
 
@@ -1081,8 +1081,9 @@ int main()
                 one = 1;
                 arduino_send(cvs, "1");
             }
-            if (inputs->t >= 3 && two == 0) {
+            if (inputs->t >= 1.1 && two == 0) {
                 two = 1;
+                arduino_send(cvs, "K");
                 arduino_send(cvs, "K");
             }
             update_time(cvs);

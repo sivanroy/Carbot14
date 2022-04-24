@@ -68,7 +68,7 @@ void excSq_loop(ctrlStruct *cvs){
             case S0_es: {
                 //if (excSq->go) {
                     excSq->status = Dpmt1_es;
-                    if (TEAM) set_goal(cvs, 2.53, 0.5, M_PI / 2);
+                    if (TEAM) set_goal(cvs, 2.3, 0.5, M_PI / 2);
                     else set_goal(cvs, .65, 0.5, M_PI / 2);
                     printf("go to dp1\n");
                     excSq->go = 0;
@@ -82,7 +82,7 @@ void excSq_loop(ctrlStruct *cvs){
                     motors_stop(cvs);
                     set_commands(cvs, 0, 0);
                     excSq->status = rec_start_es;
-                    if (TEAM) set_goal(cvs, 2.45, 0.24, M_PI);
+                    if (TEAM) set_goal(cvs, 2.41, 0.21, -0.95*M_PI);
                     else set_goal(cvs, .68, 0.25, 0.8 * M_PI);
                     setChrono(cvs,wait);
                 }
@@ -98,20 +98,13 @@ void excSq_loop(ctrlStruct *cvs){
             }
             case Dpmt2_es: {
                 sendFromHLCPF(cvs, -1, 1,1);
-                if (hlcPF->output) {
+                if (hlcPF->output | checkChrono(cvs)) {
                     motors_stop(cvs);
                     set_commands(cvs, 0, 0);
                     excSq->status = rec1_es;
                     setChrono(cvs,wait);
-                    if (TEAM) set_goal(cvs, 2.45, 0.21-dy, M_PI);
+                    if (TEAM) set_goal(cvs, 2.41, 0.21-dy, M_PI);
                     else set_goal(cvs, 0.6675 + 0.1, .21-dy, M_PI);
-                }
-                else if (checkChrono(cvs)) {
-                    motors_stop(cvs);
-                    set_commands(cvs, 0, 0);
-                    excSq->status = Dpmt1_es;
-                    if (TEAM) set_goal(cvs, 2.53, 0.5, M_PI / 2);
-                    else set_goal(cvs, .65, 0.5, M_PI / 2);
                 }
                 break;
             }
@@ -119,6 +112,7 @@ void excSq_loop(ctrlStruct *cvs){
                 if (rec_static(cvs)|checkChrono(cvs)) {
                     printf("rec1_es END : go to Dpmt1_prec_es\n");
                     excSq->status = Dpmt1_prec_es;
+                    setChrono(cvs, 5);
                 }
                 break;
             }
@@ -137,6 +131,14 @@ void excSq_loop(ctrlStruct *cvs){
                     teensy_send(cvs, "C");
                     printf("go to Check1_es\n");
                     //excSq->output = 1;
+                }
+                else if (checkChrono(cvs)) {
+                    motors_stop(cvs);
+                    set_commands(cvs, 0, 0);
+                    excSq->status = Dpmt2_es;
+                    setChrono(cvs, 2);
+                    if (TEAM) set_goal(cvs, 2.43, 0.21, -0.95*M_PI);
+                    else set_goal(cvs, .68, 0.25, 0.8 * M_PI);
                 }
                 break;
             }
@@ -693,7 +695,7 @@ void excSq_loop(ctrlStruct *cvs){
                     motors_stop(cvs);
                     set_commands(cvs,0,0);
                     excSq->status = rec_start_es;
-                    set_goal(cvs,1.935,0.24,M_PI);
+                    set_goal(cvs,1.935,0.21,M_PI);
                     //setChrono(cvs, 5);
                     setChrono(cvs,wait);
                 }

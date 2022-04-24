@@ -181,7 +181,7 @@ void saShed_loop(ctrlStruct *cvs){
                 if (TEAM) set_goal(cvs,2.83,0.16,-10);//2.73,.30,-10
                 else set_goal(cvs,3-2.83,.16,-10);
                 printf("go to Dpmt6_ps\n");
-                setChrono(cvs,2);
+                setChrono(cvs,3);
                 teensy_send(cvs, "5");
                 teensy_send(cvs, "B");
                 //if (TEAM) set_goal(cvs, 2.58, .46, -M_PI / 4);
@@ -309,10 +309,10 @@ void saShed_loop(ctrlStruct *cvs){
                 motors_stop(cvs);
                 set_commands(cvs,0,0);
                 saShed->status = Dpmt10_sas;
-                if (TEAM) set_goal(cvs,2.77,.25,-10);
+                if (TEAM) set_goal(cvs,2.83,.2,-10);
                 else set_goal(cvs,.23,.25,-10);
                 printf("go to Dpmt10_ps\n");
-                setChrono(cvs,1.5);
+                setChrono(cvs,3);
                 //teensy_send(cvs, "B");
                 //teensy_send(cvs, "5");
                 //saShed->output = 1;
