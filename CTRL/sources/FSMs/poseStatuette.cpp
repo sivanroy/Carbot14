@@ -91,6 +91,7 @@ void poseStat_loop(ctrlStruct *cvs){
                 poseStat->status = vitrine_prec2_pos;
                 if (TEAM) set_goal(cvs,2.78,1.99,-10);
                 else set_goal(cvs,.25,1.99,-10);
+                setChrono(cvs,1.5);
             }
             break;
         }
@@ -102,7 +103,7 @@ void poseStat_loop(ctrlStruct *cvs){
             mlcPF->sigma = 0.5;
             sendFromHLCPF(cvs,1,1);
             teensy_recv(cvs);
-            if (teensy->switch_F) {
+            if (teensy->switch_F|checkChrono(cvs)) {
                 motors_stop(cvs);
                 teensy_send(cvs, "Q");
                 arduino_send(cvs,"K");
