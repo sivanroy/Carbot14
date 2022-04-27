@@ -44,7 +44,7 @@ int main()
     int mlcPF_ON = 0;
     int mlc_ON = 0;
     int rplON = 0;
-    int odoCalib = 0;
+    int odoCalib = 0;   
     int hlcPFON = 0;
     int pushShedON = 0;
     int pushShed_and_sonar_ON = 0;
