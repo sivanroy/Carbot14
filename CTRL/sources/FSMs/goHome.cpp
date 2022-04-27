@@ -56,6 +56,7 @@ void goHome_loop(ctrlStruct *cvs){
                 else set_goal(cvs,0.35,1.3,M_PI);
                 arduino_send(cvs,"K");
                 setChrono(cvs,wait);
+                cvs->ghome->output = 1;
             }
             break;
         }

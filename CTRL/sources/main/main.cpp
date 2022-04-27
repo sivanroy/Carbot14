@@ -55,14 +55,14 @@ int main()
     int odON = 0;
     int poseStatON = 0;
     int saShedON = 0;
-    int excSqON = 1;
+    int excSqON = 0;
     int distON = 0;
 
     int arduinoON = 0;
     int mThreadsON = 0;
 
     int avoidOpponent = 0;
-    int contest = 0;
+    int contest = 1;
     int started = 0;
     if (contest) {
         printf("let's go!\n");
@@ -80,7 +80,7 @@ int main()
         threads_start(cvs);
         teensy_send(cvs, "Q");
 
-        while(inputs->t < 99){
+        while(inputs->t < 96){
             auto start = high_resolution_clock::now();
             teensy_recv(cvs);
 

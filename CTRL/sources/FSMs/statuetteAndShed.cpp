@@ -12,7 +12,7 @@
 enum {S0_sas,Dpmt1_sas,servoShedOut_sas,Dpmt2_sas,Dpmt3_sas,Dpmt4_sas,Dpmt5_sas,rec_sas,Dpmt_prec_stat,Dpmt6_sas,
         Wait_for_stat_sas,Dpmt7_sas,Dpmt8_sas,Wait_for_cube_sas, servoShedIn_sas,Go_to_vitrine_sas,
     Dpmt9_sas,Dpmt10_sas,Out_sas,rec_push_sas,rec_stat_sas,
-    dpmt_si_echec};
+    dpmt_si_echec,rec_end};
 
 void saShed_init(statAndShed *saShed) {
     saShed->status = S0_ps;
@@ -253,6 +253,7 @@ void saShed_loop(ctrlStruct *cvs){
                 if (TEAM) set_goal(cvs,2.83,0.16,-10);//2.73,.30,-10
                 else set_goal(cvs,0.16,.17,-10);
                 printf("go to Dpmt8_ps\n");
+                setChrono(cvs, 7);
                 //teensy_send(cvs, "B");
                 //teensy_send(cvs, "5");
                 //saShed->output = 1;
@@ -266,7 +267,7 @@ void saShed_loop(ctrlStruct *cvs){
             hlcPF->Tau_min = .1;
             mlcPF->sigma = 0.5;
             sendFromHLCPF(cvs,1,1);
-            if (teensy->switch_F) {
+            if (teensy->switch_F || checkChrono(cvs)) {
                 motors_stop(cvs);
                 set_commands(cvs,0,0);
                 setChrono(cvs,0.5);
@@ -310,7 +311,7 @@ void saShed_loop(ctrlStruct *cvs){
                 set_commands(cvs,0,0);
                 saShed->status = Dpmt10_sas;
                 if (TEAM) set_goal(cvs,2.83,.2,-10);
-                else set_goal(cvs,.23,.25,-10);
+                else set_goal(cvs,.25,.23,-10);
                 printf("go to Dpmt10_ps\n");
                 setChrono(cvs,3);
                 //teensy_send(cvs, "B");
@@ -356,6 +357,14 @@ void saShed_loop(ctrlStruct *cvs){
             if(hlcPF->output){
                 set_commands(cvs,0,0);
                 teensy_send(cvs, "B");
+                saShed->status = rec_end;
+                setChrono(cvs,wait);
+            }
+            break;
+        }
+        case rec_end:{
+            if (rec_static(cvs)|checkChrono(cvs)) {
+                printf("rec END\n");
                 saShed->output = 1;
             }
             break;
