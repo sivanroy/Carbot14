@@ -47,7 +47,7 @@ int main()
     int rplON = 0;
     int odoCalib = 0;   
     int hlcPFON = 0;
-    int checkRepetabilityHLCPF = 1;
+    int checkRepetabilityHLCPF = 0;
     int pushShedON = 0;
     int pushShed_and_sonar_ON = 0;
     int icp_test = 0;
@@ -64,7 +64,7 @@ int main()
     int mThreadsON = 0;
 
     int avoidOpponent = 0;
-    int contest = 0;
+    int contest = 1;
     int started = 0;
     if (contest) {
         printf("let's go!\n");

@@ -52,7 +52,7 @@ void distr_loop(ctrlStruct *cvs){
     set_param_normal(cvs);
     switch(distr->status){
         case S0_di:
-        	if(distr->go){
+        	//if(distr->go){
         		distr->status = DpmtHLCPF1_di;
 
                 if (TEAM) set_goal(cvs,2.5,.75,M_PI);
@@ -61,8 +61,8 @@ void distr_loop(ctrlStruct *cvs){
                 printf("go to dpHLCPF1\n");
         		distr->go = 0;
                 distr->output = 0;
-        	}
-        	else motors_stop(cvs);
+        	//}
+        	//else motors_stop(cvs);
             break;
 
         case DpmtHLCPF1_di:{
@@ -121,7 +121,7 @@ void distr_loop(ctrlStruct *cvs){
                 teensy->switch_B = 0;
                 distr->status = GetSamples_di;
                 teensy_send(cvs,"L");
-                //setChrono(cvs,.1);
+                setChrono(cvs,0.1);
                 printf("go to GetSamples_di\n");
                 if (TEAM) set_goal(cvs,3-.35,.75,-10);
                 else set_goal(cvs,.35,.75,-10);
@@ -143,7 +143,7 @@ void distr_loop(ctrlStruct *cvs){
 
         case DpmtHLCPFOut_di: {
             set_param_prec(cvs);
-            hlcPF->Tau_max = .15;
+            hlcPF->Tau_max = .1;
             hlcPF->Tau_min = .1;
             mlcPF->sigma = 0.5;
             sendFromHLCPF(cvs,-1,1);

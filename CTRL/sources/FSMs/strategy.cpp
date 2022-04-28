@@ -6,7 +6,7 @@
 #include "strategy.h"
 
 //enum {S0_sp,SelectGoal,RunInt,Run,Ok_sp,NotOk_sp,GoHome,releaseT,Recalibrate};
-enum {S0_s,select_action_s,actionPushShed_s,poseStatuette_s,excavation_squares_s,goHome_s};
+enum {S0_s,select_action_s,actionPushShed_s,distribution_s,poseStatuette_s,excavation_squares_s,goHome_s};
 
 void strategy_FSM_init(strategy_FSM *stratFSM) {
     stratFSM->status = S0_s;
@@ -14,12 +14,12 @@ void strategy_FSM_init(strategy_FSM *stratFSM) {
     stratFSM->timeTillBreak = 15;
     stratFSM->timeToComeBack = 90;//1.30 min au total
 
-    int s = 4;
+    int s = 5;
     stratFSM->s = s;
-    double timingi[s] = {35,30,30,100};
-    double maxtimingi[s] = {35,60,85,100};
+    double timingi[s] = {35,15,30,30,100};
+    double maxtimingi[s] = {35,50,60,85,100};
     double maxt = 0;
-    int actionsi[s] = {actionPushShed_s,poseStatuette_s,excavation_squares_s,goHome_s}; 
+    int actionsi[s] = {actionPushShed_s,distribution_s,poseStatuette_s,excavation_squares_s,goHome_s}; 
     for (int i = 0; i<s; i++){
             stratFSM->actions[i] = actionsi[i];
             stratFSM->timing[i]  = timingi[i];
@@ -87,6 +87,18 @@ void strategy_loop(ctrlStruct *cvs){
             break;
         }
 
+        case distribution_s:{
+            distr_loop(cvs);
+            if(cvs->distr->output == -1){
+                printf("failed poseStat /: !\n");
+                stratFSM->status = select_action_s;
+            } if(cvs->distr->output | (checkChrono(cvs,1)& stratFSM->maxt < inputs->t) ) {
+                stratFSM->status = select_action_s;
+            }
+            checkIfEnd(cvs);
+            break;
+        }
+
         case poseStatuette_s:{
             poseStat_loop(cvs);
             if(cvs->poseStat->output == -1){
@@ -101,7 +113,7 @@ void strategy_loop(ctrlStruct *cvs){
 
         case excavation_squares_s:{
             excSq_loop(cvs);
-            if(cvs->poseStat->output == -1){
+            if(cvs->excSq->output == -1){
                 printf("failed excSquares /: !\n");
                 stratFSM->status = select_action_s;
             } else if(checkChrono(cvs,1) & stratFSM->maxt < inputs->t){

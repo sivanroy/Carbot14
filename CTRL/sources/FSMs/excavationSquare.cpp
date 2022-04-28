@@ -23,6 +23,8 @@ void excSq_init(excSquares *excSq){
     excSq->status = S0_ps;
     excSq->output = 0;
     excSq->go = 0;
+    cvs->excSq->at_least_one = 0;
+    for (int i = 0; i < 8; i++) cvs->excSq->pts_flag[i] = 0;
     printf("excSq initialized\n");
 }
 
