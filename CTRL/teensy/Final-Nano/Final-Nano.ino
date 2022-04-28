@@ -86,24 +86,14 @@ void ledStrip(){
 }
 
 void scoreBlink(){
-  for(int i=0; i<30; i++){
-        fill_solid(leds, NUM_LEDS, CRGB::Red); 
-        FastLED.show();
-        for(int j=0; j<6; j++){
-          checkRPI();
-          count();
-          digitDisplay();
-          delay(5);
-        }
-        fill_solid(leds, NUM_LEDS, CRGB::Black); 
-        FastLED.show();
-        for(int j=0; j<6; j++){
-          checkRPI();
-          count();
-          digitDisplay();
-          delay(5);
-        }
-      }
+  fill_solid(leds, NUM_LEDS, CRGB::Red); 
+  FastLED.show();
+  digitDisplay();
+  delay(10);
+  fill_solid(leds, NUM_LEDS, CRGB::Black); 
+  FastLED.show();
+  digitDisplay();
+  delay(10);
 }
 
 void sawTooth(){
@@ -184,49 +174,71 @@ void count() {
     points = points + 1;
     started = 1;
     data = "0";
-    scoreBlink();
-  }
+    fill_solid(leds, NUM_LEDS, CRGB::Red); 
+    FastLED.show();
+    digitDisplay();
+    delay(10);
+    fill_solid(leds, NUM_LEDS, CRGB::Black); 
+    FastLED.show();
+    digitDisplay();
+    delay(10);
+  }  
+  
   if (data == "2"){
-    points = points + 2;
-    started = 1;
-    data = "0";
-    scoreBlink();
+    for (int i=0; i<2; i++){
+      points = points + 1;
+      started = 1;
+      data = "0";
+      scoreBlink();
+    }
   }
   if (data == "3"){
-    points = points + 3;
-    started = 1;
-    data = "0";
-    scoreBlink();
+    for (int i=0; i<3; i++){
+      points = points + 1;
+      started = 1;
+      data = "0";
+      scoreBlink();
+    }
   }
   if (data == "5"){
-    points = points + 5;
-    started = 1;
-    data = "0";
-    scoreBlink();
+    for (int i=0; i<5; i++){
+      points = points + 1;
+      started = 1;
+      data = "0";
+      scoreBlink();
+    }
   }
   if (data == "6"){
-    points = points + 6;
-    started = 1;
-    data = "0";
-    scoreBlink();
+    for (int i=0; i<6; i++){
+      points = points + 1;
+      started = 1;
+      data = "0";
+      scoreBlink();
+    }
   }
   if (data == "A"){
-    points = points + 10;
-    started = 1;
-    data = "0";
-    scoreBlink();
+    for (int i=0; i<10; i++){
+      points = points + 1;
+      started = 1;
+      data = "0";
+      scoreBlink();
+    }
   }
   if (data == "F"){
-    points = points + 15;
-    started = 1;
-    data = "0";
-    scoreBlink();
+    for (int i=0; i<15; i++){
+      points = points + 1;
+      started = 1;
+      data = "0";
+      scoreBlink();
+    }
   }
   if (data == "K"){
-    points = points + 20;
-    started = 1;
-    data = "0";
-    scoreBlink();
+    for (int i=0; i<20; i++){
+      points = points + 1;
+      started = 1;
+      data = "0";
+      scoreBlink();
+    }
   }
   if (data == "R"){
     points = 4;
