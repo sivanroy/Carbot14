@@ -55,10 +55,10 @@ String data = "0";
 void setup() {
  Serial.begin(57600);
  FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
- FastLED.setBrightness(255);
+ FastLED.setBrightness(130);
  //FastLED.addLeds<WS2811, DATA_PIN, GRB>(leds, NUM_LEDS);    
  
- points = 14;
+ points = 4;
  
  pinMode(pinA, OUTPUT);     
  pinMode(pinB, OUTPUT);     
@@ -86,20 +86,14 @@ void ledStrip(){
 }
 
 void scoreBlink(){
-  for(int i=0; i<30; i++){
-        fill_solid(leds, NUM_LEDS, CRGB::White); 
-        FastLED.show();
-        checkRPI();
-        count();
-        digitDisplay();
-        delay(8);
-        fill_solid(leds, NUM_LEDS, CRGB::Black); 
-        FastLED.show();
-        checkRPI();
-        count();
-        digitDisplay();
-        delay(8);
-      }
+  fill_solid(leds, NUM_LEDS, CRGB::Red); 
+  FastLED.show();
+  digitDisplay();
+  delay(10);
+  fill_solid(leds, NUM_LEDS, CRGB::Black); 
+  FastLED.show();
+  digitDisplay();
+  delay(10);
 }
 
 void sawTooth(){
@@ -178,43 +172,73 @@ void checkRPI(){
 void count() {
   if (data == "1"){
     points = points + 1;
+    started = 1;
     data = "0";
-    scoreBlink();
-  }
+    fill_solid(leds, NUM_LEDS, CRGB::Red); 
+    FastLED.show();
+    digitDisplay();
+    delay(10);
+    fill_solid(leds, NUM_LEDS, CRGB::Black); 
+    FastLED.show();
+    digitDisplay();
+    delay(10);
+  }  
+  
   if (data == "2"){
-    points = points + 2;
-    data = "0";
-    scoreBlink();
+    for (int i=0; i<2; i++){
+      points = points + 1;
+      started = 1;
+      data = "0";
+      scoreBlink();
+    }
   }
   if (data == "3"){
-    points = points + 3;
-    data = "0";
-    scoreBlink();
+    for (int i=0; i<3; i++){
+      points = points + 1;
+      started = 1;
+      data = "0";
+      scoreBlink();
+    }
   }
   if (data == "5"){
-    points = points + 5;
-    data = "0";
-    scoreBlink();
+    for (int i=0; i<5; i++){
+      points = points + 1;
+      started = 1;
+      data = "0";
+      scoreBlink();
+    }
   }
   if (data == "6"){
-    points = points + 6;
-    data = "0";
-    scoreBlink();
+    for (int i=0; i<6; i++){
+      points = points + 1;
+      started = 1;
+      data = "0";
+      scoreBlink();
+    }
   }
   if (data == "A"){
-    points = points + 10;
-    data = "0";
-    scoreBlink();
+    for (int i=0; i<10; i++){
+      points = points + 1;
+      started = 1;
+      data = "0";
+      scoreBlink();
+    }
   }
   if (data == "F"){
-    points = points + 15;
-    data = "0";
-    scoreBlink();
+    for (int i=0; i<15; i++){
+      points = points + 1;
+      started = 1;
+      data = "0";
+      scoreBlink();
+    }
   }
   if (data == "K"){
-    points = points + 20;
-    data = "0";
-    scoreBlink();
+    for (int i=0; i<20; i++){
+      points = points + 1;
+      started = 1;
+      data = "0";
+      scoreBlink();
+    }
   }
   if (data == "R"){
     points = 4;

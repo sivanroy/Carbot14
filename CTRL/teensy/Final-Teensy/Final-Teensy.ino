@@ -20,16 +20,17 @@ F -> Take 1st pallet from stack and drop it at the bottom of expoisiton gallery 
 G -> Take 2nd pallet from stack and drop it at the bottom of expoisiton gallery (pos: 160)
 H -> Take 3rd pallet from stack and drop it at the bottom of expoisiton gallery (pos: 220)
 
-J
-
-Y -> open clamp 
-
+K -> Flip down to the ground
+L -> Flip 3 pallets 90°
+J -> Flip mid (60°)
+M -> Flip up
 I -> Arm drops pallet and reset its position
-K -> Take 1st pallet from stack and drop it at the top of expositon gallery (pos: 100)
+N -> Take 1st pallet from stack and drop it at the top of expositon gallery (pos: 100)
 O -> Take 1st pallet from stack and drop it at the top of expositon gallery (pos: 160)
 P -> Take 1st pallet from stack and drop it at the top of expositon gallery (pos: 220)
 Q -> Clamp IN -> release the statuette
 S -> Clamp OUT -> clamps the statuette
+Y -> Open clamp
 T -> Push the resistance pallet
 X -> Front and back switches are OFF
 a -> Homologation push under the shed + clamp OUT
@@ -83,6 +84,7 @@ int flip3P = 680 + delta;
 int flip2P = 670 + delta;
 int flip1P = 670 + delta;
 int flipUp = 800 + delta;
+int flipMid = 560 + delta;
 int flipDown = 340 + delta;
 
 int pos3P = 105;
@@ -203,6 +205,10 @@ void flip(){
   }
   if (data == "L"){
     Dynamixel.moveSpeed(ID4,flip3P,160);
+    data = "NULL";
+  }
+  if (data == "J"){
+    Dynamixel.moveSpeed(ID4,flipMid,160);
     data = "NULL";
   }
   if (data == "M"){
