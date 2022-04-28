@@ -46,7 +46,7 @@ void lpf_init(lowPassFilter *lpf){
     lpf->value_le = 0;
     lpf->value_ro = 0;
     lpf->value_lo = 0;
-    lpf->beta = .85 ;
+    lpf->beta = 0.1;
 }
 
 double lpf(ctrlStruct *cvs,double val,int select){

@@ -26,7 +26,6 @@ def plot_mlc_data():
 
     Data = read_txt_file("../../build/mlc_data.txt", 7)
 
-
     plt.plot(Data[0], Data[3], label="d_ref")
     plt.plot(Data[0], Data[4], label="d_mes")
     plt.xlabel("t [s]")
@@ -79,33 +78,37 @@ def plot_llc_data():
     print(t_95)
 
     
+    fig,(ax1,ax2) = plt.subplots(2,sharex=True)
+    #plt.suptitle("Wheels speed profile")
+    
 
-    plt.plot(Data[0], Data[1], label=r"$\omega_{ref}$", linewidth=2)
-    plt.plot(Data[0], Data[3], label=r"$\omega_{mes,r}$", linewidth=1.2)
-    plt.xlabel("Time [s]")
-    plt.ylabel(r"$\omega$ [rad/s]")
-    plt.title("R wheel speed profile")
+    ax1.plot(Data[0], Data[1], label=r"$\omega_{ref}$", linewidth=2)
+    ax1.plot(Data[0], Data[3], label=r"$\omega_{mes,r}$", linewidth=1.2)
+    #ax1.set(xlabel="Time [s]")
+    ax1.set(ylabel=r"$\omega_r$ [rad/s]")
+    ax1.set(title="Right wheel speed profile")
     #plt.xlim(1.95, 2.1)
     #plt.ylim(-1, 6)
     #plt.axis([0, 10, -6, 6])
-    plt.legend()
-    plt.grid()
+    ax1.legend()
+    ax1.grid()
     #plt.savefig("speed_profile_zoom.pdf", format="pdf")
-    plt.show()
+    #plt.show()
     
-    plt.plot(Data[0], Data[2], label=r"$\omega_{ref}$", linewidth=2)
-    plt.plot(Data[0], Data[4], label=r"$\omega_{mes,l}$", linewidth=1.2)
-    plt.xlabel("Time [s]")
-    plt.ylabel(r"$\omega$ [rad/s]")
-    plt.title("L wheel speed profile")
+    ax2.plot(Data[0], Data[2], label=r"$\omega_{ref}$", linewidth=2)
+    ax2.plot(Data[0], Data[4], label=r"$\omega_{mes,l}$", linewidth=1.2,c='r')
+    #plt.plot(Data[0], Data[3], label=r"$\omega_{mes,r}$", linewidth=1.2,ls=":",c="g")
+    ax2.set(xlabel="Time [s]")
+    ax2.set(ylabel="$\omega_l$ [rad/s]")
+    ax2.set(title="Left wheel speed profile")
     #plt.xlim(0, 0.05)
     #plt.ylim(-1, 6)
     #plt.axis([0, 10, -6, 6])
-    plt.legend()
-    plt.grid()
-    #plt.savefig("speed_profile_zoom.pdf", format="pdf")
+    ax2.legend()
+    ax2.grid()
+    plt.savefig("plot_llc.pdf", format="pdf")
     plt.show()
-    
+    return
     plt.plot(Data[0], Data[1], label=r"$\omega_{ref}$", linewidth=2)
     plt.plot(Data[0], Data[5], label=r"$\omega_{mes,r}$", linewidth=1.2)
     plt.xlabel("Time [s]")
@@ -117,6 +120,7 @@ def plot_llc_data():
     plt.legend()
     plt.grid()
     #plt.savefig("speed_profile_zoom.pdf", format="pdf")
+
     plt.show()
     
     plt.plot(Data[0], Data[2], label=r"$\omega_{ref}$", linewidth=2)
@@ -184,6 +188,7 @@ def plot_llc_data():
     plt.grid()
     plt.show()
     
+    """
     m = 0
     T = 0
     i = 0
@@ -201,7 +206,7 @@ def plot_llc_data():
         
     print(m)
     print(T)
-        
+    """ 
     
 
 def plot_lpf_data():
@@ -294,7 +299,27 @@ def plot_enc_data():
 
 def plot_mlc_opti():
 
-    Data = read_txt_file("../../build/mlc_data.txt", 13)
+    Data = read_txt_file("../../build/mlc_data.txt", 5)
+    
+    fig,(ax1,ax2) = plt.subplots(2,sharex=True)
+    
+    ax1.plot(Data[0],Data[1],label=r"$v_{ref}$")#vref
+    ax1.plot(Data[0],Data[3],label=r"$v_{mes}$")#v
+    ax1.set(title=r"$v$ profile")
+    ax1.set(ylabel="v [m/s]")
+    ax1.legend()
+    
+    ax2.plot(Data[0],Data[2],label=r"$\theta_{ref}$")#thetaref
+    ax2.plot(Data[0],Data[4],label=r"$\theta_{mes}$")#theta
+    ax2.set(title=r"$\theta$ profile")
+    ax2.set(ylabel=r"$\theta$ [rad]")
+    ax2.set(xlabel="time [s]")
+    ax2.legend()
+    #plt.show()
+
+    plt.savefig("mlcPF output.pdf", format="pdf")                          
+    
+    return
 
     plt.plot(Data[0], Data[1], label="x_g")
     plt.plot(Data[0], Data[3], label="x")
@@ -422,7 +447,7 @@ def plot_mp_data():
     plt.grid()
     #plt.savefig("mp_data2.pdf", format="pdf")
     plt.show()
-    """
+    
     plt.plot(Data[5], Data[3], 'r', label="w")
     plt.xlabel("t [s]")
     plt.ylabel("w [rad/s]")
@@ -442,7 +467,7 @@ def plot_mp_data():
     plt.grid()
     #plt.savefig("mp_data2.pdf", format="pdf")
     plt.show()
-    """
+    
     print("x = ", Data[0][len(Data[0])-1])
     print("y = ", Data[1][len(Data[0])-1])
     print("th = ", Data[2][len(Data[0])-1])
@@ -657,9 +682,11 @@ plot_rec_data()
 plot_llc_data()
 plot_mp_data()
 """
-plot_icp_data()
+#plot_icp_data()
+#plot_mlc_opti()
 plot_mp_data()
-#plot_od_data()
+plot_llc_data()
+#plot_lpf_data()
 
 """
 th_mp =  -140.47653170302596
