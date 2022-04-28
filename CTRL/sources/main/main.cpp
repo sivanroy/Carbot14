@@ -1,6 +1,7 @@
 //
 // Created by Louis Libert on 10/03/22.
 //
+
 #include <iostream>
 #include <unistd.h>
 #include <math.h>
@@ -44,8 +45,9 @@ int main()
     int mlcPF_ON = 0;
     int mlc_ON = 0;
     int rplON = 0;
-    int odoCalib = 0;
+    int odoCalib = 0;   
     int hlcPFON = 0;
+    int checkRepetabilityHLCPF = 1;
     int pushShedON = 0;
     int pushShed_and_sonar_ON = 0;
     int icp_test = 0;
@@ -56,12 +58,13 @@ int main()
     int poseStatON = 0;
     int saShedON = 0;
     int excSqON = 0;
-    int distON = 1;
+    int distON = 0;
 
     int arduinoON = 0;
     int mThreadsON = 0;
 
-    int contest = 1;
+    int avoidOpponent = 0;
+    int contest = 0;
     int started = 0;
     if (contest) {
         printf("let's go!\n");
@@ -77,8 +80,9 @@ int main()
             teensy_send(cvs,"2");
         } else teensy_send(cvs, "1");
         threads_start(cvs);
+        teensy_send(cvs, "Q");
 
-        while(inputs->t < 99){
+        while(inputs->t < 96){
             auto start = high_resolution_clock::now();
             teensy_recv(cvs);
 
@@ -104,6 +108,75 @@ int main()
         mt->thread_main_end = 1;
         printf("th_end : start ... ");
         threads_end(cvs);
+    }
+
+    if (avoidOpponent){
+        threads_start(cvs);
+        get_d2r_data(cvs);
+        //inputs->team = 1;
+        saShed_launch(cvs);
+        printf("avoidopp\n");
+        cvs->mp->x = 3-0.133;
+        cvs->mp->y = 1.467;
+        cvs->mp->th = M_PI;
+        printf("team = %d \n",inputs->team );
+        if(!inputs->team){
+            teensy_send(cvs, "2");
+            cvs->mp->x = .133;
+            cvs->mp->th = 0;
+        }
+        else teensy_send(cvs, "1");
+        double xgoal = cvs->mp->x;double ygoal=cvs->mp->y;
+        int forward;double orientation;
+        set_param_normal(cvs);
+        //inputs->team = 1;
+        cvs->mp->x = 3-0.14;
+        cvs->mp->y = 2-0.53;
+        cvs->mp->th = M_PI;
+
+        printf("begin test hlcPavoid oppoent \n");
+        while (inputs->t < 75) {
+            auto start = high_resolution_clock::now();
+            double t = inputs->t;
+            if (t==0) {
+                xgoal = 1;//2.2;//1.2;
+                ygoal = 1;//1.60;
+                forward=-1;
+                orientation = M_PI;//M_PI/2;
+                set_goal(cvs, xgoal, ygoal, orientation);
+                printf("goal A\n");
+            } else if (t>25 & t<25.01) {
+                //set_param_prec(cvs);
+                xgoal = 2;
+                ygoal = 1;
+                forward =-1;
+                orientation = M_PI;
+                set_goal(cvs, xgoal, ygoal, orientation);
+                printf("goal B\n");
+            } else if (t>50 & t<50.1) {
+                xgoal = 1;//1.3;
+                ygoal = 1;
+                forward = -1;
+                orientation = M_PI;
+                set_goal(cvs, xgoal, ygoal, orientation);
+                printf("goal c\n");
+            }
+            //get_d2r_data(cvs); // ctrlIn
+            sendFromHLCPF(cvs,forward);
+
+            //set_new_position(cvs);
+            //printf("cmd_r = %d | cmd_l = %d\n", outputs->r_cmd, outputs->l_cmd);
+            //printf("x = %f | y = %f | th = %f\n", mp->x, mp->y, mp->th);
+
+            fprintf(cvs->llc_data, "%f,%f,%f,%f,%f,%f,%f\n", inputs->t, mlcPF->r_sp_ref, mlcPF->l_sp_ref, inputs->r_sp_mes_enc, inputs->l_sp_mes_enc, inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
+
+            update_time(cvs);
+            auto stop = high_resolution_clock::now();
+            auto duration = duration_cast<microseconds>(stop - start);
+
+            //printf("duration.count() = %lld us | t = %f\n-------------\n", duration.count(), inputs->t);
+            usleep(dt * 1000000 - duration.count());
+        }
     }
 
     if (odON) {
@@ -390,7 +463,7 @@ int main()
         double r_sp_ref = 0.0;
         double l_sp_ref = 0.0;
 
-        while (inputs->t < 6.5) {
+        while (inputs->t < 8) {
             auto start = high_resolution_clock::now();
 
             get_d2r_data(cvs); // ctrlIn
@@ -398,16 +471,16 @@ int main()
             printf("r_sp_mes_enc = %f | l_sp_mes_enc = %f\n", inputs->r_sp_mes_enc, inputs->l_sp_mes_enc);
             printf("r_sp_mes_odo = %f | l_sp_mes_odo = %f\n", inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
 
-            if (inputs->t >= 0 && inputs->t < 2) {
+            if (inputs->t >= 0 && inputs->t < 3) {
                 r_sp_ref = 10;
                 l_sp_ref = 10;
             }
 
-            else if (inputs->t >= 2 && inputs->t < 4) {
+            else if (inputs->t >= 3 && inputs->t < 4) {
                 r_sp_ref = 0;
                 l_sp_ref = 0;
             }
-            else if (inputs->t >= 4 && inputs->t < 6) {
+            else if (inputs->t >= 4 && inputs->t < 7) {
                 r_sp_ref = -10;
                 l_sp_ref = -10;
             }
@@ -437,26 +510,29 @@ int main()
         mp->th = M_PI;
         double v_ref = 0.2;
         double th_ref = M_PI;
+        cvs->mp->x = 3-0.14;//3-0.94;//3-0.14;
+        cvs->mp->y = 1.13;//2-0.53;//0.795+0.125;//1.13;//0.45;//2-0.53;
+        cvs->mp->th = M_PI;//0;//M_PI;
 
         mlcPF->t_start = inputs->t;
-        while (inputs->t < 9) {
+        while (inputs->t < 10) {
 
-            if (inputs->t >= 0 && inputs->t < 2) {
-                v_ref = 0.2;
-                th_ref = M_PI;
+            if (inputs->t >= 0 && inputs->t < 2.5) {
+                v_ref = .20;
+                th_ref = M_PI*.9;
             }
 
-            else if (inputs->t >= 2 && inputs->t < 4) {
+            else if (inputs->t >= 2.5 && inputs->t < 5) {
                 v_ref = 0;
-                th_ref = M_PI;
+                th_ref = 0;
             }
-            else if (inputs->t >= 4 && inputs->t < 6) {
+            else if (inputs->t >= 5 && inputs->t < 7.5) {
                 v_ref = -0.2;
-                th_ref = M_PI;
+                th_ref = -M_PI/2;
             }
             else {
-                v_ref = 0.2;
-                th_ref = M_PI/2;
+                v_ref = 0.01;
+                th_ref = M_PI/4;
             }
             auto start = high_resolution_clock::now();
 
@@ -476,7 +552,9 @@ int main()
             printf("x = %f | y = %f | th = %f\n", mp->x, mp->y, mp->th);
 
             fprintf(cvs->llc_data, "%f,%f,%f,%f,%f,%f,%f\n", inputs->t, mlcPF->r_sp_ref, mlcPF->l_sp_ref, inputs->r_sp_mes_enc, inputs->l_sp_mes_enc, inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
+            fprintf(cvs->mlc_data, "%f,%f,%f,%f,%f\n",inputs->t,v_ref,th_ref,mp->v,mp->th );
 
+            //fprintf(cvs->mlcPF, "%f,%f,%f\n", );
             update_time(cvs);
             auto stop = high_resolution_clock::now();
             auto duration = duration_cast<microseconds>(stop - start);
@@ -583,6 +661,79 @@ int main()
             usleep(dt * 1000000 - duration.count());
         }
     }
+        if (checkRepetabilityHLCPF) {
+
+        threads_start(cvs);
+
+        get_d2r_data(cvs);
+        //inputs->team = 1;
+        saShed_launch(cvs);
+        printf("checkRepetabilityHLCPF\n");
+        cvs->mp->x = 3-0.133;
+        cvs->mp->y = 1.467;
+        cvs->mp->th = M_PI;
+        printf("team = %d \n",inputs->team );
+        if(!inputs->team){
+            teensy_send(cvs, "2");
+            cvs->mp->x = .133;
+            cvs->mp->th = 0;
+        }
+        else teensy_send(cvs, "1");
+        double xgoal = cvs->mp->x;double ygoal=cvs->mp->y;
+        int forward;double orientation;
+        set_param_normal(cvs);
+        //inputs->team = 1;
+        cvs->mp->x = 3-0.14;
+        cvs->mp->y = 2-0.53;
+        cvs->mp->th = M_PI;
+        double xs[3] = {1,2,1.5};
+        double ys[3] = {.5,.5,1.1};
+        int pt = 0;
+        printf("begin test hlcPF\n");
+        set_goal(cvs,xs[pt%3],ys[pt%3],-10);
+        while (inputs->t < 100) {
+            auto start = high_resolution_clock::now();
+            double t = inputs->t;
+            set_param_normal(cvs);
+            //get_d2r_data(cvs); // ctrlIn
+            sendFromHLCPF(cvs,1,1);
+            if(hlcPF->output){
+                pt+=1;
+                set_goal(cvs,xs[pt%3],ys[pt%3],-10);
+                printf("plus\n");
+            }
+            //set_new_position(cvs);
+            //printf("cmd_r = %d | cmd_l = %d\n", outputs->r_cmd, outputs->l_cmd);
+            //printf("x = %f | y = %f | th = %f\n", mp->x, mp->y, mp->th);
+
+            fprintf(cvs->llc_data, "%f,%f,%f,%f,%f,%f,%f\n", inputs->t, mlcPF->r_sp_ref, mlcPF->l_sp_ref, inputs->r_sp_mes_enc, inputs->l_sp_mes_enc, inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
+
+            update_time(cvs);
+            auto stop = high_resolution_clock::now();
+            auto duration = duration_cast<microseconds>(stop - start);
+
+            //printf("duration.count() = %lld us | t = %f\n-------------\n", duration.count(), inputs->t);
+            //usleep(dt * 1000000 - duration.count());
+
+
+        }
+        printf("------------- rec static -------------\n");
+        rec->iter = 0;
+        mp->w = 0;
+        mp->v = 0;
+        motors_stop(cvs);
+        while (1) if (rec_static(cvs)) break;
+        printf("x = %f | y = %f | th = %f\n", mp->x, mp->y, mp->th);
+        usleep(2000000);
+
+        mt->thread_main_end = 1;
+        printf("th_end : start ... ");
+        threads_end(cvs);
+        printf("end\n");
+        //mt->thread_main_end = 1;
+
+        //threads_end(cvs);
+    }
     if (hlcPFON) {
 
         threads_start(cvs);
@@ -605,40 +756,40 @@ int main()
         int forward;double orientation;
         set_param_normal(cvs);
         //inputs->team = 1;
-        cvs->mp->x = 3-0.14;
-        cvs->mp->y = 2-0.53;
-        cvs->mp->th = M_PI;
+        //cvs->mp->x = 3-0.14;
+        //cvs->mp->y = 2-0.53;
+        //cvs->mp->th = M_PI;
 
         printf("begin test hlcPF\n");
-        while (inputs->t < 5) {
+        while (inputs->t < 10) {
             auto start = high_resolution_clock::now();
             double t = inputs->t;
             if (t==0) {
-                set_param_prec(cvs);
+                set_param_normal(cvs);
                 //hlcPF->Tau_max = .15;
                 //hlcPF->Tau_min = .1;
                 //mlcPF->sigma = 0.5;
                 //cvs->mlcPF->Kp_th = 10;
-                hlcPF->error = 0.09;
-                xgoal = 3-0.6;//2.2;//1.2;
-                ygoal = 2-0.53;//1.60;
-                forward=1;
+                //hlcPF->error = 0.09;
+                xgoal = 2.2;//2.2;//1.2;
+                ygoal = 1.5;//1.60;
+                forward = -1;
                 orientation = M_PI;//M_PI/2;
                 set_goal(cvs, xgoal, ygoal, orientation);
                 printf("goal A\n");
             } else if (t>25 & t<25.01) {
                 //set_param_prec(cvs);
-                xgoal = 3-0.3;
-                ygoal = 1.13;
+                xgoal = 2;
+                ygoal = .45;
                 forward =-1;
                 orientation = M_PI;
                 set_goal(cvs, xgoal, ygoal, orientation);
                 printf("goal B\n");
             } else if (t>50 & t<50.1) {
-                xgoal = 0.6;//1.3;
-                ygoal = 0.6;
-                forward =1;
-                orientation = M_PI;
+                xgoal = 2.6;//1.3;
+                ygoal = 1.3;
+                forward = -1;
+                orientation = 0;
                 set_goal(cvs, xgoal, ygoal, orientation);
                 printf("goal c\n");
             }
@@ -901,7 +1052,7 @@ int main()
             cvs->mp->th = 0;
         }
         else teensy_send(cvs, "1");
-        while(inputs->t < 50){
+        while(inputs->t < 60){
             auto start = high_resolution_clock::now();
             teensy_recv(cvs);
 
@@ -996,11 +1147,7 @@ int main()
         }
     }
     if (arduinoON) {
-        teensy_send(cvs, "A");
-        usleep(1200000);
-        teensy_send(cvs, "Q");
-        usleep(1200000);
-        teensy_send(cvs, "R");
+        arduino_send(cvs, "R");
 
         int one = 0;
         int two = 0;
@@ -1014,8 +1161,9 @@ int main()
                 one = 1;
                 arduino_send(cvs, "1");
             }
-            if (inputs->t >= 3 && two == 0) {
+            if (inputs->t >= 1.1 && two == 0) {
                 two = 1;
+                arduino_send(cvs, "K");
                 arduino_send(cvs, "K");
             }
             update_time(cvs);

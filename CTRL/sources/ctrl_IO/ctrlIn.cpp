@@ -37,6 +37,8 @@ void ctrlIn_init(ctrlIn *inputs)
 
     inputs->team = -1;
     inputs->start = -1;
+    inputs->option1 = -1;
+    inputs->option2 = -1;
 }
 
 void lpf_init(lowPassFilter *lpf){
@@ -44,7 +46,7 @@ void lpf_init(lowPassFilter *lpf){
     lpf->value_le = 0;
     lpf->value_ro = 0;
     lpf->value_lo = 0;
-    lpf->beta = .85 ;
+    lpf->beta = 0.1;
 }
 
 double lpf(ctrlStruct *cvs,double val,int select){
@@ -139,6 +141,10 @@ void get_d2r_data(ctrlStruct *cvs)
     if(inputs->team == -1){
         inputs->team = (data>>1)%2;
         printf("TEAM %d\n",inputs->team);
+        inputs->option1 = (data>>2)%2;
+        printf("OPTION1 %d\n",inputs->option1);
+        inputs->option2 = (data>>3)%2;
+        printf("OPTION2 %d\n", inputs->option2);
     }
 
     if (d_sFR < 300) inputs->r_front_s = d_sFR;

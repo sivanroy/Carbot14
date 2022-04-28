@@ -126,7 +126,7 @@ void set_speed_ref(ctrlStruct *cvs, double x_g, double y_g, int goForward)
         mlc->r_sp_ref = r_sp_ref;
         mlc->l_sp_ref = l_sp_ref;
     }
-    fprintf(cvs->mlc_data, "%f,%f,%f,%f,%f,%f,%f\n", cvs->inputs->t, mlc->r_sp_ref, mlc->l_sp_ref, mlc->d_ref, mlc->d_mes, mlc->th_ref, mlc->th_mes);
+    //fprintf(cvs->mlc_data, "%f,%f,%f,%f,%f,%f,%f\n", cvs->inputs->t, mlc->r_sp_ref, mlc->l_sp_ref, mlc->d_ref, mlc->d_mes, mlc->th_ref, mlc->th_mes);
 
 }
 

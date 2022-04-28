@@ -12,11 +12,11 @@ void mlcPF_init(midLevelCtrlPF *mlcPF)
 {
     mlcPF->dt = 0.003;
 
-    mlcPF->sigma = 1;
+    mlcPF->sigma = 0.8;
     mlcPF->R_odo = 0.022;
 
-    mlcPF->Kp_th = 7.0;
-    mlcPF->max_th = 8;
+    mlcPF->Kp_th = 20.0; //20 /30
+    mlcPF->max_th = 5;
 
     mlcPF->r_sp_ref = 0.0;
     mlcPF->l_sp_ref = 0.0;
@@ -40,7 +40,7 @@ void mlcPF_out(ctrlStruct *cvs, double v_ref, double th_ref)
     double th_error = limit_angle(th_ref - mp->th);
 
     // proportional terms
-    double v_out = (v_ref/mlcPF->R_odo) * exp(-pow(th_error/mlcPF->sigma, 2));
+    double v_out = (v_ref/0.03) * exp(-pow(th_error/mlcPF->sigma, 2));
 
     double KPTH = mlcPF->Kp_th;
     if(cvs->hlcPF->reorientation){

@@ -6,7 +6,7 @@
 #include "goHome.h"
 
 //enum {S0_sp,SelectGoal,RunInt,Run,Ok_sp,NotOk_sp,GoHome,releaseT,Recalibrate};
-enum {S0_gh,dp1_gh,dp2_gh};
+enum {S0_gh,dp1_gh,rec_gh,dp2_gh};
 
 void goHome_init(goHome *ghome) {
     ghome->status = S0_gh;
@@ -35,6 +35,7 @@ void goHome_loop(ctrlStruct *cvs){
     x = pos[0];//+ hlcPF->x_shift * cos(th);
     y = pos[1];//+ hlcPF->x_shift * sin(th);
 
+    double wait = 0.6;
     //cvs->s actions
     switch(ghome->status){
         case S0_gh:{
@@ -50,14 +51,22 @@ void goHome_loop(ctrlStruct *cvs){
             set_param_normal(cvs);
             sendFromHLCPF(cvs,-1);
             if(hlcPF->output){
-                ghome->status = dp2_gh;
-                if (TEAM) set_goal(cvs,2.75,1.3,0); //2.32,1.51
-                else set_goal(cvs,0.25,1.3,M_PI);
+                ghome->status = rec_gh;
+                if (TEAM) set_goal(cvs,2.65,1.3,0); //2.32,1.51
+                else set_goal(cvs,0.35,1.3,M_PI);
                 arduino_send(cvs,"K");
+                setChrono(cvs,wait);
+                cvs->ghome->output = 1;
             }
             break;
         }
-
+        case rec_gh:{
+            if (rec_static(cvs) || checkChrono(cvs)) {
+                printf("rec_gh END : go to dp2_gh\n");
+                ghome->status = dp2_gh;
+            }
+            break;
+        }
         case dp2_gh:{
             set_param_prec(cvs);
             sendFromHLCPF(cvs,-1,1);

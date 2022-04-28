@@ -124,7 +124,7 @@ int rec_ICP(ctrlStruct *cvs, IcpPointToPlane *icp)
     Matrix t(2,1);
 
     auto start = high_resolution_clock::now();
-    rec->iter = icp->fit(rec->rpl_p,rec->m,rec->R,t,0.01);
+    rec->iter = icp->fit(rec->rpl_p,rec->m,rec->R,t,0.1);
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<microseconds>(stop - start);
     printf("rec : duration.count() = %lld us\n-------------\n", duration.count());

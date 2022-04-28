@@ -45,7 +45,7 @@ void poseStat_loop(ctrlStruct *cvs){
     x = pos[0];//+ hlcPF->x_shift * cos(th);
     y = pos[1];//+ hlcPF->x_shift * sin(th);
 
-
+    double wait = 0.6;
 
     switch(poseStat->status){
         case S0_pos:
@@ -67,12 +67,12 @@ void poseStat_loop(ctrlStruct *cvs){
                 motors_stop(cvs);
                 set_commands(cvs,0,0);
                 poseStat->status = rec_pos;
-
+                setChrono(cvs,wait);
             }
             break;
         }
         case rec_pos:{
-            if (rec_static(cvs)) {
+            if (rec_static(cvs) | checkChrono(cvs)) {
                 poseStat->status = vitrine_prec1_pos;
                 if (TEAM) set_goal(cvs,2.78,1.7,M_PI/2);
                 else set_goal(cvs,.25,1.7,M_PI/2);
@@ -91,6 +91,7 @@ void poseStat_loop(ctrlStruct *cvs){
                 poseStat->status = vitrine_prec2_pos;
                 if (TEAM) set_goal(cvs,2.78,1.99,-10);
                 else set_goal(cvs,.25,1.99,-10);
+                setChrono(cvs, 5);
             }
             break;
         }
@@ -101,8 +102,7 @@ void poseStat_loop(ctrlStruct *cvs){
             hlcPF->Tau_min = .1;
             mlcPF->sigma = 0.5;
             sendFromHLCPF(cvs,1,1);
-            teensy_recv(cvs);
-            if (teensy->switch_F) {
+            if (teensy->switch_F | checkChrono(cvs)) {
                 motors_stop(cvs);
                 teensy_send(cvs, "Q");
                 arduino_send(cvs,"K");
@@ -118,7 +118,7 @@ void poseStat_loop(ctrlStruct *cvs){
             if (checkChrono(cvs)) {
                 poseStat->status = go_back_prec_pos;
                 if (TEAM) set_goal(cvs,2.8,1.6,-1.2*M_PI/2);
-                else set_goal(cvs,.25,1.6,0);
+                else set_goal(cvs,.25,1.6,-M_PI/4);
                 printf("go to Dpmt3_ps\n");
             }
             break;
@@ -128,12 +128,13 @@ void poseStat_loop(ctrlStruct *cvs){
             sendFromHLCPF(cvs,0,1);
             if(hlcPF->output){
                 poseStat->status = rec_out_pos;
+                setChrono(cvs,wait);
                 printf("rec START\n");
             }
             break;
         }
         case rec_out_pos:{
-            if (rec_static(cvs)) {
+            if (rec_static(cvs)|checkChrono(cvs)) {
                 printf("rec END\n");
                 poseStat->output =1;
             }

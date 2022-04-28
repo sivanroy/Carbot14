@@ -1,4 +1,3 @@
-
 /*
 Communication Teensy -> RPI :
 1 -> Pallet violet (470 Ohm)

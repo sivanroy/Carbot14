@@ -127,7 +127,7 @@ void set_param_normal(ctrlStruct *cvs){
     //local minimum
     cvs->mlcPF->sigma = 0.5;
     cvs->mlcPF->Kp_th = 8;
-    hlcPF->Kp_th_reorient = 20;
+    //hlcPF->Kp_th_reorient = 20;
 }
 
 void set_param_prec(ctrlStruct *cvs){
@@ -148,7 +148,7 @@ void set_param_prec(ctrlStruct *cvs){
     //local minimum
     cvs->mlcPF->sigma = .3;
     cvs->mlcPF->Kp_th = 7;
-    hlcPF->Kp_th_reorient = 500;
+    //hlcPF->Kp_th_reorient = 500;
 }
 
 void set_param_large(ctrlStruct *cvs){
@@ -169,7 +169,7 @@ void set_param_large(ctrlStruct *cvs){
     //local minimum
     cvs->mlcPF->sigma = .3;
     cvs->mlcPF->Kp_th = 8;
-    hlcPF->Kp_th_reorient = 20;
+    //hlcPF->Kp_th_reorient = 20;
 }
 
 //make computation to give a tau dependant of the distance to the opponent (ralentit si trop proche de l'ennemi)

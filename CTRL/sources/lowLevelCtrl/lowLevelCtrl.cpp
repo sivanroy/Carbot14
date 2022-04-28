@@ -12,8 +12,8 @@ void llc_init(lowLevelCtrl *llc)
     llc->max = 20;
     llc->min = -20;
 
-    llc->Kp = 1;//0.706;
-    llc->Ki = 5;//39.437;
+    llc->Kp = 2;//0.706;
+    llc->Ki = 8;//5;//39.437;
 
     llc->r_integral_err = 0.0;
     llc->l_integral_err = 0.0;
@@ -52,18 +52,21 @@ void set_commands(ctrlStruct *cvs, double r_sp_ref, double l_sp_ref)
     double l_error = l_sp_ref - l_sp_mes;
 
     // proportional terms
-    double r_Pout = llc->Kp * 0.8 *  r_error;
+    //double r_Pout = llc->Kp * 0.8 *  r_error;
+    //double l_Pout = llc->Kp * l_error;
+    // proportional terms
+    double r_Pout = llc->Kp * r_error;
     double l_Pout = llc->Kp * l_error;
 
     // integral terms
     double r_int_err = llc->r_integral_err + r_error * llc->dt;
     double l_int_err = llc->l_integral_err + l_error * llc->dt;
 
-    double r_Iout = llc->Ki *  0.8 * r_int_err;
-    double l_Iout = llc->Ki * 1.1 *  l_int_err;
-    if (r_Iout <=0) {
-        r_Iout *= 0.9;
-    }
+    //double r_Iout = llc->Ki *  0.8 * r_int_err;
+    //double l_Iout = llc->Ki * 1.1 *  l_int_err;
+    //if (r_Iout <=0) r_Iout *= 0.9;
+    double r_Iout = llc->Ki * r_int_err;
+    double l_Iout = llc->Ki *  l_int_err;
 
     // calculate total outputs (commands)
     double r_cmd = r_Pout + r_Iout + kphi_r;
