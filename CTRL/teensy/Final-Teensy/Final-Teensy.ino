@@ -16,6 +16,7 @@ A -> Both front servo OUT : hold pallets to push under the shed
 B -> Both front servo IN : release pallets to push under the shed
 C -> Measure resistance and push system
 D -> Push cube
+
 F -> Take 1st pallet from stack and drop it at the bottom of expoisiton gallery (pos: 100)
 G -> Take 2nd pallet from stack and drop it at the bottom of expoisiton gallery (pos: 160)
 H -> Take 3rd pallet from stack and drop it at the bottom of expoisiton gallery (pos: 220)
@@ -24,10 +25,13 @@ K -> Flip down to the ground
 L -> Flip 3 pallets 90°
 J -> Flip mid (60°)
 M -> Flip up
+
 I -> Arm drops pallet and reset its position
+
 N -> Take 1st pallet from stack and drop it at the top of expositon gallery (pos: 100)
 O -> Take 1st pallet from stack and drop it at the top of expositon gallery (pos: 160)
 P -> Take 1st pallet from stack and drop it at the top of expositon gallery (pos: 220)
+
 Q -> Clamp IN -> release the statuette
 S -> Clamp OUT -> clamps the statuette
 Y -> Open clamp

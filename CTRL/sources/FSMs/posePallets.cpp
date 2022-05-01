@@ -8,24 +8,15 @@
 
 
 
-enum {S0_pp,Dpmt1_pp,servoShedOut_pp,Dpmt2_pp,Dpmt3_pp};
+enum {S0_pp,Dpmt1_pp,Dpmt1prec_pp,pose1_pp,
+    Dpmt2_pp,Dpmt2prec_pp,pose2_pp,
+    Dpmt3_pp,Dpmt3prec_pp,pose3_pp,
+    Dptout_pp};
 
 void pPallets_init(posePallets *pPallets){
     pPallets->status = S0_ps;
     pPallets->output = 0;
     pPallets->go = 0;
-
-    int s = 3; //2.28 ;; 1.51
-    double x_goalsI[s] = {2.41,1,1};
-    double y_goalsI[s] = {0.21,1,1};
-    double thetasI[s] = {-0.77,-10,-10}; //s
-    double forwardI[s] = {1,-1,-1};
-    for (int i=0; i<s;i++) {
-    	pPallets->x_goals[i] = x_goalsI[i];
-    	pPallets->y_goals[i] = y_goalsI[i];
-        pPallets->thetas[i] = thetasI[i];
-        pPallets->forward[i] = forwardI[i];
-    }
     printf("ppallets initialized\n");
 
 }
@@ -55,53 +46,122 @@ void pPallets_loop(ctrlStruct *cvs){
     th = pos[2];
     x = pos[0];//+ hlcPF->x_shift * cos(th);
     y = pos[1];//+ hlcPF->x_shift * sin(th);
-    
+    set_param_normal(cvs);
+    double dy = -0.02;
+
     switch(pPallets->status){
         case S0_pp:
-        	if(pPallets->go){
-        		pPallets->status = Dpmt1_pp;
-                set_goal(cvs,pPallets->x_goals[0],pPallets->y_goals[0]);
-        		printf("go to dp1\n");
-        		pPallets->go = 0;
-        	}
-            break;
+        	pPallets->status = Dpmt1_pp;
+            if (TEAM) set_goal(cvs,3-1.05,1.55,-M_PI/2);
+            else set_goal(cvs,1.05,1.55,-M_PI/2);
+            printf("go to dp1\n");
+        	pPallets->go = 0;
+        	break;
 
         case Dpmt1_pp:{
-    		sendFromHLCPF(cvs,cvs->pPallets->forward[0]);
+    		sendFromHLCPF(cvs,-1);
         	if(hlcPF->output){
-        		pPallets->status = servoShedOut_pp;
+        		pPallets->status = Dpmt1prec_pp;
+                teensy_send(cvs,"F");
+                if (TEAM) set_goal(cvs,3-1.05,2-.21+dy,-M_PI/2);
+                else set_goal(cvs,1.05,2-.21+dy,-M_PI/2);
         	}
         	break;
         }
 
-        case servoShedOut_pp: {
-            teensy_send(cvs, "A");
-            inputs->t = inputs->t + 2;
-            usleep(2000000);
-            pPallets->status = Dpmt2_pp;
-            set_goal(cvs,pPallets->x_goals[1],pPallets->y_goals[1]);
-            printf("go to Dpmt2_ps\n");
+        case Dpmt1prec_pp: {
+            set_param_prec(cvs);
+            sendFromHLCPF(cvs,0,1);
+            if(hlcPF->output){
+                pPallets->status = pose1_pp;
+                setChrono(cvs,1);
+                printf("go to Dpmt2_ps\n");
+                teensy_send(cvs,"I");
+            }
+            break;
+        }
+
+        case pose1_pp: {
+            if (checkChrono(cvs)) {
+                pPallets->status = Dpmt2_pp;
+                if (TEAM) set_goal(cvs,3-.81,1.55,-M_PI/2);
+                else set_goal(cvs,.81,1.55,-M_PI/2);
+
+            }
             break;
         }
 
         case Dpmt2_pp:{
-            sendFromHLCPF(cvs,cvs->pPallets->forward[1]);
+            sendFromHLCPF(cvs,-1);
             if(hlcPF->output){
-                pPallets->status = Dpmt3_pp;
-                set_goal(cvs,pPallets->x_goals[2],pPallets->y_goals[2]);
+                pPallets->status = Dpmt2prec_pp;
+                teensy_send(cvs,"F");
+                if (TEAM) set_goal(cvs,3-.81,2-.21+dy,-M_PI/2);
+                else set_goal(cvs,.81,2-.19+dy,-M_PI/2);
+            }
+            break;
+        }
+
+        case Dpmt2prec_pp: {
+            set_param_prec(cvs);
+            sendFromHLCPF(cvs,0,1);
+            if(hlcPF->output){
+                pPallets->status = pose2_pp;
+                setChrono(cvs,1);
                 printf("go to Dpmt2_ps\n");
+                teensy_send(cvs,"I");
+            }
+            break;
+        }
+
+        case pose2_pp: {
+            if (checkChrono(cvs)) {
+                pPallets->status = Dpmt3_pp;
+                if (TEAM) set_goal(cvs,3-.57,1.55,-M_PI/2);
+                else set_goal(cvs,.57,1.55,-M_PI/2);
             }
             break;
         }
 
         case Dpmt3_pp:{
-            sendFromHLCPF(cvs,cvs->pPallets->forward[1]);
+            sendFromHLCPF(cvs,-1);
             if(hlcPF->output){
-                pPallets->status = S0_pp;
-                printf("go to Dpmt2_ps\n");
+                pPallets->status = Dpmt3prec_pp;
+                teensy_send(cvs,"G");
+                if (TEAM) set_goal(cvs,3-.57,2-.21+dy,-M_PI/2);
+                else set_goal(cvs,.57,2-.21+dy,-M_PI/2);
             }
             break;
         }
+
+        case Dpmt3prec_pp: {
+            set_param_prec(cvs);
+            sendFromHLCPF(cvs,0,1);
+            if(hlcPF->output){
+                pPallets->status = pose3_pp;
+                setChrono(cvs,1);
+                printf("go to Dpmt2_ps\n");
+                teensy_send(cvs,"I");
+            }
+            break;
+        }
+
+        case pose3_pp: {
+            if (checkChrono(cvs)) {
+                set_goal(cvs,1,1,M_PI/2);
+                if (TEAM) set_goal(cvs,3-.57,1.5,-10);
+                else set_goal(cvs,.57,1.5,-10);
+            }
+            break;
+        }
+
+        case Dptout_pp: {
+            sendFromHLCPF(cvs,-1);
+            if(hlcPF->output){
+                pPallets->output = 1;
+            }
+        }
+
         default:
             printf("probleme defautl value in FSM\n");
     }

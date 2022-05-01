@@ -54,10 +54,8 @@ void distr_loop(ctrlStruct *cvs){
         case S0_di:
         	//if(distr->go){
         		distr->status = DpmtHLCPF1_di;
-
                 if (TEAM) set_goal(cvs,2.5,.75,M_PI);
                 else set_goal(cvs,.5,.75,0);
-
                 printf("go to dpHLCPF1\n");
         		distr->go = 0;
                 distr->output = 0;
@@ -120,7 +118,7 @@ void distr_loop(ctrlStruct *cvs){
             if(teensy->switch_B){
                 teensy->switch_B = 0;
                 distr->status = GetSamples_di;
-                teensy_send(cvs,"L");
+                teensy_send(cvs,"J");
                 setChrono(cvs,0.1);
                 printf("go to GetSamples_di\n");
                 if (TEAM) set_goal(cvs,3-.35,.75,-10);
@@ -149,8 +147,9 @@ void distr_loop(ctrlStruct *cvs){
             sendFromHLCPF(cvs,-1,1);
             if(hlcPF->output){
                 distr->status = S0_di;
-                distr->output = 1;
                 printf("end loop\n");
+                teensy_send(cvs,"L");
+                distr->output = 1;
             }
             break;
         }
