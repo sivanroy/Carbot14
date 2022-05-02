@@ -67,6 +67,10 @@ int main()
     int avoidOpponent = 0;
     int contest = 0;
     int started = 0;
+
+    auto begin_time = high_resolution_clock::now();
+
+    set_initial_time(cvs);
     if (contest) {
         printf("let's go!\n");
         get_d2r_data(cvs);
@@ -89,7 +93,8 @@ int main()
 
             if (!started) {
                 get_d2r_data(cvs);
-                inputs->t = 0;
+                //inputs->t = 0;
+                set_initial_time(cvs);
                 if(inputs->start) {
                     started = 1; 
                     printf("START!\n");
@@ -104,6 +109,11 @@ int main()
             auto stop = high_resolution_clock::now();
             auto duration = duration_cast<microseconds>(stop - start);
             usleep(dt * 1000000 - duration.count());
+            
+            stop = high_resolution_clock::now();
+            duration = duration_cast<microseconds>(stop- begin_time );
+            cvs->inputs->t = duration.count()*1e-6;
+
         }
         printf("ENDED\n");
         mt->thread_main_end = 1;
@@ -498,12 +508,20 @@ int main()
 
             fprintf(cvs->llc_data, "%f,%f,%f,%f,%f,%f,%f\n", inputs->t, r_sp_ref, l_sp_ref, inputs->r_sp_mes_enc, inputs->l_sp_mes_enc, inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
 
-            update_time(cvs);
+            // to retrieve
+            //update_time(cvs);
             auto stop = high_resolution_clock::now();
             auto duration = duration_cast<microseconds>(stop - start);
             printf("duration.count() = %lld us | t = %f\n-------------\n", duration.count(), inputs->t);
-
             usleep(dt * 1000000 - duration.count());
+
+            //to add !!
+            stop = high_resolution_clock::now();
+            duration = duration_cast<microseconds>(stop- begin_time );
+            cvs->inputs->t = duration.count()*1e-6;
+
+            printf("duration %f\n", cvs->inputs->t);
+
         }
     }
     if (mlcPF_ON) {
@@ -694,6 +712,7 @@ int main()
             update_time(cvs);
             auto stop = high_resolution_clock::now();
             auto duration = duration_cast<microseconds>(stop - start);
+            usleep(dt * 1000000 - duration.count());
         }
         printf("------------- rec static -------------\n");
         rec->iter = 0;

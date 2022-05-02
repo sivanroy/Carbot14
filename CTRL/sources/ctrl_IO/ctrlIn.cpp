@@ -178,6 +178,5 @@ void update_time(ctrlStruct *cvs)
 {
     ctrlIn *inputs;
     inputs = cvs->inputs;
-
     inputs->t += inputs->dt;
 }

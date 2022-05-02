@@ -12,6 +12,10 @@
 #include <math.h>
 #include <wiringPiSPI.h>
 
+#include <chrono>
+using namespace std::chrono;
+using namespace std;
+
 #include "../ctrlStruct/ctrlStruct.h"
 
 
@@ -21,6 +25,7 @@ typedef struct ctrlIn
 {
     double t; ///< time reference [s]
     double dt; ///< time-step : time between 2 updates
+    high_resolution_clock::time_point t_start;
 
     double radPerTick_enc; ///< radian per tick of the encoders
     double radPerTick_odo; ///< radian per tick of the odometers
@@ -66,6 +71,7 @@ unsigned char d2r_enc_address(int encoder, int left, int sonarF);
 int d2r_enc_measure(ctrlStruct *cvs, int encoder, int left, int sonarF ,bool verbose);
 void get_d2r_data(ctrlStruct *cvs);
 
-void update_time(ctrlStruct *cvs);
+void set_initial_time(ctrlStruct *cvs);
+void update_time(ctrlStruct *cvs,int verbose=0);
 
 #endif
