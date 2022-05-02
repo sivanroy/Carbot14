@@ -8,9 +8,9 @@
 
 
 
-enum {S0_pp,Dpmt1_pp,Dpmt1prec_pp,pose1_pp,
-    Dpmt2_pp,Dpmt2prec_pp,pose2_pp,
-    Dpmt3_pp,Dpmt3prec_pp,pose3_pp,
+enum {S0_pp,Dpmt1_pp,rec1_pp,Dpmt1prec_pp,pose1_pp,
+    Dpmt2_pp,rec2_pp,Dpmt2prec_pp,pose2_pp,
+    Dpmt3_pp,rec3_pp,Dpmt3prec_pp,pose3_pp,
     Dptout_pp};
 
 void pPallets_init(posePallets *pPallets){
@@ -48,6 +48,7 @@ void pPallets_loop(ctrlStruct *cvs){
     y = pos[1];//+ hlcPF->x_shift * sin(th);
     set_param_normal(cvs);
     double dy = -0.02;
+    double wait = .6;
 
     switch(pPallets->status){
         case S0_pp:
@@ -59,14 +60,23 @@ void pPallets_loop(ctrlStruct *cvs){
         	break;
 
         case Dpmt1_pp:{
-    		sendFromHLCPF(cvs,-1);
+    		sendFromHLCPF(cvs,-1,1,1);
         	if(hlcPF->output){
-        		pPallets->status = Dpmt1prec_pp;
+        		pPallets->status = rec1_pp;
                 teensy_send(cvs,"F");
+                setChrono(cvs,wait,2);
                 if (TEAM) set_goal(cvs,3-1.05,2-.21+dy,-M_PI/2);
                 else set_goal(cvs,1.05,2-.21+dy,-M_PI/2);
         	}
         	break;
+        }
+
+        case rec1_pp:{
+            if (rec_static(cvs) | checkChrono(cvs,2)) {
+                printf("rec_start_es END : go to Dpmt2_es\n");
+                pPallets->status = Dpmt1prec_pp;
+            }
+            break;
         }
 
         case Dpmt1prec_pp: {
@@ -75,7 +85,7 @@ void pPallets_loop(ctrlStruct *cvs){
             if(hlcPF->output){
                 pPallets->status = pose1_pp;
                 setChrono(cvs,1);
-                printf("go to Dpmt2_ps\n");
+                printf("go to pose1_ps\n");
                 teensy_send(cvs,"I");
             }
             break;
@@ -92,12 +102,20 @@ void pPallets_loop(ctrlStruct *cvs){
         }
 
         case Dpmt2_pp:{
-            sendFromHLCPF(cvs,-1);
+            sendFromHLCPF(cvs,-1,1,1);
             if(hlcPF->output){
-                pPallets->status = Dpmt2prec_pp;
+                pPallets->status = rec2_pp;
                 teensy_send(cvs,"F");
                 if (TEAM) set_goal(cvs,3-.81,2-.21+dy,-M_PI/2);
                 else set_goal(cvs,.81,2-.19+dy,-M_PI/2);
+            }
+            break;
+        }
+
+        case rec2_pp:{
+            if (rec_static(cvs) | checkChrono(cvs,2)) {
+                printf("rec_start_es END : go to Dpmt2_es\n");
+                pPallets->status = Dpmt2prec_pp;
             }
             break;
         }
@@ -108,7 +126,7 @@ void pPallets_loop(ctrlStruct *cvs){
             if(hlcPF->output){
                 pPallets->status = pose2_pp;
                 setChrono(cvs,1);
-                printf("go to Dpmt2_ps\n");
+                printf("go to pose2_ps\n");
                 teensy_send(cvs,"I");
             }
             break;
@@ -124,12 +142,20 @@ void pPallets_loop(ctrlStruct *cvs){
         }
 
         case Dpmt3_pp:{
-            sendFromHLCPF(cvs,-1);
+            sendFromHLCPF(cvs,-1,1,1);
             if(hlcPF->output){
-                pPallets->status = Dpmt3prec_pp;
+                pPallets->status = rec3_pp;
                 teensy_send(cvs,"G");
                 if (TEAM) set_goal(cvs,3-.57,2-.21+dy,-M_PI/2);
                 else set_goal(cvs,.57,2-.21+dy,-M_PI/2);
+            }
+            break;
+        }
+
+        case rec3_pp:{
+            if (rec_static(cvs) | checkChrono(cvs,2)) {
+                printf("rec_start_es END : go to Dpmt2_es\n");
+                pPallets->status = Dpmt3prec_pp;
             }
             break;
         }
@@ -140,7 +166,7 @@ void pPallets_loop(ctrlStruct *cvs){
             if(hlcPF->output){
                 pPallets->status = pose3_pp;
                 setChrono(cvs,1);
-                printf("go to Dpmt2_ps\n");
+                printf("go to pose3_ps\n");
                 teensy_send(cvs,"I");
             }
             break;
@@ -151,6 +177,7 @@ void pPallets_loop(ctrlStruct *cvs){
                 set_goal(cvs,1,1,M_PI/2);
                 if (TEAM) set_goal(cvs,3-.57,1.5,-10);
                 else set_goal(cvs,.57,1.5,-10);
+                pPallets->status = Dptout_pp;
             }
             break;
         }

@@ -25,6 +25,8 @@ typedef struct lowLevelCtrl
     double l_integral_err; ///< integral error of the left wheel controller
     double kphiOnK;
 
+    int stop_count;
+
 } lowLevelCtrl;
 
 

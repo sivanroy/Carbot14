@@ -51,6 +51,8 @@ typedef struct ctrlIn
     int leftWheelBlocked;
     int rightWheelBlocked;
 
+    int count_stop;
+
 } ctrlIn;
 
 void ctrlIn_init(ctrlIn *inputs);

@@ -39,6 +39,8 @@ void ctrlIn_init(ctrlIn *inputs)
     inputs->start = -1;
     inputs->option1 = -1;
     inputs->option2 = -1;
+
+    inputs->count_stop = 0;
 }
 
 void lpf_init(lowPassFilter *lpf){
@@ -174,7 +176,7 @@ void get_d2r_data(ctrlStruct *cvs)
         inputs->r_sp_mes_enc,inputs->l_sp_mes_enc,inputs->r_sp_mes_odo,inputs->l_sp_mes_odo);
 }
 
-void update_time(ctrlStruct *cvs)
+void update_time(ctrlStruct *cvs,int verbose)
 {
     ctrlIn *inputs;
     inputs = cvs->inputs;

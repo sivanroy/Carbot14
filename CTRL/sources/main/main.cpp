@@ -41,7 +41,7 @@ int main()
 
     int display_position_ON = 0;
     int cmdON = 0;
-    int llcON = 1;
+    int llcON = 0;
     int mlcPF_ON = 0;
     int mlc_ON = 0;
     int rplON = 0;
@@ -59,7 +59,7 @@ int main()
     int saShedON = 0;
     int excSqON = 0;
     int distON = 0;
-    int posePalletON = 0;
+    int posePalletON = 1;
 
     int arduinoON = 0;
     int mThreadsON = 0;
@@ -70,7 +70,6 @@ int main()
 
     auto begin_time = high_resolution_clock::now();
 
-    set_initial_time(cvs);
     if (contest) {
         printf("let's go!\n");
         get_d2r_data(cvs);
@@ -94,7 +93,7 @@ int main()
             if (!started) {
                 get_d2r_data(cvs);
                 //inputs->t = 0;
-                set_initial_time(cvs);
+                //set_initial_time(cvs);
                 if(inputs->start) {
                     started = 1; 
                     printf("START!\n");
@@ -109,7 +108,7 @@ int main()
             auto stop = high_resolution_clock::now();
             auto duration = duration_cast<microseconds>(stop - start);
             usleep(dt * 1000000 - duration.count());
-            
+
             stop = high_resolution_clock::now();
             duration = duration_cast<microseconds>(stop- begin_time );
             cvs->inputs->t = duration.count()*1e-6;
@@ -473,8 +472,9 @@ int main()
     if (llcON) {
         double r_sp_ref = 0.0;
         double l_sp_ref = 0.0;
+        teensy_send(cvs,"I");
 
-        while (inputs->t < 8) {
+        while (inputs->t < 2) {
             auto start = high_resolution_clock::now();
 
             get_d2r_data(cvs); // ctrlIn
@@ -482,12 +482,12 @@ int main()
             printf("r_sp_mes_enc = %f | l_sp_mes_enc = %f\n", inputs->r_sp_mes_enc, inputs->l_sp_mes_enc);
             printf("r_sp_mes_odo = %f | l_sp_mes_odo = %f\n", inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
 
-            if (inputs->t >= 0 && inputs->t < 3) {
+            if (inputs->t >= 0 && inputs->t < 1) {
                 r_sp_ref = 10;
                 l_sp_ref = 10;
             }
 
-            else if (inputs->t >= 3 && inputs->t < 4) {
+            else if (inputs->t >= 1 && inputs->t < 2) {
                 r_sp_ref = 0;
                 l_sp_ref = 0;
             }
@@ -924,7 +924,7 @@ int main()
         usleep(200000);
         teensy_send(cvs, "R");
         usleep(200000);
-
+        get_d2r_data(cvs);
         distr_launch(cvs);
         printf("distON\n");
         cvs->mp->x = 3-0.14;
@@ -938,7 +938,7 @@ int main()
         }
         else teensy_send(cvs, "1");
 
-        while(inputs->t < 30){
+        while(inputs->t < 15){
             auto start = high_resolution_clock::now();
             teensy_recv(cvs);
 
