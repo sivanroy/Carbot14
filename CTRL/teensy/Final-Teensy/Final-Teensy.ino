@@ -83,11 +83,11 @@ int servoIn5 = 185; //MAX : 200 //Push resistance
 int servoMid5 = 100;
 int servoOut5 = 35; //MIN : -25
 
-int delta = 150;
+int delta = 165;
 int flip3P = 680 + delta;
 int flip2P = 670 + delta;
 int flip1P = 670 + delta;
-int flipUp = 800 + delta;
+int flipUp = 845 + delta;
 int flipMid = 560 + delta;
 int flipDown = 340 + delta;
 
@@ -205,10 +205,14 @@ void clamp(){
 void flip(){
   if (data == "K"){
     Dynamixel.moveSpeed(ID4,flipDown,512);
+    Dynamixel.moveSpeed(ID1,665,1023);
+    usingArm = 1;
     data = "NULL";
   }
   if (data == "L"){
     Dynamixel.moveSpeed(ID4,flip3P,160);
+    delay(2000);
+    usingArm = 0;
     data = "NULL";
   }
   if (data == "J"){
@@ -240,7 +244,6 @@ void moveStepper(){
 
     usingArm = 1;
     data = "NULL";
-    delay(1000);
   }
   
   
@@ -339,6 +342,7 @@ void dropPallet(){
     
     usingArm = 0;
     resetArm();
+    data = "NULL";
   }
 }
 void goToPosition(int pos){

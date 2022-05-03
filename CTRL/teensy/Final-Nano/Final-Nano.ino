@@ -24,7 +24,7 @@
 #include<stdlib.h>
 #include<string.h>
 #include <FastLED.h>
-#define NUM_LEDS 60
+#define NUM_LEDS 10
 #define LED_PIN 2
 
 CRGB leds[NUM_LEDS];
@@ -71,6 +71,9 @@ void setup() {
  pinMode(D2, OUTPUT);  
  pinMode(D3, OUTPUT);  
  pinMode(D4, OUTPUT);  
+
+ fill_solid(leds, NUM_LEDS, CRGB::Red); 
+ FastLED.show();
 }
 
 
@@ -82,18 +85,18 @@ void loop() {
 }
 
 void ledStrip(){
-  //
+  scoreBlink();
 }
 
 void scoreBlink(){
   fill_solid(leds, NUM_LEDS, CRGB::Red); 
   FastLED.show();
   digitDisplay();
-  delay(10);
+  delay(5);
   fill_solid(leds, NUM_LEDS, CRGB::Black); 
   FastLED.show();
   digitDisplay();
-  delay(10);
+  delay(5);
 }
 
 void sawTooth(){
