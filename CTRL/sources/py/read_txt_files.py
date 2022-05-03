@@ -663,6 +663,103 @@ def plot_tau_data():
     plt.grid()
     #plt.savefig("mp_data2.pdf", format="pdf")
     plt.show()
+    
+def plot_lidar_caract():
+    
+    Data = read_txt_file("../../build/lidar_caract_data.txt", 3)
+    Map = read_txt_file("../../build/icp1_data.txt", 2)
+    
+    plt.plot(Map[0], Map[1], label="Map")
+    plt.plot(Data[0], Data[1], label="pos")
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.title("recalib pos")
+    #plt.axis("equal")
+    plt.legend()
+    plt.grid()
+    plt.xlim(-0.1, 3.1)
+    plt.ylim(-0.1, 2.1)
+    #plt.savefig("mp_data2.pdf", format="pdf")
+    plt.show()
+    
+    plt.plot(Data[0], label="x")
+    plt.xlabel("x")
+    plt.title("recalib x")
+    #plt.axis("equal")
+    plt.legend()
+    plt.grid()
+    #plt.savefig("mp_data2.pdf", format="pdf")
+    plt.show()
+    
+    plt.plot(Data[1], label="y")
+    plt.xlabel("y")
+    plt.title("recalib y")
+    #plt.axis("equal")
+    plt.legend()
+    plt.grid()
+    #plt.savefig("mp_data2.pdf", format="pdf")
+    plt.show()
+    
+    plt.plot(Data[2], label="th")
+    plt.xlabel("th")
+    plt.title("recalib th")
+    #plt.axis("equal")
+    plt.legend()
+    plt.grid()
+    #plt.savefig("mp_data2.pdf", format="pdf")
+    plt.show()
+    
+    xlist = Data[0]
+    ylist = Data[1]
+    thlist = Data[2]
+    
+    xref = 3-0.133
+    yref = 1.467
+    thref = -pi
+    
+    n = len(xlist)-1
+    moy_x = 0
+    moy_y = 0
+    moy_th = 0
+    sd_x = 0
+    sd_y = 0
+    sd_th = 0
+    
+    for i in range(1,n+1):
+        moy_x += xlist[i]
+        moy_y += ylist[i]
+        moy_th += thlist[i]
+        
+    moy_x = moy_x/n
+    moy_y = moy_y/n
+    moy_th = moy_th/n
+    
+    print(moy_x)
+    print(moy_y)
+    print(moy_th)
+    
+    for i in range(1,n+1):
+        sd_x += (xlist[i] - moy_x)*(xlist[i] - moy_x)
+        sd_y += (ylist[i] - moy_y)*(ylist[i] - moy_y)
+        sd_th += (thlist[i] - moy_th)*(thlist[i] - moy_th)
+        
+    sd_x = np.sqrt(sd_x/n)
+    sd_y = np.sqrt(sd_y/n)
+    sd_th = np.sqrt(sd_th/n)
+    
+    print(sd_x)
+    print(sd_y)
+    print(sd_th)
+    
+    """
+    ------------------------
+    xref = 3-0.133
+    yref = 1.467
+    thref = -pi
+    
+    
+    
+    """
 
 """
 plot_rpl_data()
@@ -681,10 +778,11 @@ plot_mp_data()
 """
 #plot_icp_data()
 #plot_mlc_opti()
-plot_mp_data()
+#plot_mp_data()
 #plot_llc_data()
 #plot_lpf_data()
 #open_loop()
+plot_lidar_caract()
 
 """
 th_mp =  -140.47653170302596

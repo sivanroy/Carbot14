@@ -65,8 +65,10 @@ int main()
     int mThreadsON = 0;
 
     int avoidOpponent = 0;
-    int contest = 1;
+    int contest = 0;
     int started = 0;
+
+    int lidar_caract = 1;
 
     auto begin_time = high_resolution_clock::now();
 
@@ -121,7 +123,24 @@ int main()
         printf("th_end : start ... ");
         threads_end(cvs);
     }
+    if (lidar_caract) {
+        threads_start(cvs);
 
+        inputs->team = 0;
+
+        cvs->mp->x = 3-0.133;
+        cvs->mp->y = 1.467;
+        cvs->mp->th = M_PI;
+
+        while (rec->n_rec < 101) {
+            //printf("------------- rec static -------------\n");
+            rec_static(cvs);
+        }
+        usleep(500000);
+        mt->thread_main_end = 1;
+        printf("th_end : start ... ");
+        threads_end(cvs);
+    }
     if (avoidOpponent){
         threads_start(cvs);
         get_d2r_data(cvs);

@@ -28,6 +28,7 @@ typedef struct reCalibStruct
 
     int rpl_nTurn;
     int rpl_nTurn_set;
+    int n_rec;
 
     double w_limit; ///< omega limit for the reCalibration [rad/s]
     double v_limit; ///< linear speed limit for the reCalibration [m/s]
@@ -40,6 +41,7 @@ typedef struct reCalibStruct
     Matrix R; ///< rotation matrix of the ICP transformation
     int32_t max_iter; ///< maximum number of iterations of the ICP algorithm
     int iter;  ///< number of iterations of the ICP algorithm
+    int n_try;
     double min_delta; ///< minimum delta (error) of iterations of the ICP algorithm
 
     double wall_margin; ///< margin of the walls taken to ensure that the output new position is admissible, in [m]
