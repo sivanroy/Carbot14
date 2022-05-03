@@ -70,6 +70,7 @@ int main()
 
     auto begin_time = high_resolution_clock::now();
 
+    //set_initial_time(cvs);
     if (contest) {
         printf("let's go!\n");
         get_d2r_data(cvs);
@@ -100,7 +101,7 @@ int main()
                     printf("START!\n");
                 }
             }
-
+            update_pos(cvs);
             if(started){
                 strategy_loop(cvs);
             }
@@ -429,29 +430,18 @@ int main()
         int r_cmd = 0;
         int l_cmd = 0;
 
-        while (inputs->t < 2) {
+        while (inputs->t < 5.1) {
             auto start = high_resolution_clock::now();
 
             get_d2r_data(cvs); // ctrlIn
 
             printf("r_sp_mes_enc = %f | l_sp_mes_enc = %f\n", inputs->r_sp_mes_enc, inputs->l_sp_mes_enc);
-            printf("r_sp_mes_odo = %f | l_sp_mes_odo = %f\n", inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
+            //printf("r_sp_mes_odo = %f | l_sp_mes_odo = %f\n", inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
 
-            if (inputs->t >= 0 && inputs->t < 1) {
-                r_cmd = 5;
-                l_cmd = 5;
-            }
-
-            else if (inputs->t >= 1 && inputs->t < 2) {
+            if (inputs->t >= 0 && inputs->t < 5) {
                 r_cmd = 10;
                 l_cmd = 10;
             }
-                /*
-                else if (inputs->t >= 4 && inputs->t < 6) {
-                    r_cmd = -10;
-                    l_cmd = 10;
-                }
-                */
             else {
                 r_cmd = 0;
                 l_cmd = 0;
@@ -698,6 +688,7 @@ int main()
         set_goal(cvs,xs[pt%3],ys[pt%3],-10);
         while (inputs->t < 100) {
             auto start = high_resolution_clock::now();
+            update_pos(cvs);
             double t = inputs->t;
             set_param_normal(cvs);
             sendFromHLCPF(cvs,1,1);
@@ -756,6 +747,7 @@ int main()
         printf("begin test hlcPF\n");
         while (inputs->t < 15) {
             auto start = high_resolution_clock::now();
+            update_pos(cvs);
             double t = inputs->t;
             if (t==0) {
                 set_param_normal(cvs);
@@ -824,7 +816,7 @@ int main()
 
         while(inputs->t < 20){
             auto start = high_resolution_clock::now();
-
+            update_pos(cvs);
             pushShed_loop(cvs);
             if(pshed->output) {
                 printf("ended\n");
@@ -846,6 +838,7 @@ int main()
 
         while(inputs->t < 70){
             auto start = high_resolution_clock::now();
+            update_pos(cvs);
             if(inputs->l_front_s < 5 | inputs->r_front_s<5){
                 motors_stop(cvs);
             }
@@ -899,6 +892,7 @@ int main()
             auto start = high_resolution_clock::now();
             teensy_recv(cvs);
 
+            update_pos(cvs);
             saShed_loop(cvs);
             if(saShed->output) {
                 printf("ended with %d\n",saShed->output);
@@ -943,6 +937,7 @@ int main()
             auto start = high_resolution_clock::now();
             teensy_recv(cvs);
 
+            update_pos(cvs);
             distr_loop(cvs);
             if(cvs->distr->output) {
                 printf("ended with %d\n",cvs->distr->output);
@@ -994,6 +989,7 @@ int main()
             auto start = high_resolution_clock::now();
             teensy_recv(cvs);
 
+            update_pos(cvs);
             poseStat_loop(cvs);
             if(poseStat->output) {
                 printf("ended with %d\n",poseStat->output);
@@ -1034,6 +1030,7 @@ int main()
             auto start = high_resolution_clock::now();
             teensy_recv(cvs);
 
+            update_pos(cvs);
             pPallets_loop(cvs);
             if(cvs->pPallets->output) {
                 printf("ended with %d\n",cvs->pPallets->output);
@@ -1084,6 +1081,7 @@ int main()
             auto start = high_resolution_clock::now();
             teensy_recv(cvs);
 
+            update_pos(cvs);
             excSq_loop(cvs);
             if(excSq->output) {
                 printf("ended with %d\n",excSq->output);

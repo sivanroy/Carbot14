@@ -33,5 +33,6 @@ void mp_init(myPosition *mp);
 void set_new_position(ctrlStruct *cvs);
 void get_pos(ctrlStruct *cvs, double pos[5]);
 double limit_angle(double th);
+void update_pos(ctrlStruct *cvs);
 
 #endif

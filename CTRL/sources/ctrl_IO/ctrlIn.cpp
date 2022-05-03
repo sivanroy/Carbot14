@@ -175,9 +175,8 @@ void get_d2r_data(ctrlStruct *cvs)
     fprintf(cvs->lpf_data,"%f,%f,%f,%f,%f,%f,%f,%f\n",r_sp_mes_enc,l_sp_mes_enc,r_sp_mes_odo,l_sp_mes_odo,
         inputs->r_sp_mes_enc,inputs->l_sp_mes_enc,inputs->r_sp_mes_odo,inputs->l_sp_mes_odo);
 }
+void update_time(ctrlStruct *cvs, int verbose)
 
-void update_time(ctrlStruct *cvs,int verbose)
-{
     ctrlIn *inputs;
     inputs = cvs->inputs;
     inputs->t += inputs->dt;
