@@ -14,12 +14,13 @@ void strategy_FSM_init(strategy_FSM *stratFSM) {
     stratFSM->timeTillBreak = 15;
     stratFSM->timeToComeBack = 90;//1.30 min au total
 
-    int s = 6;
+    int s = 2;
     stratFSM->s = s;
-    double timingi[s] = {35,15,30,30,30,100};
-    double maxtimingi[s] = {35,50,60,85,90,100};
+    double timingi[s] = {20,30};//{35,15,30,30,30,100};
+    double maxtimingi[s] = {20,50};//{35,50,60,85,90,100};
     double maxt = 0;
-    int actionsi[s] = {actionPushShed_s,distribution_s,poseStatuette_s,posePallet_s,excavation_squares_s,goHome_s}; 
+    //int actionsi[s] = {actionPushShed_s,distribution_s,poseStatuette_s,posePallet_s,excavation_squares_s,goHome_s}; 
+    int actionsi[s] = {distribution_s,posePallet_s};
     for (int i = 0; i<s; i++){
             stratFSM->actions[i] = actionsi[i];
             stratFSM->timing[i]  = timingi[i];
