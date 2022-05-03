@@ -176,8 +176,7 @@ void get_d2r_data(ctrlStruct *cvs)
         inputs->r_sp_mes_enc,inputs->l_sp_mes_enc,inputs->r_sp_mes_odo,inputs->l_sp_mes_odo);
 }
 
-void update_time(ctrlStruct *cvs,int verbose)
-{
+void update_time(ctrlStruct *cvs, int verbose){
     ctrlIn *inputs;
     inputs = cvs->inputs;
     inputs->t += inputs->dt;

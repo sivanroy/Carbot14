@@ -51,6 +51,58 @@ def plot_mlc_data():
     plt.show()
 
 
+    
+def open_loop():
+    
+    Data = read_txt_file("../../build/llc_data.txt", 5)
+    
+    moy_list = []
+    moy = 0
+    for i in range (len(Data[0])):
+        if Data[0][i] > 0.4:
+            moy_list.append(Data[3][i])
+            moy = moy + Data[3][i]
+            
+    moy = moy/len(moy_list)
+    print(moy)
+    
+    moy_95 = moy*0.95
+    
+    t_95 = 0
+    for i in range (len(Data[0])):
+        if Data[4][i] >= moy_95:
+            t_95 = Data[0][i]
+            break
+    print(t_95)
+    
+    plt.plot(Data[0], Data[1], label=r"$cmd_{ref}$", linewidth=2)
+    plt.plot(Data[0], Data[3], label=r"$\omega_{mes,r}$", linewidth=1.2)
+    plt.xlabel("Time [s]")
+    plt.ylabel(r"$\omega$ [rad/s]")
+    plt.title("R")
+    plt.xlim(0, 0.05)
+    #plt.ylim(-1, 6)
+    #plt.axis([0, 10, -6, 6])
+    plt.legend()
+    plt.grid()
+    #plt.savefig("speed_profile_zoom.pdf", format="pdf")
+
+    plt.show()
+    
+    plt.plot(Data[0], Data[2], label=r"$cmd_{ref}$", linewidth=2)
+    plt.plot(Data[0], Data[4], label=r"$\omega_{mes,r}$", linewidth=1.2)
+    plt.xlabel("Time [s]")
+    plt.ylabel(r"$\omega$ [rad/s]")
+    plt.title("L")
+    plt.xlim(0, 0.02)
+    #plt.ylim(-1, 6)
+    #plt.axis([0, 10, -6, 6])
+    plt.legend()
+    plt.grid()
+    #plt.savefig("speed_profile_zoom.pdf", format="pdf")
+
+    plt.show()
+
 
 
 def plot_llc_data():
@@ -612,61 +664,103 @@ def plot_tau_data():
     #plt.savefig("mp_data2.pdf", format="pdf")
     plt.show()
     
-def plot_rpl_corr():
+def plot_lidar_caract():
     
+    Data = read_txt_file("../../build/lidar_caract_data.txt", 3)
+    Map = read_txt_file("../../build/icp1_data.txt", 2)
     
-    Data1 = read_txt_file("../../build/icp1_data.txt", 2)
-    Data2 = read_txt_file("../../build/icp2_data.txt", 2)
-    Data3 = read_txt_file("../../build/icp3_data.txt", 2)
-    
-    plt.plot(Data1[0], Data1[1], 'ro', label="Map", markersize = 2)
-    plt.plot(Data2[0], Data2[1], 'bo', label="Lidar point cloud", markersize = 2)
-    #plt.plot(Data3[0], Data3[1], 'o', marker='x', label="Recalibrated point cloud")
-    plt.xlabel("x [m]")
-    plt.ylabel("y [m]")
-    plt.title("Lidar point cloud without correction")
-    #plt.ylim(1.75, 2.05)
-    #plt.xlim(1.75, 2.05)
-    #plt.ylim(-0.02, 0.25)
-    #plt.xlim(-0.02, 0.25)
-    #plt.ylim(-1, 3)
-    # plt.xlim(-1, 4)
-    #plt.ylim(-0.1, 0.2)
-    #plt.xlim(1.6, 2.8)
+    plt.plot(Map[0], Map[1], label="Map")
+    plt.plot(Data[0], Data[1], label="pos")
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.title("recalib pos")
     #plt.axis("equal")
     plt.legend()
     plt.grid()
-    #plt.savefig("rpl_wo_corr.pdf", format="pdf")
+    plt.xlim(-0.1, 3.1)
+    plt.ylim(-0.1, 2.1)
+    #plt.savefig("mp_data2.pdf", format="pdf")
     plt.show()
     
-def plot_od_data():
-    
-    od = read_txt_file("../../build/od_data.txt", 2)
-    Map = read_txt_file("../../build/icp1_data.txt", 2)
-    
-    dx = 0.0145
-    dxb = 0.0025
-    
-    plt.plot(Map[0], Map[1], label="Map")
-    plt.plot(od[0], od[1], 'ro', label="od_data", markersize = 2)
-    plt.plot([3-0.055+0.017, 3-0.055+0.017], [0.675, 0.825], 'b')
-    plt.plot([3-0.055+0.017*2, 3-0.055+0.017*2], [0.675, 0.825], 'b')
-    plt.plot([3-0.055+0.017-dx, 3-0.055+0.017-dx], [0.675, 0.825], 'r')
-    plt.plot([3-0.055+0.017*2-dx, 3-0.055+0.017*2-dx], [0.675, 0.825], 'r')
-    #plt.plot([3-0.055+dx*0.25, 3-0.055+dx*0.25], [0.675, 0.825], 'g')
-    #plt.plot([3-0.055+0.017+dx*0.25, 3-0.055+0.017+dx*0.25], [0.675, 0.825], 'g')
-    #plt.plot([3-0.055+0.017*2+dx*0.25, 3-0.055+0.017*2+dx*0.25], [0.675, 0.825], 'g')
-    plt.xlabel("x [m]")
-    plt.ylabel("y [m]")
-    plt.title("od")
-    plt.xlim(1.5, 1.8)
-    plt.ylim(1.8, 2.05)
+    plt.plot(Data[0], label="x")
+    plt.xlabel("x")
+    plt.title("recalib x")
     #plt.axis("equal")
     plt.legend()
     plt.grid()
     #plt.savefig("mp_data2.pdf", format="pdf")
     plt.show()
     
+    plt.plot(Data[1], label="y")
+    plt.xlabel("y")
+    plt.title("recalib y")
+    #plt.axis("equal")
+    plt.legend()
+    plt.grid()
+    #plt.savefig("mp_data2.pdf", format="pdf")
+    plt.show()
+    
+    plt.plot(Data[2], label="th")
+    plt.xlabel("th")
+    plt.title("recalib th")
+    #plt.axis("equal")
+    plt.legend()
+    plt.grid()
+    #plt.savefig("mp_data2.pdf", format="pdf")
+    plt.show()
+    
+    xlist = Data[0]
+    ylist = Data[1]
+    thlist = Data[2]
+    
+    xref = 3-0.133
+    yref = 1.467
+    thref = -pi
+    
+    n = len(xlist)-1
+    moy_x = 0
+    moy_y = 0
+    moy_th = 0
+    sd_x = 0
+    sd_y = 0
+    sd_th = 0
+    
+    for i in range(1,n+1):
+        moy_x += xlist[i]
+        moy_y += ylist[i]
+        moy_th += thlist[i]
+        
+    moy_x = moy_x/n
+    moy_y = moy_y/n
+    moy_th = moy_th/n
+    
+    print(moy_x)
+    print(moy_y)
+    print(moy_th)
+    
+    for i in range(1,n+1):
+        sd_x += (xlist[i] - moy_x)*(xlist[i] - moy_x)
+        sd_y += (ylist[i] - moy_y)*(ylist[i] - moy_y)
+        sd_th += (thlist[i] - moy_th)*(thlist[i] - moy_th)
+        
+    sd_x = np.sqrt(sd_x/n)
+    sd_y = np.sqrt(sd_y/n)
+    sd_th = np.sqrt(sd_th/n)
+    
+    print(sd_x)
+    print(sd_y)
+    print(sd_th)
+    
+    """
+    ------------------------
+    xref = 3-0.133
+    yref = 1.467
+    thref = -pi
+    
+    
+    
+    """
+
 """
 plot_rpl_data()
 plot_op_data()
@@ -684,9 +778,11 @@ plot_mp_data()
 """
 #plot_icp_data()
 #plot_mlc_opti()
-plot_mp_data()
+#plot_mp_data()
 #plot_llc_data()
 #plot_lpf_data()
+#open_loop()
+plot_lidar_caract()
 
 """
 th_mp =  -140.47653170302596

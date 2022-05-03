@@ -63,7 +63,6 @@ int checkChrono(ctrlStruct *cvs, int i){
 }
 
 void sendFromHLCPF(ctrlStruct *cvs,int goForward,int noWall,int stopIf, double d_max){
-	get_d2r_data(cvs);
     dyn_obs_set(cvs);
     hlcPF_out(cvs,goForward,noWall);
     if(cvs->hlcPF->output) {
@@ -79,11 +78,9 @@ void sendFromHLCPF(ctrlStruct *cvs,int goForward,int noWall,int stopIf, double d
     mlcPF_out(cvs, cvs->hlcPF->v_ref, cvs->hlcPF->theta_ref);
     set_commands(cvs, cvs->mlcPF->r_sp_ref, cvs->mlcPF->l_sp_ref);
     send_commands(cvs);
-    set_new_position(cvs);
 }
 
 void sendFromMLC(ctrlStruct *cvs,double x_goal,double y_goal,int forward){
-    get_d2r_data(cvs);
     dyn_obs_set(cvs);
     set_speed_ref(cvs,x_goal,y_goal,forward);
     if(cvs->mlc->reach_goal){
@@ -92,17 +89,14 @@ void sendFromMLC(ctrlStruct *cvs,double x_goal,double y_goal,int forward){
     }
     set_commands(cvs, cvs->mlc->r_sp_ref, cvs->mlc->l_sp_ref);
     send_commands(cvs);
-    set_new_position(cvs);
 }
 
 
 void sendFromMLCPF(ctrlStruct *cvs,double v_ref, double th_ref){
-    get_d2r_data(cvs); 
     dyn_obs_set(cvs);
     mlcPF_out(cvs, v_ref, th_ref);
     set_commands(cvs, cvs->mlcPF->r_sp_ref, cvs->mlcPF->l_sp_ref);
     send_commands(cvs);
-    set_new_position(cvs);
 }
 
 

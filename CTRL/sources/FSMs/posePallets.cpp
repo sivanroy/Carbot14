@@ -47,9 +47,9 @@ void pPallets_loop(ctrlStruct *cvs){
     x = pos[0];//+ hlcPF->x_shift * cos(th);
     y = pos[1];//+ hlcPF->x_shift * sin(th);
     set_param_normal(cvs);
-    double dy = -0.02;
+    double dy = -0.035;
     double wait = .6;
-
+    double waitForP = 3;
     switch(pPallets->status){
         case S0_pp:
         	pPallets->status = Dpmt1_pp;
@@ -65,6 +65,7 @@ void pPallets_loop(ctrlStruct *cvs){
         		pPallets->status = rec1_pp;
                 teensy_send(cvs,"F");
                 setChrono(cvs,wait,2);
+                setChrono(cvs,waitForP);
                 if (TEAM) set_goal(cvs,3-1.05,2-.21+dy,-M_PI/2);
                 else set_goal(cvs,1.05,2-.21+dy,-M_PI/2);
         	}
@@ -82,11 +83,12 @@ void pPallets_loop(ctrlStruct *cvs){
         case Dpmt1prec_pp: {
             set_param_prec(cvs);
             sendFromHLCPF(cvs,0,1);
-            if(hlcPF->output){
+            if(hlcPF->output & checkChrono(cvs)){
                 pPallets->status = pose1_pp;
                 setChrono(cvs,1);
                 printf("go to pose1_ps\n");
                 teensy_send(cvs,"I");
+                arduino_send(cvs,"6");
             }
             break;
         }
@@ -96,16 +98,16 @@ void pPallets_loop(ctrlStruct *cvs){
                 pPallets->status = Dpmt2_pp;
                 if (TEAM) set_goal(cvs,3-.81,1.55,-M_PI/2);
                 else set_goal(cvs,.81,1.55,-M_PI/2);
-
+                teensy_send(cvs,"G");
+                setChrono(cvs,waitForP);
             }
             break;
         }
 
         case Dpmt2_pp:{
             sendFromHLCPF(cvs,-1,1,1);
-            if(hlcPF->output){
+            if(hlcPF->output & checkChrono(cvs)){
                 pPallets->status = rec2_pp;
-                teensy_send(cvs,"F");
                 if (TEAM) set_goal(cvs,3-.81,2-.21+dy,-M_PI/2);
                 else set_goal(cvs,.81,2-.19+dy,-M_PI/2);
             }
@@ -128,6 +130,8 @@ void pPallets_loop(ctrlStruct *cvs){
                 setChrono(cvs,1);
                 printf("go to pose2_ps\n");
                 teensy_send(cvs,"I");
+                arduino_send(cvs,"6");
+
             }
             break;
         }
@@ -137,15 +141,16 @@ void pPallets_loop(ctrlStruct *cvs){
                 pPallets->status = Dpmt3_pp;
                 if (TEAM) set_goal(cvs,3-.57,1.55,-M_PI/2);
                 else set_goal(cvs,.57,1.55,-M_PI/2);
+                teensy_send(cvs,"H");
+                setChrono(cvs,waitForP);
             }
             break;
         }
 
         case Dpmt3_pp:{
             sendFromHLCPF(cvs,-1,1,1);
-            if(hlcPF->output){
+            if(hlcPF->output&checkChrono(cvs)){
                 pPallets->status = rec3_pp;
-                teensy_send(cvs,"G");
                 if (TEAM) set_goal(cvs,3-.57,2-.21+dy,-M_PI/2);
                 else set_goal(cvs,.57,2-.21+dy,-M_PI/2);
             }
@@ -168,6 +173,7 @@ void pPallets_loop(ctrlStruct *cvs){
                 setChrono(cvs,1);
                 printf("go to pose3_ps\n");
                 teensy_send(cvs,"I");
+                arduino_send(cvs,"6");
             }
             break;
         }

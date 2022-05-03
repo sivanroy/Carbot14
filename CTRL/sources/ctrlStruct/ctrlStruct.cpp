@@ -136,6 +136,9 @@ ctrlStruct* cvs_init()
     cvs->tau_data = fopen("tau_data.txt", "w");
     if (cvs->tau_data == NULL) printf("Enable to open file tau_data.txt\n");
 
+    cvs->lidar_caract_data = fopen("lidar_caract_data.txt", "w");
+    if (cvs->lidar_caract_data == NULL) printf("Enable to open file lidar_caract_data.txt\n");
+
     return cvs;
 }
 
@@ -182,6 +185,7 @@ void cvs_free(ctrlStruct *cvs)
     fclose(cvs->icp2_data);
     fclose(cvs->icp3_data);
     fclose(cvs->tau_data);
+    fclose(cvs->lidar_caract_data);
 
     free(cvs);
 }

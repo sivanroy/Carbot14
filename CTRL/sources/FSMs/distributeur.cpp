@@ -16,6 +16,8 @@ void distr_init(distributeurs *distr){
     distr->status = S0_di;
     distr->output = 0;
     distr->go = 0;
+    distr->center = 0;
+    distr->get = 0;
     printf("sashed initialized\n");
 }
 
@@ -150,6 +152,7 @@ void distr_loop(ctrlStruct *cvs){
                 distr->status = S0_di;
                 printf("end loop\n");
                 teensy_send(cvs,"L");
+                arduino_send(cvs,"3");
                 distr->output = 1;
             }
             break;

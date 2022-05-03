@@ -17,6 +17,7 @@ void rec_init(reCalibStruct *rec)
 
     rec->rpl_nTurn = 0;
     rec->rpl_nTurn_set = 0;
+    rec->n_rec = 0;
 
     rec->w_limit = 1;
     rec->v_limit = 0.4;
@@ -61,7 +62,8 @@ void rec_init(reCalibStruct *rec)
 
     rec->R = Matrix::eye(2);
     rec->max_iter = 20;
-    rec->iter = 0;
+    rec->iter = -1;
+    rec->n_try = -1;
     rec->min_delta = 1e-3;
 
     rec->wall_margin = 0.1;
@@ -142,10 +144,11 @@ int rec_ICP(ctrlStruct *cvs, IcpPointToPlane *icp)
     if ((new_x > 0 + rec->wall_margin && new_x < 3 - rec->wall_margin) &&
         (new_y > 0 + rec->wall_margin && new_y < 2 - rec->wall_margin)) {
         if (rec->iter < rec->max_iter) {
-            printf("Recalib pos\n");
+            printf("Recalib pos : %d\n", rec->n_rec);
             mp->x = new_x;
             mp->y = new_y;
             mp->th = new_th;
+            fprintf(cvs->lidar_caract_data, "%f,%f,%f\n", new_x, new_y, new_th);
         }
     }
     pthread_mutex_unlock(&(mt->mutex_mp));
@@ -165,6 +168,7 @@ int rec_ICP(ctrlStruct *cvs, IcpPointToPlane *icp)
 
     pthread_mutex_lock(&(mt->mutex_rec_flag));
     rec->rec_flag = 0;
+    rec->n_rec++;
     pthread_mutex_unlock(&(mt->mutex_rec_flag));
 
     return 1;
@@ -194,16 +198,20 @@ int rec_static(ctrlStruct *cvs)
 
     pthread_mutex_lock(&(mt->mutex_rec_static));
     int iter = rec->iter;
+    int n_try = rec->n_try;
     pthread_mutex_unlock(&(mt->mutex_rec_static));
 
     switch (rec->static_status) {
         case S0_rec_static: {
-            if (rpl->rpl_bug) return 1;
-            if (iter == 0)  {
+            if (rpl->rpl_bug) {
+                printf("S0_rec_static : BUG\n");
+                return 1;
+            }
+            if (n_try == -1)  {
                 rec->rpl_nTurn = rpl->nTurns + 2;
                 printf("S0_rec_static : try 1\n");
             }
-            if (iter == -1) {
+            if (n_try == -2) {
                 rec->rpl_nTurn = rpl->nTurns + 1;
                 printf("S0_rec_static : try 2\n");
             }
@@ -211,13 +219,16 @@ int rec_static(ctrlStruct *cvs)
             return 0;
         }
         case launch_rec_static: {
-            if (rpl->rpl_bug) return 1;
+            if (rpl->rpl_bug) {
+                printf("launch_rec_static : BUG\n");
+                return 1;
+            }
             if (rpl->nTurns == rec->rpl_nTurn) {
                 printf("rpl->nTurns == rec->rpl_nTurn\n");
                 if (rec_ON(cvs)) {
-                    printf("launch_rec_static : rec_ON\n");
-                    if (iter == 0)  rec->static_status = firstTry_rec_static;
-                    if (iter == -1) rec->static_status = secondTry_rec_static;
+                    printf("launch_rec_static : rec_ON | iter = %d\n", iter);
+                    if (n_try == -1) rec->static_status = firstTry_rec_static;
+                    if (n_try == -2) rec->static_status = secondTry_rec_static;
                     return 0;
                 }
             }
@@ -229,33 +240,43 @@ int rec_static(ctrlStruct *cvs)
             return 0;
         }
         case firstTry_rec_static: {
-            if (rpl->rpl_bug) return 1;
-            if (iter > 0) {
+            if (rpl->rpl_bug) {
+                printf("firstTry_rec_static : BUG\n");
+                return 1;
+            }
+            if (iter >= 0) {
                 if (iter < rec->max_iter) {
                     pthread_mutex_lock(&(mt->mutex_rec_static));
-                    rec->iter = 0;
+                    rec->iter = -1;
+                    rec->n_try = -1;
                     pthread_mutex_unlock(&(mt->mutex_rec_static));
                     rec->static_status = S0_rec_static;
                     printf("rec_static : firstTry\n");
                     return 1;
                 } else {
                     pthread_mutex_lock(&(mt->mutex_rec_static));
-                    rec->iter = -1;
+                    rec->iter = -2;
+                    rec->n_try = -2;
                     pthread_mutex_unlock(&(mt->mutex_rec_static));
                     rec->static_status = S0_rec_static;
+                    printf("rec_static : secondTry\n");
                     return 0;
                 }
             }
             return 0;
         }
         case secondTry_rec_static: {
-            if (rpl->rpl_bug) return 1;
-            if (iter > 0) {
+            if (rpl->rpl_bug) {
+                printf("secondTry_rec_static : BUG\n");
+                return 1;
+            }
+            if (iter >= 0) {
                 printf("rec_static : secondTry\n");
             }
             rec->static_status = S0_rec_static;
             pthread_mutex_lock(&(mt->mutex_rec_static));
-            rec->iter = 0;
+            rec->iter = -1;
+            rec->n_try = -1;
             pthread_mutex_unlock(&(mt->mutex_rec_static));
             return 1;
         }

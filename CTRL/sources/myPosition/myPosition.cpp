@@ -86,3 +86,9 @@ void get_pos(ctrlStruct *cvs, double pos[5])
     pos[4] = mp->v;
     pthread_mutex_unlock(&(mt->mutex_mp));
 }
+
+void update_pos(ctrlStruct *cvs)
+{
+    get_d2r_data(cvs);
+    set_new_position(cvs);
+}

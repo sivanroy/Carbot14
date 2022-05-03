@@ -113,6 +113,7 @@ typedef struct ctrlStruct
     FILE *icp2_data;
     FILE *icp3_data;
     FILE *tau_data;
+    FILE *lidar_caract_data;
 
 } ctrlStruct;
 
