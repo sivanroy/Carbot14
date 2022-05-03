@@ -59,13 +59,13 @@ int main()
     int saShedON = 0;
     int excSqON = 0;
     int distON = 0;
-    int posePalletON = 1;
+    int posePalletON = 0;
 
     int arduinoON = 0;
     int mThreadsON = 0;
 
     int avoidOpponent = 0;
-    int contest = 0;
+    int contest = 1;
     int started = 0;
 
     auto begin_time = high_resolution_clock::now();
@@ -94,6 +94,7 @@ int main()
                 get_d2r_data(cvs);
                 //inputs->t = 0;
                 //set_initial_time(cvs);
+                begin_time = high_resolution_clock::now();
                 if(inputs->start) {
                     started = 1; 
                     printf("START!\n");

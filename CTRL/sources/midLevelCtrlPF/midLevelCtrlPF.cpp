@@ -44,7 +44,7 @@ void mlcPF_out(ctrlStruct *cvs, double v_ref, double th_ref)
 
     double KPTH = mlcPF->Kp_th;
     if(cvs->hlcPF->reorientation){
-        KPTH *= 1.5;
+        KPTH *= 2;
     }
     double th_out = mlcPF->Kp_th * th_error;
 
