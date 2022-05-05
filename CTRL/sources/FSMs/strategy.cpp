@@ -6,29 +6,29 @@
 #include "strategy.h"
 
 //enum {S0_sp,SelectGoal,RunInt,Run,Ok_sp,NotOk_sp,GoHome,releaseT,Recalibrate};
-enum {S0_s,select_action_s,actionPushShed_s,distribution_s,poseStatuette_s,posePallet_s,excavation_squares_s,goHome_s};
+enum {S0_s,select_action_s,actionPushShed_s,distribution1_s,distribution2_s,poseStatuette_s,posePallet1_s,posePallet2_s,excavation_squares_s,goHome_s};
 
 void strategy_FSM_init(strategy_FSM *stratFSM) {
     stratFSM->status = S0_s;
     stratFSM->output = 0;
     stratFSM->timeTillBreak = 15;
-    stratFSM->timeToComeBack = 90;//1.30 min au total
+    stratFSM->timeToComeBack = 95;//1.30 min au total
 
-    int s = 2;
+    int s = 8;
     stratFSM->s = s;
-    double timingi[s] = {20,30};//{35,15,30,30,30,100};
-    double maxtimingi[s] = {20,50};//{35,50,60,85,90,100};
+    double maxtimingi[s] = {35,50,60,85,90,95,90,100};
+    //double maxtimingi[s] = {35,70,105,150};
     double maxt = 0;
-    //int actionsi[s] = {actionPushShed_s,distribution_s,poseStatuette_s,posePallet_s,excavation_squares_s,goHome_s}; 
-    int actionsi[s] = {distribution_s,posePallet_s};
+    int actionsi[s] = {actionPushShed_s,distribution1_s,poseStatuette_s,posePallet1_s,
+        distribution2_s,posePallet2_s,excavation_squares_s,goHome_s}; 
+    //int actionsi[s] = {distribution1_s,posePallet1_s,distribution2_s,posePallet2_s};
     for (int i = 0; i<s; i++){
             stratFSM->actions[i] = actionsi[i];
-            stratFSM->timing[i]  = timingi[i];
+            //stratFSM->timing[i]  = timingi[i];
             stratFSM->maxTiming[i] = maxtimingi[i];
     }
     stratFSM->pt = 0;
-    printf("strategy initialized\n");
-    
+    printf("strategy initialized\n");   
 }
 
 void checkIfEnd(ctrlStruct *cvs){
@@ -63,7 +63,7 @@ void strategy_loop(ctrlStruct *cvs){
             stratFSM->status = stratFSM->actions[stratFSM->pt];
             stratFSM->maxt = stratFSM->maxTiming[stratFSM->pt];
             printf("action selected : %d\n", stratFSM->actions[stratFSM->pt]);
-            setChrono(cvs,stratFSM->timing[stratFSM->pt],1);
+            //setChrono(cvs,stratFSM->timing[stratFSM->pt],1);
             stratFSM->pt ++;
             checkIfEnd(cvs);
             if(stratFSM->status == poseStatuette_s & !cvs->saShed->gotStat){
@@ -77,7 +77,7 @@ void strategy_loop(ctrlStruct *cvs){
                 printf("failed actionPushShed_s /: !\n");
                 stratFSM->status = select_action_s;
                 teensy_send(cvs,"B");
-            } else if(checkChrono(cvs,1) & stratFSM->maxt < inputs->t){
+            } else if( stratFSM->maxt < inputs->t){
                 printf("failed checkChrono pushshed\n");
                 stratFSM->status = select_action_s;
                 teensy_send(cvs,"B");
@@ -88,12 +88,25 @@ void strategy_loop(ctrlStruct *cvs){
             break;
         }
 
-        case distribution_s:{
+        case distribution1_s:{
             distr_loop(cvs);
             if(cvs->distr->output == -1){
                 printf("failed poseStat /: !\n");
                 stratFSM->status = select_action_s;
-            } if(cvs->distr->output | (checkChrono(cvs,1)& stratFSM->maxt < inputs->t) ) {
+            } if(cvs->distr->output | stratFSM->maxt < inputs->t) {
+                stratFSM->status = select_action_s;
+            }
+            checkIfEnd(cvs);
+            break;
+        }
+
+
+        case distribution2_s:{
+            distr_loop(cvs,1);
+            if(cvs->distr->output == -1){
+                printf("failed poseStat /: !\n");
+                stratFSM->status = select_action_s;
+            } if(cvs->distr->output | stratFSM->maxt < inputs->t)  {
                 stratFSM->status = select_action_s;
             }
             checkIfEnd(cvs);
@@ -105,19 +118,31 @@ void strategy_loop(ctrlStruct *cvs){
             if(cvs->poseStat->output == -1){
                 printf("failed poseStat /: !\n");
                 stratFSM->status = select_action_s;
-            } if(cvs->poseStat->output | (checkChrono(cvs,1)& stratFSM->maxt < inputs->t) ) {
+            } if(cvs->poseStat->output | stratFSM->maxt < inputs->t)  {
                 stratFSM->status = select_action_s;
             }
             checkIfEnd(cvs);
             break;
         }
 
-        case posePallet_s:{
+        case posePallet1_s:{
             pPallets_loop(cvs);
             if(cvs->pPallets->output == -1){
                 printf("failed poseStat /: !\n");
                 stratFSM->status = select_action_s;
-            } if(cvs->pPallets->output | (checkChrono(cvs,1)& stratFSM->maxt < inputs->t) ) {
+            } if(cvs->pPallets->output | stratFSM->maxt < inputs->t) {
+                stratFSM->status = select_action_s;
+            }
+            checkIfEnd(cvs);
+            break;
+        }
+
+        case posePallet2_s:{
+            pPallets_loop(cvs,1);
+            if(cvs->pPallets->output == -1){
+                printf("failed poseStat /: !\n");
+                stratFSM->status = select_action_s;
+            } if(cvs->pPallets->output | stratFSM->maxt < inputs->t)  {
                 stratFSM->status = select_action_s;
             }
             checkIfEnd(cvs);
@@ -129,7 +154,7 @@ void strategy_loop(ctrlStruct *cvs){
             if(cvs->excSq->output == -1){
                 printf("failed excSquares /: !\n");
                 stratFSM->status = select_action_s;
-            } else if(checkChrono(cvs,1) & stratFSM->maxt < inputs->t){
+            } else if(stratFSM->maxt < inputs->t){
                 printf("failed checkChrono excavation_squares_s\n");
                 stratFSM->status = select_action_s;
             } else if(cvs->excSq->output){
@@ -144,13 +169,12 @@ void strategy_loop(ctrlStruct *cvs){
             goHome_loop(cvs);
             if(cvs->ghome->output){
                 stratFSM->status = select_action_s;
-                printf("strat FSM ended\n");
             }
             checkIfEnd(cvs);
             break;
 
         default:
-            printf("probleme defautl value in FSM\n");
+            printf("probleme default value in FSM strat\n");
             checkIfEnd(cvs);
             break;
 

@@ -158,7 +158,6 @@ void saShed_loop(ctrlStruct *cvs){
             hlcPF->Tau_min = 0.2;
             mlcPF->sigma = .7;
             hlcPF->error = 0.02;
-            hlcPF->Kp_th_reorient = 500;
 
             if(checkChrono(cvs,2)){
                 saShed->status = rec_push_sas;
@@ -184,6 +183,7 @@ void saShed_loop(ctrlStruct *cvs){
                 setChrono(cvs,3);
                 teensy_send(cvs, "5");
                 teensy_send(cvs, "B");
+                teensy_send(cvs,"Y");
                 //if (TEAM) set_goal(cvs, 2.58, .46, -M_PI / 4);
                 //else set_goal(cvs, .45, .42, -3 * M_PI / 4);
             }
@@ -199,19 +199,21 @@ void saShed_loop(ctrlStruct *cvs){
             if (teensy->switch_F) {
                 motors_stop(cvs);
                 set_commands(cvs,0,0);
-                setChrono(cvs,0.5);
+                setChrono(cvs,wait);
                 teensy_send(cvs, "6");
                 teensy->switch_F = 0;
                 saShed->status = rec_push_sas;
                 //setChrono(cvs,.2);
                 arduino_send(cvs,"A");
-                //teensy_send(cvs, "5");
+                teensy_send(cvs, "S");
                 //saShed->output = 1;
             }
             else if (checkChrono(cvs)) {
                 motors_stop(cvs);
                 set_commands(cvs,0,0);
                 teensy_send(cvs, "6");
+                arduino_send(cvs,"A");
+                arduino_send(cvs,"S");
                 teensy->switch_F = 0;
                 saShed->status = rec_push_sas;
                 setChrono(cvs,wait);
@@ -222,7 +224,7 @@ void saShed_loop(ctrlStruct *cvs){
         case dpmt_si_echec:{
             sendFromHLCPF(cvs,-1);
             if(hlcPF->output){
-                saShed->status = rec_push_sas;
+                saShed->status = rec_stat_sas;
                 setChrono(cvs,wait);
             }
             break;
@@ -231,7 +233,11 @@ void saShed_loop(ctrlStruct *cvs){
         case rec_push_sas:{
             if (rec_static(cvs) | checkChrono(cvs)) {
                 printf("rec END\n");
-                saShed->status = Dpmt7_sas;
+                //MODIFIED !!!!
+                //saShed->status = Dpmt7_sas;
+                setChrono(cvs,1);
+                saShed->status = Wait_for_stat_sas;
+                saShed->gotStat = 1;
                 if (TEAM) set_goal(cvs,2.51,0.5,-M_PI/4);//2.73,.30,-10
                 else set_goal(cvs,0.5,0.53,-3*M_PI/4);
             }
@@ -373,7 +379,7 @@ void saShed_loop(ctrlStruct *cvs){
 
 
         default:
-            printf("Problem default value in FSM\n");
+            printf("Problem default value in FSM sashed\n");
     }
 
 }

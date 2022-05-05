@@ -27,7 +27,7 @@ N -> Take 1st pallet from stack and drop it at the top of expoisiton gallery (po
 O -> Take 1st pallet from stack and drop it at the top of expoisiton gallery (pos: 160)
 P -> Take 1st pallet from stack and drop it at the top of expoisiton gallery (pos: 220)
 Q -> Clamp IN -> release the statuette
-R -> Clamp with its widest opening
+ -> Clamp with its widest opening
 S -> Clamp OUT -> clamps the statuette
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

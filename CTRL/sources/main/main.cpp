@@ -59,18 +59,19 @@ int main()
     int saShedON = 0;
     int excSqON = 0;
     int distON = 0;
-    int posePalletON = 0;
+    int posePalletON = 1;
 
     int arduinoON = 0;
     int mThreadsON = 0;
 
     int avoidOpponent = 0;
-    int contest = 0;
+    int contest = 1;
     int started = 0;
 
-    int lidar_caract = 1;
+    int lidar_caract = 0;
 
     auto begin_time = high_resolution_clock::now();
+    arduino_send(cvs,"R");
 
     //set_initial_time(cvs);
     if (contest) {
@@ -89,7 +90,7 @@ int main()
         threads_start(cvs);
         teensy_send(cvs, "Q");
 
-        while(inputs->t < 96){
+        while(inputs->t < 99){
             auto start = high_resolution_clock::now();
             teensy_recv(cvs);
 
@@ -100,6 +101,7 @@ int main()
                 begin_time = high_resolution_clock::now();
                 if(inputs->start) {
                     started = 1; 
+                    arduino_send(cvs,"1");
                     printf("START!\n");
                 }
             }
@@ -957,7 +959,7 @@ int main()
             teensy_recv(cvs);
 
             update_pos(cvs);
-            distr_loop(cvs);
+            distr_loop(cvs,1);
             if(cvs->distr->output) {
                 printf("ended with %d\n",cvs->distr->output);
                 motors_stop(cvs);
@@ -1038,6 +1040,8 @@ int main()
         cvs->mp->x = 3-0.133;
         cvs->mp->y = 1.13;
         cvs->mp->th = M_PI;
+
+        cvs->distr->get = 1;
         if(!inputs->team){
             teensy_send(cvs, "2");
             cvs->mp->x = .133;
@@ -1050,7 +1054,7 @@ int main()
             teensy_recv(cvs);
 
             update_pos(cvs);
-            pPallets_loop(cvs);
+            pPallets_loop(cvs,1);
             if(cvs->pPallets->output) {
                 printf("ended with %d\n",cvs->pPallets->output);
                 motors_stop(cvs);
@@ -1140,13 +1144,14 @@ int main()
         int Q = 0;
         int R = 0;
         int S = 0;
-        while (inputs->t < 9) {
+        while (inputs->t < 3) {
 
             auto start = high_resolution_clock::now();
 
             teensy_recv(cvs);
 
             //printf("switch_F : %d\n", teensy->switch_F);
+            /*
             if (teensy->switch_F) {
                 printf("Switch front ON\n");
                 //teensy->switch_F = 0;
@@ -1157,9 +1162,10 @@ int main()
                 printf("Switch back ON\n");
                 //teensy->switch_B = 0;
                 teensy->switch_B_end = 1;
-            }
+            }*/
+
             if (inputs->t >= 2 && C == 0) {
-                teensy_send(cvs, "Y");
+                teensy_send(cvs, "Q");
                 C = 1;
             }
 

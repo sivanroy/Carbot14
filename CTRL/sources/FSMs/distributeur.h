@@ -11,12 +11,14 @@ typedef struct distributeurs
 	int status;
 	int output;
 	int go;
-	int center;
+	int getHome;
+	int getCenter;
+	int let;
 	int get;
 } distributeurs;
 
 void distr_init(distributeurs *distr);
-void distr_loop(ctrlStruct *cvs);
+void distr_loop(ctrlStruct *cvs,int center = 0);
 void distr_launch(ctrlStruct *cvs);
 
 #endif // end of header guard
