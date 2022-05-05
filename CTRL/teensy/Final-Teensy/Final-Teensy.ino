@@ -16,7 +16,6 @@ A -> Both front servo OUT : hold pallets to push under the shed
 B -> Both front servo IN : release pallets to push under the shed
 C -> Measure resistance and push system
 D -> Push cube
-
 F -> Take 1st pallet from stack and drop it at the bottom of expoisiton gallery (pos: 100)
 G -> Take 2nd pallet from stack and drop it at the bottom of expoisiton gallery (pos: 160)
 H -> Take 3rd pallet from stack and drop it at the bottom of expoisiton gallery (pos: 220)
@@ -25,13 +24,10 @@ K -> Flip down to the ground
 L -> Flip 3 pallets 90°
 J -> Flip mid (60°)
 M -> Flip up
-
 I -> Arm drops pallet and reset its position
-
 N -> Take 1st pallet from stack and drop it at the top of expositon gallery (pos: 100)
 O -> Take 1st pallet from stack and drop it at the top of expositon gallery (pos: 160)
 P -> Take 1st pallet from stack and drop it at the top of expositon gallery (pos: 220)
-
 Q -> Clamp IN -> release the statuette
 S -> Clamp OUT -> clamps the statuette
 Y -> Open clamp
@@ -91,9 +87,10 @@ int flipUp = 845 + delta;
 int flipMid = 560 + delta;
 int flipDown = 340 + delta;
 
-int pos3P = 105;
-int pos2P = 165;
-int pos1P = 230;
+int pos3P = 115;
+int pos2P = 170;
+int pos1P = 228;
+int posLow = 428;
 
 const int measureResPin = 21;
 int rawMeasure = 0;
@@ -239,7 +236,7 @@ void moveStepper(){
     delay(500);
     Dynamixel.moveSpeed(ID1,600,1023);
     delay(500);
-    goToPosition(350);
+    goToPosition(posLow);
     Wire.endTransmission();  
 
     usingArm = 1;
@@ -253,12 +250,12 @@ void moveStepper(){
     Wire.beginTransmission(0x0E);
     goToPosition(pos2P);
     digitalWrite(pumpPin, HIGH);
-    delay(1000);
+    delay(750);
     goToPosition(0);
     delay(750);
     Dynamixel.moveSpeed(ID1,600,1023);
     delay(500);
-    goToPosition(350);
+    goToPosition(posLow);
     Wire.endTransmission();
 
     usingArm = 1;
@@ -276,7 +273,7 @@ void moveStepper(){
     delay(1000);
     Dynamixel.moveSpeed(ID1,600,1023);
     delay(500);
-    goToPosition(350);
+    goToPosition(posLow);
     Wire.endTransmission(); 
 
     usingArm = 1;
@@ -292,7 +289,9 @@ void moveStepper(){
     delay(750);
     goToPosition(0);
     delay(500);
-    Dynamixel.moveSpeed(ID1,600,1023);
+    Dynamixel.moveSpeed(ID1,545,1023);
+    delay(500);
+    goToPosition(200);
     Wire.endTransmission(); 
 
     usingArm = 1;
@@ -309,7 +308,9 @@ void moveStepper(){
     delay(1000);
     goToPosition(0);
     delay(750);
-    Dynamixel.moveSpeed(ID1,600,1023);
+    Dynamixel.moveSpeed(ID1,545,1023);
+    delay(500);
+    goToPosition(200);
     Wire.endTransmission();
 
     usingArm = 1;
@@ -325,7 +326,9 @@ void moveStepper(){
     delay(1250);
     goToPosition(0);
     delay(1000);
-    Dynamixel.moveSpeed(ID1,600,1023);
+    Dynamixel.moveSpeed(ID1,545,1023);
+    delay(500);
+    goToPosition(200);
     Wire.endTransmission(); 
     
     usingArm = 1;
