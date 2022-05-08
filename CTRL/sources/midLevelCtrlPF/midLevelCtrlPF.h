@@ -23,6 +23,7 @@ typedef struct midLevelCtrlPF
 
     double Kp_th; ///< proportional constant of the PI 'th' controller
     double max_th;
+    double K_orient;
 
     double r_sp_ref; ///< reference speed of the right wheel
     double l_sp_ref; ///< reference speed of the left wheel

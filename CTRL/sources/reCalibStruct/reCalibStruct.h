@@ -30,6 +30,8 @@ typedef struct reCalibStruct
     int rpl_nTurn_set;
     int n_rec;
 
+    int change;
+
     double w_limit; ///< omega limit for the reCalibration [rad/s]
     double v_limit; ///< linear speed limit for the reCalibration [m/s]
 
@@ -50,7 +52,7 @@ typedef struct reCalibStruct
 
 void rec_init(reCalibStruct *rec);
 int rec_ICP(ctrlStruct *cvs, IcpPointToPlane *icp);
-int rec_ON(ctrlStruct *cvs);
-int rec_static(ctrlStruct *cvs);
+int rec_ON(ctrlStruct *cvs,int change=1);
+int rec_static(ctrlStruct *cvs,int change=1);
 
 #endif

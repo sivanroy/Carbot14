@@ -357,9 +357,11 @@ def plot_mlc_opti():
     
     ax1.plot(Data[0],Data[1],label=r"$v_{ref}$")#vref
     ax1.plot(Data[0],Data[3],label=r"$v_{mes}$")#v
-    ax1.set(title=r"$v$ profile")
+    ax1.set(title=r"Speed profile")
     ax1.set(ylabel="v [m/s]")
+    ax1.set(xlim=[0,10])
     ax1.legend()
+    ax1.grid()
     
     ax2.plot(Data[0],Data[2],label=r"$\theta_{ref}$")#thetaref
     ax2.plot(Data[0],Data[4],label=r"$\theta_{mes}$")#theta
@@ -367,6 +369,7 @@ def plot_mlc_opti():
     ax2.set(ylabel=r"$\theta$ [rad]")
     ax2.set(xlabel="time [s]")
     ax2.legend()
+    ax2.grid()
     #plt.show()
 
     plt.savefig("mlcPF output.pdf", format="pdf")                          
@@ -487,7 +490,8 @@ def plot_mp_data():
 
     Map = read_txt_file("../../build/icp1_data.txt", 2)
     
-    plt.plot(Map[0], Map[1], label="Map")
+    plt.plot([1.55,1.85,1.85,1.55,1.55],[.6,.6,.8,.8,.6],label="Opponent")
+    plt.plot(Map[0], Map[1], label="Map",c="b")
     plt.plot(Data[0], Data[1], 'ro', label="mp_data", markersize = 1)
     plt.xlabel("x [m]")
     plt.ylabel("y [m]")
@@ -756,10 +760,129 @@ def plot_lidar_caract():
     xref = 3-0.133
     yref = 1.467
     thref = -pi
-    
-    
-    
     """
+    
+def plot_odo_caract():
+    Data = read_txt_file("../../build/caract_odo_data.txt", 4)
+    Map = read_txt_file("../../build/icp1_data.txt", 2)
+    Data1 = read_txt_file("../../build/caract_odo_data2.txt", 4)
+    
+    #plt.plot(Map[0],Map[1])
+    plt.plot(Data[1],Data[2],"o")
+    plt.plot(Data1[1],Data1[2],"x")
+    
+    plt.show()
+    
+    t1 = [[],[],[]]
+    t2 = [[],[],[]]
+    t3 = [[],[],[]]
+    l1 = [[],[],[]]
+    l2 = [[],[],[]]
+    l3 = [[],[],[]]
+    size = min(len(Data[0]),len(Data1[0]))
+
+    for i in range (size):
+        if(i%3==0):
+            t1[0].append(Data[1][i])
+            t1[1].append(Data[2][i])
+            t1[2].append(Data[3][i])
+        elif (i%3==1):
+            t2[0].append(Data[1][i])
+            t2[1].append(Data[2][i])
+            t2[2].append(Data[3][i])
+        else:
+            t3[0].append(Data[1][i])
+            t3[1].append(Data[2][i])
+            t3[2].append(Data[3][i])
+            
+    for i in range (size):
+        if(i%3==0):
+            l1[0].append(Data1[1][i])
+            l1[1].append(Data1[2][i])
+            l1[2].append(Data1[3][i])
+
+        elif (i%3==1):
+            l2[0].append(Data1[1][i])
+            l2[1].append(Data1[2][i])
+            l2[2].append(Data1[3][i])
+
+        else:
+            l3[0].append(Data1[1][i])
+            l3[1].append(Data1[2][i])
+            l3[2].append(Data1[3][i])
+
+    
+    plt.title("Odometers vs Lidar")
+    plt.plot(t1[0],t1[1],'o',label="Odometers")
+    plt.plot(l1[0],l1[1],'x',label="Lidar")
+    plt.xlabel("x [m]")
+    plt.ylabel("y [m]")
+    plt.axis('equal')
+    plt.plot(1.15,.57,'o',c='r',label="Goal")
+    #plot the circle
+    a = 1.15
+    b = .57
+    r = 0.02
+    xs = np.linspace(a,a+r*(1+1/100),100)
+    ys1 = np.sqrt(r**2 - (xs-a)**2)+b
+    ys2 = -np.sqrt(r**2-(xs-a)**2)+b
+    ys= np.array([])    
+    xs = np.append(xs,xs)
+    ys = np.append(ys1,ys2)
+    plt.plot(xs,ys,c='g',ls=':',label="Reached goal")
+    plt.plot(-(xs-a)+a,ys,c='g',ls=':')
+    plt.grid()
+    plt.legend()
+    plt.show()
+    
+    e1 = np.array(t1)-np.array(l1)
+    e2 = np.array(t2)-np.array(l2)
+    e3 = np.array(t3)-np.array(l3)
+    e1[2][1]+=2*np.pi
+    print(e1[2])
+        
+    #plt.plot(e[0],e[1],'o')
+    data1 = [e1[0],e2[0],e3[0]]
+    data2 = [e1[1],e2[1],e3[1]]
+    data3 = [e1[2],e2[2],e3[2]]
+    #data2 = []
+    #print(data)
+    
+    fig,(ax1,ax2,ax3) = plt.subplots(3,sharex=True)
+    
+    ax1.boxplot(data1)
+    ax1.grid()
+    ax1.set(ylim = [-0.05,0.05])
+    
+    ax2.boxplot(data2)
+    ax2.grid()
+    ax2.set(ylim = [-0.05,0.05])
+    
+    ax3.boxplot(data3)
+    ax3.grid()
+    ax3.set(ylim=[-.2,.2])
+    plt.show()
+    
+    d1 = np.sqrt(e1[0]**2+e1[1]**2)
+    d2 = np.sqrt(e2[0]**2+e2[1]**2)
+    d3 = np.sqrt(e3[0]**2+e3[1]**2)
+    #plt.plot(d3)
+    #plt.show()
+    d1 = np.append(d1,d2)
+    d1 = np.append(d1,d3)
+    #plt.boxplot([d1,d2,d3])
+    
+    fig,(ax1,ax2) = plt.subplots(2)
+    ax1.boxplot(d1)
+    ax1.set(ylim=[0,0.05])
+    ax1.grid()
+    
+    ax2.hist(d1,60)
+    ax2.set(xlim=[0,0.07])
+    ax2.grid()
+    fig.show()
+    
+    
 
 """
 plot_rpl_data()
@@ -778,11 +901,13 @@ plot_mp_data()
 """
 #plot_icp_data()
 #plot_mlc_opti()
-plot_mp_data()
+#plot_mp_data()
 #plot_llc_data()
 #plot_lpf_data()
 #open_loop()
 #plot_lidar_caract()
+#plot_mlc_opti()
+plot_odo_caract()
 
 """
 th_mp =  -140.47653170302596

@@ -114,7 +114,8 @@ typedef struct ctrlStruct
     FILE *icp3_data;
     FILE *tau_data;
     FILE *lidar_caract_data;
-
+    FILE *caract_odo_data;
+    FILE *caract_odo_data2;
 } ctrlStruct;
 
 ctrlStruct* cvs_init();

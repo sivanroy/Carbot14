@@ -65,7 +65,7 @@ void excSq_loop(ctrlStruct *cvs){
     double wait = 0.6;
     double dy = 0.02;
 
-    if (TEAM) {
+    if (1) {
         switch (excSq->status) {
             case S0_es: {
                 //if (excSq->go) {
@@ -84,7 +84,7 @@ void excSq_loop(ctrlStruct *cvs){
                     motors_stop(cvs);
                     set_commands(cvs, 0, 0);
                     excSq->status = rec_start_es;
-                    if (TEAM) set_goal(cvs, 2.41, 0.21, -0.95*M_PI);
+                    if (TEAM) set_goal(cvs, 2.38, 0.21, -0.95*M_PI);
                     else set_goal(cvs, .68, 0.25, 0.8 * M_PI);
                     setChrono(cvs,wait);
                 }
@@ -93,7 +93,7 @@ void excSq_loop(ctrlStruct *cvs){
             case rec_start_es:{
                 if (rec_static(cvs) | checkChrono(cvs)) {
                     printf("rec_start_es END : go to Dpmt2_es\n");
-                    excSq->status = Dpmt2_es;
+                    excSq->status = rec1_es;
                     setChrono(cvs, 5);
                 }
                 break;
@@ -105,8 +105,8 @@ void excSq_loop(ctrlStruct *cvs){
                     set_commands(cvs, 0, 0);
                     excSq->status = rec1_es;
                     setChrono(cvs,wait);
-                    if (TEAM) set_goal(cvs, 2.42, 0.21-dy, M_PI);
-                    else set_goal(cvs, 0.6675 + 0.1, .21-dy, M_PI);
+                    if (TEAM) set_goal(cvs, 2.44, 0.21-dy, M_PI);
+                    else set_goal(cvs, 0.6675 + 0.15, .21-dy, M_PI);
                 }
                 break;
             }
@@ -115,15 +115,17 @@ void excSq_loop(ctrlStruct *cvs){
                     printf("rec1_es END : go to Dpmt1_prec_es\n");
                     excSq->status = Dpmt1_prec_es;
                     setChrono(cvs, 5);
+                    if (TEAM) set_goal(cvs, 2.44, 0.21-dy, M_PI);
+                    else set_goal(cvs, 0.6675 + 0.12, .21-dy, M_PI);
                 }
                 break;
             }
             case Dpmt1_prec_es: {
                 //set_param_normal(cvs);
                 set_param_prec(cvs);
-                hlcPF->Tau_max = .15;
-                hlcPF->Tau_min = .1;
-                mlcPF->sigma = 0.5;
+                //hlcPF->Tau_max = .15;
+                //hlcPF->Tau_min = .1;
+                //mlcPF->sigma = 0.5;
                 sendFromHLCPF(cvs, -1, 1,1);
                 if (hlcPF->output) {
                     motors_stop(cvs);
@@ -168,8 +170,6 @@ void excSq_loop(ctrlStruct *cvs){
                     excSq->status = rec2_es;
                     setChrono(cvs,wait);
                     printf("go to rec2_es\n");
-                    if (TEAM) set_goal(cvs, 2.265, 0.21-dy, M_PI);
-                    else set_goal(cvs, 0.8525 + 0.1, .21-dy, M_PI);
                 }
                 break;
             }
@@ -177,15 +177,18 @@ void excSq_loop(ctrlStruct *cvs){
                 if (rec_static(cvs)|checkChrono(cvs)) {
                     printf("rec2_es END : go to Dpmt2_prec_es\n");
                     excSq->status = Dpmt2_prec_es;
+
+                    if (TEAM) set_goal(cvs, 2.265, 0.21-dy, M_PI);
+                    else set_goal(cvs, 0.8525 + 0.1, .21-dy, M_PI);
                 }
                 break;
             }
             case Dpmt2_prec_es: {
                 //set_param_normal(cvs);
                 set_param_prec(cvs);
-                hlcPF->Tau_max = .15;
-                hlcPF->Tau_min = .1;
-                mlcPF->sigma = 0.5;
+                //hlcPF->Tau_max = .15;
+                //hlcPF->Tau_min = .1;
+                //mlcPF->sigma = 0.5;
                 sendFromHLCPF(cvs, -1, 1,1);
                 if (hlcPF->output) {
                     motors_stop(cvs);
@@ -237,15 +240,17 @@ void excSq_loop(ctrlStruct *cvs){
                 if (rec_static(cvs)|checkChrono(cvs)) {
                     printf("rec3_es END : go to Dpmt3_prec_es\n");
                     excSq->status = Dpmt3_prec_es;
+                    if (TEAM) set_goal(cvs, 2.08 - 0.01, 0.21-dy, M_PI);
+                    else set_goal(cvs, 1.0375 + 0.14, .21-dy, M_PI);
                 }
                 break;
             }
             case Dpmt3_prec_es: {
                 //set_param_normal(cvs);
                 set_param_prec(cvs);
-                hlcPF->Tau_max = .15;
-                hlcPF->Tau_min = .1;
-                mlcPF->sigma = 0.5;
+                //hlcPF->Tau_max = .15;
+                //hlcPF->Tau_min = .1;
+                //mlcPF->sigma = 0.5;
                 sendFromHLCPF(cvs, -1, 1,1);
                 if (hlcPF->output) {
                     motors_stop(cvs);
@@ -267,9 +272,6 @@ void excSq_loop(ctrlStruct *cvs){
             case Dpmt3_noR_es: {
                 //set_param_normal(cvs);
                 set_param_prec(cvs);
-                hlcPF->Tau_max = .15;
-                hlcPF->Tau_min = .1;
-                mlcPF->sigma = 0.5;
                 sendFromHLCPF(cvs, -1, 1,1);
                 if (hlcPF->output) {
                     motors_stop(cvs);
@@ -331,15 +333,18 @@ void excSq_loop(ctrlStruct *cvs){
                 if (rec_static(cvs)|checkChrono(cvs)) {
                     printf("rec4_es END : go to Dpmt4_prec_es\n");
                     excSq->status = Dpmt4_prec_es;
+
+                    if (TEAM) set_goal(cvs, 1.895 - 0.01, 0.21-dy, M_PI);
+                    else set_goal(cvs, 1.2225 + 0.12, 0.21-dy, M_PI);
                 }
                 break;
             }
             case Dpmt4_prec_es: {
                 //set_param_normal(cvs);
                 set_param_prec(cvs);
-                hlcPF->Tau_max = .15;
-                hlcPF->Tau_min = .1;
-                mlcPF->sigma = 0.5;
+                //hlcPF->Tau_max = .15;
+                //hlcPF->Tau_min = .1;
+                //mlcPF->sigma = 0.5;
                 sendFromHLCPF(cvs, -1, 1 ,1);
                 if (hlcPF->output) {
                     motors_stop(cvs);
@@ -406,9 +411,9 @@ void excSq_loop(ctrlStruct *cvs){
             case Dpmt5_prec_es: {
                 //set_param_normal(cvs);
                 set_param_prec(cvs);
-                hlcPF->Tau_max = .15;
-                hlcPF->Tau_min = .1;
-                mlcPF->sigma = 0.5;
+                //hlcPF->Tau_max = .15;
+                //hlcPF->Tau_min = .1;
+                //mlcPF->sigma = 0.5;
                 sendFromHLCPF(cvs, -1, 1,1);
                 if (hlcPF->output) {
                     motors_stop(cvs);
@@ -430,9 +435,9 @@ void excSq_loop(ctrlStruct *cvs){
             case Dpmt5_noR_es: {
                 //set_param_normal(cvs);
                 set_param_prec(cvs);
-                hlcPF->Tau_max = .15;
-                hlcPF->Tau_min = .1;
-                mlcPF->sigma = 0.5;
+                //hlcPF->Tau_max = .15;
+                //hlcPF->Tau_min = .1;
+                //mlcPF->sigma = 0.5;
                 sendFromHLCPF(cvs, -1, 1,1);
                 if (hlcPF->output) {
                     motors_stop(cvs);
@@ -520,9 +525,9 @@ void excSq_loop(ctrlStruct *cvs){
             case Dpmt6_prec_es: {
                 //set_param_normal(cvs);
                 set_param_prec(cvs);
-                hlcPF->Tau_max = .15;
-                hlcPF->Tau_min = .1;
-                mlcPF->sigma = 0.5;
+                //hlcPF->Tau_max = .15;
+                //hlcPF->Tau_min = .1;
+                //mlcPF->sigma = 0.5;
                 sendFromHLCPF(cvs, -1, 1,1);
                 if (hlcPF->output) {
                     motors_stop(cvs);
@@ -544,9 +549,9 @@ void excSq_loop(ctrlStruct *cvs){
             case Dpmt6_noR_es: {
                 //set_param_normal(cvs);
                 set_param_prec(cvs);
-                hlcPF->Tau_max = .15;
-                hlcPF->Tau_min = .1;
-                mlcPF->sigma = 0.5;
+                //hlcPF->Tau_max = .15;
+                //hlcPF->Tau_min = .1;
+                //mlcPF->sigma = 0.5;
                 sendFromHLCPF(cvs, -1, 1,1);
                 if (hlcPF->output) {
                     motors_stop(cvs);
@@ -631,9 +636,9 @@ void excSq_loop(ctrlStruct *cvs){
             case Dpmt7_prec_es: {
                 //set_param_normal(cvs);
                 set_param_prec(cvs);
-                hlcPF->Tau_max = .15;
-                hlcPF->Tau_min = .1;
-                mlcPF->sigma = 0.5;
+                //hlcPF->Tau_max = .15;
+                //hlcPF->Tau_min = .1;
+                //mlcPF->sigma = 0.5;
                 sendFromHLCPF(cvs, -1, 1,1);
                 if (hlcPF->output) {
                     motors_stop(cvs);

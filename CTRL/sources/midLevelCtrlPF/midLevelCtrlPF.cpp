@@ -15,8 +15,9 @@ void mlcPF_init(midLevelCtrlPF *mlcPF)
     mlcPF->sigma = 0.8;
     mlcPF->R_odo = 0.022;
 
-    mlcPF->Kp_th = 20.0; //20 /30
+    mlcPF->Kp_th = 10.0; //20 /30
     mlcPF->max_th = 5;
+    mlcPF->K_orient = 3;
 
     mlcPF->r_sp_ref = 0.0;
     mlcPF->l_sp_ref = 0.0;
@@ -44,7 +45,7 @@ void mlcPF_out(ctrlStruct *cvs, double v_ref, double th_ref)
 
     double KPTH = mlcPF->Kp_th;
     if(cvs->hlcPF->reorientation){
-        KPTH *= 2;
+        KPTH *= mlcPF->K_orient;
     }
     double th_out = mlcPF->Kp_th * th_error;
 

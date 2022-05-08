@@ -47,7 +47,8 @@ int main()
     int rplON = 0;
     int odoCalib = 0;   
     int hlcPFON = 0;
-    int checkRepetabilityHLCPF = 0;
+    int checkRepetabilityHLCPFTrianlge = 0;
+    int odo_caracterisation_ON = 1;
     int pushShedON = 0;
     int pushShed_and_sonar_ON = 0;
     int icp_test = 0;
@@ -59,13 +60,13 @@ int main()
     int saShedON = 0;
     int excSqON = 0;
     int distON = 0;
-    int posePalletON = 1;
+    int posePalletON = 0;
 
     int arduinoON = 0;
     int mThreadsON = 0;
 
     int avoidOpponent = 0;
-    int contest = 1;
+    int contest = 0;
     int started = 0;
 
     int lidar_caract = 0;
@@ -90,7 +91,7 @@ int main()
         threads_start(cvs);
         teensy_send(cvs, "Q");
 
-        while(inputs->t < 99){
+        while(inputs->t < 139){
             auto start = high_resolution_clock::now();
             teensy_recv(cvs);
 
@@ -538,27 +539,30 @@ int main()
     }
     if (mlcPF_ON) {
 
-        mp->th = M_PI;
+        mp->th = 0;
         double v_ref = 0.2;
-        double th_ref = M_PI;
+        double th_ref;
         cvs->mp->x = 3-0.14;//3-0.94;//3-0.14;
         cvs->mp->y = 1.13;//2-0.53;//0.795+0.125;//1.13;//0.45;//2-0.53;
-        cvs->mp->th = M_PI;//0;//M_PI;
+        cvs->mp->th = 0;//0;//M_PI;
 
         mlcPF->t_start = inputs->t;
-        while (inputs->t < 10) {
-
-            if (inputs->t >= 0 && inputs->t < 2.5) {
-                v_ref = .20;
-                th_ref = M_PI*.9;
-            }
-
-            else if (inputs->t >= 2.5 && inputs->t < 5) {
+        while (inputs->t < 12) {
+            if(inputs->t<2) {
                 v_ref = 0;
                 th_ref = 0;
             }
-            else if (inputs->t >= 5 && inputs->t < 7.5) {
-                v_ref = -0.2;
+            else if (inputs->t >= 2 && inputs->t < 7) {
+                v_ref = .30;
+                th_ref = M_PI*.9;
+            }
+
+            else if (inputs->t >= 7 && inputs->t < 15) {
+                v_ref = 0.3;
+                th_ref = M_PI/2;
+            }
+            else if (inputs->t >= 10 && inputs->t < 13) {
+                v_ref = 0.3;
                 th_ref = -M_PI/2;
             }
             else {
@@ -692,7 +696,7 @@ int main()
             usleep(dt * 1000000 - duration.count());
         }
     }
-    if (checkRepetabilityHLCPF) {
+    if (checkRepetabilityHLCPFTrianlge) {
 
         threads_start(cvs);
         get_d2r_data(cvs);
@@ -702,39 +706,53 @@ int main()
         cvs->mp->th = M_PI;
         printf("team = %d \n",inputs->team );
         set_param_normal(cvs);
-        double xs[3] = {1.15,1.5,1.85};
-        double ys[3] = {.57,1.18,.57};
+        int size = 3;
+        double xs[size] = {1.15,1.5,1.85};
+        double ys[size] = {.57,1.18,.57};
         int pt = 0;
         printf("begin test hlcPF\n");
-        set_goal(cvs,xs[pt%3],ys[pt%3],-10);
-        while (inputs->t < 100) {
+        set_goal(cvs,xs[pt%size],ys[pt%size],-10);
+
+        int rec = 0;
+        double pos[5];
+        double x_norec, y_norec, th_norec;
+
+        while (inputs->t < 300) {
             auto start = high_resolution_clock::now();
             update_pos(cvs);
             double t = inputs->t;
             set_param_normal(cvs);
-            sendFromHLCPF(cvs,1,1);
-            if(hlcPF->output){
-                pt+=1;
-                double xg = xs[pt%3];
-                double yg = ys[pt%3];
-                set_goal(cvs,xg,yg,-10);
-                printf("plus\n");
-                break;
+            if(rec){
+                if(checkChrono(cvs)){
+                    if(rec_static(cvs)|checkChrono(cvs,1)){
+                        rec = 0;
+                    }
+                } else {
+                    setChrono(cvs,1,1);
+                }
+            } else {
+                sendFromHLCPF(cvs,1,1);
+                if(hlcPF->output){
+                    pt+=1;
+                    double xg = xs[pt%size];
+                    double yg = ys[pt%size];
+                    set_goal(cvs,xg,yg,-10);
+                    rec = 1;
+                    get_pos(cvs, pos);
+                    th_norec = pos[2];
+                    x_norec = pos[0];
+                    y_norec = pos[1];
+                    fprintf(cvs->caract_odo_data,"%f,%f,%f,%f\n",inputs->t,x_norec,y_norec,th_norec);
+                    printf("positions : %f,%f,%f\n",x_norec,y_norec,th_norec);
+                    setChrono(cvs,1);
+                }
             }
-            fprintf(cvs->llc_data, "%f,%f,%f,%f,%f,%f,%f\n", inputs->t, mlcPF->r_sp_ref, mlcPF->l_sp_ref, inputs->r_sp_mes_enc, inputs->l_sp_mes_enc, inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
+            //fprintf(cvs->llc_data, "%f,%f,%f,%f,%f,%f,%f\n", inputs->t, mlcPF->r_sp_ref, mlcPF->l_sp_ref, inputs->r_sp_mes_enc, inputs->l_sp_mes_enc, inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
             update_time(cvs);
             auto stop = high_resolution_clock::now();
             auto duration = duration_cast<microseconds>(stop - start);
             usleep(dt * 1000000 - duration.count());
         }
-        printf("------------- rec static -------------\n");
-        rec->iter = 0;
-        mp->w = 0;
-        mp->v = 0;
-        motors_stop(cvs);
-        while (1) if (rec_static(cvs)) break;
-        printf("x = %f | y = %f | th = %f\n", mp->x, mp->y, mp->th);
-        usleep(2000000);
 
         mt->thread_main_end = 1;
         printf("th_end : start ... ");
@@ -744,6 +762,114 @@ int main()
 
         //threads_end(cvs);
     }
+
+    if (odo_caracterisation_ON) {
+
+        threads_start(cvs);
+        get_d2r_data(cvs);
+        printf("checkRepetabilityHLCPF\n");
+        cvs->mp->x = .5;
+        cvs->mp->y = 1;
+        cvs->mp->th = 0;
+        printf("team = %d \n",inputs->team );
+        set_param_normal(cvs);
+        int size = 8;
+        double xs[size] = {.5,1,1.5,2,  2.5,2,1.5,1,.5};
+        double ys[size] = {1,1,1,1,     1,1,1,1};
+        printf("begin test hlcPF\n");
+
+        int pt = 1;
+        set_goal(cvs,xs[pt%size],ys[pt%size],-10);
+
+        int rec = 0;
+        int orient = 0;
+        int rec_change = 0;
+
+        double pos[5];
+        double x_norec, y_norec, th_norec;
+
+        //FAUX POUR LE MOMENT
+        while (inputs->t < 100) {
+            auto start = high_resolution_clock::now();
+            update_pos(cvs);
+            double t = inputs->t;
+            set_param_normal(cvs);
+
+            if(rec){
+                if(checkChrono(cvs)){
+                    if(rec_static(cvs,0)|checkChrono(cvs,1)){
+                        rec = 0;
+                    }
+                } else {
+                    setChrono(cvs,1,1);
+                }
+            }
+            else if(orient){
+                get_pos(cvs, pos);
+                th_norec = pos[2];
+                x_norec = pos[0];
+                y_norec = pos[1];
+                double orientation = 0;
+                if(pt==5){orientation = M_PI;}
+                //cvs->mlcPF->K
+                sendFromMLCPF(cvs,0,orientation);
+                if(abs(limit_angle(th_norec - orientation)) < 0.15){
+                    orient = 0;
+                }
+            }
+
+            else if(rec_change){
+                if(checkChrono(cvs)){
+                    if(rec_static(cvs,1)|checkChrono(cvs,1)){
+                        rec_change = 0;
+                    }
+                } else {
+                    setChrono(cvs,1,1);
+                }
+
+            } else {
+                set_param_prec(cvs);
+                sendFromHLCPF(cvs,1,1);
+                if(hlcPF->output){
+                    pt+=1;
+                    pt=pt%size;
+                    double orientation = 0;
+                    if(pt>=4){
+                        orientation = M_PI;
+                    } 
+                    double xg = xs[pt];
+                    double yg = ys[pt];
+                    set_goal(cvs,xg,yg,orientation);
+
+                    rec = 1;
+                    rec_change = 0;orient = 0;
+                    if(pt == 5 |pt ==1){
+                        rec_change = 1;
+                        orient = 1;
+                    }
+
+                    get_pos(cvs, pos);
+                    th_norec = pos[2];
+                    x_norec = pos[0];
+                    y_norec = pos[1];
+                    fprintf(cvs->caract_odo_data,"%f,%f,%f,%f\n",inputs->t,x_norec,y_norec,th_norec);
+                    printf("positions : %f,%f,%f\n",x_norec,y_norec,th_norec);
+                    setChrono(cvs,1);
+                }
+            }
+            //fprintf(cvs->llc_data, "%f,%f,%f,%f,%f,%f,%f\n", inputs->t, mlcPF->r_sp_ref, mlcPF->l_sp_ref, inputs->r_sp_mes_enc, inputs->l_sp_mes_enc, inputs->r_sp_mes_odo, inputs->l_sp_mes_odo);
+            update_time(cvs);
+            auto stop = high_resolution_clock::now();
+            auto duration = duration_cast<microseconds>(stop - start);
+            usleep(dt * 1000000 - duration.count());
+        }
+        mt->thread_main_end = 1;
+        printf("th_end : start ... ");
+        threads_end(cvs);
+        printf("end\n");
+    }
+
+
     if (hlcPFON) {
 
         threads_start(cvs);
@@ -766,36 +892,36 @@ int main()
         set_param_normal(cvs);
 
         printf("begin test hlcPF\n");
-        while (inputs->t < 15) {
+        while (inputs->t < 80) {
             auto start = high_resolution_clock::now();
             update_pos(cvs);
             double t = inputs->t;
-            if (t==0) {
+            if (t<=.1) {
                 set_param_normal(cvs);
-                xgoal = 2.2;//2.2;//1.2;
-                ygoal = 1.5;//1.60;
+                xgoal = 1;//2.2;//1.2;
+                ygoal = 1.55;//1.60;
                 forward = -1;
-                orientation = M_PI;//M_PI/2;
+                orientation = -10;//M_PI/2;
                 set_goal(cvs, xgoal, ygoal, orientation);
                 printf("goal A\n");
-            } else if (t>5 & t<5.01) {
+            } else if (t>20 & t<20.01) {
                 //set_param_prec(cvs);
-                xgoal = 2;
-                ygoal = .45;
+                xgoal = .75;
+                ygoal = .5;
                 forward =-1;
-                orientation = M_PI;
+                orientation = -10;
                 set_goal(cvs, xgoal, ygoal, orientation);
                 printf("goal B\n");
-            } else if (t>10 & t<10.1) {
-                xgoal = 2.6;//1.3;
-                ygoal = 1.3;
+            } else if (t>30 & t<30.1) {
+                xgoal = 2.5;//1.3;
+                ygoal = 1.4;
                 forward = -1;
                 orientation = 0;
                 set_goal(cvs, xgoal, ygoal, orientation);
                 printf("goal c\n");
             }
             //get_d2r_data(cvs); // ctrlIn
-            sendFromHLCPF(cvs,1);
+            if(!hlcPF->output) sendFromHLCPF(cvs,forward);
             //set_new_position(cvs);
             //printf("cmd_r = %d | cmd_l = %d\n", outputs->r_cmd, outputs->l_cmd);
             //printf("x = %f | y = %f | th = %f\n", mp->x, mp->y, mp->th);
@@ -806,20 +932,11 @@ int main()
             auto stop = high_resolution_clock::now();
             auto duration = duration_cast<microseconds>(stop - start);
 
-            printf("duration.count() = %lld us | t = %f\n-------------\n", duration.count(), inputs->t);
+            //printf("duration.count() = %lld us | t = %f\n-------------\n", duration.count(), inputs->t);
             usleep(dt * 1000000 - duration.count());
 
 
         }
-        printf("------------- rec static -------------\n");
-        rec->iter = 0;
-        mp->w = 0;
-        mp->v = 0;
-        motors_stop(cvs);
-        while (1) if (rec_static(cvs)) break;
-        printf("x = %f | y = %f | th = %f\n", mp->x, mp->y, mp->th);
-        usleep(2000000);
-
         mt->thread_main_end = 1;
         printf("th_end : start ... ");
         threads_end(cvs);

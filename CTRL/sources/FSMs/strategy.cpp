@@ -12,11 +12,11 @@ void strategy_FSM_init(strategy_FSM *stratFSM) {
     stratFSM->status = S0_s;
     stratFSM->output = 0;
     stratFSM->timeTillBreak = 15;
-    stratFSM->timeToComeBack = 95;//1.30 min au total
+    stratFSM->timeToComeBack = 140;//1.30 min au total
 
     int s = 8;
     stratFSM->s = s;
-    double maxtimingi[s] = {35,50,60,85,90,95,90,100};
+    double maxtimingi[s] = {35,50,60,85,90,95,130,140};
     //double maxtimingi[s] = {35,70,105,150};
     double maxt = 0;
     int actionsi[s] = {actionPushShed_s,distribution1_s,poseStatuette_s,posePallet1_s,

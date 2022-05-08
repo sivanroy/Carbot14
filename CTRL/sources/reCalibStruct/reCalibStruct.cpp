@@ -18,6 +18,7 @@ void rec_init(reCalibStruct *rec)
     rec->rpl_nTurn = 0;
     rec->rpl_nTurn_set = 0;
     rec->n_rec = 0;
+    rec->change = 1;
 
     rec->w_limit = 1;
     rec->v_limit = 0.4;
@@ -65,7 +66,6 @@ void rec_init(reCalibStruct *rec)
     rec->iter = -1;
     rec->n_try = -1;
     rec->min_delta = 1e-3;
-
     rec->wall_margin = 0.1;
 }
 
@@ -145,9 +145,21 @@ int rec_ICP(ctrlStruct *cvs, IcpPointToPlane *icp)
         (new_y > 0 + rec->wall_margin && new_y < 2 - rec->wall_margin)) {
         if (rec->iter < rec->max_iter) {
             printf("Recalib pos : %d\n", rec->n_rec);
-            mp->x = new_x;
-            mp->y = new_y;
-            mp->th = new_th;
+
+            pthread_mutex_lock(&(mt->mutex_rec_flag));
+            int change = rec->change;
+            pthread_mutex_unlock(&(mt->mutex_rec_flag));
+
+            if(change){
+                mp->x = new_x;
+                mp->y = new_y;
+                mp->th = new_th;
+                printf("changed postions\n");
+            }
+
+
+            printf("real pos : %f,%f,%f\n", cvs->inputs->t,new_x, new_y, new_th);
+            fprintf(cvs->caract_odo_data2, "%f,%f,%f,%f\n", cvs->inputs->t,new_x, new_y, new_th);
             fprintf(cvs->lidar_caract_data, "%f,%f,%f\n", new_x, new_y, new_th);
         }
     }
@@ -174,7 +186,7 @@ int rec_ICP(ctrlStruct *cvs, IcpPointToPlane *icp)
     return 1;
 }
 
-int rec_ON(ctrlStruct *cvs)
+int rec_ON(ctrlStruct *cvs,int change)
 {
     mThreadsStruct *mt = cvs->mt;
     reCalibStruct *rec = cvs->rec;
@@ -184,13 +196,14 @@ int rec_ON(ctrlStruct *cvs)
     if (rec->rec_flag == 0) {
         rec->rec_flag = 1;
         flag = 1;
+        rec->change = change;
     }
     pthread_mutex_unlock(&(mt->mutex_rec_flag));
 
     return flag;
 }
 
-int rec_static(ctrlStruct *cvs)
+int rec_static(ctrlStruct *cvs,int change)
 {
     rplStruct *rpl = cvs->rpl;
     mThreadsStruct *mt = cvs->mt;
@@ -225,7 +238,7 @@ int rec_static(ctrlStruct *cvs)
             }
             if (rpl->nTurns == rec->rpl_nTurn) {
                 printf("rpl->nTurns == rec->rpl_nTurn\n");
-                if (rec_ON(cvs)) {
+                if (rec_ON(cvs),change) {
                     printf("launch_rec_static : rec_ON | iter = %d\n", iter);
                     if (n_try == -1) rec->static_status = firstTry_rec_static;
                     if (n_try == -2) rec->static_status = secondTry_rec_static;

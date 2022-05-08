@@ -139,6 +139,12 @@ ctrlStruct* cvs_init()
     cvs->lidar_caract_data = fopen("lidar_caract_data.txt", "w");
     if (cvs->lidar_caract_data == NULL) printf("Enable to open file lidar_caract_data.txt\n");
 
+    cvs->caract_odo_data = fopen("caract_odo_data.txt", "w");
+    if (cvs->caract_odo_data == NULL) printf("Enable to open file caract_odo_data.txt\n");
+
+    cvs->caract_odo_data2 = fopen("caract_odo_data2.txt", "w");
+    if (cvs->caract_odo_data2 == NULL) printf("Enable to open file caract_odo_data2.txt\n");
+
     return cvs;
 }
 
@@ -186,6 +192,8 @@ void cvs_free(ctrlStruct *cvs)
     fclose(cvs->icp3_data);
     fclose(cvs->tau_data);
     fclose(cvs->lidar_caract_data);
+    fclose(cvs->caract_odo_data);
+    fclose(cvs->caract_odo_data2);
 
     free(cvs);
 }
