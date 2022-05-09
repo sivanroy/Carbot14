@@ -70,6 +70,8 @@ void pPallets_loop(ctrlStruct *cvs,int high){
             else set_goal(cvs,1.05,1.55,-M_PI/2);
             printf("go to dp1\n");
         	pPallets->go = 0;
+            if(high) teensy_send(cvs,"N");
+            if(high)setChrono(cvs,waitForP);
         	break;
 
         case Dpmt1_pp:{
@@ -77,10 +79,10 @@ void pPallets_loop(ctrlStruct *cvs,int high){
         	if(hlcPF->output){
         		pPallets->status = rec1_pp;
                 if(!high) teensy_send(cvs,"F");
-                else teensy_send(cvs,"N");
+                //else teensy_send(cvs,"N");
 
                 setChrono(cvs,wait,2);
-                setChrono(cvs,waitForP);
+                if(!high)setChrono(cvs,waitForP);
 
                 if (TEAM) set_goal(cvs,3-1.05,2-.21+dy+addIfHigh,-M_PI/2);
                 else set_goal(cvs,1.05,2-.21+dy+addIfHigh,-M_PI/2);
@@ -100,6 +102,7 @@ void pPallets_loop(ctrlStruct *cvs,int high){
 
         case Dpmt1prec_pp: {
             set_param_prec(cvs);
+            cvs->mlcPF->K_orient = 10;
             sendFromHLCPF(cvs,0,1);
             if((hlcPF->output & checkChrono(cvs))|checkChrono(cvs,2)){
                 pPallets->status = pose1_pp;
@@ -146,6 +149,7 @@ void pPallets_loop(ctrlStruct *cvs,int high){
 
         case Dpmt2prec_pp: {
             set_param_prec(cvs);
+            cvs->mlcPF->K_orient = 10;
             sendFromHLCPF(cvs,0,1);
             if((hlcPF->output|checkChrono(cvs,2))&checkChrono(cvs)){
                 pPallets->status = pose2_pp;
@@ -193,6 +197,7 @@ void pPallets_loop(ctrlStruct *cvs,int high){
 
         case Dpmt3prec_pp: {
             set_param_prec(cvs);
+            cvs->mlcPF->K_orient = 10;
             sendFromHLCPF(cvs,0,1);
             if((hlcPF->output|checkChrono(cvs,2))& checkChrono(cvs)){
                 pPallets->status = pose3_pp;
@@ -221,6 +226,7 @@ void pPallets_loop(ctrlStruct *cvs,int high){
             if(hlcPF->output){
                 pPallets->output = 1;
                 pPallets->status = S0_pp;
+                printf("ended pp in t = %d\n\n----------\n",cvs->inputs->t);
             }
         }
 

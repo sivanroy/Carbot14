@@ -196,27 +196,16 @@ void saShed_loop(ctrlStruct *cvs){
             mlcPF->sigma = 0.5;
             //cvs->mlcPF->Kp_th = 10;
             sendFromHLCPF(cvs,1,1);
-            if (teensy->switch_F) {
+            if (teensy->switch_F | checkChrono(cvs)) {
                 motors_stop(cvs);
                 set_commands(cvs,0,0);
                 setChrono(cvs,wait);
-                teensy_send(cvs, "6");
                 teensy->switch_F = 0;
                 saShed->status = rec_push_sas;
                 //setChrono(cvs,.2);
-                arduino_send(cvs,"F");
+                arduino_send(cvs,"K");
                 teensy_send(cvs, "S");
-                //saShed->output = 1;
-            }
-            else if (checkChrono(cvs)) {
-                motors_stop(cvs);
-                set_commands(cvs,0,0);
                 teensy_send(cvs, "6");
-                arduino_send(cvs,"A");
-                arduino_send(cvs,"S");
-                teensy->switch_F = 0;
-                saShed->status = rec_push_sas;
-                setChrono(cvs,wait);
             }
             break;
         }
@@ -351,8 +340,8 @@ void saShed_loop(ctrlStruct *cvs){
         case Wait_for_cube_sas:{
             if (checkChrono(cvs)) {
                 saShed->status = Out_sas;
-                if (TEAM) set_goal(cvs,2.5,.5,0.9*M_PI/2);
-                else set_goal(cvs,.5,.5,1.1*M_PI/2);
+                if (TEAM) set_goal(cvs,2.5,.5,-10);
+                else set_goal(cvs,.5,.5,-10);
                 printf("go to Out_sas\n");
             }
             break;
@@ -372,6 +361,7 @@ void saShed_loop(ctrlStruct *cvs){
             if (rec_static(cvs)|checkChrono(cvs)) {
                 printf("rec END\n");
                 saShed->output = 1;
+                printf("ended sa in t = %d\n\n----------\n",cvs->inputs->t);
             }
             break;
         }

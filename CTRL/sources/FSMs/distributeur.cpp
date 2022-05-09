@@ -184,7 +184,7 @@ void distr_loop(ctrlStruct *cvs,int center){
                 arduino_send(cvs,"3");
                 if (center) {
                     if (TEAM) set_goal(cvs,3-1.2,1.5,-10);
-                    else set_goal(cvs,1.35,1.5,-10);
+                    else set_goal(cvs,1.2,1.5,-10);
                     setChrono(cvs,3);
                     distr->status = goout_di;
                 }                
@@ -198,6 +198,7 @@ void distr_loop(ctrlStruct *cvs,int center){
             if(hlcPF->output|checkChrono(cvs)){
                 distr->output = 1;
                 distr->status = S0_di;
+                printf("ended di in t = %d\n\n----------\n",cvs->inputs->t);
             }
             break;
         }

@@ -9,7 +9,8 @@ typedef struct strategy_FSM
 {   int status;
     int output;
     int s;
-
+    int shed;
+    
     double timeTillBreak;
     double timeToComeBack;
 

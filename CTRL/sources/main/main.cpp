@@ -47,8 +47,8 @@ int main()
     int rplON = 0;
     int odoCalib = 0;   
     int hlcPFON = 0;
-    int checkRepetabilityHLCPFTrianlge = 0;
-    int odo_caracterisation_ON = 1;
+    int checkRepetabilityHLCPFTrianlge =0;
+    int odo_caracterisation_ON = 0;
     int pushShedON = 0;
     int pushShed_and_sonar_ON = 0;
     int icp_test = 0;
@@ -66,7 +66,7 @@ int main()
     int mThreadsON = 0;
 
     int avoidOpponent = 0;
-    int contest = 0;
+    int contest = 1;
     int started = 0;
 
     int lidar_caract = 0;
@@ -91,7 +91,7 @@ int main()
         threads_start(cvs);
         teensy_send(cvs, "Q");
 
-        while(inputs->t < 139){
+        while(inputs->t < 99.5){
             auto start = high_resolution_clock::now();
             teensy_recv(cvs);
 
@@ -707,7 +707,7 @@ int main()
         printf("team = %d \n",inputs->team );
         set_param_normal(cvs);
         int size = 3;
-        double xs[size] = {1.15,1.5,1.85};
+        double xs[size] = {1.15,1.15,1.85};
         double ys[size] = {.57,1.18,.57};
         int pt = 0;
         printf("begin test hlcPF\n");
@@ -797,7 +797,7 @@ int main()
 
             if(rec){
                 if(checkChrono(cvs)){
-                    if(rec_static(cvs,0)|checkChrono(cvs,1)){
+                    if(rec_static(cvs)|checkChrono(cvs,1)){//retrieve the 1 in rec_static
                         rec = 0;
                     }
                 } else {
@@ -844,7 +844,7 @@ int main()
                     rec = 1;
                     rec_change = 0;orient = 0;
                     if(pt == 5 |pt ==1){
-                        rec_change = 1;
+                        //rec_change = 1;
                         orient = 1;
                     }
 

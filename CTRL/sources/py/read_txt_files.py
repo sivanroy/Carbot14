@@ -484,24 +484,91 @@ def plot_op_data():
     #plt.savefig("op_data2.pdf", format="pdf")
     plt.show()
 
+def lines(xy1,xy2,dx):
+    d = np.sqrt((xy1[0]-xy2[0])**2+(xy1[1]-xy2[1])**2)
+    N = int(max(d//dx,3))
+    if ( (xy2[0] - xy1[0]) == 0) :
+        pointsx = []
+        pointsy = []
+        for i in range(N):
+            y1 = xy1[1];y2 = xy2[1]
+            dy = y2-y1
+            step = dy/(N-1)
+            pointsy.append(y1+step*i)
+            pointsx.append(xy1[0])
+        return pointsx,pointsy
+        
+    else :
+        a = (xy2[1]-xy1[1]) / (xy2[0] - xy1[0]);
+        b = xy1[1] - a*xy1[0]
+        x1 = xy1[0]; x2 = xy2[0]
+        pointsx = []
+        pointsy = []
+        for i in range(N):
+            dx = x2-x1
+            step = dx / (N-1)
+            pointsx.append(x1+step*i)
+            y = a*(x1+step*i)+b
+            pointsy.append(y)
+        return pointsx,pointsy     
+    
+def obstacles():
+    xo = []
+    yo = []
+    #limitsx = [[0,3.00],[3.00,3.00],[3.00,0],[0,0],[0,0.30],[1,1.2],[1.8,2]]
+    #limitsy = [[0,0],[0,2.00],[2.00,2.00],[2.00,0],[0.30,0],[0.4,.70],[.70,1]]
+    limitsx = [[0.56,2.43],[3.00,3.0], [3.00,2.555],[.44,0],[1.175,1.825]  ,[0,0],\
+               [.51,0],[2.49,3.0],\
+               [1.45,1.5],[1.55,1.5],\
+               [2.898,2.898],[.102,.102],\
+               [.45,1.17],[1.830,2.55],\
+               #[1.48,1.48],[1.52,1.52],\
+               #[.45,.45],[1.17,1.17],\
+               #[1.83,1.83],[2.55,2.55]\
+                   ];
+    limitsy = [[0,0],  [0.57,2.00],   [2.00,2.00],[2.00,2.00],[2.00,2.00],  [2.00,0.57],\
+               [0,.51],[0,.51],\
+               [1.95,1.7],[1.95,1.65],\
+               [.825,.675],[.825,.675],\
+               [1.914,1.914],[1.914,1.914],\
+               #[1.95,1.7],[1.95,1.7],\
+               #[1.914,2],[1.914,2],\
+               #[1.914,2],[1.914,2]\
+                   ]; 
+    density = .05
+    for i in range (len(limitsx)):
+    #for i in range (1):
+        xs = limitsx[i]
+        ys = limitsy[i]
+        xp,yp = lines([xs[0],ys[0]],[xs[1],ys[1]],density)
+        xo.extend(xp)
+        yo.extend(yp)
+    print("size of obstacles : {}".format(len(xo)))
+    return xo,yo
+
+
 def plot_mp_data():
+    
 
     Data = read_txt_file("../../build/mp_data.txt", 6)
 
     Map = read_txt_file("../../build/icp1_data.txt", 2)
+    xo,yo=obstacles()
     
-    plt.plot([1.55,1.85,1.85,1.55,1.55],[.6,.6,.8,.8,.6],label="Opponent")
-    plt.plot(Map[0], Map[1], label="Map",c="b")
-    plt.plot(Data[0], Data[1], 'ro', label="mp_data", markersize = 1)
+    plt.plot([1.55,1.85,1.85,1.55,1.55],[.6,.6,.8,.8,.6],label="Opponent",linewidth=4,c='r')
+    #plt.plot(Map[0], Map[1], label="Map",c="b")
+    plt.plot(xo,yo,"o",c='r',markersize = 4,label="Walls")
+    plt.plot(Data[0], Data[1], 'ro', label="Path", markersize = 3,c='b')
+    plt.plot([1,.75,2.5],[1.55,.5,1.4],'o',c='g',markersize = 6,label="goals")
     plt.xlabel("x [m]")
     plt.ylabel("y [m]")
-    plt.title("mp")
+    plt.title("Potential field path planning")
     plt.xlim(-0.1, 3.1)
     plt.ylim(-0.1, 2.1)
     #plt.axis("equal")
     plt.legend()
     plt.grid()
-    #plt.savefig("mp_data2.pdf", format="pdf")
+    plt.savefig("mp_data2.pdf", format="pdf")
     plt.show()
     
     plt.plot(Data[5], Data[3], 'r', label="w")
@@ -766,10 +833,14 @@ def plot_odo_caract():
     Data = read_txt_file("../../build/caract_odo_data.txt", 4)
     Map = read_txt_file("../../build/icp1_data.txt", 2)
     Data1 = read_txt_file("../../build/caract_odo_data2.txt", 4)
-    
-    #plt.plot(Map[0],Map[1])
+    plt.title("Odometers caracterization")
+    plt.plot(Map[0],Map[1])
     plt.plot(Data[1],Data[2],"o")
     plt.plot(Data1[1],Data1[2],"x")
+    plt.xlabel("x [m]")
+    plt.ylabel("y [m]")
+    plt.grid()
+
     
     plt.show()
     
@@ -832,14 +903,19 @@ def plot_odo_caract():
     plt.plot(xs,ys,c='g',ls=':',label="Reached goal")
     plt.plot(-(xs-a)+a,ys,c='g',ls=':')
     plt.grid()
+    plt.ylim(([.54,.63]))
+    plt.xlim([1.12,1.2])
     plt.legend()
     plt.show()
     
     e1 = np.array(t1)-np.array(l1)
     e2 = np.array(t2)-np.array(l2)
     e3 = np.array(t3)-np.array(l3)
-    e1[2][1]+=2*np.pi
-    print(e1[2])
+    for i in range (len(e1[2])):
+        if(e1[2][i]> np.pi):
+            e1[2][i]-=2*np.pi
+        if(e1[2][i]<-np.pi):
+            e1[2][i]+=2*np.pi
         
     #plt.plot(e[0],e[1],'o')
     data1 = [e1[0],e2[0],e3[0]]
@@ -848,19 +924,28 @@ def plot_odo_caract():
     #data2 = []
     #print(data)
     
-    fig,(ax1,ax2,ax3) = plt.subplots(3,sharex=True)
+    #fig,(ax1,ax2,ax3) = plt.subplots(3,sharex=True)
     
-    ax1.boxplot(data1)
-    ax1.grid()
-    ax1.set(ylim = [-0.05,0.05])
+    plt.boxplot(data1)
+    plt.title("Error in x")
+    plt.grid()
+    #plt.ylim([-0.05,0.05])
+    plt.ylabel("x [m]")
+    plt.show()
     
-    ax2.boxplot(data2)
-    ax2.grid()
-    ax2.set(ylim = [-0.05,0.05])
-    
-    ax3.boxplot(data3)
-    ax3.grid()
-    ax3.set(ylim=[-.2,.2])
+    plt.boxplot(data2)
+    plt.grid()
+    plt.title("Error in y")
+    plt.ylim([-0.05,0.05])
+    plt.ylabel("y [m]")
+    plt.show()
+        
+    plt.boxplot(data3)
+    plt.title(r"Error in $\theta$")
+    plt.grid()
+    plt.ylim([-.025,.11])
+    plt.ylabel('angle [radian]')
+    #plt.set(ylim=[-.2,.2])
     plt.show()
     
     d1 = np.sqrt(e1[0]**2+e1[1]**2)
@@ -872,17 +957,36 @@ def plot_odo_caract():
     d1 = np.append(d1,d3)
     #plt.boxplot([d1,d2,d3])
     
+    
     fig,(ax1,ax2) = plt.subplots(2)
+    ax1.set(title="Cumulated error")
+    ax1.set(ylabel="Error [m]")
     ax1.boxplot(d1)
-    ax1.set(ylim=[0,0.05])
+    ax1.set(ylim=[0.0,0.06])
+    #ax1.set(ylim=[0,0.05])
     ax1.grid()
     
-    ax2.hist(d1,60)
-    ax2.set(xlim=[0,0.07])
+    ax2.hist(d1,30)
+    ax2.set(xlim=[0.0,0.06])
+    #ax2.set(xlim=[0,0.07])
+    ax2.set(xlabel="Error [m]")
     ax2.grid()
     fig.show()
     
-    
+def plot_odo_caract2():
+    Data = read_txt_file("../../build/caract_odo_data.txt", 4)
+    Map = read_txt_file("../../build/icp1_data.txt", 2)
+    Data1 = read_txt_file("../../build/caract_odo_data2.txt", 4)
+    plt.title("Odometers caracterization")
+    plt.plot(Map[0],Map[1])
+    print(Data)
+    plt.plot(Data[1],Data[2],"o")
+    plt.plot(Data1[1],Data1[2],"x")
+    plt.xlabel("x [m]")
+    plt.ylabel("y [m]")
+    plt.grid()
+    #plt.xlim([0.4,0.6])
+    plt.show()
 
 """
 plot_rpl_data()
@@ -907,7 +1011,9 @@ plot_mp_data()
 #open_loop()
 #plot_lidar_caract()
 #plot_mlc_opti()
+#plot_odo_caract2()
 plot_odo_caract()
+#plot_mp_data()
 
 """
 th_mp =  -140.47653170302596

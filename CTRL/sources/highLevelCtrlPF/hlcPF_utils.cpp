@@ -118,7 +118,7 @@ void set_param_normal(ctrlStruct *cvs){
     hlcPF->d_limit = 0.01;
     hlcPF->Alpha = a/hlcPF->d_limit;
     //tau
-    hlcPF->Tau_max = 10;
+    hlcPF->Tau_max = 12;//10
     hlcPF->tau_max_dist = 1;
     hlcPF->Tau_min = 0.3; //0.005;
     hlcPF->tau_min_dist = 0.1;
@@ -127,7 +127,7 @@ void set_param_normal(ctrlStruct *cvs){
     //local minimum
     cvs->mlcPF->sigma = 0.5;
     cvs->mlcPF->Kp_th = 8;
-    mlcPF->K_orient = 3;
+    cvs->mlcPF->K_orient = 5;
     //hlcPF->Kp_th_reorient = 20;
 }
 

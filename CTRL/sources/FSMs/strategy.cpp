@@ -6,18 +6,17 @@
 #include "strategy.h"
 
 //enum {S0_sp,SelectGoal,RunInt,Run,Ok_sp,NotOk_sp,GoHome,releaseT,Recalibrate};
-enum {S0_s,select_action_s,actionPushShed_s,distribution1_s,distribution2_s,poseStatuette_s,posePallet1_s,posePallet2_s,excavation_squares_s,goHome_s};
+enum {S0_s,select_action_s,actionPushShed_s,distribution1_s,distribution2_s,poseStatuette_s,posePallet1_s,posePallet2_s,excavation_squares_s,goHome_s,goHome_shed_s};
 
 void strategy_FSM_init(strategy_FSM *stratFSM) {
     stratFSM->status = S0_s;
     stratFSM->output = 0;
-    stratFSM->timeTillBreak = 15;
-    stratFSM->timeToComeBack = 140;//1.30 min au total
-
+    stratFSM->timeToComeBack = 100;//1.30 min au total
+    stratFSM->shed = 1;
     int s = 8;
     stratFSM->s = s;
-    double maxtimingi[s] = {35,50,60,85,90,95,130,140};
-    //double maxtimingi[s] = {35,70,105,150};
+    double maxtimingi[s] = {35,50,60,85,90,95,0,100};
+    //double maxtimingi[s] = {0,0,0,0,0,0,0,100};
     double maxt = 0;
     int actionsi[s] = {actionPushShed_s,distribution1_s,poseStatuette_s,posePallet1_s,
         distribution2_s,posePallet2_s,excavation_squares_s,goHome_s}; 
@@ -33,6 +32,15 @@ void strategy_FSM_init(strategy_FSM *stratFSM) {
 
 void checkIfEnd(ctrlStruct *cvs){
     if (cvs->inputs->t >= cvs->stratFSM->timeToComeBack) cvs->stratFSM->status = goHome_s;
+}
+
+void changeSettings(ctrlStruct *cvs){
+    get_d2r_data(cvs);
+    if(cvs->inputs->option1){
+
+    }else if(cvs->inputs->option2){
+
+    }
 }
 
 
@@ -132,6 +140,7 @@ void strategy_loop(ctrlStruct *cvs){
                 stratFSM->status = select_action_s;
             } if(cvs->pPallets->output | stratFSM->maxt < inputs->t) {
                 stratFSM->status = select_action_s;
+                if(stratFSM->maxt < inputs->t) teensy_send(cvs,"I");
             }
             checkIfEnd(cvs);
             break;
@@ -144,6 +153,7 @@ void strategy_loop(ctrlStruct *cvs){
                 stratFSM->status = select_action_s;
             } if(cvs->pPallets->output | stratFSM->maxt < inputs->t)  {
                 stratFSM->status = select_action_s;
+                if(stratFSM->maxt < inputs->t) teensy_send(cvs,"I");
             }
             checkIfEnd(cvs);
             break;
@@ -166,10 +176,10 @@ void strategy_loop(ctrlStruct *cvs){
         }
 
         case goHome_s:
-            goHome_loop(cvs);
+            goHome_loop(cvs,stratFSM->shed);
             if(cvs->ghome->output){
                 stratFSM->status = select_action_s;
-            }
+            } 
             checkIfEnd(cvs);
             break;
 

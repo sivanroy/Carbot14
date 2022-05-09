@@ -11,7 +11,7 @@ typedef struct goHome
 } goHome;
 
 void goHome_init(goHome *ghome);
-void goHome_loop(ctrlStruct *cvs);
+void goHome_loop(ctrlStruct *cvs,int shed=0);
 
 
 #endif // end of header guard
