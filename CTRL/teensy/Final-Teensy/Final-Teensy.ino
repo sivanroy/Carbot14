@@ -33,6 +33,7 @@ S -> Clamp OUT -> clamps the statuette
 Y -> Open clamp
 T -> Push the resistance pallet
 X -> Front and back switches are OFF
+Z -> Arm out to push excavation square
 a -> Homologation push under the shed + clamp OUT
 b -> Homologation push under the shed + clamp IN
 c -> Homologation arm + flip OUT
