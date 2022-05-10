@@ -87,7 +87,7 @@ int flipUp = 845 + delta;
 int flipMid = 560 + delta;
 int flipDown = 340 + delta;
 
-int pos3P = 115;
+int pos3P = 114;
 int pos2P = 170;
 int pos1P = 228;
 int posLow = 428;
@@ -227,7 +227,10 @@ void moveStepper(){
   
   if (data == "F"){
     Dynamixel.moveSpeed(ID4,flip3P,1023);
-  
+    delay(50);
+    Dynamixel.moveSpeed(ID1,820,1023);
+    delay(200);
+    
     Wire.beginTransmission(0x0E);
     goToPosition(pos3P);
     digitalWrite(pumpPin, HIGH);
@@ -246,7 +249,10 @@ void moveStepper(){
   
   if (data == "G"){
     Dynamixel.moveSpeed(ID4,flip2P,1023);
-  
+    delay(50);
+    Dynamixel.moveSpeed(ID1,820,1023);
+    delay(200);
+    
     Wire.beginTransmission(0x0E);
     goToPosition(pos2P);
     digitalWrite(pumpPin, HIGH);
@@ -264,7 +270,10 @@ void moveStepper(){
 
   if (data == "H"){
     Dynamixel.moveSpeed(ID4,flip1P,1023);
-  
+    delay(50);
+    Dynamixel.moveSpeed(ID1,820,1023);
+    delay(200);
+    
     Wire.beginTransmission(0x0E);
     goToPosition(pos1P);
     digitalWrite(pumpPin, HIGH);
@@ -282,6 +291,9 @@ void moveStepper(){
   
   if (data == "N"){
     Dynamixel.moveSpeed(ID4,flip3P,1023);
+    delay(50);
+    Dynamixel.moveSpeed(ID1,820,1023);
+    delay(200);
     
     Wire.beginTransmission(0x0E);
     goToPosition(pos3P);
@@ -301,6 +313,9 @@ void moveStepper(){
   
   if (data == "O"){
     Dynamixel.moveSpeed(ID4,flip2P,1023);
+    delay(50);
+    Dynamixel.moveSpeed(ID1,820,1023);
+    delay(200);
 
     Wire.beginTransmission(0x0E);
     goToPosition(pos2P);
@@ -319,6 +334,9 @@ void moveStepper(){
 
   if (data == "P"){
     Dynamixel.moveSpeed(ID4,flip1P,1023);
+    delay(50);
+    Dynamixel.moveSpeed(ID1,820,1023);
+    delay(200);
   
     Wire.beginTransmission(0x0E);
     goToPosition(pos1P);
@@ -331,6 +349,20 @@ void moveStepper(){
     goToPosition(200);
     Wire.endTransmission(); 
     
+    usingArm = 1;
+    data = "NULL";
+  }
+  
+  if (data == "Z"){
+    Dynamixel.moveSpeed(ID4,flip3P,1023);
+    delay(50);
+    
+    Wire.beginTransmission(0x0E);
+    Dynamixel.moveSpeed(ID1,600,1023);
+    delay(500);
+    goToPosition(posLow);
+    Wire.endTransmission();  
+
     usingArm = 1;
     data = "NULL";
   }
