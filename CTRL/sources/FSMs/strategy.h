@@ -26,6 +26,6 @@ typedef struct strategy_FSM
 void strategy_FSM_init(strategy_FSM *stratFSM);
 void checkIfEnd(ctrlStruct *cvs);
 void strategy_loop(ctrlStruct *cvs);
-
+void changeSettings(ctrlStruct *cvs);
 
 #endif // end of header guard

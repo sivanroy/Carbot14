@@ -54,8 +54,10 @@ void pPallets_loop(ctrlStruct *cvs,int high){
     double waitForP = 3.25;
     double ifFailed = 3;
     double addIfHigh = 0.02;
+    double addIfYellow = -0.005;
 
     if(!high) addIfHigh = 0;
+    if(TEAM) addIfYellow = 0;
 
     switch(pPallets->status){
         case S0_pp:

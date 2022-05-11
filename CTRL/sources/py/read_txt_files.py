@@ -559,7 +559,7 @@ def plot_mp_data():
     #plt.plot(Map[0], Map[1], label="Map",c="b")
     plt.plot(xo,yo,"o",c='r',markersize = 4,label="Walls")
     plt.plot(Data[0], Data[1], 'ro', label="Path", markersize = 3,c='b')
-    plt.plot([1,.75,2.5],[1.55,.5,1.4],'o',c='g',markersize = 6,label="goals")
+    plt.plot([1,.75,2.5],[1.55,.5,1.4],'o',c='g',markersize = 6,label="Goals")
     plt.xlabel("x [m]")
     plt.ylabel("y [m]")
     plt.title("Potential field path planning")
@@ -1014,7 +1014,7 @@ plot_mp_data()
 #plot_mlc_opti()
 #plot_odo_caract2()
 #plot_odo_caract()
-plot_mp_data()
+#plot_mp_data()
 
 """
 th_mp =  -140.47653170302596

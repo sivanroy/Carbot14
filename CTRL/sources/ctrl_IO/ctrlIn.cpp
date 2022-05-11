@@ -141,11 +141,12 @@ void get_d2r_data(ctrlStruct *cvs)
 
     inputs->start = data%2;
     if(inputs->team == -1){
+        printf("data : %d\n",data );
         inputs->team = (data>>1)%2;
         printf("TEAM %d\n",inputs->team);
-        inputs->option1 = (data>>2)%2;
+        inputs->option1 = ((data>>2)%2)==0;
         printf("OPTION1 %d\n",inputs->option1);
-        inputs->option2 = (data>>3)%2;
+        inputs->option2 = ((data>>3)%2)==0;
         printf("OPTION2 %d\n", inputs->option2);
     }
 

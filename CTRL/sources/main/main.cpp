@@ -91,7 +91,11 @@ int main()
         threads_start(cvs);
         teensy_send(cvs, "Q");
 
-        while(inputs->t < 99.5){
+        double maxTime = 99.75;
+        //if(cvs->inputs->option2) maxTime = 139.5;
+        //changeSettings(cvs);
+
+        while(inputs->t < maxTime){
             auto start = high_resolution_clock::now();
             teensy_recv(cvs);
 
