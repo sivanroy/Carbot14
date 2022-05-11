@@ -12,6 +12,7 @@ typedef struct statAndShed
 	int output;
 	int go;
 	int gotStat;
+	int failure;
 } statAndShed;
 
 void saShed_init(statAndShed *saShed);

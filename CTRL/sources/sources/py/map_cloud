@@ -1,0 +1,119 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Apr  6 21:50:31 2022
+
+@author: louislibert
+"""
+
+import matplotlib.pyplot as plt
+from math import pi
+import numpy as np
+
+
+def map_cloud():
+    
+    ref_pt = np.array([[0, 0, 0.055, 0.055, 0, 0, 0.45, 0.45, 1.17, 1.17, 1.275, 1.275, 1.425, 1.425, 1.575, 1.575, 1.725, 1.725, 1.83, 1.83, 2.55, 2.55, 3, 3, 2.945, 2.945, 3, 3, 2.49, 0.51, 0], [0.51, 0.675, 0.675, 0.825, 0.825, 2, 2, 1.97, 1.97, 2, 2, 1.945, 1.945, 2, 2, 1.945, 1.945, 2, 2, 1.97, 1.97, 2, 2, 0.825, 0.825, 0.675, 0.675, 0.51, 0, 0, 0.51]])
+    
+    map_cloud = np.zeros(8192)
+    d_by_line = np.zeros(31)
+
+    N = 1000
+    L = 0
+    j = 0
+    size = 0
+    for i in range(len(ref_pt[0])-1):
+        x1 = ref_pt[0][i]
+        x2 = ref_pt[0][i+1]
+        y1 = ref_pt[1][i]
+        y2 = ref_pt[1][i+1]
+        dx = x2 - x1
+        dy = y2 - y1
+        d = np.sqrt(dx*dx + dy*dy)
+        L += d
+        d_by_line[i] = d
+        
+    k = 0
+    for i in range(len(ref_pt[0])-1):
+        n = int(N * d_by_line[i]/L)
+        
+        x1 = ref_pt[0][i]
+        x2 = ref_pt[0][i+1]
+        y1 = ref_pt[1][i]
+        y2 = ref_pt[1][i+1]
+        Dx = x2 - x1
+        Dy = y2 - y1
+        
+        dx = Dx/n
+        dy = Dy/n
+        
+        for j in range(n):
+            map_cloud[2*k] = x1 + dx*j
+            map_cloud[2*k+1] = y1 + dy*j
+            k += 1
+            size += 1
+    
+    print(size)
+    
+    map_cloud_x = []
+    map_cloud_y = []
+    s = 0
+    while s < size*2:
+        map_cloud_x.append(map_cloud[s])
+        map_cloud_y.append(map_cloud[s+1])
+        s += 2
+    
+    #print(map_cloud_x)
+    #print(map_cloud_y)
+    print(d_by_line)
+    print(L)
+    
+    plt.plot(ref_pt[0], ref_pt[1])
+    plt.plot(map_cloud_x, map_cloud_y, 'o', markersize = 2)
+    plt.xlabel("x [m]")
+    plt.ylabel("y [m]")
+    plt.title("ref_pt")
+    #plt.ylim(0, 0.7)
+    #plt.xlim(0, 0.7)
+    #plt.legend()
+    plt.axis("equal")
+    plt.grid()
+    #plt.savefig("mp_data2.pdf", format="pdf")
+    plt.show()
+    
+def icp_pos():
+    R = [[0.999196, 0.040084], [-0.040084, 0.999196]]
+    tx = -0.038777
+    ty = 0.086925
+    dth = -0.040095
+    
+    x = 2.005
+    y = 0.570000
+    th = 0.000000
+    
+    e = 0.0505
+    
+    xl = x + e*np.cos(th)
+    yl = y + e*np.sin(th)
+    
+    newxl = R[0][0]*xl + R[0][1]*yl + tx
+    newyl = R[1][0]*xl + R[1][1]*yl + ty
+    
+    newx = R[0][0]*x + R[0][1]*y + tx
+    newy = R[1][0]*x + R[1][1]*y + ty
+    
+    newth = th + dth
+    
+    x = newxl - e*np.cos(newth)
+    y = newyl - e*np.sin(newth)
+    
+    print(newx, newy)
+    
+    print(newxl, newyl)
+    
+    print(x, y)
+    
+map_cloud()
+icp_pos()
+    
+    

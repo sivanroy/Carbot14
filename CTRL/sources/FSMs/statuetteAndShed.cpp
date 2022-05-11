@@ -19,6 +19,7 @@ void saShed_init(statAndShed *saShed) {
     saShed->output = 0;
     saShed->go = 0;
     saShed->gotStat = 0;
+    saShed->failure =0;
     printf("sashed initialized\n");
 }
 
@@ -68,7 +69,8 @@ void saShed_loop(ctrlStruct *cvs){
 
         case Dpmt1_sas:{
             set_param_normal(cvs);
-            hlcPF->error = 0.03;
+            hlcPF->Tau_max = 10;//10
+            hlcPF->error = 0.035;
             //printf("d_opp : %f\n",cvs->hlcPF->d_opp);
             if(checkChrono(cvs,2)){
                 saShed->status = dpmt_si_echec;
@@ -88,6 +90,7 @@ void saShed_loop(ctrlStruct *cvs){
         case Dpmt2_sas:{
             set_param_normal(cvs);
             hlcPF->error = 0.08;
+            hlcPF->Tau_max = 10;//10
             //hlcPF->Tau_max = .15;
             //hlcPF->Tau_min = .1;
             //mlcPF->sigma = 0.5;
@@ -120,6 +123,8 @@ void saShed_loop(ctrlStruct *cvs){
 
         case Dpmt3_sas:{
             set_param_prec(cvs);
+            hlcPF->Tau_max = .1;
+            //hlcPF->Tau_min = .1;
             if(checkChrono(cvs,2)){
                 saShed->status = rec_push_sas;
                 setChrono(cvs,wait);
@@ -158,7 +163,7 @@ void saShed_loop(ctrlStruct *cvs){
             hlcPF->Tau_min = 0.2;
             mlcPF->sigma = .7;
             hlcPF->error = 0.02;
-
+            cvs->mlcPF->K_orient = 20;
             if(checkChrono(cvs,2)){
                 saShed->status = rec_push_sas;
                 setChrono(cvs,wait);
@@ -196,7 +201,7 @@ void saShed_loop(ctrlStruct *cvs){
             mlcPF->sigma = 0.5;
             //cvs->mlcPF->Kp_th = 10;
             sendFromHLCPF(cvs,1,1);
-            if (teensy->switch_F | checkChrono(cvs)) {
+            if (teensy->switch_F) {
                 motors_stop(cvs);
                 set_commands(cvs,0,0);
                 setChrono(cvs,wait);
@@ -206,6 +211,19 @@ void saShed_loop(ctrlStruct *cvs){
                 arduino_send(cvs,"K");
                 teensy_send(cvs, "S");
                 teensy_send(cvs, "6");
+                saShed->failure = 0;
+            }
+            else if (checkChrono(cvs)){
+                motors_stop(cvs);
+                set_commands(cvs,0,0);
+                setChrono(cvs,wait);
+                teensy->switch_F = 0;
+                saShed->status = rec_push_sas;
+                saShed->failure = 1;
+                //setChrono(cvs,.2);
+                arduino_send(cvs,"A");
+                //teensy_send(cvs, "S");
+                teensy_send(cvs, "6");   
             }
             break;
         }
@@ -224,8 +242,11 @@ void saShed_loop(ctrlStruct *cvs){
                 printf("rec END\n");
                 //MODIFIED !!!!
                 //saShed->status = Dpmt7_sas;
-                setChrono(cvs,1);
+                setChrono(cvs,.3);
                 saShed->status = Wait_for_stat_sas;
+                if(saShed->failure){
+                    saShed->status = Dpmt7_sas;
+                }
                 saShed->gotStat = 1;
                 if (TEAM) set_goal(cvs,2.51,0.5,-M_PI/4);//2.73,.30,-10
                 else set_goal(cvs,0.5,0.53,-3*M_PI/4);
@@ -321,6 +342,7 @@ void saShed_loop(ctrlStruct *cvs){
             hlcPF->Tau_max = .15;
             hlcPF->Tau_min = .1;
             mlcPF->sigma = 0.5;
+            mlcPF->K_orient = 15;
             //cvs->mlcPF->Kp_th = 10;
             sendFromHLCPF(cvs,1,1);
             if (teensy->switch_F|checkChrono(cvs)) {

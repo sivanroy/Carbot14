@@ -53,10 +53,11 @@ void distr_loop(ctrlStruct *cvs,int center){
     th = pos[2];
     x = pos[0];//+ hlcPF->x_shift * cos(th);
     y = pos[1];//+ hlcPF->x_shift * sin(th);
+    double wait = 0.6;
 
     set_param_normal(cvs);
     switch(distr->status){
-        case S0_di:
+        case S0_di:{
             if(distr->get) {
                 break;
                 printf("cannot get the pallet because already have some\n");
@@ -73,13 +74,14 @@ void distr_loop(ctrlStruct *cvs,int center){
     		distr->go = 0;
             distr->output = 0;
             break;
+        }
 
         case DpmtHLCPF1_di:{
     		sendFromHLCPF(cvs,-1);
         	if(hlcPF->output){
                 printf("go to recalibrate_di\n");
                 distr->status = recalibrate_di;
-                setChrono(cvs,2);
+                setChrono(cvs,wait);
                 set_commands(cvs,0,0);
         	}
         	break;
@@ -148,13 +150,8 @@ void distr_loop(ctrlStruct *cvs,int center){
                     else set_goal(cvs,1.35,1.75,-10);
                 }
             } else if (checkChrono(cvs)){
-                distr->status = DpmtHLCPF1_di;
-                if (TEAM) set_goal(cvs,2.5,.75,M_PI);
-                else set_goal(cvs,.5,.75,0);
-                if (center) {
-                    if (TEAM) set_goal(cvs,3-1.35,1.75,-10);
-                    else set_goal(cvs,1.35,1.75,-10);
-                }
+                distr->status = recalibrate_di;
+                setChrono(cvs,wait);
             }
             break;
         }
@@ -182,7 +179,7 @@ void distr_loop(ctrlStruct *cvs,int center){
                 printf("end loop\n");
                 teensy_send(cvs,"L");
                 arduino_send(cvs,"3");
-                if (center) {
+                if (center&0) {
                     if (TEAM) set_goal(cvs,3-1.2,1.5,-10);
                     else set_goal(cvs,1.2,1.5,-10);
                     setChrono(cvs,3);

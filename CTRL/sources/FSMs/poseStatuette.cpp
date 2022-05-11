@@ -74,8 +74,8 @@ void poseStat_loop(ctrlStruct *cvs){
         case rec_pos:{
             if (rec_static(cvs) | checkChrono(cvs)) {
                 poseStat->status = vitrine_prec1_pos;
-                if (TEAM) set_goal(cvs,2.78,1.7,M_PI/2);
-                else set_goal(cvs,.25,1.7,M_PI/2);
+                if (TEAM) set_goal(cvs,2.78,1.7,-10);
+                else set_goal(cvs,.25,1.7,-10);
                 printf("go to vitrine_prec_pos\n");
             }
             break;

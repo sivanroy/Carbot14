@@ -51,7 +51,7 @@ void pPallets_loop(ctrlStruct *cvs,int high){
     set_param_normal(cvs);
     double dy = -0.035;
     double wait = .6;
-    double waitForP = 3;
+    double waitForP = 3.25;
     double ifFailed = 3;
     double addIfHigh = 0.02;
 
@@ -79,10 +79,10 @@ void pPallets_loop(ctrlStruct *cvs,int high){
         	if(hlcPF->output){
         		pPallets->status = rec1_pp;
                 if(!high) teensy_send(cvs,"F");
+                if(!high)setChrono(cvs,waitForP);
                 //else teensy_send(cvs,"N");
 
                 setChrono(cvs,wait,2);
-                if(!high)setChrono(cvs,waitForP);
 
                 if (TEAM) set_goal(cvs,3-1.05,2-.21+dy+addIfHigh,-M_PI/2);
                 else set_goal(cvs,1.05,2-.21+dy+addIfHigh,-M_PI/2);
@@ -102,7 +102,7 @@ void pPallets_loop(ctrlStruct *cvs,int high){
 
         case Dpmt1prec_pp: {
             set_param_prec(cvs);
-            cvs->mlcPF->K_orient = 10;
+            cvs->mlcPF->K_orient = 15;
             sendFromHLCPF(cvs,0,1);
             if((hlcPF->output & checkChrono(cvs))|checkChrono(cvs,2)){
                 pPallets->status = pose1_pp;
@@ -149,7 +149,7 @@ void pPallets_loop(ctrlStruct *cvs,int high){
 
         case Dpmt2prec_pp: {
             set_param_prec(cvs);
-            cvs->mlcPF->K_orient = 10;
+            cvs->mlcPF->K_orient = 15;
             sendFromHLCPF(cvs,0,1);
             if((hlcPF->output|checkChrono(cvs,2))&checkChrono(cvs)){
                 pPallets->status = pose2_pp;
@@ -169,7 +169,7 @@ void pPallets_loop(ctrlStruct *cvs,int high){
                 else set_goal(cvs,.57,1.55,-M_PI/2);
                 if(!high) teensy_send(cvs,"H");
                 else teensy_send(cvs,"P");
-
+                printf("goto dpmt3_pp\n");
                 setChrono(cvs,waitForP);
             }
             break;
@@ -182,6 +182,7 @@ void pPallets_loop(ctrlStruct *cvs,int high){
                 if (TEAM) set_goal(cvs,3-.57,2-.21+dy+addIfHigh,-M_PI/2);
                 else set_goal(cvs,.57,2-.21+dy+addIfHigh,-M_PI/2);
                 setChrono(cvs,wait,2);
+                printf("goto rec3_pp\n");
             }
             break;
         }
@@ -191,21 +192,21 @@ void pPallets_loop(ctrlStruct *cvs,int high){
                 printf("rec_start_es END : go to Dpmt2_es\n");
                 pPallets->status = Dpmt3prec_pp;
                 setChrono(cvs,ifFailed,2);
+                printf("goto Dpmt3prec_pp\n");
             }
             break;
         }
 
         case Dpmt3prec_pp: {
             set_param_prec(cvs);
-            cvs->mlcPF->K_orient = 10;
+            cvs->mlcPF->K_orient = 15;
             sendFromHLCPF(cvs,0,1);
             if((hlcPF->output|checkChrono(cvs,2))& checkChrono(cvs)){
                 pPallets->status = pose3_pp;
                 setChrono(cvs,.3);
-                printf("go to pose3_ps\n");
                 teensy_send(cvs,"I");
                 arduino_send(cvs,"6");
-
+                printf("pose3_pp\n");
                 cvs->distr->get = 0;
             }
             break;
@@ -217,6 +218,7 @@ void pPallets_loop(ctrlStruct *cvs,int high){
                 if (TEAM) set_goal(cvs,3-.57,1.5,-10);
                 else set_goal(cvs,.57,1.5,-10);
                 pPallets->status = Dptout_pp;
+                printf("Dptout_pp\n");
             }
             break;
         }
@@ -228,10 +230,12 @@ void pPallets_loop(ctrlStruct *cvs,int high){
                 pPallets->status = S0_pp;
                 printf("ended pp in t = %d\n\n----------\n",cvs->inputs->t);
             }
+            break;
         }
 
         default:
-            printf("probleme defautl value in FSM pp\n");
+            printf("%d\n",pPallets->status );
+            printf("probleme defautl value in FSM posePallets !!\n");
     }
 
 }

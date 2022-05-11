@@ -15,8 +15,9 @@ void strategy_FSM_init(strategy_FSM *stratFSM) {
     stratFSM->shed = 1;
     int s = 8;
     stratFSM->s = s;
-    double maxtimingi[s] = {35,50,60,85,90,95,0,100};
+    //double maxtimingi[s] = {35,50,60,85,90,90,0,100};
     //double maxtimingi[s] = {0,0,0,0,0,0,0,100};
+    double maxtimingi[s] = {0,15,0,40,60,95,0,100};
     double maxt = 0;
     int actionsi[s] = {actionPushShed_s,distribution1_s,poseStatuette_s,posePallet1_s,
         distribution2_s,posePallet2_s,excavation_squares_s,goHome_s}; 

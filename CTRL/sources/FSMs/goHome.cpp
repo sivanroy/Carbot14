@@ -6,7 +6,7 @@
 #include "goHome.h"
 
 //enum {S0_sp,SelectGoal,RunInt,Run,Ok_sp,NotOk_sp,GoHome,releaseT,Recalibrate};
-enum {S0_gh,dp1_gh,rec_gh,dp2_gh,dpSq_gh,rec1_gh,dp_prec_Sq_gh};
+enum {S0_gh,dp1_gh,rec_gh,dp2_gh,dpSq1_gh,dpSq2_gh,rec1_gh,dp_prec_Sq_gh};
 
 void goHome_init(goHome *ghome) {
     ghome->status = S0_gh;
@@ -14,9 +14,10 @@ void goHome_init(goHome *ghome) {
     printf("gohome initialized\n");
 }
 
-void checkTime(cvs){
+
+void checkTime(ctrlStruct *cvs){
     int TEAM = cvs->inputs->team;
-    if(cvs->inputs->t > 97){
+    if(cvs->inputs->t >= 98.5){
         if (TEAM) set_goal(cvs,3-.85,.4,-10); //2.32,1.51
         else set_goal(cvs,.85,.4,-10);
         cvs->ghome->status = dp1_gh;
@@ -46,18 +47,33 @@ void goHome_loop(ctrlStruct *cvs,int shed){
     double wait = 0.6;
     //cvs->s actions
     if(shed){
+        checkTime(cvs);
         switch(ghome->status){
             case S0_gh:{
                 ghome->output=0;
-                ghome->status = dpSq_gh;
+                ghome->status = dpSq1_gh;
                 printf("goto act\n");
-                if (TEAM) set_goal(cvs,3-.855,.45,M_PI/2); //2.32,1.51
-                else set_goal(cvs,.855,.45,M_PI/2);
-                teensy_send(cvs,"F");                    
+                if (TEAM) set_goal(cvs,3-.6,.6,-10); //2.32,1.51
+                else set_goal(cvs,.6,.5,-10);
+                teensy_send(cvs,"Z");                    
                 break;
             }
 
-            case dpSq_gh:{
+            case dpSq1_gh:{
+                hlcPF->Tau_max = 15;
+                cvs->mlcPF->K_orient = 5;
+                cvs->mlcPF->max_th = 12;
+                sendFromHLCPF(cvs,-1,1,1);
+                if(hlcPF->output){
+                    ghome->status = dpSq2_gh;
+                    if (TEAM) set_goal(cvs,3-.855,.45,M_PI/2); //2.32,1.51
+                    else set_goal(cvs,.855,.45,M_PI/2);
+                    setChrono(cvs,wait);                    
+                }
+                break;
+            }
+
+            case dpSq2_gh:{
                 hlcPF->Tau_max = 15;
                 cvs->mlcPF->K_orient = 5;
                 cvs->mlcPF->max_th = 12;
@@ -100,7 +116,7 @@ void goHome_loop(ctrlStruct *cvs,int shed){
                     if (TEAM) set_goal(cvs,3-.85,.5,M_PI/2); //2.32,1.51
                     else set_goal(cvs,.85,.5,M_PI/2);
                     arduino_send(cvs,"K");
-                    teensy_send(cvs,"I");
+                    //teensy_send(cvs,"I");
                     setChrono(cvs,wait);
                     ghome->output =1;
                 }

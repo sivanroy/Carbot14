@@ -833,7 +833,7 @@ def plot_odo_caract():
     Data = read_txt_file("../../build/caract_odo_data.txt", 4)
     Map = read_txt_file("../../build/icp1_data.txt", 2)
     Data1 = read_txt_file("../../build/caract_odo_data2.txt", 4)
-    plt.title("Odometers caracterization")
+    plt.title("Odometers characterization")
     plt.plot(Map[0],Map[1])
     plt.plot(Data[1],Data[2],"o")
     plt.plot(Data1[1],Data1[2],"x")
@@ -841,7 +841,7 @@ def plot_odo_caract():
     plt.ylabel("y [m]")
     plt.grid()
 
-    
+    #plt.savefig("mp_data2.pdf", format="pdf")
     plt.show()
     
     t1 = [[],[],[]]
@@ -906,6 +906,7 @@ def plot_odo_caract():
     plt.ylim(([.54,.63]))
     plt.xlim([1.12,1.2])
     plt.legend()
+    plt.savefig("goal_odo_caract.pdf", format="pdf")
     plt.show()
     
     e1 = np.array(t1)-np.array(l1)
@@ -1012,8 +1013,8 @@ plot_mp_data()
 #plot_lidar_caract()
 #plot_mlc_opti()
 #plot_odo_caract2()
-plot_odo_caract()
-#plot_mp_data()
+#plot_odo_caract()
+plot_mp_data()
 
 """
 th_mp =  -140.47653170302596
