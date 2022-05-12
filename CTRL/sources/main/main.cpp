@@ -289,6 +289,7 @@ int main()
         printf("end\n");
     }
     if (icpON) {
+        arduino_send(cvs,"R");
         cvs->mp->x = 3-0.14;//2.00;//3-0.14;
         cvs->mp->y = 1.13;//0.75;//0.445+0.125;//0.45;//2-0.53;
         cvs->mp->th = M_PI;//0;//M_PI;
