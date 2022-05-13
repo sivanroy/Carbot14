@@ -1,4 +1,3 @@
-----------------------------
 Welcome to the Carbot14's CTRL folder
 ----------------------------
 You found the CTRL folder with all the interesting files of our famous robot !
@@ -18,5 +17,10 @@ You will find in it the folders use in our teensy & in our arduino to control re
 
 -----------------------------
 If you have any questions :
-	simon.vanroy@student.uclouvain.be
+
+simon.vanroy@student.uclouvain.be
+
+louis.libert@student.uclouvain.be
+
 -----------------------------
+
