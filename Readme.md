@@ -6,6 +6,6 @@ if everythings works as expected (:
 
 The code is in python and used in the Eurobot 2022 contest
 
-<img src="carbot14.png" alt="Employee data" title="Employee Data title" width="50%" height="50%">
+<img src="carbot14.png" alt="Employee data" title="Employee Data title" width="50%" height="50%" center>
 
 nouveauté
