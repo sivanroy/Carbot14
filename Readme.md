@@ -11,7 +11,7 @@ Firstly, If you want to get straight into the code we invite you to go into the 
 To introduce ourselves, we are Group 5 of the LELME2002 project running in 2021-2022. You can see our finished baby
 
 <p align="center">
-	<img src="carbot14.png" alt="Employee data" title="Employee Data title" width="50%" height="50%" center>
+	<img src="carbot14_2.png" width="50%" height="50%" center>
 </p>
 
 The code found here is not the better in any way. Get inspired but stay critical and do not copy our mistakes (:
