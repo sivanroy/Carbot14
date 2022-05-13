@@ -6,7 +6,7 @@ if everythings works as expected (:
 
 The code is in python and used in the Eurobot 2022 contest
 
-![Employee data](/repository/carbot14.png?raw=true "Employee Data title")
-<img src="/repository/assets/employee.png" alt="Employee data" title="Employee Data title">
+![Employee data](carbot14.png?raw=true "Employee Data title")
+<img src="carbot14.png" alt="Employee data" title="Employee Data title">
 
 nouveauté
