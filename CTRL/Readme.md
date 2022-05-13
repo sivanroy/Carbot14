@@ -6,7 +6,9 @@ You found the CTRL folder with all the interesting files of our famous robot !
 	cd build/
 You will find in the build file, the makefile as well as some extracted data from our tests
 
-	scd ources/
+
+	cd sources/
+
 You will find in it all the subfolders needed for the robot. don't hesitate to inspire yourself without forgetting to mention your source (:
 
 	cd teensy/

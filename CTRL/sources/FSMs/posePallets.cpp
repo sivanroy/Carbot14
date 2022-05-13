@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <cmath> //for sqrt
-
+#include <cmath> 
 #include "posePallets.h"
 #include "FSMs_utils.h"
 

@@ -67,12 +67,59 @@ int main()
 
     int avoidOpponent = 0;
     int contest = 1;
-    int started = 0;
+    int started = 1;
 
     int lidar_caract = 0;
 
     auto begin_time = high_resolution_clock::now();
     arduino_send(cvs,"R");
+
+    if(0){
+        printf("let's go!\n");
+        get_d2r_data(cvs);
+        arduino_send(cvs,"R");
+        cvs->mp->x = 3-0.133;
+        cvs->mp->y = 1.467;
+        cvs->mp->th = M_PI;
+        printf("team = %d \n",inputs->team);
+        if(!inputs->team){
+            cvs->mp->x = .133;
+            cvs->mp->th = 0;
+            teensy_send(cvs,"2");
+        } else teensy_send(cvs, "1");
+        //threads_start(cvs);
+        teensy_send(cvs, "Q");
+
+        double maxTime = 2;
+        //if(cvs->inputs->option2) maxTime = 139.5;
+        //changeSettings(cvs);
+        int i = 0;
+        while(i<1000){
+            auto start = high_resolution_clock::now();
+
+            auto tester_begin=high_resolution_clock::now();
+            arduino_send(cvs,"1");
+            auto tester_stop = high_resolution_clock::now();
+            auto tester_duration = duration_cast<nanoseconds>(tester_stop - tester_begin);
+            double timer = tester_duration.count();
+            fprintf(cvs->timing_data,"%f\n",timer);
+
+            update_time(cvs);
+            auto stop = high_resolution_clock::now();
+            auto duration = duration_cast<microseconds>(stop - start);
+            usleep(dt * 1000000 - duration.count());
+
+            stop = high_resolution_clock::now();
+            duration = duration_cast<microseconds>(stop- begin_time );
+            cvs->inputs->t = duration.count()*1e-6;
+            i ++;
+
+        }
+        printf("ENDED\n");
+        //mt->thread_main_end = 1;
+        //printf("th_end : start ... ");
+        //threads_end(cvs);
+    }
 
     //set_initial_time(cvs);
     if (contest) {
@@ -91,18 +138,17 @@ int main()
         threads_start(cvs);
         teensy_send(cvs, "Q");
 
-        double maxTime = 99.75;
+        double maxTime = 4;
         //if(cvs->inputs->option2) maxTime = 139.5;
         //changeSettings(cvs);
 
         while(inputs->t < maxTime){
-            auto start = high_resolution_clock::now();
 
+            auto start = high_resolution_clock::now();
             auto tester_begin=high_resolution_clock::now();
+
             teensy_recv(cvs);
-            auto tester_stop = high_resolution_clock::now();
-            auto tester_duration = duration_cast<microseconds>(stop - start);
-            fprintf("%f\n",tester_duration.count());
+
 
             if (!started) {
                 get_d2r_data(cvs);
@@ -120,7 +166,12 @@ int main()
                 strategy_loop(cvs);
             }
 
-            update_time(cvs);
+            auto tester_stop = high_resolution_clock::now();
+            auto tester_duration = duration_cast<nanoseconds>(tester_stop - tester_begin);
+            double timer = tester_duration.count();
+            fprintf(cvs->timing_data,"%f\n",timer);
+
+            //update_time(cvs);
             auto stop = high_resolution_clock::now();
             auto duration = duration_cast<microseconds>(stop - start);
             usleep(dt * 1000000 - duration.count());

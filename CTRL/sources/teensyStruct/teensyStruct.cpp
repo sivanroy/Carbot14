@@ -109,7 +109,7 @@ void arduino_send(ctrlStruct *cvs, const char *data)
 
     strcpy(teensy->str_send, data);
     RS232_cputs(teensy->a_port, teensy->str_send);
-    printf("Sent to arduino: '%s'\n", teensy->str_send);
+    //printf("Sent to arduino: '%s'\n", teensy->str_send);
     //usleep(2000);
 }
 
@@ -120,7 +120,7 @@ void teensy_send(ctrlStruct *cvs, const char *data)
 
     strcpy(teensy->str_send, data);
     RS232_cputs(teensy->t_port, teensy->str_send);
-    printf("Sent to teensy: '%s'\n", teensy->str_send);
+    //printf("Sent to teensy: '%s'\n", teensy->str_send);
     //usleep(2000);
 }
 
