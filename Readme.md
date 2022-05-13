@@ -37,5 +37,9 @@ You will find in it the folders used in our teensy & in our arduino to control r
 
 -----------------------------
 If you have any questions :
-	simon.vanroy@student.uclouvain.be
+
+simon.vanroy@student.uclouvain.be
+
+louis.libert@student.uclouvain.be
+
 -----------------------------
