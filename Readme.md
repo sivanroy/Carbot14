@@ -3,7 +3,9 @@ Welcome to the Carbot14's github
 ----------------------------
 
 ----------------------------
-Firstly, If you want to get straight into the code we invite you to go into the ./CTRL folder and read the Readme in it instead
+Firstly, If you want to get straight into the code we invite you to go into the CTRL folder and read the Readme in it instead
+-----------------------------
+	cd CTRL/
 -----------------------------
 
 To introduce ourselves, we are Group 5 of the LELME2002 project running in 2021-2022. You can see our finished baby
@@ -28,7 +30,7 @@ You will find in the build file, the makefile as well as some extracted data fro
 You will find in it all the subfolders needed for the robot. don't hesitate to inspire yourself without forgetting to mention your source (:
 
 	cd CTRL/teensy
-You will find in it the folders use in our teensy & in our arduino to control respectively the 
+You will find in it the folders used in our teensy & in our arduino to control respectively the 
 	- dynamixels, the steppers, servos 
 	- 7 segments display 
 
