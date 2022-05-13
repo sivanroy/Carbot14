@@ -208,7 +208,7 @@ void saShed_loop(ctrlStruct *cvs){
                 teensy->switch_F = 0;
                 saShed->status = rec_push_sas;
                 //setChrono(cvs,.2);
-                arduino_send(cvs,"K");
+                arduino_send(cvs,"F");
                 teensy_send(cvs, "S");
                 teensy_send(cvs, "6");
                 saShed->failure = 0;
