@@ -8,7 +8,9 @@ Firstly, If you want to get straight into the code we invite you to go into the 
 
 To introduce ourselves, we are Group 5 of the LELME2002 project running in 2021-2022. You can see our finished baby
 
-<img src="carbot14.png" alt="Employee data" title="Employee Data title" width="50%" height="50%" center>
+<p align="center">
+	<img src="carbot14.png" alt="Employee data" title="Employee Data title" width="50%" height="50%" center>
+</p>
 
 The code found here is not the better in any way. Get inspired but stay critical and do not copy our mistakes (:
 
@@ -19,13 +21,13 @@ We invite you to check the video's in [Youtube video's](www.google.com)
 What is in ./CTRL
 -----------------------------
 
-	./build
+	cd CTRL/build
 You will find in the build file, the makefile as well as some extracted data from our tests
 
-	./sources
+	cd CTRL/sources
 You will find in it all the subfolders needed for the robot. don't hesitate to inspire yourself without forgetting to mention your source (:
 
-	./teensy
+	cd CTRL/teensy
 You will find in it the folders use in our teensy & in our arduino to control respectively the 
 	- dynamixels, the steppers, servos 
 	- 7 segments display 
