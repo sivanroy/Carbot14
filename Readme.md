@@ -17,7 +17,7 @@ To introduce ourselves, we are Group 5 of the LELME2002 project running in 2021-
 The code found here is not the better in any way. Get inspired but stay critical and do not copy our mistakes (:
 
 All the code found here is in C++. It is the final version in it will not be updated from now (June 2022)
-We invite you to check the video's in [Youtube video's](www.google.com)
+We invite you to check the video's in [Youtube video's](https://www.google.com)
 
 -----------------------------
 What is in ./CTRL
