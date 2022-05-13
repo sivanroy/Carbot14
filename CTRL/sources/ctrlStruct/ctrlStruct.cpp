@@ -145,6 +145,9 @@ ctrlStruct* cvs_init()
     cvs->caract_odo_data2 = fopen("caract_odo_data2.txt", "w");
     if (cvs->caract_odo_data2 == NULL) printf("Enable to open file caract_odo_data2.txt\n");
 
+    cvs->timing_data = fopen("timing_data.txt","w");
+    if(cvs->timing_data == NULL) printf("Enab to open timing_data\n");
+
     return cvs;
 }
 
@@ -194,6 +197,7 @@ void cvs_free(ctrlStruct *cvs)
     fclose(cvs->lidar_caract_data);
     fclose(cvs->caract_odo_data);
     fclose(cvs->caract_odo_data2);
+    fclose(cvs->timing_data);
 
     free(cvs);
 }

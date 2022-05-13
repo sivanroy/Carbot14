@@ -116,6 +116,7 @@ typedef struct ctrlStruct
     FILE *lidar_caract_data;
     FILE *caract_odo_data;
     FILE *caract_odo_data2;
+    FILE *timing_data;
 } ctrlStruct;
 
 ctrlStruct* cvs_init();

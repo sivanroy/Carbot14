@@ -97,7 +97,12 @@ int main()
 
         while(inputs->t < maxTime){
             auto start = high_resolution_clock::now();
+
+            auto tester_begin=high_resolution_clock::now();
             teensy_recv(cvs);
+            auto tester_stop = high_resolution_clock::now();
+            auto tester_duration = duration_cast<microseconds>(stop - start);
+            fprintf("%f\n",tester_duration.count());
 
             if (!started) {
                 get_d2r_data(cvs);
