@@ -1,9 +1,10 @@
 /*
 ----------------------------
-Welcome to the lowLevelCtrl.h
+Welcome to the midleLevelCtrlPF.h
 ----------------------------
-Low-level controller of the robot : PI with back-emf compensation, 
-anti-windup and voltage saturation
+Midle level controller of the hlcPF (potential field)
+Get a reference speed and an absolute angle , return the wheels
+reference speed
 -----------------------------
 */
 

@@ -13,8 +13,7 @@ You can find in it all the subfolders needed for the robot. don't hesitate to in
 
 	cd teensy/
 You can find in it the folders use in our teensy & in our arduino to control respectively the 
-	- dynamixels, the steppers, servos 
-	- 8 segments display 
+	- all the actuators	- 8 segments display 
 
 -----------------------------
 More about sources folder

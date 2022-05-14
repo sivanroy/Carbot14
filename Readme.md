@@ -32,8 +32,7 @@ You can find another readme in it, do not hesitate to consult it.
 
 	cd CTRL/teensy
 You can find in it the folders used in our teensy & in our arduino to control respectively the 
-	- dynamixels, the steppers, servos 
-	- 8 segments display 
+	- all the actuators - 8 segments display 
 
 
 -----------------------------

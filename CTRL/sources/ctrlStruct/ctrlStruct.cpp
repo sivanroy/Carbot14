@@ -1,6 +1,6 @@
 /*
 ----------------------------
-Welcome to the ctrIln.h
+Welcome to the ctrlStruct.h
 ----------------------------
 Controller's main structure containing all the other structures as well
 as files for extracting data
