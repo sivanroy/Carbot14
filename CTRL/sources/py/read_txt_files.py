@@ -988,7 +988,21 @@ def plot_odo_caract2():
     plt.grid()
     #plt.xlim([0.4,0.6])
     plt.show()
-
+    
+def print_mean_timing():
+    path = "../../build/data_timing/"
+    arduino_send = path + "arduin_send.txt"
+    timings = ["arduin_send.txt","getd2r_data.txt","main_loop.txt","sashed.txt","strategy.txt","teensy_rcv.txt","teensy_send.txt","update_pos.txt"]
+    datas = []
+    for i in timings:
+        data = read_txt_file(path+i, 1)
+        print(len(data[0]))
+        print(i,np.mean(data[0])*1e-6)
+        datas.append(np.mean(data[0])*1e-6)
+    total_time = datas[5]+datas[4]+datas[7]
+    print(datas[5]/total_time)
+    print(datas[4]/total_time)
+    print(datas[7]/total_time)
 """
 plot_rpl_data()
 plot_op_data()
@@ -1004,6 +1018,7 @@ plot_rec_data()
 plot_llc_data()
 plot_mp_data()
 """
+print_mean_timing()
 #plot_icp_data()
 #plot_mlc_opti()
 #plot_mp_data()

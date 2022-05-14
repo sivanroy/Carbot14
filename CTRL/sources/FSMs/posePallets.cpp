@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <cmath> 
+
 #include "posePallets.h"
 #include "FSMs_utils.h"
 

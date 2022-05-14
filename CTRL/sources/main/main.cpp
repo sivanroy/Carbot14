@@ -138,18 +138,15 @@ int main()
         threads_start(cvs);
         teensy_send(cvs, "Q");
 
-        double maxTime = 4;
+        double maxTime = 99.5;
         //if(cvs->inputs->option2) maxTime = 139.5;
         //changeSettings(cvs);
 
         while(inputs->t < maxTime){
 
             auto start = high_resolution_clock::now();
-            auto tester_begin=high_resolution_clock::now();
-
+            //auto tester_begin=high_resolution_clock::now();
             teensy_recv(cvs);
-
-
             if (!started) {
                 get_d2r_data(cvs);
                 //inputs->t = 0;
@@ -165,11 +162,12 @@ int main()
             if(started){
                 strategy_loop(cvs);
             }
-
+            /* Timing tester
             auto tester_stop = high_resolution_clock::now();
             auto tester_duration = duration_cast<nanoseconds>(tester_stop - tester_begin);
             double timer = tester_duration.count();
             fprintf(cvs->timing_data,"%f\n",timer);
+            */
 
             //update_time(cvs);
             auto stop = high_resolution_clock::now();

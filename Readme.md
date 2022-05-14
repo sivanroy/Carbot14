@@ -32,7 +32,7 @@ You will find in it all the subfolders needed for the robot. don't hesitate to i
 	cd CTRL/teensy
 You will find in it the folders used in our teensy & in our arduino to control respectively the 
 	- dynamixels, the steppers, servos 
-	- 7 segments display 
+	- 8 segments display 
 
 
 -----------------------------
