@@ -1,7 +1,14 @@
-/*!
- * \file obstacles_gr5.h
- * \brief File description
- */
+/*
+----------------------------
+Welcome to the lowLevelCtrl.h
+----------------------------
+Functions and structure for the static and dynamic
+obstacles.
+Static obstacles are done from equidistants points
+Dynamic obstacle is update by oppoent position and is defined by a point
+-----------------------------
+*/
+
 
 #ifndef CARBOT14_OBSTACLES_H // adapt it with the name of this file (header guard)
 #define CARBOT14_OBSTACLES_H // must be the same name as the line before

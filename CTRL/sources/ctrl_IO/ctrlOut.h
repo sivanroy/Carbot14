@@ -1,7 +1,10 @@
-/*!
- * \file ctrlOut.h
- * \brief Structure defining the outputs of the robot controller
- */
+/*
+----------------------------
+Welcome to the ctrlOut.h
+----------------------------
+Structure defining outputs of the robot controller
+-----------------------------
+*/
 
 #ifndef CARBOT14_CTRLOUT_H
 #define CARBOT14_CTRLOUT_H

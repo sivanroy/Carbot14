@@ -1,7 +1,12 @@
-/*!
- * \file objDetection.h
- * \brief Objects detection in a given position with the lidar
- */
+/*
+----------------------------
+Welcome to the objDetection.h
+----------------------------
+Objects detection in a given position with the lidar
+(example: determine if a pallet is in a distributor)
+-----------------------------
+*/
+
 
 #ifndef CARBOT14_OBJDETECTION_H
 #define CARBOT14_OBJDETECTION_H

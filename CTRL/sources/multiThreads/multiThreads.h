@@ -1,7 +1,11 @@
-/*!
- * \file multiThreads.h
- * \brief multi-threads functions
- */
+/*
+----------------------------
+Welcome to the multiThreads.h
+----------------------------
+Multithreads functions and structure
+-----------------------------
+*/
+
 
 #ifndef CARBOT14_MULTITHREADS_H
 #define CARBOT14_MULTITHREADS_H

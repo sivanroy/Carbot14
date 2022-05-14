@@ -1,7 +1,11 @@
-/*!
- * \file lowLevelCtrl.h
- * \brief Low-level controller of the robot : PI with back-emf compensation, anti-windup and voltage saturation
- */
+/*
+----------------------------
+Welcome to the lowLevelCtrl.h
+----------------------------
+Low-level controller of the robot : PI with back-emf compensation, 
+anti-windup and voltage saturation
+-----------------------------
+*/
 
 #ifndef CARBOT14_LOWLEVELCTRL_H
 #define CARBOT14_LOWLEVELCTRL_H

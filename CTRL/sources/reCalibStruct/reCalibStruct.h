@@ -1,7 +1,11 @@
-/*!
- * \file reCalibStruct.h
- * \brief functions for recalibration
- */
+/*
+----------------------------
+Welcome to the recalibStruct.h
+----------------------------
+Functions and structure for the recalibration thanks
+to the ICP algorithm
+-----------------------------
+*/
 
 #ifndef CARBOT14_RECALIBSTRUCT_H
 #define CARBOT14_RECALIBSTRUCT_H

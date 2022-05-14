@@ -1,7 +1,11 @@
-/*!
- * \file oppPosition.h
- * \brief Detection of the opponent position
- */
+/*
+----------------------------
+Welcome to the oppPosition.h
+----------------------------
+Detection of the opponent position
+-----------------------------
+*/
+
 
 #ifndef CARBOT14_OPPPOSITION_H
 #define CARBOT14_OPPPOSITION_H

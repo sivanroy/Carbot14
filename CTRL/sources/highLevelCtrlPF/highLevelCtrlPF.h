@@ -1,7 +1,13 @@
-/*!
- * \file highLevelCtrlPF_gr5.h
- * \brief File description
- */
+/*
+----------------------------
+Welcome to the highLevelCtrlPF.h
+----------------------------
+Functions and structure defining the high level controller potential 
+field path planning (hlcPF)
+-----------------------------
+*/
+
+
 #ifndef CARBOT14_HIGHLEVELCTRLPF_H // adapt it with the name of this file (header guard)
 #define CARBOT14_HIGHLEVELCTRLPF_H // must be the same name as the line before
 

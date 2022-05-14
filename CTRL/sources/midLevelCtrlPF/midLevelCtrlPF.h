@@ -1,7 +1,11 @@
-/*!
- * \file midLevelCtrlPF.h
- * \brief Middle-level controller of the robot for Potential Field method
- */
+/*
+----------------------------
+Welcome to the lowLevelCtrl.h
+----------------------------
+Low-level controller of the robot : PI with back-emf compensation, 
+anti-windup and voltage saturation
+-----------------------------
+*/
 
 #ifndef CARBOT14_MIDLEVELCTRLPF_H
 #define CARBOT14_MIDLEVELCTRLPF_H

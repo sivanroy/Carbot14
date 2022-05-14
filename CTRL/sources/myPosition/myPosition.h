@@ -1,7 +1,10 @@
-/*!
- * \file myPosition.h
- * \brief Localization of the robot
- */
+/*
+----------------------------
+Welcome to the myPosition.h
+----------------------------
+Functions and strucutre for the localization of the robot
+-----------------------------
+*/
 
 #ifndef CARBOT14_MYPOSITION_H
 #define CARBOT14_MYPOSITION_H

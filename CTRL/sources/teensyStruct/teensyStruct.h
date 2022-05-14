@@ -1,7 +1,11 @@
-/*!
- * \file teensyStruct.h
- * \brief communication with the teensy
- */
+/*
+----------------------------
+Welcome to the oppPosition.h
+----------------------------
+Structure and functions to communicate with the teensy and
+with the arduino 
+-----------------------------
+*/
 
 #ifndef CARBOT14_TEENSYSTRUCT_H
 #define CARBOT14_TEENSYSTRUCT_H

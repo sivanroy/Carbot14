@@ -1,7 +1,14 @@
-//
-// Created by Louis Libert on 10/03/22.
-//
+/*
+----------------------------
+Welcome to the main.cpp
+----------------------------
+In it, you can find all the test functions and
+the 'contest' function --> for the robotix's and UCL cup !
 
+Test functions can be launched with the appropriate flags, defined lines 48 to 72
+Contest function can be launched line 76
+-----------------------------
+*/
 #include <iostream>
 #include <unistd.h>
 #include <math.h>
@@ -61,65 +68,18 @@ int main()
     int excSqON = 0;
     int distON = 0;
     int posePalletON = 0;
-
+    int timing_tests = 0;
     int arduinoON = 0;
     int mThreadsON = 0;
-
-    int avoidOpponent = 0;
-    int contest = 1;
-    int started = 1;
-
     int lidar_caract = 0;
+    int avoidOpponent = 0;
+
+    
+    int contest = 1;
+    int started = 0;
 
     auto begin_time = high_resolution_clock::now();
     arduino_send(cvs,"R");
-
-    if(0){
-        printf("let's go!\n");
-        get_d2r_data(cvs);
-        arduino_send(cvs,"R");
-        cvs->mp->x = 3-0.133;
-        cvs->mp->y = 1.467;
-        cvs->mp->th = M_PI;
-        printf("team = %d \n",inputs->team);
-        if(!inputs->team){
-            cvs->mp->x = .133;
-            cvs->mp->th = 0;
-            teensy_send(cvs,"2");
-        } else teensy_send(cvs, "1");
-        //threads_start(cvs);
-        teensy_send(cvs, "Q");
-
-        double maxTime = 2;
-        //if(cvs->inputs->option2) maxTime = 139.5;
-        //changeSettings(cvs);
-        int i = 0;
-        while(i<1000){
-            auto start = high_resolution_clock::now();
-
-            auto tester_begin=high_resolution_clock::now();
-            arduino_send(cvs,"1");
-            auto tester_stop = high_resolution_clock::now();
-            auto tester_duration = duration_cast<nanoseconds>(tester_stop - tester_begin);
-            double timer = tester_duration.count();
-            fprintf(cvs->timing_data,"%f\n",timer);
-
-            update_time(cvs);
-            auto stop = high_resolution_clock::now();
-            auto duration = duration_cast<microseconds>(stop - start);
-            usleep(dt * 1000000 - duration.count());
-
-            stop = high_resolution_clock::now();
-            duration = duration_cast<microseconds>(stop- begin_time );
-            cvs->inputs->t = duration.count()*1e-6;
-            i ++;
-
-        }
-        printf("ENDED\n");
-        //mt->thread_main_end = 1;
-        //printf("th_end : start ... ");
-        //threads_end(cvs);
-    }
 
     //set_initial_time(cvs);
     if (contest) {
@@ -184,6 +144,54 @@ int main()
         printf("th_end : start ... ");
         threads_end(cvs);
     }
+
+        if(timing_tests){
+        printf("let's go!\n");
+        get_d2r_data(cvs);
+        arduino_send(cvs,"R");
+        cvs->mp->x = 3-0.133;
+        cvs->mp->y = 1.467;
+        cvs->mp->th = M_PI;
+        printf("team = %d \n",inputs->team);
+        if(!inputs->team){
+            cvs->mp->x = .133;
+            cvs->mp->th = 0;
+            teensy_send(cvs,"2");
+        } else teensy_send(cvs, "1");
+        //threads_start(cvs);
+        teensy_send(cvs, "Q");
+
+        double maxTime = 2;
+        //if(cvs->inputs->option2) maxTime = 139.5;
+        //changeSettings(cvs);
+        int i = 0;
+        while(i<1000){
+            auto start = high_resolution_clock::now();
+
+            auto tester_begin=high_resolution_clock::now();
+            arduino_send(cvs,"1");
+            auto tester_stop = high_resolution_clock::now();
+            auto tester_duration = duration_cast<nanoseconds>(tester_stop - tester_begin);
+            double timer = tester_duration.count();
+            fprintf(cvs->timing_data,"%f\n",timer);
+
+            update_time(cvs);
+            auto stop = high_resolution_clock::now();
+            auto duration = duration_cast<microseconds>(stop - start);
+            usleep(dt * 1000000 - duration.count());
+
+            stop = high_resolution_clock::now();
+            duration = duration_cast<microseconds>(stop- begin_time );
+            cvs->inputs->t = duration.count()*1e-6;
+            i ++;
+
+        }
+        printf("ENDED\n");
+        //mt->thread_main_end = 1;
+        //printf("th_end : start ... ");
+        //threads_end(cvs);
+    }
+
     if (lidar_caract) {
         threads_start(cvs);
 

@@ -1,8 +1,11 @@
-/*!
- * \file ctrlStruct.cpp
- * \brief Controller main structure
- */
-
+/*
+----------------------------
+Welcome to the ctrIln.h
+----------------------------
+Controller's main structure containing all the other structures as well
+as files for extracting data
+-----------------------------
+*/
 #include "ctrlStruct.h"
 
 

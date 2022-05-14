@@ -1,9 +1,15 @@
-/*!
- * \file midLevelCtrl_gr5.h
- * \brief File description
- */
-#ifndef _MIDLEVELCTRL_GR5_H_ // adapt it with the name of this file (header guard)
-#define _MIDLEVELCTRL_GR5_H_ // must be the same name as the line before
+/*
+----------------------------
+Welcome to the midleLevelCtrl.h
+----------------------------
+structures and functions for a midle level controller
+which input are coordinate and output wheels speed references
+/!\ this is not the hlcPF mlc. The folder of it is midLevelCtrlPF
+-----------------------------
+*/
+
+#ifndef _MIDLEVELCTRL_GR5_H_ 
+#define _MIDLEVELCTRL_GR5_H_ 
 
 #include "../ctrlStruct/ctrlStruct.h"
 
@@ -43,4 +49,4 @@ void init_midLevelCtrl(midLevelCtrl *mlc);
 void set_d_th_ref_mes(ctrlStruct *cvs, double x_g, double y_g);
 void set_speed_ref(ctrlStruct *cvs, double x_g, double y_g, int goForward = 1);
 
-#endif // end of header guard
+#endif 

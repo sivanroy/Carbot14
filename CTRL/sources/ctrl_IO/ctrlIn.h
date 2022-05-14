@@ -1,7 +1,10 @@
-/*!
- * \file ctrlIn.h
- * \brief Structure defining the inputs of the robot controller
- */
+/*
+----------------------------
+Welcome to the ctrlIln.h
+----------------------------
+Structure defining inputs of the robot controller
+-----------------------------
+*/
 
 #ifndef CARBOT14_CTRLIN_H
 #define CARBOT14_CTRLIN_H
